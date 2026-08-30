@@ -11,23 +11,28 @@ const DEFAULT_TIE_BAND = 0.10;
  * because the whole product claim is that it makes no network calls.
  * `faces` is [family, weight, file]; a single entry means a variable font.
  */
+const FALLBACK = ', -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif';
+
 export const FONTS = {
-  system:  { label: 'System default', stack: '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif', faces: [] },
-  inter:   { label: 'Inter',         stack: '"Inter", sans-serif',
-             faces: [['Inter', '400 700', 'inter-400-700.woff2']] },
-  plex:    { label: 'IBM Plex Sans', stack: '"IBM Plex Sans", sans-serif',
+  geist:   { label: 'Geist',             stack: '"Geist"' + FALLBACK,
+             faces: [['Geist', '400 700', 'geist-400-700.woff2']] },
+  jakarta: { label: 'Plus Jakarta Sans', stack: '"Plus Jakarta Sans"' + FALLBACK,
+             faces: [['Plus Jakarta Sans', '400 700', 'jakarta-400-700.woff2']] },
+  plex:    { label: 'IBM Plex Sans',     stack: '"IBM Plex Sans"' + FALLBACK,
              faces: [['IBM Plex Sans', '400', 'plex-400.woff2'],
                      ['IBM Plex Sans', '600', 'plex-600.woff2'],
                      ['IBM Plex Sans', '700', 'plex-700.woff2']] },
-  manrope: { label: 'Manrope',       stack: '"Manrope", sans-serif',
-             faces: [['Manrope', '400 700', 'manrope-400-700.woff2']] }
+  manrope: { label: 'Manrope',           stack: '"Manrope"' + FALLBACK,
+             faces: [['Manrope', '400 700', 'manrope-400-700.woff2']] },
+  grotesk: { label: 'Space Grotesk',     stack: '"Space Grotesk"' + FALLBACK,
+             faces: [['Space Grotesk', '400 700', 'grotesk-400-700.woff2']] }
 };
 
-export const DEFAULT_FONT = 'inter';
+export const DEFAULT_FONT = 'geist';
 
 /** @font-face rules for one font. urlFor keeps chrome.* out of the engine. */
 export function fontFaceCss(key, urlFor) {
-  const f = FONTS[key] || FONTS.system;
+  const f = FONTS[key] || FONTS[DEFAULT_FONT];
   return f.faces.map(([family, weight, file]) =>
     `@font-face{font-family:"${family}";font-style:normal;font-weight:${weight};` +
     `font-display:swap;src:url("${urlFor('src/fonts/' + file)}") format("woff2");}`
@@ -35,7 +40,7 @@ export function fontFaceCss(key, urlFor) {
 }
 
 export function fontStack(key) {
-  return (FONTS[key] || FONTS.system).stack;
+  return (FONTS[key] || FONTS[DEFAULT_FONT]).stack;
 }
 
 // Schema.org types that mean "you can buy something on this page".
