@@ -1,6 +1,6 @@
 // Zero-dependency test runner:  node tools/test-engine.mjs
 import { readFileSync } from 'node:fs';
-import { rank, resolveMerchant, pruneInstances, isMerchantPage, isCheckoutPage, isCommitLabel, inferCategory, isPinned } from '../src/engine.js';
+import { rank, resolveMerchant, pruneInstances, isMerchantPage, isCheckoutPage, isCommitLabel, isBuyLabel, inferCategory, isPinned } from '../src/engine.js';
 
 const load = n => JSON.parse(readFileSync(new URL(`../data/${n}.json`, import.meta.url), 'utf8'));
 const products = load('cards'), merchants = load('merchants'), valuations = load('valuations');
@@ -281,14 +281,14 @@ eq('a known merchant with one weak signal does', M({ cartLink: true }, true), tr
 // only because the domain was in the table, which is the bug this fixes.
 eq('LIVE youtube watch page does not show',
    M({ ldTypes: ['VideoObject', 'InteractionCounter'], ogType: 'video.other',
-       platform: false, cartLink: false, buyText: false, price: false }, true), false);
+       platform: false, cartLink: false, buttonLabels: [], price: false }, true), false);
 // Live homedepot.com homepage, 2026-08-30: one weak signal, a real merchant.
 eq('LIVE home depot homepage still shows',
    M({ ldTypes: ['WebSite', 'Organization'], ogType: 'homepage',
-       cartLink: true, buyText: false, price: false }, true), true);
+       cartLink: true, buttonLabels: [], price: false }, true), true);
 // Live netflix.com, 2026-08-30: plan pricing on a signup page.
 eq('LIVE netflix signup page still shows',
-   M({ ldTypes: [], cartLink: false, buyText: false, price: true }, true), true);
+   M({ ldTypes: [], cartLink: false, buttonLabels: [], price: true }, true), true);
 // A bare payment page has no product markup at all, but must still mount the
 // dock or the checkout auto-open would have nothing to open.
 eq('a bare payment page counts as a merchant page',
@@ -296,16 +296,16 @@ eq('a bare payment page counts as a merchant page',
 eq('...and so does one with a card field', M({ paymentField: true }, false), true);
 eq('a bare page does not', M({}), false);
 eq('news article quoting one price does not', M({ price: true }), false);
-eq('blog post with a "buy now" phrase alone does not', M({ buyText: true }), false);
+eq('a buy control alone does not', M({ buttonLabels: ['Add to cart'] }), false);
 eq('two weak signals together do', M({ price: true, cartLink: true }), true);
-eq('price + buy language does', M({ price: true, buyText: true }), true);
+eq('price + a buy control does', M({ price: true, buttonLabels: ['Add to cart'] }), true);
 eq('JSON-LD Product alone is enough', M({ ldTypes: ['WebPage', 'Product'] }), true);
 eq('JSON-LD Hotel alone is enough (this is the IHG case)', M({ ldTypes: ['Hotel'] }), true);
 eq('JSON-LD Article is not', M({ ldTypes: ['Article', 'BreadcrumbList'] }), false);
 // ihg.com's own landing page markup, read off the live site 2026-08-29.
 eq('JSON-LD OfferCatalog is enough (real IHG homepage signal)',
    M({ ldTypes: ['WebSite', 'Organization', 'OfferCatalog', 'FAQPage'], ogType: 'website',
-       buyText: true, cartLink: false, price: false }), true);
+       buttonLabels: ['Add to cart'], cartLink: false, price: false }), true);
 eq('og:type product is enough', M({ ogType: 'product' }), true);
 eq('og:type product.item is enough', M({ ogType: 'product.item' }), true);
 eq('og:type article is not', M({ ogType: 'article' }), false);
@@ -313,14 +313,14 @@ eq('a storefront platform fingerprint is enough', M({ platform: true }), true);
 // Real signals read off live pages on 2026-08-29.
 eq('LIVE wikipedia "Credit card" article is NOT a merchant page',
    M({ ldTypes: ['Article', 'Organization', 'ImageObject'], ogType: 'website',
-       buyText: true, cartLink: false, price: true }), false);
+       buttonLabels: ['Add to cart'], cartLink: false, price: true }), false);
 eq('LIVE allbirds.com shows via its Shopify fingerprint',
    M({ ldTypes: ['CollectionPage', 'ItemList', 'FAQPage'], ogType: 'website',
-       platform: true, buyText: true, cartLink: false, price: true }), true);
+       platform: true, buttonLabels: ['Add to cart'], cartLink: false, price: true }), true);
 eq('an editorial page WITH a real cart link still counts',
-   M({ ldTypes: ['NewsArticle'], buyText: true, cartLink: true, price: true }), true);
+   M({ ldTypes: ['NewsArticle'], buttonLabels: ['Add to cart'], cartLink: true, price: true }), true);
 eq('a hotel page with book-now and a price but no cart link counts',
-   M({ ldTypes: [], buyText: true, price: true }), true);
+   M({ ldTypes: [], buttonLabels: ['Add to cart'], price: true }), true);
 eq('empty signals object is safe', M(), false);
 
 // --- category inference for merchants not in the table --------------------
@@ -345,7 +345,7 @@ eq('no signals infers nothing', IC(), null);
 // silently dropped Blue Cash Everyday's 3% US online retail.
 {
   const ALLBIRDS = { ldTypes: ['CollectionPage', 'ItemList', 'FAQPage'], ogType: 'website',
-                     platform: true, cartLink: true, buyText: true, price: true };
+                     platform: true, cartLink: true, buttonLabels: ['Add to cart'], price: true };
   const r = run('allbirds.com', WALLET, { signals: ALLBIRDS });
   eq('LIVE allbirds is inferred as online retail', r.category, 'online_retail');
   eq('...and flagged as a guess, not a verified merchant', r.categorySource, 'inferred');
@@ -379,6 +379,28 @@ eq('no signals infers nothing', IC(), null);
 ].forEach(([label, want]) =>
   eq(`commit label ${JSON.stringify(label)}`, isCommitLabel(label), want));
 
+// --- buy controls, not page text ------------------------------------------
+// This project's own README quotes "add to cart" and "Pay $52.10" as examples.
+// A page-text scan flagged the GitHub page rendering it as a storefront, so the
+// signal is now the presence of an actual control.
+[['Add to cart', true], ['Add to Bag', true], ['Add to basket', true],
+ ['Buy now', true], ['Buy it now', true], ['Book now', true],
+ ['Check availability', true], ['Reserve now', true],
+ ['Add to cart to see price', true],
+ ['Code', false], ['Star', false], ['Fork', false], ['Edit file', false],
+ ['Read about add to cart', false], ['Cart', false], ['Buy', false],
+ ['', false]
+].forEach(([l, want]) => eq(`buy label ${JSON.stringify(l)}`, isBuyLabel(l), want));
+
+// Live github.com/davidx7217/card-picker, 2026-08-30: the rendered README puts
+// commerce words and a price on the page, but nothing you can click to buy.
+eq('LIVE github repo page showing this README is not a storefront',
+   M({ ldTypes: [], ogType: 'object', platform: false, cartLink: false, price: true,
+       buttonLabels: ['Code', 'Star', 'Fork', 'Edit file', 'Add file'] }), false);
+eq('a real product page with the same words on a button is',
+   M({ ldTypes: [], cartLink: false, price: true,
+       buttonLabels: ['Add to cart', 'Wishlist'] }), true);
+
 // --- checkout detection ---------------------------------------------------
 const CO = s => isCheckoutPage(s);
 
@@ -411,7 +433,7 @@ eq('a /checkout URL alone is not', CO({ checkoutUrl: true }), false);
 eq('checkout copy alone is not', CO({ checkoutText: true }), false);
 eq('URL plus copy together is', CO({ checkoutUrl: true, checkoutText: true }), true);
 eq('a product page is not checkout',
-   CO({ buyText: true, cartLink: true, price: true }), false);
+   CO({ buttonLabels: ['Add to cart'], cartLink: true, price: true }), false);
 eq('empty signals are safe', CO(), false);
 // Live check on docs.stripe.com 2026-08-29: the mounted card element appears as
 // iframe[name*="StripeFrame"], while eight iframe[src*="js.stripe.com"] frames
@@ -423,7 +445,7 @@ eq('a page that only loads stripe.js is not checkout',
 // Note checkoutUrl was false there: the path is /checkouts/cn/... and the card
 // frames carried the detection on their own.
 const ALLBIRDS_CHECKOUT = { ldTypes: [], ogType: '', platform: true, cartLink: true,
-  buyText: false, price: false, paymentField: true, checkoutUrl: false, checkoutText: true };
+  buttonLabels: [], price: false, paymentField: true, checkoutUrl: false, checkoutText: true };
 eq('LIVE Shopify checkout is detected as checkout', CO(ALLBIRDS_CHECKOUT), true);
 eq('LIVE Shopify checkout also passes the merchant gate, so the dock exists to open',
    isMerchantPage(ALLBIRDS_CHECKOUT, false), true);

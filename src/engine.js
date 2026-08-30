@@ -37,6 +37,17 @@ const COMMIT_LABEL = new RegExp(
   '|^pay\\s*[$\u00a3\u20ac]\\s?[\\d,.]+' +
   '|^pay$');
 
+// A control that puts something IN a basket, as opposed to a page that merely
+// contains the words. Matched against button labels rather than page text: this
+// project's own README quotes "add to cart" and "buy now" as examples, and a
+// text scan happily flagged the GitHub page showing it as a storefront.
+const BUY_LABEL = /^(add to (cart|bag|basket|order|trolley)|buy( it)? now|book now|reserve now|check availability|add to my order)\b/;
+
+export function isBuyLabel(label) {
+  const l = String(label || '').trim().toLowerCase();
+  return l.length > 0 && l.length < 45 && BUY_LABEL.test(l);
+}
+
 export function isCommitLabel(label) {
   const l = String(label || '').trim().toLowerCase();
   return l.length > 0 && l.length < 45 && COMMIT_LABEL.test(l);
@@ -126,7 +137,8 @@ export function isMerchantPage(signals = {}, knownMerchant = false) {
   if (/^product/i.test(signals.ogType || '')) return true;
   if (signals.platform) return true;
 
-  const weak = [signals.buyText, signals.cartLink, signals.price].filter(Boolean).length;
+  const buyControl = (signals.buttonLabels || []).some(isBuyLabel);
+  const weak = [buyControl, signals.cartLink, signals.price].filter(Boolean).length;
   const editorial = (signals.ldTypes || []).some(t => EDITORIAL_TYPES.has(t));
 
   // Being a known merchant settles WHAT this site is, not whether THIS page is

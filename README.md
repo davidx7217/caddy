@@ -60,7 +60,7 @@ No icons are included, so Chrome shows a default puzzle piece. Pin it to the too
 ```bash
 node tools/test-engine.mjs
 ```
-170 assertions over the recommendation logic. Run this after any data or engine change.
+189 assertions over the recommendation logic. Run this after any data or engine change.
 
 ```bash
 node tools/test-lifecycle.mjs
@@ -135,12 +135,18 @@ script reads the DOM, the engine judges, so the rule is testable in node. Preced
 4. A domain in `merchants.json` still needs one weak signal. Being in the table
    settles WHAT a site is, not whether THIS page sells anything -- youtube.com is
    a merchant, but a video you are watching on it is not a purchase.
-5. Otherwise two of three weak signals: buy/book language, a cart link, a price.
+5. Otherwise two of three weak signals: a buy CONTROL, a cart link, a price.
 
 Step 4 exists because being in the table used to short-circuit detection
 entirely, so the dock sat on every YouTube video. Measured live: a YouTube watch
 page has zero commerce signals, while homedepot.com's homepage has one and
 netflix.com's signup page has one. One weak signal separates them cleanly.
+
+A buy signal means a control you can click, never words on the page. This
+README quotes "add to cart" and "Pay $52.10" as examples, and a page-text scan
+duly flagged the GitHub page rendering it as a storefront -- a documentation site
+has no Article markup, so the editorial veto could not save it. Matching button
+labels instead separates a page that *sells* from a page that *describes selling*.
 
 Step 3 exists because it was a real false positive: Wikipedia's "Credit card" article
 carries both dollar figures and the words "buy now". Signals captured from live pages

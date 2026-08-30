@@ -187,7 +187,6 @@
       cartLink: !!document.querySelector(
         'a[href*="/cart"], a[href*="/checkout"], a[href*="/basket"], a[href*="/bag"],' +
         'form[action*="/cart"], form[action*="/checkout"]'),
-      buyText: /add to (cart|bag|basket)|buy now|proceed to checkout|book now|reserve now|check availability|add to order/.test(text),
       price: /[$\u20ac\u00a3]\s?\d/.test(text),
 
       // Existence only. This never reads a field's value, and nothing here
