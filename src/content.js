@@ -241,10 +241,12 @@
     const unresolved = res.resolvedBy === 'unresolved' && res.tied.length > 1;
     const others = res.tied.filter(c => c.productId !== res.winner.productId);
 
+    const font = res.font || {};
     root.innerHTML = `
       <style>
+        ${font.faces || ''}
         :host { all: initial; }
-        * { box-sizing: border-box; margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; }
+        * { box-sizing: border-box; margin: 0; font-family: ${font.stack || '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif'}; }
 
         /* Only the dock is in flow, so host.bottom always means the dock's
            bottom edge no matter what the panel is doing. */

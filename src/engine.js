@@ -6,6 +6,38 @@
 
 const DEFAULT_TIE_BAND = 0.10;
 
+/**
+ * Fonts the extension can use, bundled as woff2 -- never fetched from a CDN,
+ * because the whole product claim is that it makes no network calls.
+ * `faces` is [family, weight, file]; a single entry means a variable font.
+ */
+export const FONTS = {
+  system:  { label: 'System default', stack: '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif', faces: [] },
+  inter:   { label: 'Inter',         stack: '"Inter", sans-serif',
+             faces: [['Inter', '400 700', 'inter-400-700.woff2']] },
+  plex:    { label: 'IBM Plex Sans', stack: '"IBM Plex Sans", sans-serif',
+             faces: [['IBM Plex Sans', '400', 'plex-400.woff2'],
+                     ['IBM Plex Sans', '600', 'plex-600.woff2'],
+                     ['IBM Plex Sans', '700', 'plex-700.woff2']] },
+  manrope: { label: 'Manrope',       stack: '"Manrope", sans-serif',
+             faces: [['Manrope', '400 700', 'manrope-400-700.woff2']] }
+};
+
+export const DEFAULT_FONT = 'inter';
+
+/** @font-face rules for one font. urlFor keeps chrome.* out of the engine. */
+export function fontFaceCss(key, urlFor) {
+  const f = FONTS[key] || FONTS.system;
+  return f.faces.map(([family, weight, file]) =>
+    `@font-face{font-family:"${family}";font-style:normal;font-weight:${weight};` +
+    `font-display:swap;src:url("${urlFor('src/fonts/' + file)}") format("woff2");}`
+  ).join('');
+}
+
+export function fontStack(key) {
+  return (FONTS[key] || FONTS.system).stack;
+}
+
 // Schema.org types that mean "you can buy something on this page".
 const COMMERCE_TYPES = new Set([
   'Product', 'Offer', 'AggregateOffer', 'IndividualProduct', 'ProductGroup',

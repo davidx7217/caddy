@@ -26,5 +26,15 @@
       ],
       "run_at": "document_idle"
     }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "src/fonts/*.woff2"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
   ]
 }

@@ -1,4 +1,4 @@
-import { pruneInstances, isPinned } from './engine.js';
+import { pruneInstances, isPinned, FONTS, DEFAULT_FONT, fontFaceCss, fontStack } from './engine.js';
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c =>
@@ -27,6 +27,19 @@ async function load() {
   valuations = s.valuations || {};
   prefs = s.prefs || {};
   prefs.categoryDefaults = prefs.categoryDefaults || {};
+  prefs.font = prefs.font || DEFAULT_FONT;
+  applyFont(prefs.font);
+}
+
+function applyFont(key) {
+  let tag = document.getElementById('font-faces');
+  if (!tag) {
+    tag = document.createElement('style');
+    tag.id = 'font-faces';
+    document.head.appendChild(tag);
+  }
+  tag.textContent = fontFaceCss(key, chrome.runtime.getURL);
+  document.documentElement.style.setProperty('--font', fontStack(key));
 }
 
 // Reloading the extension orphans an open options page exactly as it orphans a
@@ -163,6 +176,10 @@ function render() {
         ? `<div class="bar"><span></span><button data-clearalldefaults="1">Clear all</button></div>` : '')
     : `<p class="empty">Nothing saved. You'll be asked at the moment of purchase.</p>`;
 
+  $('#fonts').innerHTML = Object.entries(FONTS).map(([key, f]) => `
+    <button data-font="${key}" aria-pressed="${prefs.font === key}"
+            style="font-family:${f.stack}">${esc(f.label)}</button>`).join('');
+
   const live = new Set(instances.map(i => products[i.productId].currency));
   $('#vals').className = 'vals';
   $('#vals').innerHTML = Object.keys(baseVals)
@@ -190,6 +207,7 @@ document.addEventListener('click', e => {
   if (d.down) { swap(+d.down, +d.down + 1); }
   if (d.unpin) { const i = instances[+d.unpin]; delete i.pinned; delete i.priority; commit('instances'); }
   if (d.unpinall) { instances.forEach(i => { delete i.pinned; delete i.priority; }); commit('instances'); }
+  if (d.font) { prefs.font = d.font; applyFont(d.font); commit('prefs'); }
   if (d.cleardefault) { delete prefs.categoryDefaults[d.cleardefault]; commit('prefs'); }
   if (d.clearalldefaults) { prefs.categoryDefaults = {}; commit('prefs'); }
 });

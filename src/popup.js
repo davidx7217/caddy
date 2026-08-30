@@ -1,4 +1,23 @@
+import { DEFAULT_FONT, fontFaceCss, fontStack } from './engine.js';
+
 const $ = s => document.querySelector(s);
+
+// Every surface reads one setting, so the extension looks like one thing.
+(async () => {
+  const { prefs = {} } = await chrome.storage.local.get('prefs');
+  applyFont(prefs.font || DEFAULT_FONT);
+})();
+
+export function applyFont(key) {
+  let tag = document.getElementById('font-faces');
+  if (!tag) {
+    tag = document.createElement('style');
+    tag.id = 'font-faces';
+    document.head.appendChild(tag);
+  }
+  tag.textContent = fontFaceCss(key, chrome.runtime.getURL);
+  document.documentElement.style.setProperty('--font', fontStack(key));
+}
 const money = v => `${v.toFixed(2)}%`;
 const esc = s => String(s).replace(/[&<>"']/g, c =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));

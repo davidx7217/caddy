@@ -39,6 +39,10 @@ select, input[type=number] { background: var(--chip); border: 1px solid var(--li
        padding-top: 11px; }
 
 /* valuations */
+.fonts { display: flex; flex-wrap: wrap; gap: 8px; }
+.fonts button { padding: 9px 14px; font-size: 13px; }
+.fonts button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+
 .vals { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
 .vals div { display: flex; justify-content: space-between; align-items: center; gap: 8px;
             border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }

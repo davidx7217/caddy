@@ -86,6 +86,7 @@ src/
   popup.js/.html    full ranking for the current tab
   options.js/.html  card picker, per-card config, saved tie choices, valuations
   options.css       options page styling only; ui.css holds the shared tokens
+  fonts/            bundled woff2, latin subset only, never fetched remotely
 tools/
   test-engine.mjs   zero-dependency test runner for the engine
   test-lifecycle.mjs runs the real content script in a vm sandbox
@@ -265,6 +266,14 @@ cards' `verified` and `last_verified` fields, so it cannot drift again.
 Only `caution` is rendered -- one short line, the thing that changes a decision
 (the Robinhood subscription, the CSR travel credit). Maintainer reasoning stays in
 `note` and never reaches the UI.
+
+**One font setting, four surfaces.** `FONTS` in `engine.js` is the single source
+of truth; the options page and popup import it, and the overlay -- which cannot
+import -- is handed the resolved stack and `@font-face` rules in the recommendation
+payload. Fonts are bundled woff2 (latin subset, 192KB total) rather than loaded
+from Google, because "no network calls" has to stay literally true. The overlay
+reaches them through `web_accessible_resources`, which is a local
+`chrome-extension://` URL, not a request.
 
 **Every stored preference needs a visible off switch.** Saved tie choices, pinned
 order, and (previously) the snooze list were all write-only at some point, each
