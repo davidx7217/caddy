@@ -87,7 +87,8 @@ src/
   options.js/.html  card picker, per-card config, saved tie choices, valuations
   options.css       options page styling only; ui.css holds the shared tokens
   fonts/            bundled woff2, latin subset only, never fetched remotely
-                    (Geist, Plus Jakarta Sans, IBM Plex Sans, Manrope, Space Grotesk)
+                    (Plus Jakarta Sans, Space Grotesk, Atkinson Hyperlegible,
+                     Bricolage Grotesque, JetBrains Mono)
 tools/
   test-engine.mjs   zero-dependency test runner for the engine
   test-lifecycle.mjs runs the real content script in a vm sandbox
@@ -282,7 +283,7 @@ the setting looked broken. Declaring a face costs nothing until something uses i
 **One font setting, four surfaces.** `FONTS` in `engine.js` is the single source
 of truth; the options page and popup import it, and the overlay -- which cannot
 import -- is handed the resolved stack and `@font-face` rules in the recommendation
-payload. Fonts are bundled woff2 (latin subset, 228KB total) rather than loaded
+payload. Fonts are bundled woff2 (latin subset, 152KB total) rather than loaded
 from Google, because "no network calls" has to stay literally true. The overlay
 reaches them through `web_accessible_resources`, which is a local
 `chrome-extension://` URL, not a request.

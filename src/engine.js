@@ -13,22 +13,22 @@ const DEFAULT_TIE_BAND = 0.10;
  */
 const FALLBACK = ', -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif';
 
+// Deliberately five different CATEGORIES, not five neutral sans-serifs.
 export const FONTS = {
-  geist:   { label: 'Geist',             stack: '"Geist"' + FALLBACK,
-             faces: [['Geist', '400 700', 'geist-400-700.woff2']] },
-  jakarta: { label: 'Plus Jakarta Sans', stack: '"Plus Jakarta Sans"' + FALLBACK,
-             faces: [['Plus Jakarta Sans', '400 700', 'jakarta-400-700.woff2']] },
-  plex:    { label: 'IBM Plex Sans',     stack: '"IBM Plex Sans"' + FALLBACK,
-             faces: [['IBM Plex Sans', '400', 'plex-400.woff2'],
-                     ['IBM Plex Sans', '600', 'plex-600.woff2'],
-                     ['IBM Plex Sans', '700', 'plex-700.woff2']] },
-  manrope: { label: 'Manrope',           stack: '"Manrope"' + FALLBACK,
-             faces: [['Manrope', '400 700', 'manrope-400-700.woff2']] },
-  grotesk: { label: 'Space Grotesk',     stack: '"Space Grotesk"' + FALLBACK,
-             faces: [['Space Grotesk', '400 700', 'grotesk-400-700.woff2']] }
+  jakarta:   { label: 'Plus Jakarta Sans', stack: '"Plus Jakarta Sans"' + FALLBACK,
+               faces: [['Plus Jakarta Sans', '400 700', 'jakarta-400-700.woff2']] },
+  grotesk:   { label: 'Space Grotesk',     stack: '"Space Grotesk"' + FALLBACK,
+               faces: [['Space Grotesk', '400 700', 'grotesk-400-700.woff2']] },
+  atkinson:  { label: 'Atkinson Hyperlegible', stack: '"Atkinson Hyperlegible"' + FALLBACK,
+               faces: [['Atkinson Hyperlegible', '400', 'atkinson-400.woff2'],
+                       ['Atkinson Hyperlegible', '700', 'atkinson-700.woff2']] },
+  bricolage: { label: 'Bricolage Grotesque', stack: '"Bricolage Grotesque"' + FALLBACK,
+               faces: [['Bricolage Grotesque', '400 700', 'bricolage-400-700.woff2']] },
+  jetbrains: { label: 'JetBrains Mono',    stack: '"JetBrains Mono", ui-monospace, monospace',
+               faces: [['JetBrains Mono', '400 700', 'jetbrains-400-700.woff2']] }
 };
 
-export const DEFAULT_FONT = 'geist';
+export const DEFAULT_FONT = 'jakarta';
 
 /** @font-face rules for one font. urlFor keeps chrome.* out of the engine. */
 export function fontFaceCss(key, urlFor) {
