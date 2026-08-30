@@ -70,8 +70,9 @@ export function isCheckoutPage(signals = {}) {
   // checkout" and "continue to payment", which mean you are NOT there yet.
   if ((signals.buttonLabels || []).some(isCommitLabel)) return true;
 
-  // A payment-method chooser, or a card already on file ("Visa ending in
-  // 4242"). This is what a checkout looks like anywhere you have an account.
+  // A payment-method chooser. Every conclusive signal here must come from a
+  // control, never from page text -- text that TALKS about paying is not a
+  // payment page, and this project's own docs are the proof.
   if (signals.paymentChoice) return true;
 
   // autocomplete="billing *" is the HTML standard for a billing form. It is

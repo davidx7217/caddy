@@ -408,6 +408,14 @@ eq('a card-number field alone is conclusive', CO({ paymentField: true }), true);
 eq('a commit button alone is conclusive (saved-card checkouts have no field)',
    CO({ buttonLabels: ['Edit', 'Place your order'] }), true);
 eq('a payment-method chooser is conclusive', CO({ paymentChoice: true }), true);
+// The actual culprit behind the dock appearing on this project's own GitHub
+// page: paymentChoice used to have a text form matching "Visa ending in 4242",
+// which the README documents verbatim -- and paymentChoice is conclusive alone.
+eq('LIVE github repo page is not a checkout either',
+   CO({ paymentField: false, paymentChoice: false, billingForm: false,
+        checkoutUrl: false, checkoutText: true, buttonLabels: ['Code', 'Star', 'Fork'] }), false);
+eq('prose about a saved card proves nothing',
+   CO({ paymentChoice: false, checkoutUrl: false, checkoutText: true }), false);
 eq('a billing autocomplete form is conclusive', CO({ billingForm: true }), true);
 // Live payments.wikimedia.org card step, 2026-08-29. No card field on this
 // step at all and no recognisable commit label ("Donate"), so the earlier

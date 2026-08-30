@@ -60,7 +60,7 @@ No icons are included, so Chrome shows a default puzzle piece. Pin it to the too
 ```bash
 node tools/test-engine.mjs
 ```
-189 assertions over the recommendation logic. Run this after any data or engine change.
+191 assertions over the recommendation logic. Run this after any data or engine change.
 
 ```bash
 node tools/test-lifecycle.mjs
@@ -142,6 +142,12 @@ entirely, so the dock sat on every YouTube video. Measured live: a YouTube watch
 page has zero commerce signals, while homedepot.com's homepage has one and
 netflix.com's signup page has one. One weak signal separates them cleanly.
 
+**No conclusive signal may come from page text.** A control means you can act;
+text only means the page is talking. Text may corroborate a weak signal -- a
+price is one third of the merchant test -- but nothing text-only should ever
+decide on its own. Both false positives on this project's own GitHub page came
+from breaking that rule, once in the buy scan and once in the saved-card scan.
+
 A buy signal means a control you can click, never words on the page. This
 README quotes "add to cart" and "Pay $52.10" as examples, and a page-text scan
 duly flagged the GitHub page rendering it as a storefront -- a documentation site
@@ -160,7 +166,7 @@ script re-checks once after 2.5s and then stops.
 
 - a mounted card field or payment-processor frame;
 - a commit button -- "Place your order", "Pay $52.10" -- via `isCommitLabel()`;
-- a payment-method chooser or a card on file ("Visa ending in 4242");
+- a payment-method chooser (a control, not the words);
 - two or more `autocomplete="billing *"` inputs, the HTML standard for a billing form;
 - a checkout-shaped URL corroborated by checkout-shaped copy.
 

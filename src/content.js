@@ -213,11 +213,13 @@
       checkoutUrl: /\/(checkouts?|payments?|place-?order|order-review|review-order|billing|purchase|onepage|onestepcheckout|gp\/buy|buy\/spc)(\/|$|\?|#)/i
         .test(location.pathname + location.search),
       buttonLabels: buttonLabels(),
-      // A card on file ("Visa ending in 4242") or a payment-method chooser.
-      paymentChoice: /(ending in|ending with)\s*[\u2022*x\d]{4}|[\u2022*]{4}\s?[\u2022*]{0,4}\s?\d{4}/i.test(text)
-        || !!document.querySelector(
-             'input[type="radio"][name*="payment" i], input[name*="paymentmethod" i],' +
-             'input[type="radio"][name*="submethod" i]'),
+      // A payment-method chooser. Deliberately a control, never page text: the
+      // text form of this ("Visa ending in 4242") is conclusive on its own, and
+      // this project's README documents it with that exact example -- which
+      // made the GitHub page rendering it look like a checkout.
+      paymentChoice: !!document.querySelector(
+        'input[type="radio"][name*="payment" i], input[name*="paymentmethod" i],' +
+        'input[type="radio"][name*="submethod" i], select[name*="paymentmethod" i]'),
       // The HTML standard for a billing form. Language-independent, and
       // present where card entry happens on a later step.
       billingForm: document.querySelectorAll('input[autocomplete*="billing" i]').length >= 2,
