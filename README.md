@@ -6,6 +6,15 @@ No account. No bank linking. No network calls. No build step. No dependencies.
 
 ---
 
+## Licence
+
+MIT -- see [LICENSE](LICENSE). Rates and merchant categories are facts read from
+public issuer terms, and facts are not copyrightable, so the licence covers the
+code and the arrangement of the data rather than the underlying numbers. It is
+here to make contribution and reuse unambiguous, not to fence anything off.
+
+Not financial advice. Verify any rate against your issuer before relying on it.
+
 ## Data status
 
 All 7 card records were verified against issuer sources on **2026-08-29**. Each carries
