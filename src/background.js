@@ -1,5 +1,5 @@
 import { rank, isMerchantPage, isCheckoutPage,
-         DEFAULT_FONT, fontFaceCss, fontStack } from './engine.js';
+         DEFAULT_FONT, overlayFont } from './engine.js';
 
 // One-time cleanup of the removed snooze feature's leftover key. Safe to
 // delete this line once it has run on every machine that had the old build.
@@ -46,8 +46,7 @@ export async function recommend(hostname, signals) {
   });
   result.overlayPos = st.overlayPos;
   // The overlay cannot import, so hand it the font already resolved.
-  const fontKey = st.prefs.font || DEFAULT_FONT;
-  result.font = { stack: fontStack(fontKey), faces: fontFaceCss(fontKey, chrome.runtime.getURL) };
+  result.font = overlayFont(st.prefs.font || DEFAULT_FONT, chrome.runtime.getURL);
   // The overlay only appears on pages you can buy something on. The result is
   // still cached and still reachable from the toolbar popup either way.
   result.show = signals === undefined || isMerchantPage(signals, !!result.merchant);

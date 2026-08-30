@@ -1,4 +1,4 @@
-import { pruneInstances, isPinned, FONTS, DEFAULT_FONT, fontFaceCss, fontStack } from './engine.js';
+import { pruneInstances, isPinned, FONTS, DEFAULT_FONT, allFontFaceCss, fontStack } from './engine.js';
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c =>
@@ -38,7 +38,7 @@ function applyFont(key) {
     tag.id = 'font-faces';
     document.head.appendChild(tag);
   }
-  tag.textContent = fontFaceCss(key, chrome.runtime.getURL);
+  tag.textContent = allFontFaceCss(chrome.runtime.getURL);
   document.documentElement.style.setProperty('--font', fontStack(key));
 }
 

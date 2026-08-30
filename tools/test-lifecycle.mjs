@@ -42,6 +42,10 @@ function harness(initialRespond) {
     },
     document: {
       body: { textContent: '' },
+      // The overlay puts its @font-face into the host page's head, because
+      // Chrome ignores @font-face inside a shadow root.
+      head: { appendChild() {} },
+      getElementById: () => null,
       documentElement: { appendChild(){}, style:{ getPropertyValue:()=>'',getPropertyPriority:()=>'',setProperty(){},removeProperty(){} } },
       createElement: () => fakeEl(),
       querySelector: () => null,

@@ -268,6 +268,17 @@ Only `caution` is rendered -- one short line, the thing that changes a decision
 (the Robinhood subscription, the CSR travel credit). Maintainer reasoning stays in
 `note` and never reaches the UI.
 
+**Chrome ignores @font-face inside a shadow root.** Measured, not assumed: the
+identical rule applies at document scope and does nothing in a shadow tree. So
+the overlay's faces are injected into the HOST PAGE's head, under a namespaced
+family (`CardPicker-geist`) so they cannot override a face the site declares
+under the same name, and removed again when the dock unmounts.
+
+**Declare every face the page might use, not just the active one.** The options
+picker renders each button in its own typeface; declaring only the selected font
+made the other four silently fall back, so all five buttons looked identical and
+the setting looked broken. Declaring a face costs nothing until something uses it.
+
 **One font setting, four surfaces.** `FONTS` in `engine.js` is the single source
 of truth; the options page and popup import it, and the overlay -- which cannot
 import -- is handed the resolved stack and `@font-face` rules in the recommendation

@@ -242,9 +242,21 @@
     const others = res.tied.filter(c => c.productId !== res.winner.productId);
 
     const font = res.font || {};
+    // The faces must live in the host page's document; Chrome ignores
+    // @font-face inside a shadow root. The family name is namespaced so it
+    // cannot collide with a face the site declares itself.
+    if (font.faces) {
+      let ff = document.getElementById('__card-picker-fonts');
+      if (!ff) {
+        ff = document.createElement('style');
+        ff.id = '__card-picker-fonts';
+        document.head.appendChild(ff);
+      }
+      ff.textContent = font.faces;
+    }
+
     root.innerHTML = `
       <style>
-        ${font.faces || ''}
         :host { all: initial; }
         * { box-sizing: border-box; margin: 0; font-family: ${font.stack || '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif'}; }
 
@@ -435,6 +447,8 @@
         // Drop the listener too -- mount/unmount cycles on a SPA would
         // otherwise leak one per route.
         window.removeEventListener('resize', onResize);
+        const ff = document.getElementById('__card-picker-fonts');
+        if (ff) ff.remove();
         host.remove();
       }
     };

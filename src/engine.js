@@ -39,6 +39,37 @@ export function fontFaceCss(key, urlFor) {
   ).join('');
 }
 
+/**
+ * @font-face rules for EVERY font.
+ *
+ * The options page needs all of them: its picker renders each button in its own
+ * typeface, and a face that is never declared silently falls back -- which made
+ * all five buttons look identical and the whole setting look broken. Declaring a
+ * face costs nothing until something uses it.
+ */
+export function allFontFaceCss(urlFor) {
+  return Object.keys(FONTS).map(k => fontFaceCss(k, urlFor)).join('');
+}
+
+/**
+ * Font for the injected overlay.
+ *
+ * Chrome ignores @font-face declared inside a shadow root -- measured, not
+ * assumed: the same rule applies at document scope and does nothing in a shadow
+ * tree. So the overlay's faces have to go into the HOST PAGE's head, which
+ * means the family name must be namespaced or it could override a face the site
+ * itself declares under the same name.
+ */
+export function overlayFont(key, urlFor) {
+  const f = FONTS[key] || FONTS[DEFAULT_FONT];
+  const family = 'CardPicker-' + (FONTS[key] ? key : DEFAULT_FONT);
+  const faces = f.faces.map(([, weight, file]) =>
+    `@font-face{font-family:"${family}";font-style:normal;font-weight:${weight};` +
+    `font-display:swap;src:url("${urlFor('src/fonts/' + file)}") format("woff2");}`
+  ).join('');
+  return { family, faces, stack: `"${family}"${FALLBACK}` };
+}
+
 export function fontStack(key) {
   return (FONTS[key] || FONTS[DEFAULT_FONT]).stack;
 }
