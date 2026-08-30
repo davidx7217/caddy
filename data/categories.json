@@ -1,0 +1,19 @@
+{
+  "dining":           { "label": "Dining & restaurants" },
+  "groceries":        { "label": "Groceries / supermarkets" },
+  "wholesale_club":   { "label": "Wholesale clubs" },
+  "department_store": { "label": "Department stores & superstores" },
+  "online_retail":    { "label": "Online retail" },
+  "gas":              { "label": "Gas stations" },
+  "ev_charging":      { "label": "EV charging" },
+  "travel_air":       { "label": "Airfare" },
+  "travel_hotel":     { "label": "Hotels" },
+  "travel_ground":    { "label": "Transit & rideshare" },
+  "travel_portal":    { "label": "Issuer travel portal" },
+  "drugstore":        { "label": "Drugstores & pharmacies" },
+  "streaming":        { "label": "Streaming services" },
+  "entertainment":    { "label": "Entertainment & events" },
+  "home_improvement": { "label": "Home improvement" },
+  "utilities":        { "label": "Utilities" },
+  "other":            { "label": "Everything else" }
+}

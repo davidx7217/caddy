@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "Card Picker",
+  "version": "0.1.0",
+  "description": "Shows the best credit card to use on the site you're on. No account, no bank linking, no network calls.",
+  "minimum_chrome_version": "102",
+  "permissions": [
+    "storage"
+  ],
+  "background": {
+    "service_worker": "src/background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "src/popup.html",
+    "default_title": "Card Picker"
+  },
+  "options_page": "src/options.html",
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "src/content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}

@@ -1,0 +1,298 @@
+{
+  "_comment": "UNVERIFIED SEED DATA. domain -> normalized category. issuer_overrides encode the known disputes (e.g. Amex does not treat Instacart as a US supermarket). confidence: high|medium|low.",
+  "doordash.com": {
+    "category": "dining",
+    "confidence": "high"
+  },
+  "ubereats.com": {
+    "category": "dining",
+    "confidence": "high"
+  },
+  "grubhub.com": {
+    "category": "dining",
+    "confidence": "high"
+  },
+  "opentable.com": {
+    "category": "dining",
+    "confidence": "medium"
+  },
+  "starbucks.com": {
+    "category": "dining",
+    "confidence": "medium",
+    "note": "reloads may code as dining, gift cards may not"
+  },
+  "chipotle.com": {
+    "category": "dining",
+    "confidence": "high"
+  },
+  "seamless.com": {
+    "category": "dining",
+    "confidence": "high"
+  },
+  "instacart.com": {
+    "category": "groceries",
+    "confidence": "medium",
+    "issuer_overrides": {
+      "amex": "other",
+      "chase": "other"
+    },
+    "note": "third-party delivery; most issuers do NOT code this as a supermarket"
+  },
+  "wholefoodsmarket.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "kroger.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "safeway.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "freshdirect.com": {
+    "category": "groceries",
+    "confidence": "medium"
+  },
+  "publix.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "traderjoes.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "target.com": {
+    "category": "department_store",
+    "confidence": "high",
+    "note": "classic trap: Target does NOT code as groceries on any major issuer"
+  },
+  "walmart.com": {
+    "category": "department_store",
+    "confidence": "high",
+    "note": "same trap as Target"
+  },
+  "macys.com": {
+    "category": "department_store",
+    "confidence": "high"
+  },
+  "kohls.com": {
+    "category": "department_store",
+    "confidence": "high"
+  },
+  "costco.com": {
+    "category": "wholesale_club",
+    "confidence": "high"
+  },
+  "samsclub.com": {
+    "category": "wholesale_club",
+    "confidence": "high"
+  },
+  "bjs.com": {
+    "category": "wholesale_club",
+    "confidence": "high"
+  },
+  "amazon.com": {
+    "category": "online_retail",
+    "confidence": "high",
+    "note": "most cards have no online-retail bonus; expect the 2% catch-all to win"
+  },
+  "ebay.com": {
+    "category": "online_retail",
+    "confidence": "high"
+  },
+  "etsy.com": {
+    "category": "online_retail",
+    "confidence": "high"
+  },
+  "bestbuy.com": {
+    "category": "online_retail",
+    "confidence": "medium"
+  },
+  "wayfair.com": {
+    "category": "online_retail",
+    "confidence": "medium"
+  },
+  "newegg.com": {
+    "category": "online_retail",
+    "confidence": "medium"
+  },
+  "delta.com": {
+    "category": "travel_air",
+    "confidence": "high"
+  },
+  "united.com": {
+    "category": "travel_air",
+    "confidence": "high"
+  },
+  "aa.com": {
+    "category": "travel_air",
+    "confidence": "high"
+  },
+  "southwest.com": {
+    "category": "travel_air",
+    "confidence": "high"
+  },
+  "jetblue.com": {
+    "category": "travel_air",
+    "confidence": "high"
+  },
+  "aircanada.com": {
+    "category": "travel_air",
+    "confidence": "high"
+  },
+  "marriott.com": {
+    "category": "travel_hotel",
+    "confidence": "high"
+  },
+  "hilton.com": {
+    "category": "travel_hotel",
+    "confidence": "high"
+  },
+  "hyatt.com": {
+    "category": "travel_hotel",
+    "confidence": "high"
+  },
+  "booking.com": {
+    "category": "travel_hotel",
+    "confidence": "high",
+    "note": "Online travel agency, not a direct booking. Issuers that pay elevated rates only on 'booked direct' travel pay base rate here."
+  },
+  "expedia.com": {
+    "category": "travel_hotel",
+    "confidence": "medium",
+    "note": "Online travel agency, not a direct booking. Issuers that pay elevated rates only on 'booked direct' travel pay base rate here."
+  },
+  "airbnb.com": {
+    "category": "travel_hotel",
+    "confidence": "medium",
+    "note": "Online travel agency, not a direct booking. Issuers that pay elevated rates only on 'booked direct' travel pay base rate here."
+  },
+  "uber.com": {
+    "category": "travel_ground",
+    "confidence": "high"
+  },
+  "lyft.com": {
+    "category": "travel_ground",
+    "confidence": "high"
+  },
+  "cvs.com": {
+    "category": "drugstore",
+    "confidence": "high"
+  },
+  "walgreens.com": {
+    "category": "drugstore",
+    "confidence": "high"
+  },
+  "riteaid.com": {
+    "category": "drugstore",
+    "confidence": "high"
+  },
+  "netflix.com": {
+    "category": "streaming",
+    "confidence": "high"
+  },
+  "spotify.com": {
+    "category": "streaming",
+    "confidence": "high"
+  },
+  "hulu.com": {
+    "category": "streaming",
+    "confidence": "high"
+  },
+  "disneyplus.com": {
+    "category": "streaming",
+    "confidence": "high"
+  },
+  "max.com": {
+    "category": "streaming",
+    "confidence": "high"
+  },
+  "youtube.com": {
+    "category": "streaming",
+    "confidence": "low",
+    "note": "only YouTube Premium/TV charges code as streaming"
+  },
+  "ticketmaster.com": {
+    "category": "entertainment",
+    "confidence": "high"
+  },
+  "stubhub.com": {
+    "category": "entertainment",
+    "confidence": "high"
+  },
+  "fandango.com": {
+    "category": "entertainment",
+    "confidence": "high"
+  },
+  "homedepot.com": {
+    "category": "home_improvement",
+    "confidence": "high"
+  },
+  "lowes.com": {
+    "category": "home_improvement",
+    "confidence": "high"
+  },
+  "shell.us": {
+    "category": "gas",
+    "confidence": "medium"
+  },
+  "exxon.com": {
+    "category": "gas",
+    "confidence": "medium"
+  },
+  "ihg.com": {
+    "category": "travel_hotel",
+    "confidence": "high"
+  },
+  "choicehotels.com": {
+    "category": "travel_hotel",
+    "confidence": "high"
+  },
+  "wyndhamhotels.com": {
+    "category": "travel_hotel",
+    "confidence": "high"
+  },
+  "bestwestern.com": {
+    "category": "travel_hotel",
+    "confidence": "high"
+  },
+  "radissonhotels.com": {
+    "category": "travel_hotel",
+    "confidence": "high"
+  },
+  "accor.com": {
+    "category": "travel_hotel",
+    "confidence": "high"
+  },
+  "hotels.com": {
+    "category": "travel_hotel",
+    "confidence": "high",
+    "note": "Online travel agency, not a direct booking. Issuers paying elevated rates only on 'booked direct' travel pay base rate here."
+  },
+  "priceline.com": {
+    "category": "travel_hotel",
+    "confidence": "high",
+    "note": "Online travel agency, not a direct booking. Issuers paying elevated rates only on 'booked direct' travel pay base rate here."
+  },
+  "vrbo.com": {
+    "category": "travel_hotel",
+    "confidence": "high",
+    "note": "Online travel agency, not a direct booking. Issuers paying elevated rates only on 'booked direct' travel pay base rate here."
+  },
+  "kayak.com": {
+    "category": "travel_hotel",
+    "confidence": "high",
+    "note": "Online travel agency, not a direct booking. Issuers paying elevated rates only on 'booked direct' travel pay base rate here."
+  },
+  "orbitz.com": {
+    "category": "travel_hotel",
+    "confidence": "high",
+    "note": "Online travel agency, not a direct booking. Issuers paying elevated rates only on 'booked direct' travel pay base rate here."
+  },
+  "travelocity.com": {
+    "category": "travel_hotel",
+    "confidence": "high",
+    "note": "Online travel agency, not a direct booking. Issuers paying elevated rates only on 'booked direct' travel pay base rate here."
+  }
+}

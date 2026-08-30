@@ -1,0 +1,447 @@
+{
+  "_comment": "All 7 records verified against issuer sources on 2026-08-29. Each carries its source_url. Chase Freedom Flex rotating categories MUST be re-verified 2026-10-01.",
+  "chase-sapphire-reserve": {
+    "id": "chase-sapphire-reserve",
+    "issuer": "chase",
+    "network": "visa",
+    "currency": "ur",
+    "name": "Chase Sapphire Reserve",
+    "annual_fee": 795,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-08-29",
+    "source_url": "https://creditcards.chase.com/rewards-credit-cards/sapphire/reserve",
+    "rules": [
+      {
+        "category": "dining",
+        "rate": 3.0
+      },
+      {
+        "category": "travel_air",
+        "rate": 4.0,
+        "caveat": "Flights booked direct. The first $300/yr of travel is absorbed by the annual travel credit and earns no points.",
+        "merchant_denylist": [
+          "expedia.com",
+          "booking.com",
+          "airbnb.com",
+          "hotels.com",
+          "priceline.com",
+          "vrbo.com",
+          "kayak.com",
+          "orbitz.com",
+          "travelocity.com"
+        ]
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 4.0,
+        "caveat": "Hotels booked direct. The first $300/yr of travel is absorbed by the annual travel credit and earns no points.",
+        "merchant_denylist": [
+          "expedia.com",
+          "booking.com",
+          "airbnb.com",
+          "hotels.com",
+          "priceline.com",
+          "vrbo.com",
+          "kayak.com",
+          "orbitz.com",
+          "travelocity.com"
+        ]
+      },
+      {
+        "category": "travel_ground",
+        "rate": 5.0,
+        "merchant_allowlist": [
+          "lyft.com"
+        ],
+        "window": {
+          "end": "2027-09-30"
+        },
+        "caveat": "Requires the card set as default payment in the Lyft app. Offer ends 2027-09-30."
+      },
+      {
+        "category": "travel_portal",
+        "rate": 8.0,
+        "portal_only": true,
+        "portal": "Chase Travel",
+        "caveat": "Purchases covered by the $300 travel credit earn no points."
+      }
+    ],
+    "caution": "First $300/yr of travel is absorbed by the annual credit and earns nothing."
+  },
+  "chase-freedom-unlimited": {
+    "id": "chase-freedom-unlimited",
+    "issuer": "chase",
+    "network": "visa",
+    "currency": "ur",
+    "name": "Chase Freedom Unlimited",
+    "annual_fee": 0,
+    "base_rate": 1.5,
+    "verified": true,
+    "last_verified": "2026-08-29",
+    "source_url": "https://creditcards.chase.com/cash-back-credit-cards/freedom/unlimited",
+    "rules": [
+      {
+        "category": "dining",
+        "rate": 3.0
+      },
+      {
+        "category": "drugstore",
+        "rate": 3.0
+      },
+      {
+        "category": "travel_portal",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Chase Travel"
+      }
+    ]
+  },
+  "chase-freedom-flex": {
+    "id": "chase-freedom-flex",
+    "issuer": "chase",
+    "network": "mastercard",
+    "currency": "ur",
+    "name": "Chase Freedom Flex",
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-08-29",
+    "source_url": "https://creditcards.chase.com/cash-back-credit-cards/freedom/flex",
+    "note": "Rotating categories confirmed on chase.com for Q3 2026 (Jul-Sep).",
+    "rules": [
+      {
+        "category": "dining",
+        "rate": 3.0
+      },
+      {
+        "category": "drugstore",
+        "rate": 3.0
+      },
+      {
+        "category": "gas",
+        "rate": 5.0,
+        "window": {
+          "start": "2026-07-01",
+          "end": "2026-09-30"
+        },
+        "requires_activation": true,
+        "cap": {
+          "amount": 1500,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "Q3 2026 rotating category. The $1,500 cap is combined across all 5% categories."
+      },
+      {
+        "category": "travel_ground",
+        "rate": 5.0,
+        "window": {
+          "start": "2026-07-01",
+          "end": "2026-09-30"
+        },
+        "requires_activation": true,
+        "cap": {
+          "amount": 1500,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "Q3 2026 rotating category (public transit). The $1,500 cap is combined across all 5% categories."
+      },
+      {
+        "category": "ev_charging",
+        "rate": 5.0,
+        "window": {
+          "start": "2026-07-01",
+          "end": "2026-09-30"
+        },
+        "requires_activation": true,
+        "cap": {
+          "amount": 1500,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "Q3 2026 rotating category. The $1,500 cap is combined across all 5% categories."
+      },
+      {
+        "category": "entertainment",
+        "rate": 5.0,
+        "merchant_allowlist": [
+          "ticketmaster.com",
+          "stubhub.com"
+        ],
+        "window": {
+          "start": "2026-07-01",
+          "end": "2026-09-30"
+        },
+        "requires_activation": true,
+        "cap": {
+          "amount": 1500,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "Q3 2026 category is SELECT LIVE entertainment only, not cinema. Cap is combined across all 5% categories."
+      },
+      {
+        "category": "travel_portal",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Chase Travel"
+      }
+    ],
+    "caution": "Rotating 5% categories are Q3 2026. Re-verify 1 Oct 2026."
+  },
+  "robinhood-gold": {
+    "id": "robinhood-gold",
+    "issuer": "robinhood",
+    "network": "visa",
+    "currency": "cash",
+    "name": "Robinhood Gold Card",
+    "annual_fee": 0,
+    "base_rate": 3.0,
+    "verified": true,
+    "last_verified": "2026-08-29",
+    "source_url": "https://robinhood.com/creditcard/",
+    "note": "Third-party sites report 5% on travel booked through a Robinhood travel portal; robinhood.com did NOT confirm it, so it is deliberately not modelled. Verify before adding.",
+    "rules": [],
+    "caution": "3% requires an active Robinhood Gold subscription (~$50/yr)."
+  },
+  "amex-blue-cash-everyday": {
+    "id": "amex-blue-cash-everyday",
+    "issuer": "amex",
+    "network": "amex",
+    "currency": "cash",
+    "name": "Amex Blue Cash Everyday",
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-08-29",
+    "source_url": "https://www.americanexpress.com/en-us/credit-cards/credit-intel/amex-blue-cash-everyday-benefits/",
+    "rules": [
+      {
+        "category": "groceries",
+        "rate": 3.0,
+        "cap": {
+          "amount": 6000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "merchant_denylist": [
+          "target.com",
+          "walmart.com",
+          "costco.com",
+          "samsclub.com",
+          "bjs.com",
+          "instacart.com"
+        ],
+        "caveat": "US merchants only. The $6,000 cap is per category per year, then 1%."
+      },
+      {
+        "category": "online_retail",
+        "rate": 3.0,
+        "cap": {
+          "amount": 6000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "US merchants only. The $6,000 cap is per category per year, then 1%."
+      },
+      {
+        "category": "gas",
+        "rate": 3.0,
+        "cap": {
+          "amount": 6000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "US merchants only. The $6,000 cap is per category per year, then 1%."
+      }
+    ]
+  },
+  "chase-aeroplan": {
+    "id": "chase-aeroplan",
+    "issuer": "chase",
+    "network": "visa",
+    "currency": "aeroplan",
+    "name": "Chase Aeroplan",
+    "annual_fee": 95,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-08-29",
+    "source_url": "https://creditcards.chase.com/travel-credit-cards/aircanada/aeroplan",
+    "rules": [
+      {
+        "category": "dining",
+        "rate": 3.0
+      },
+      {
+        "category": "groceries",
+        "rate": 3.0
+      },
+      {
+        "category": "travel_air",
+        "rate": 3.0,
+        "merchant_allowlist": [
+          "aircanada.com"
+        ]
+      }
+    ],
+    "note": "Also earns 500 bonus points per $2,000 spent in a calendar month, up to 1,500/month. Not modelled: needs spend tracking."
+  },
+  "bofa-customized-cash": {
+    "id": "bofa-customized-cash",
+    "issuer": "bofa",
+    "network": "visa",
+    "currency": "cash",
+    "name": "BofA Customized Cash Rewards",
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-08-29",
+    "source_url": "https://www.bankofamerica.com/credit-cards/products/cash-back-credit-card/cash-back-category-choices/",
+    "note": "Not in David's wallet. Kept in the catalog because it is the only card exercising selection groups and tier multipliers.",
+    "user_config": {
+      "selection": {
+        "label": "Your chosen 3% category",
+        "options": {
+          "gas_ev": "Gas & EV Charging Stations",
+          "online": "Online Shopping",
+          "dining": "Dining",
+          "travel": "Travel",
+          "drug": "Drug Stores",
+          "home": "Home Improvement & Furnishings"
+        }
+      },
+      "tier_multiplier": {
+        "label": "Preferred Rewards tier",
+        "options": {
+          "None": 1.0,
+          "Gold": 1.25,
+          "Platinum": 1.5,
+          "Platinum Honors": 1.75
+        }
+      }
+    },
+    "rules": [
+      {
+        "category": "gas",
+        "rate": 3.0,
+        "selection_group": "gas_ev",
+        "cap": {
+          "amount": 2500,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "The $2,500 quarterly cap is COMBINED across the 3% choice category and the 2% grocery/wholesale spend."
+      },
+      {
+        "category": "ev_charging",
+        "rate": 3.0,
+        "selection_group": "gas_ev",
+        "cap": {
+          "amount": 2500,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "The $2,500 quarterly cap is COMBINED across the 3% choice category and the 2% grocery/wholesale spend."
+      },
+      {
+        "category": "online_retail",
+        "rate": 3.0,
+        "selection_group": "online",
+        "cap": {
+          "amount": 2500,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "The $2,500 quarterly cap is COMBINED across the 3% choice category and the 2% grocery/wholesale spend."
+      },
+      {
+        "category": "dining",
+        "rate": 3.0,
+        "selection_group": "dining",
+        "cap": {
+          "amount": 2500,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "The $2,500 quarterly cap is COMBINED across the 3% choice category and the 2% grocery/wholesale spend."
+      },
+      {
+        "category": "travel_air",
+        "rate": 3.0,
+        "selection_group": "travel",
+        "cap": {
+          "amount": 2500,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "The $2,500 quarterly cap is COMBINED across the 3% choice category and the 2% grocery/wholesale spend."
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 3.0,
+        "selection_group": "travel",
+        "cap": {
+          "amount": 2500,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "The $2,500 quarterly cap is COMBINED across the 3% choice category and the 2% grocery/wholesale spend."
+      },
+      {
+        "category": "travel_ground",
+        "rate": 3.0,
+        "selection_group": "travel",
+        "cap": {
+          "amount": 2500,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "The $2,500 quarterly cap is COMBINED across the 3% choice category and the 2% grocery/wholesale spend."
+      },
+      {
+        "category": "drugstore",
+        "rate": 3.0,
+        "selection_group": "drug",
+        "cap": {
+          "amount": 2500,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "The $2,500 quarterly cap is COMBINED across the 3% choice category and the 2% grocery/wholesale spend."
+      },
+      {
+        "category": "home_improvement",
+        "rate": 3.0,
+        "selection_group": "home",
+        "cap": {
+          "amount": 2500,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "The $2,500 quarterly cap is COMBINED across the 3% choice category and the 2% grocery/wholesale spend."
+      },
+      {
+        "category": "groceries",
+        "rate": 2.0,
+        "cap": {
+          "amount": 2500,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "The $2,500 quarterly cap is COMBINED across the 3% choice category and the 2% grocery/wholesale spend."
+      },
+      {
+        "category": "wholesale_club",
+        "rate": 2.0,
+        "cap": {
+          "amount": 2500,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "The $2,500 quarterly cap is COMBINED across the 3% choice category and the 2% grocery/wholesale spend."
+      }
+    ]
+  }
+}

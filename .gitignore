@@ -1,0 +1,7 @@
+node_modules/
+.DS_Store
+*.log
+
+# Never commit a real wallet. Which cards a person holds is their business, and
+# the extension ships without one -- tools/fixtures/wallet.json is test data.
+data/wallet.json

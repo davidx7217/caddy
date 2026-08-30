@@ -1,0 +1,11 @@
+{
+  "_comment": "Test wallet only. A realistic Chase-heavy US wallet chosen because it produces the hard cases: a 4-way exact tie on dining, a 2-way tie on online retail, and three different point currencies. Not shipped with the extension.",
+  "instances": [
+    { "productId": "robinhood-gold", "config": {} },
+    { "productId": "chase-sapphire-reserve", "config": {} },
+    { "productId": "chase-freedom-unlimited", "config": {} },
+    { "productId": "chase-freedom-flex", "config": {} },
+    { "productId": "amex-blue-cash-everyday", "config": {} },
+    { "productId": "chase-aeroplan", "config": {} }
+  ]
+}

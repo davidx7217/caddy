@@ -1,0 +1,39 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Card Picker</title>
+<link rel="stylesheet" href="ui.css">
+<link rel="stylesheet" href="options.css">
+<div class="page">
+  <header class="head">
+    <div>
+      <h1>Card Picker</h1>
+      <p class="sub">Which of your cards to use, on every site.</p>
+    </div>
+    <div id="freshness"></div>
+  </header>
+
+  <section>
+    <h2>My cards</h2>
+    <p class="sub hint">Top to bottom is your preference order. Reordering two cards
+      <strong>pins</strong> them, so future ties are settled silently instead of asking.</p>
+    <div id="owned"></div>
+  </section>
+
+  <section>
+    <h2>Add a card</h2>
+    <div id="available"></div>
+  </section>
+
+  <section>
+    <h2>When two cards tie</h2>
+    <p class="sub hint">Saved by "Always use" at checkout. Clear one to be asked again.</p>
+    <div id="defaults"></div>
+  </section>
+
+  <section>
+    <h2>What your points are worth</h2>
+    <p class="sub hint">Cents per point. These are opinions, and they decide which card wins.</p>
+    <div id="vals"></div>
+  </section>
+</div>
+<script type="module" src="options.js"></script>

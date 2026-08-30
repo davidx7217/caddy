@@ -1,0 +1,10 @@
+{
+  "_comment": "Cents per point. cash = 1.0 by definition. These are DEFAULTS and are opinions, not facts. User-overridable in Options.",
+  "cash":  1.0,
+  "ur":    1.5,
+  "mr":    1.6,
+  "c1":    1.4,
+  "citi":  1.4,
+  "disco": 1.0,
+  "aeroplan": 1.5
+}
