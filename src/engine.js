@@ -13,30 +13,34 @@ const DEFAULT_TIE_BAND = 0.10;
  */
 const FALLBACK = ', -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif';
 
-// Every one of these has a point of view. No neutral workhorses, no monospace.
+// `adjust` is a size-adjust percentage that normalises apparent size, because
+// the same px value looks smaller in a font with a shorter x-height. Measured
+// at 100px against Sora (x-height 53.4) rather than eyeballed:
+//   Sora 53.4 | Archivo 52.6 | Schibsted 52.7 | Familjen 50 | Gabarito 48.8 | Outfit 47.5
 export const FONTS = {
-  grotesk:   { label: 'Space Grotesk',    stack: '"Space Grotesk"' + FALLBACK,
-               faces: [['Space Grotesk', '400 700', 'grotesk-400-700.woff2']] },
-  syne:      { label: 'Syne',             stack: '"Syne"' + FALLBACK,
-               faces: [['Syne', '400 700', 'syne-400-700.woff2']] },
-  fraunces:  { label: 'Fraunces',         stack: '"Fraunces", Georgia, serif',
-               faces: [['Fraunces', '400 700', 'fraunces-400-700.woff2']] },
-  unbounded: { label: 'Unbounded',        stack: '"Unbounded"' + FALLBACK,
-               faces: [['Unbounded', '400 700', 'unbounded-400-700.woff2']] },
-  sora:      { label: 'Sora',             stack: '"Sora"' + FALLBACK,
+  sora:      { label: 'Sora',              stack: '"Sora"' + FALLBACK,             adjust: 100,
                faces: [['Sora', '400 700', 'sora-400-700.woff2']] },
-  familjen:  { label: 'Familjen Grotesk', stack: '"Familjen Grotesk"' + FALLBACK,
-               faces: [['Familjen Grotesk', '400 700', 'familjen-400-700.woff2']] }
+  familjen:  { label: 'Familjen Grotesk',  stack: '"Familjen Grotesk"' + FALLBACK, adjust: 106.8,
+               faces: [['Familjen Grotesk', '400 700', 'familjen-400-700.woff2']] },
+  schibsted: { label: 'Schibsted Grotesk', stack: '"Schibsted Grotesk"' + FALLBACK, adjust: 101.3,
+               faces: [['Schibsted Grotesk', '400 700', 'schibsted-400-700.woff2']] },
+  archivo:   { label: 'Archivo',           stack: '"Archivo"' + FALLBACK,          adjust: 101.5,
+               faces: [['Archivo', '400 700', 'archivo-400-700.woff2']] },
+  gabarito:  { label: 'Gabarito',          stack: '"Gabarito"' + FALLBACK,         adjust: 109.4,
+               faces: [['Gabarito', '400 700', 'gabarito-400-700.woff2']] },
+  outfit:    { label: 'Outfit',            stack: '"Outfit"' + FALLBACK,           adjust: 112.4,
+               faces: [['Outfit', '400 700', 'outfit-400-700.woff2']] }
 };
 
-export const DEFAULT_FONT = 'grotesk';
+export const DEFAULT_FONT = 'sora';
 
 /** @font-face rules for one font. urlFor keeps chrome.* out of the engine. */
 export function fontFaceCss(key, urlFor) {
   const f = FONTS[key] || FONTS[DEFAULT_FONT];
+  const adj = f.adjust && f.adjust !== 100 ? `size-adjust:${f.adjust}%;` : '';
   return f.faces.map(([family, weight, file]) =>
     `@font-face{font-family:"${family}";font-style:normal;font-weight:${weight};` +
-    `font-display:swap;src:url("${urlFor('src/fonts/' + file)}") format("woff2");}`
+    `font-display:swap;${adj}src:url("${urlFor('src/fonts/' + file)}") format("woff2");}`
   ).join('');
 }
 
@@ -64,9 +68,10 @@ export function allFontFaceCss(urlFor) {
 export function overlayFont(key, urlFor) {
   const f = FONTS[key] || FONTS[DEFAULT_FONT];
   const family = 'CardPicker-' + (FONTS[key] ? key : DEFAULT_FONT);
+  const adj = f.adjust && f.adjust !== 100 ? `size-adjust:${f.adjust}%;` : '';
   const faces = f.faces.map(([, weight, file]) =>
     `@font-face{font-family:"${family}";font-style:normal;font-weight:${weight};` +
-    `font-display:swap;src:url("${urlFor('src/fonts/' + file)}") format("woff2");}`
+    `font-display:swap;${adj}src:url("${urlFor('src/fonts/' + file)}") format("woff2");}`
   ).join('');
   return { family, faces, stack: `"${family}"${FALLBACK}` };
 }

@@ -87,8 +87,8 @@ src/
   options.js/.html  card picker, per-card config, saved tie choices, valuations
   options.css       options page styling only; ui.css holds the shared tokens
   fonts/            bundled woff2, latin subset only, never fetched remotely
-                    (Space Grotesk, Syne, Fraunces, Unbounded, Sora,
-                     Familjen Grotesk)
+                    (Sora, Familjen Grotesk, Schibsted Grotesk, Archivo,
+                     Gabarito, Outfit)
 tools/
   test-engine.mjs   zero-dependency test runner for the engine
   test-lifecycle.mjs runs the real content script in a vm sandbox
@@ -275,6 +275,18 @@ the overlay's faces are injected into the HOST PAGE's head, under a namespaced
 family (`CardPicker-geist`) so they cannot override a face the site declares
 under the same name, and removed again when the dock unmounts.
 
+**Normalise apparent size with `size-adjust`, measured.** The same px value looks
+smaller in a font with a shorter x-height, which is a real complaint and not a
+matter of taste. Each entry carries an `adjust` percentage derived from its
+measured x-height at 100px against Sora (53.4): Outfit was 47.5 and needs 112.4%.
+After adjustment all six measure identically, so switching font changes the shape
+of the type and not its size.
+
+**Switching font must not redraw the page.** The picker sits at the top so nothing
+above it can move it, and a font change updates the pressed state in place instead
+of re-rendering -- a full redraw reflows every row and yanks the control out from
+under the pointer. Verified: the picker's offset is identical before and after.
+
 **Declare every face the page might use, not just the active one.** The options
 picker renders each button in its own typeface; declaring only the selected font
 made the other four silently fall back, so all five buttons looked identical and
@@ -283,7 +295,7 @@ the setting looked broken. Declaring a face costs nothing until something uses i
 **One font setting, four surfaces.** `FONTS` in `engine.js` is the single source
 of truth; the options page and popup import it, and the overlay -- which cannot
 import -- is handed the resolved stack and `@font-face` rules in the recommendation
-payload. Fonts are bundled woff2 (latin subset, 228KB total) rather than loaded
+payload. Fonts are bundled woff2 (latin subset, 200KB total) rather than loaded
 from Google, because "no network calls" has to stay literally true. The overlay
 reaches them through `web_accessible_resources`, which is a local
 `chrome-extension://` URL, not a request.

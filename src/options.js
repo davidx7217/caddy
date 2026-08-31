@@ -74,7 +74,7 @@ let saving = false;
  * And never render from memory after a write -- doing that is how a cleared tie
  * choice looked cleared, was never saved, and came back on the next page.
  */
-async function commit(key) {
+async function commit(key, { redraw = true } = {}) {
   if (dead) return;
   if (!contextAlive()) { die(); return; }
   saving = true;
@@ -87,7 +87,7 @@ async function commit(key) {
     saving = false;
   }
   await load();
-  render();
+  if (redraw) render();
 }
 
 // ---------- render ----------
@@ -207,7 +207,15 @@ document.addEventListener('click', e => {
   if (d.down) { swap(+d.down, +d.down + 1); }
   if (d.unpin) { const i = instances[+d.unpin]; delete i.pinned; delete i.priority; commit('instances'); }
   if (d.unpinall) { instances.forEach(i => { delete i.pinned; delete i.priority; }); commit('instances'); }
-  if (d.font) { prefs.font = d.font; applyFont(d.font); commit('prefs'); }
+  if (d.font) {
+    prefs.font = d.font;
+    applyFont(d.font);
+    // Update the pressed state in place rather than re-rendering. Rebuilding
+    // the page on a font change reflows every row and moves the picker.
+    document.querySelectorAll('#fonts button').forEach(b =>
+      b.setAttribute('aria-pressed', String(b.dataset.font === d.font)));
+    commit('prefs', { redraw: false });
+  }
   if (d.cleardefault) { delete prefs.categoryDefaults[d.cleardefault]; commit('prefs'); }
   if (d.clearalldefaults) { prefs.categoryDefaults = {}; commit('prefs'); }
 });
