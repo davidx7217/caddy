@@ -13,22 +13,23 @@ const DEFAULT_TIE_BAND = 0.10;
  */
 const FALLBACK = ', -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif';
 
-// Deliberately five different CATEGORIES, not five neutral sans-serifs.
+// Every one of these has a point of view. No neutral workhorses, no monospace.
 export const FONTS = {
-  jakarta:   { label: 'Plus Jakarta Sans', stack: '"Plus Jakarta Sans"' + FALLBACK,
-               faces: [['Plus Jakarta Sans', '400 700', 'jakarta-400-700.woff2']] },
-  grotesk:   { label: 'Space Grotesk',     stack: '"Space Grotesk"' + FALLBACK,
+  grotesk:   { label: 'Space Grotesk',    stack: '"Space Grotesk"' + FALLBACK,
                faces: [['Space Grotesk', '400 700', 'grotesk-400-700.woff2']] },
-  atkinson:  { label: 'Atkinson Hyperlegible', stack: '"Atkinson Hyperlegible"' + FALLBACK,
-               faces: [['Atkinson Hyperlegible', '400', 'atkinson-400.woff2'],
-                       ['Atkinson Hyperlegible', '700', 'atkinson-700.woff2']] },
-  bricolage: { label: 'Bricolage Grotesque', stack: '"Bricolage Grotesque"' + FALLBACK,
-               faces: [['Bricolage Grotesque', '400 700', 'bricolage-400-700.woff2']] },
-  jetbrains: { label: 'JetBrains Mono',    stack: '"JetBrains Mono", ui-monospace, monospace',
-               faces: [['JetBrains Mono', '400 700', 'jetbrains-400-700.woff2']] }
+  syne:      { label: 'Syne',             stack: '"Syne"' + FALLBACK,
+               faces: [['Syne', '400 700', 'syne-400-700.woff2']] },
+  fraunces:  { label: 'Fraunces',         stack: '"Fraunces", Georgia, serif',
+               faces: [['Fraunces', '400 700', 'fraunces-400-700.woff2']] },
+  unbounded: { label: 'Unbounded',        stack: '"Unbounded"' + FALLBACK,
+               faces: [['Unbounded', '400 700', 'unbounded-400-700.woff2']] },
+  sora:      { label: 'Sora',             stack: '"Sora"' + FALLBACK,
+               faces: [['Sora', '400 700', 'sora-400-700.woff2']] },
+  familjen:  { label: 'Familjen Grotesk', stack: '"Familjen Grotesk"' + FALLBACK,
+               faces: [['Familjen Grotesk', '400 700', 'familjen-400-700.woff2']] }
 };
 
-export const DEFAULT_FONT = 'jakarta';
+export const DEFAULT_FONT = 'grotesk';
 
 /** @font-face rules for one font. urlFor keeps chrome.* out of the engine. */
 export function fontFaceCss(key, urlFor) {
