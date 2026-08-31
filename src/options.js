@@ -1,4 +1,4 @@
-import { pruneInstances, isPinned, FONTS, DEFAULT_FONT, allFontFaceCss, fontStack } from './engine.js';
+import { pruneInstances, isPinned, DEFAULT_FONT, fontFaceCss, fontStack } from './engine.js';
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c =>
@@ -27,8 +27,7 @@ async function load() {
   valuations = s.valuations || {};
   prefs = s.prefs || {};
   prefs.categoryDefaults = prefs.categoryDefaults || {};
-  prefs.font = prefs.font || DEFAULT_FONT;
-  applyFont(prefs.font);
+  applyFont(DEFAULT_FONT);
 }
 
 function applyFont(key) {
@@ -38,7 +37,7 @@ function applyFont(key) {
     tag.id = 'font-faces';
     document.head.appendChild(tag);
   }
-  tag.textContent = allFontFaceCss(chrome.runtime.getURL);
+  tag.textContent = fontFaceCss(key, chrome.runtime.getURL);
   document.documentElement.style.setProperty('--font', fontStack(key));
 }
 
@@ -176,10 +175,6 @@ function render() {
         ? `<div class="bar"><span></span><button data-clearalldefaults="1">Clear all</button></div>` : '')
     : `<p class="empty">Nothing saved. You'll be asked at the moment of purchase.</p>`;
 
-  $('#fonts').innerHTML = Object.entries(FONTS).map(([key, f]) => `
-    <button data-font="${key}" aria-pressed="${prefs.font === key}"
-            style="font-family:${f.stack}">${esc(f.label)}</button>`).join('');
-
   const live = new Set(instances.map(i => products[i.productId].currency));
   $('#vals').className = 'vals';
   $('#vals').innerHTML = Object.keys(baseVals)
@@ -207,15 +202,6 @@ document.addEventListener('click', e => {
   if (d.down) { swap(+d.down, +d.down + 1); }
   if (d.unpin) { const i = instances[+d.unpin]; delete i.pinned; delete i.priority; commit('instances'); }
   if (d.unpinall) { instances.forEach(i => { delete i.pinned; delete i.priority; }); commit('instances'); }
-  if (d.font) {
-    prefs.font = d.font;
-    applyFont(d.font);
-    // Update the pressed state in place rather than re-rendering. Rebuilding
-    // the page on a font change reflows every row and moves the picker.
-    document.querySelectorAll('#fonts button').forEach(b =>
-      b.setAttribute('aria-pressed', String(b.dataset.font === d.font)));
-    commit('prefs', { redraw: false });
-  }
   if (d.cleardefault) { delete prefs.categoryDefaults[d.cleardefault]; commit('prefs'); }
   if (d.clearalldefaults) { prefs.categoryDefaults = {}; commit('prefs'); }
 });

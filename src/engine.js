@@ -13,26 +13,15 @@ const DEFAULT_TIE_BAND = 0.10;
  */
 const FALLBACK = ', -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif';
 
-// `adjust` is a size-adjust percentage that normalises apparent size, because
-// the same px value looks smaller in a font with a shorter x-height. Measured
-// at 100px against Sora (x-height 53.4) rather than eyeballed:
-//   Sora 53.4 | Archivo 52.6 | Schibsted 52.7 | Familjen 50 | Gabarito 48.8 | Outfit 47.5
+// One font, applied to every surface. `adjust` is a size-adjust percentage:
+// Outfit's x-height measures 47.5 at 100px against a 53.4 reference, so the
+// same px value would otherwise render visibly smaller than it should.
 export const FONTS = {
-  sora:      { label: 'Sora',              stack: '"Sora"' + FALLBACK,             adjust: 100,
-               faces: [['Sora', '400 700', 'sora-400-700.woff2']] },
-  familjen:  { label: 'Familjen Grotesk',  stack: '"Familjen Grotesk"' + FALLBACK, adjust: 106.8,
-               faces: [['Familjen Grotesk', '400 700', 'familjen-400-700.woff2']] },
-  schibsted: { label: 'Schibsted Grotesk', stack: '"Schibsted Grotesk"' + FALLBACK, adjust: 101.3,
-               faces: [['Schibsted Grotesk', '400 700', 'schibsted-400-700.woff2']] },
-  archivo:   { label: 'Archivo',           stack: '"Archivo"' + FALLBACK,          adjust: 101.5,
-               faces: [['Archivo', '400 700', 'archivo-400-700.woff2']] },
-  gabarito:  { label: 'Gabarito',          stack: '"Gabarito"' + FALLBACK,         adjust: 109.4,
-               faces: [['Gabarito', '400 700', 'gabarito-400-700.woff2']] },
-  outfit:    { label: 'Outfit',            stack: '"Outfit"' + FALLBACK,           adjust: 112.4,
-               faces: [['Outfit', '400 700', 'outfit-400-700.woff2']] }
+  outfit: { label: 'Outfit', stack: '"Outfit"' + FALLBACK, adjust: 112.4,
+            faces: [['Outfit', '400 700', 'outfit-400-700.woff2']] }
 };
 
-export const DEFAULT_FONT = 'sora';
+export const DEFAULT_FONT = 'outfit';
 
 /** @font-face rules for one font. urlFor keeps chrome.* out of the engine. */
 export function fontFaceCss(key, urlFor) {
@@ -42,18 +31,6 @@ export function fontFaceCss(key, urlFor) {
     `@font-face{font-family:"${family}";font-style:normal;font-weight:${weight};` +
     `font-display:swap;${adj}src:url("${urlFor('src/fonts/' + file)}") format("woff2");}`
   ).join('');
-}
-
-/**
- * @font-face rules for EVERY font.
- *
- * The options page needs all of them: its picker renders each button in its own
- * typeface, and a face that is never declared silently falls back -- which made
- * all five buttons look identical and the whole setting look broken. Declaring a
- * face costs nothing until something uses it.
- */
-export function allFontFaceCss(urlFor) {
-  return Object.keys(FONTS).map(k => fontFaceCss(k, urlFor)).join('');
 }
 
 /**

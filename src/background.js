@@ -46,7 +46,7 @@ export async function recommend(hostname, signals) {
   });
   result.overlayPos = st.overlayPos;
   // The overlay cannot import, so hand it the font already resolved.
-  result.font = overlayFont(st.prefs.font || DEFAULT_FONT, chrome.runtime.getURL);
+  result.font = overlayFont(DEFAULT_FONT, chrome.runtime.getURL);
   // The overlay only appears on pages you can buy something on. The result is
   // still cached and still reachable from the toolbar popup either way.
   result.show = signals === undefined || isMerchantPage(signals, !!result.merchant);

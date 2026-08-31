@@ -2,13 +2,10 @@ import { DEFAULT_FONT, fontFaceCss, fontStack } from './engine.js';
 
 const $ = s => document.querySelector(s);
 
-// Every surface reads one setting, so the extension looks like one thing.
-(async () => {
-  const { prefs = {} } = await chrome.storage.local.get('prefs');
-  applyFont(prefs.font || DEFAULT_FONT);
-})();
+// One font across every surface, so the extension looks like one thing.
+applyFont(DEFAULT_FONT);
 
-export function applyFont(key) {
+function applyFont(key) {
   let tag = document.getElementById('font-faces');
   if (!tag) {
     tag = document.createElement('style');
