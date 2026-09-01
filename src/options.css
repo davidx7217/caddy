@@ -39,6 +39,11 @@ select, input[type=number] { background: var(--chip); border: 1px solid var(--li
        padding-top: 11px; }
 
 /* valuations */
+#blocked { width: 100%; background: var(--chip); border: 1px solid var(--line);
+           border-radius: 8px; padding: 10px 12px; font: 12px/1.6 var(--font);
+           color: var(--fg); resize: vertical; }
+#blocked:focus { outline: none; border-color: var(--muted); }
+
 .vals { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
 .vals div { display: flex; justify-content: space-between; align-items: center; gap: 8px;
             border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }

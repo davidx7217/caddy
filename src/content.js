@@ -53,25 +53,40 @@
   let lastUrl = location.href;
   let poll = null;
 
-  // Client-rendered storefronts often have nothing to detect at document_idle,
-  // so a single miss is never conclusive -- always re-check once it settles.
-  evaluate(() => setTimeout(() => evaluate(null), SETTLE_MS));
+  // Sites the user has excluded are checked FIRST, before any DOM is read.
+  // On a blocked host this script does nothing at all: no signals collected,
+  // no message sent, no timers started.
+  chrome.storage.local.get('blocked', ({ blocked = [] }) => {
+    if (chrome.runtime.lastError) return;
+    const host = String(location.hostname || '').toLowerCase().replace(/^www\./, '');
+    const off = blocked.some(b => {
+      const d = String(b || '').toLowerCase().trim().replace(/^www\./, '');
+      return d && (host === d || host.endsWith('.' + d));
+    });
+    if (!off) start();
+  });
 
-  // Checkout is nearly always a client-side route change, which fires no page
-  // load at all. A once-a-second href comparison is cheap and catches it.
-  poll = setInterval(() => {
-    // Stop within a second of the extension being reloaded, rather than
-    // lingering until the page happens to change route. Without this an
-    // orphan on a static page polls forever.
-    if (!contextAlive()) return shutdown();
-    if (location.href === lastUrl) return;
-    lastUrl = location.href;
-    autoOpened = false;
-    // Same rule on a new route: only unmount once a settled re-check agrees
-    // the page really is not a merchant, so a mid-render miss cannot flicker
-    // the dock away.
-    evaluate(() => setTimeout(() => evaluate(unmount), SETTLE_MS));
-  }, 1000);
+  function start() {
+    // Client-rendered storefronts often have nothing to detect at document_idle,
+    // so a single miss is never conclusive -- always re-check once it settles.
+    evaluate(() => setTimeout(() => evaluate(null), SETTLE_MS));
+
+    // Checkout is nearly always a client-side route change, which fires no page
+    // load at all. A once-a-second href comparison is cheap and catches it.
+    poll = setInterval(() => {
+      // Stop within a second of the extension being reloaded, rather than
+      // lingering until the page happens to change route. Without this an
+      // orphan on a static page polls forever.
+      if (!contextAlive()) return shutdown();
+      if (location.href === lastUrl) return;
+      lastUrl = location.href;
+      autoOpened = false;
+      // Same rule on a new route: only unmount once a settled re-check agrees
+      // the page really is not a merchant, so a mid-render miss cannot flicker
+      // the dock away.
+      evaluate(() => setTimeout(() => evaluate(unmount), SETTLE_MS));
+    }, 1000);
+  }
 
   // Reloading the extension orphans every content script already injected in
   // an open tab: the script keeps running but its chrome.runtime is dead, and

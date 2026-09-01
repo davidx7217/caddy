@@ -12,7 +12,7 @@ import vm from 'node:vm';
 
 const SRC = readFileSync(new URL('../src/content.js', import.meta.url), 'utf8');
 
-function harness(initialRespond) {
+function harness(initialRespond, blocked = []) {
   const log = [];
   let timers = [], now = 0, intervals = [];
   let href = 'https://shop.example/';
@@ -53,7 +53,10 @@ function harness(initialRespond) {
       forms: [],
     },
     get location(){ const u=new URL(href); return { href, hostname:u.hostname, pathname:u.pathname, search:u.search }; },
-    chrome: { runtime: {
+    chrome: {
+      // The content script reads the user's blocklist before touching the DOM.
+      storage: { local: { get: (_k, cb) => cb({ blocked }) } },
+      runtime: {
       id: 'test-extension-id',   // absent once the extension is reloaded
       lastError: null,
       sendMessage(msg, cb) {
@@ -197,6 +200,23 @@ const check = (name, got, want) => {
   try { h.nav('https://shop.example/x'); h.tick(4000); } catch (e) { threw = e.message; }
   check('a throwing sendMessage is caught, not propagated', threw, null);
   check('...and shuts the orphan down', h.pollingLive(), false);
+}
+
+// 7. A blocked host must be inert: no messages, no dock, no timers.
+{
+  const h = harness(() => ({ show: true }), ['shop.example']);
+  h.tick(6000);
+  h.nav('https://shop.example/checkout');
+  h.tick(6000);
+  check('blocked host sends nothing', h.log.filter(x => x === 'evaluate').length, 0);
+  check('...and never mounts', h.log.includes('MOUNT'), false);
+  check('...and starts no polling', h.pollingLive(), false);
+}
+{
+  const h = harness(() => ({ show: true }), ['other.example']);
+  h.tick(200);
+  check('an unrelated blocklist entry does not stop a normal site',
+        h.log.includes('MOUNT'), true);
 }
 
 console.log(`\n${pass} passed, ${fail} failed`);

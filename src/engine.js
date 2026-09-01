@@ -179,10 +179,28 @@ export function inferCategory(signals = {}) {
  * that, one strong structural signal is enough, and weak signals need to
  * corroborate each other (a news article quoting a price should not count).
  */
+/**
+ * Does anything on this page suggest the SITE sells things?
+ *
+ * Payment machinery alone is not evidence of shopping. Payroll, banking,
+ * insurance, tax and HR portals all have payment-method choosers and billing
+ * address forms -- the dock turned up on an employer's payroll site on exactly
+ * that basis. Money being involved is not the same as a purchase being made.
+ */
+function hasCommerceContext(signals, knownMerchant) {
+  return knownMerchant
+    || (signals.ldTypes || []).some(t => COMMERCE_TYPES.has(t))
+    || /^product/i.test(signals.ogType || '')
+    || !!signals.platform
+    || !!signals.cartLink
+    || (signals.buttonLabels || []).some(isBuyLabel);
+}
+
 export function isMerchantPage(signals = {}, knownMerchant = false) {
-  // If you are being asked to pay, it is a place of purchase, full stop. This
-  // also guarantees the dock exists on a bare payment page so that the
-  // checkout auto-open has something to open.
+  // Nothing here sells anything, so nothing else can qualify it.
+  if (!hasCommerceContext(signals, knownMerchant)) return false;
+
+  // Being asked to pay ON a site that sells things is a purchase.
   if (isCheckoutPage(signals)) return true;
 
   if ((signals.ldTypes || []).some(t => COMMERCE_TYPES.has(t))) return true;
@@ -249,6 +267,18 @@ const PORTAL_BOOKABLE = new Set(['travel_air', 'travel_hotel']);
  */
 export function isPinned(inst) {
   return inst.pinned === true || inst.priority != null;
+}
+
+/**
+ * Sites the user has told the extension to stay off entirely. Matched by
+ * suffix so one entry covers subdomains. Checked before ANY DOM is read.
+ */
+export function isBlockedHost(hostname, blocked = []) {
+  const host = normalizeHost(hostname);
+  return blocked.some(b => {
+    const d = normalizeHost(b);
+    return d && (host === d || host.endsWith('.' + d));
+  });
 }
 
 /** Drops instances whose product no longer exists in cards.json. */

@@ -1,6 +1,6 @@
 // Zero-dependency test runner:  node tools/test-engine.mjs
 import { readFileSync } from 'node:fs';
-import { rank, resolveMerchant, pruneInstances, isMerchantPage, isCheckoutPage, isCommitLabel, isBuyLabel, inferCategory, isPinned } from '../src/engine.js';
+import { rank, resolveMerchant, pruneInstances, isMerchantPage, isCheckoutPage, isCommitLabel, isBuyLabel, inferCategory, isPinned, isBlockedHost } from '../src/engine.js';
 
 const load = n => JSON.parse(readFileSync(new URL(`../data/${n}.json`, import.meta.url), 'utf8'));
 const products = load('cards'), merchants = load('merchants'), valuations = load('valuations');
@@ -291,9 +291,6 @@ eq('LIVE netflix signup page still shows',
    M({ ldTypes: [], cartLink: false, buttonLabels: [], price: true }, true), true);
 // A bare payment page has no product markup at all, but must still mount the
 // dock or the checkout auto-open would have nothing to open.
-eq('a bare payment page counts as a merchant page',
-   M({ billingForm: true }, false), true);
-eq('...and so does one with a card field', M({ paymentField: true }, false), true);
 eq('a bare page does not', M({}), false);
 eq('news article quoting one price does not', M({ price: true }), false);
 eq('a buy control alone does not', M({ buttonLabels: ['Add to cart'] }), false);
@@ -464,6 +461,32 @@ eq('a /payment marketing page with no checkout copy is not',
 // and there is nothing to auto-open.
 eq('a real checkout is also a merchant page',
    isMerchantPage({ cartLink: true, price: true, checkoutText: true }), true);
+
+// Payment machinery WITHOUT any sign the site sells things is not shopping.
+// The dock turned up on an employer's payroll portal on exactly this basis:
+// direct-deposit forms have payment-method choosers and billing addresses.
+eq('a billing form on a site that sells nothing is not a merchant page',
+   isMerchantPage({ billingForm: true }, false), false);
+eq('nor is a card field on its own',
+   isMerchantPage({ paymentField: true }, false), false);
+eq('payroll-shaped page: money everywhere, nothing for sale',
+   isMerchantPage({ ldTypes: [], platform: false, cartLink: false, price: true,
+                    paymentChoice: true, billingForm: true, checkoutText: true,
+                    buttonLabels: ['Save', 'Cancel', 'Add direct deposit'] }, false), false);
+// The same machinery ON a site that does sell is still a checkout.
+eq('...but the identical signals on a storefront are',
+   isMerchantPage({ platform: true, billingForm: true, paymentChoice: true }, false), true);
+eq('...as they are on a known merchant',
+   isMerchantPage({ billingForm: true, paymentChoice: true }, true), true);
+
+// --- user blocklist -------------------------------------------------------
+eq('exact host is blocked', isBlockedHost('paylocity.com', ['paylocity.com']), true);
+eq('subdomains are blocked too', isBlockedHost('access.paylocity.com', ['paylocity.com']), true);
+eq('www is normalised', isBlockedHost('www.paylocity.com', ['paylocity.com']), true);
+eq('an entry with www still matches', isBlockedHost('access.paylocity.com', ['www.paylocity.com']), true);
+eq('a lookalike suffix is not blocked', isBlockedHost('notpaylocity.com', ['paylocity.com']), false);
+eq('unrelated hosts pass', isBlockedHost('allbirds.com', ['paylocity.com']), false);
+eq('empty list blocks nothing', isBlockedHost('allbirds.com', []), false);
 
 {
   // The popup reports the band it actually used, so a changed tieBand cannot

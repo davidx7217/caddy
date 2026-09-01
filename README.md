@@ -60,12 +60,12 @@ No icons are included, so Chrome shows a default puzzle piece. Pin it to the too
 ```bash
 node tools/test-engine.mjs
 ```
-191 assertions over the recommendation logic. Run this after any data or engine change.
+201 assertions over the recommendation logic. Run this after any data or engine change.
 
 ```bash
 node tools/test-lifecycle.mjs
 ```
-18 assertions over the content script's mount/unmount/polling behaviour. It runs the
+25 assertions over the content script's mount/unmount/polling behaviour. It runs the
 real `src/content.js` in a vm sandbox with stubbed DOM and chrome globals and a fake
 clock, so the timing rules below are actually verified rather than reasoned about.
 
@@ -127,7 +127,9 @@ Blue Cash Everyday's 3% US online retail never entered the ranking.
 `engine.js` decides, and like `rank()` it is pure and signal-based -- the content
 script reads the DOM, the engine judges, so the rule is testable in node. Precedence:
 
-1. The page is a checkout -> always show, so the auto-open has a dock to open.
+0. The user has excluded this domain -> the script stops before reading anything.
+1. Nothing suggests the SITE sells things -> never show, whatever else is present.
+2. The page is a checkout -> show, so the auto-open has a dock to open.
 2. One strong structural signal -> show. Schema.org commerce types (`Product`,
    `Offer`, `OfferCatalog`, `Hotel`, ...), `og:type` starting `product`, or a
    storefront platform fingerprint (Shopify, WooCommerce, Magento, BigCommerce).
@@ -142,6 +144,18 @@ Step 4 exists because being in the table used to short-circuit detection
 entirely, so the dock sat on every YouTube video. Measured live: a YouTube watch
 page has zero commerce signals, while homedepot.com's homepage has one and
 netflix.com's signup page has one. One weak signal separates them cleanly.
+
+**Payment machinery is not evidence of shopping.** Payroll, banking, insurance,
+tax and HR portals all have payment-method choosers and billing-address forms.
+The dock appeared on an employer's payroll site on exactly that basis. A page now
+has to show some sign the SITE sells things -- a cart link, a storefront platform,
+commerce markup, a buy control, or a known merchant domain -- before any payment
+signal can qualify it. Money being involved is not the same as a purchase.
+
+**A blocklist users can actually reach.** `Never run on these sites` in Options.
+Checked in the content script BEFORE any DOM is read, so on a listed domain the
+extension collects nothing, sends nothing and starts no timers. Suffix matched,
+so one entry covers subdomains.
 
 **No conclusive signal may come from page text.** A control means you can act;
 text only means the page is talking. Text may corroborate a weak signal -- a

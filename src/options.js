@@ -17,14 +17,15 @@ const j = n => fetch(chrome.runtime.getURL(`data/${n}.json`)).then(r => r.json()
 const [products, baseVals] = await Promise.all([j('cards'), j('valuations')]);
 const productIds = Object.keys(products).filter(k => !k.startsWith('_'));
 
-let instances = [], valuations = {}, prefs = {}, dropped = 0;
+let instances = [], valuations = {}, prefs = {}, blocked = [], dropped = 0;
 
 async function load() {
-  const s = await chrome.storage.local.get(['instances', 'valuations', 'prefs']);
+  const s = await chrome.storage.local.get(['instances', 'valuations', 'prefs', 'blocked']);
   const raw = s.instances || [];
   instances = pruneInstances(raw, products);
   dropped = raw.length - instances.length;
   valuations = s.valuations || {};
+  blocked = s.blocked || [];
   prefs = s.prefs || {};
   prefs.categoryDefaults = prefs.categoryDefaults || {};
   applyFont(DEFAULT_FONT);
@@ -78,7 +79,7 @@ async function commit(key, { redraw = true } = {}) {
   if (!contextAlive()) { die(); return; }
   saving = true;
   try {
-    await chrome.storage.local.set({ [key]: { instances, valuations, prefs }[key] });
+    await chrome.storage.local.set({ [key]: { instances, valuations, prefs, blocked }[key] });
   } catch (e) {
     die();
     return;
@@ -175,6 +176,11 @@ function render() {
         ? `<div class="bar"><span></span><button data-clearalldefaults="1">Clear all</button></div>` : '')
     : `<p class="empty">Nothing saved. You'll be asked at the moment of purchase.</p>`;
 
+  // Only repaint the textarea when it is not being edited, or typing would
+  // fight the re-render.
+  const box = $('#blocked');
+  if (document.activeElement !== box) box.value = blocked.join('\n');
+
   const live = new Set(instances.map(i => products[i.productId].currency));
   $('#vals').className = 'vals';
   $('#vals').innerHTML = Object.keys(baseVals)
@@ -219,6 +225,10 @@ document.addEventListener('change', e => {
     inst.config = inst.config || {};
     inst.config.tier_multiplier = parseFloat(t.value);
     commit('instances');
+  }
+  if (t.id === 'blocked') {
+    blocked = t.value.split('\n').map(x => x.trim()).filter(Boolean);
+    commit('blocked', { redraw: false });
   }
   if (d.val) {
     const v = parseFloat(t.value);
