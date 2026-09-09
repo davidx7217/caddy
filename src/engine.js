@@ -41,10 +41,17 @@ export function fontFaceCss(key, urlFor) {
  * tree. So the overlay's faces have to go into the HOST PAGE's head, which
  * means the family name must be namespaced or it could override a face the site
  * itself declares under the same name.
+ *
+ * `nonce` makes that namespace random instead of branded. A fixed
+ * "CardPicker-outfit" in the page's stylesheets is a name any site can scan
+ * document.styleSheets for, which told a merchant it was talking to someone
+ * running a card optimiser. A random name namespaces just as well and says
+ * nothing. `urlFor` returns a data: URI, so there is no extension URL to probe
+ * either -- see the note on web_accessible_resources in the README.
  */
-export function overlayFont(key, urlFor) {
+export function overlayFont(key, urlFor, nonce = '') {
   const f = FONTS[key] || FONTS[DEFAULT_FONT];
-  const family = 'CardPicker-' + (FONTS[key] ? key : DEFAULT_FONT);
+  const family = nonce ? 'f' + nonce : 'CardPicker-' + (FONTS[key] ? key : DEFAULT_FONT);
   const adj = f.adjust && f.adjust !== 100 ? `size-adjust:${f.adjust}%;` : '';
   const faces = f.faces.map(([, weight, file]) =>
     `@font-face{font-family:"${family}";font-style:normal;font-weight:${weight};` +
@@ -271,12 +278,36 @@ export function resolveMerchant(hostname, merchants) {
 // Quarters are calendar dates the cardholder experiences locally, so parse
 // both ends as local time. Bare 'YYYY-MM-DD' parses as UTC, which would make
 // the two ends inconsistent with each other.
-function inWindow(win, now) {
-  if (!win) return true;
+//
+// Three states, not a boolean. A rule that has EXPIRED is not the same as a rule
+// that does not apply: the first means the card's data is out of date and the
+// number on screen is wrong, the second means the rule was never relevant. Told
+// apart, the first can be surfaced; conflated, it vanishes silently.
+export function windowState(win, now) {
+  if (!win) return 'open';
   const t = now.getTime();
-  if (win.start && t < Date.parse(win.start + 'T00:00:00')) return false;
-  if (win.end && t > Date.parse(win.end + 'T23:59:59')) return false;
-  return true;
+  if (win.start && t < Date.parse(win.start + 'T00:00:00')) return 'future';
+  if (win.end && t > Date.parse(win.end + 'T23:59:59')) return 'expired';
+  return 'open';
+}
+
+const DAY = 86400000;
+
+// Re-verify anything older than this. The README carries the same number as a
+// standing obligation; this is what makes it visible instead of a note in a file
+// nobody opens.
+export const STALE_AFTER_DAYS = 90;
+
+// How long before a rate ends to start saying so. A quarter is 13 weeks, so two
+// weeks is the last usable window to act in without warning for a whole month.
+export const EXPIRING_SOON_DAYS = 14;
+
+function daysUntil(dateStr, now) {
+  return Math.floor((Date.parse(dateStr + 'T23:59:59') - now.getTime()) / DAY);
+}
+
+function daysSince(dateStr, now) {
+  return Math.floor((now.getTime() - Date.parse(dateStr + 'T00:00:00')) / DAY);
 }
 
 // Categories you can actually route through an issuer travel portal. Transit
@@ -296,30 +327,63 @@ export function isPinned(inst) {
   return inst.pinned === true || inst.priority != null;
 }
 
-/**
- * Sites the user has told the extension to stay off entirely. Matched by
- * suffix so one entry covers subdomains. Checked before ANY DOM is read.
- */
-export function isBlockedHost(hostname, blocked = []) {
-  const host = normalizeHost(hostname);
-  return blocked.some(b => {
-    const d = normalizeHost(b);
-    return d && (host === d || host.endsWith('.' + d));
-  });
-}
-
 /** Drops instances whose product no longer exists in cards.json. */
 export function pruneInstances(instances, products) {
   return instances.filter(i => products[i.productId]);
 }
 
-function ruleApplies(rule, ctx) {
+// Everything except the window. Split out so an expired rule can be recognised
+// as "this WOULD be your 5x category, but the data behind it ran out".
+function ruleMatchesContext(rule, ctx) {
   if (rule.category !== ctx.category) return false;
   if (rule.selection_group && !ctx.selected.includes(rule.selection_group)) return false;
-  if (!inWindow(rule.window, ctx.now)) return false;
   if (rule.merchant_denylist && ctx.domain && rule.merchant_denylist.includes(ctx.domain)) return false;
   if (rule.merchant_allowlist && (!ctx.domain || !rule.merchant_allowlist.includes(ctx.domain))) return false;
   return true;
+}
+
+function ruleApplies(rule, ctx) {
+  return ruleMatchesContext(rule, ctx) && windowState(rule.window, ctx.now) === 'open';
+}
+
+/**
+ * Why the number on screen might be wrong, as opposed to merely caveated.
+ *
+ * Three cases, in order of how badly they mislead:
+ *
+ * 1. A rule for this category expired. Measured on Freedom Flex: once the Q3
+ *    window closes the rule stops applying, the card silently drops to its base
+ *    rate, and every caveat disappears with it. The extension then quietly stops
+ *    recommending a card it should still be recommending, and says nothing. This
+ *    is the failure that made the whole check necessary.
+ * 2. A rate that is about to expire, so the user can act before it does.
+ * 3. The product record itself is older than the re-verification interval.
+ *
+ * Returns a string to show, or null. Deliberately one string: a stack of
+ * warnings on a badge nobody asked for is how people learn to ignore badges.
+ */
+function stalenessFor(product, best, expired, now) {
+  // Only worth saying if the expiry actually cost something. If another rule
+  // still pays more, the lapsed one changed nothing and the warning is noise.
+  if (expired && (!best || expired.rate > best.rate)) {
+    return `${expired.rate}x on ${expired.category.replace(/_/g, ' ')} expired ` +
+           `${expired.window.end}. This card's rotating categories have not been updated, ` +
+           `so it is being ranked on its base rate.`;
+  }
+  if (best && best.window && best.window.end) {
+    const left = daysUntil(best.window.end, now);
+    if (left >= 0 && left <= EXPIRING_SOON_DAYS) {
+      return `This ${best.rate}x rate ends ${best.window.end}` +
+             (left === 0 ? ' (today).' : ` (${left} day${left === 1 ? '' : 's'}).`);
+    }
+  }
+  if (product.last_verified) {
+    const age = daysSince(product.last_verified, now);
+    if (age > STALE_AFTER_DAYS) {
+      return `Rates last verified ${product.last_verified}, ${age} days ago. Re-check with the issuer.`;
+    }
+  }
+  return null;
 }
 
 function capText(cap) {
@@ -389,13 +453,21 @@ export function rank(input) {
     // aside and decide after scoring whether it is worth mentioning.
     let best = null;
     let portal = null;
+    let expired = null;
     for (const rule of p.rules || []) {
       if (rule.portal_only) {
         if (PORTAL_BOOKABLE.has(category) && (!portal || rule.rate > portal.rate)) portal = rule;
         continue;
       }
-      if (!ruleApplies(rule, ctx)) continue;
-      if (!best || rule.rate > best.rate) best = rule;
+      if (!ruleMatchesContext(rule, ctx)) continue;
+      const w = windowState(rule.window, ctx.now);
+      if (w === 'open') {
+        if (!best || rule.rate > best.rate) best = rule;
+      } else if (w === 'expired' && (!expired || rule.rate > expired.rate)) {
+        // Held rather than dropped: this is the rule whose lapse is the reason
+        // the card is about to be ranked on its base rate.
+        expired = rule;
+      }
     }
 
     const tier = cfg.tier_multiplier || 1;
@@ -403,6 +475,7 @@ export function rank(input) {
     const cpp = valuations[p.currency] ?? 1.0;
 
     const value = Math.round(rate * cpp * 1000) / 1000;
+    const staleReason = stalenessFor(p, best, expired, now);
 
     if (portal) {
       const portalValue = Math.round(portal.rate * cpp * 1000) / 1000;
@@ -429,7 +502,11 @@ export function rank(input) {
       reason: best
         ? `${rate}x on ${best.category.replace(/_/g, ' ')}`
         : `${rate}x base rate`,
-      caveats: caveatsFor(best, p),
+      caveats: staleReason ? [...caveatsFor(best, p), staleReason] : caveatsFor(best, p),
+      // Surfaced on its own as well as in caveats, for the same reason
+      // needsActivation is: the overlay renders no caveat list, and this is the
+      // one that says the number beside it may simply be out of date.
+      staleReason,
       // Surfaced on its own in the overlay: without activation this rate is
       // simply not earned, which is different in kind from a cap or an exclusion.
       needsActivation: !!(best && best.requires_activation),
@@ -472,5 +549,7 @@ export function rank(input) {
   }
 
   return { hostname, merchant, category: baseCategory, categorySource,
-           all: entries, winner, tied, resolvedBy, tieBand, notes };
+           all: entries, winner, tied, resolvedBy, tieBand, notes,
+           // One flag so a surface can show a banner without walking the list.
+           stale: entries.some(e => e.staleReason) };
 }

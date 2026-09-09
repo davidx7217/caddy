@@ -11,12 +11,16 @@ import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 
 const SRC = readFileSync(new URL('../src/content.js', import.meta.url), 'utf8');
+// Loaded ahead of content.js by the manifest, so the harness must load it first
+// too -- content.js calls __cpIsBlockedHost before it reads any DOM.
+const HOSTMATCH = readFileSync(new URL('../src/hostmatch.js', import.meta.url), 'utf8');
 
-function harness(initialRespond, blocked = []) {
+function harness(initialRespond, blocked = [], startHref = 'https://shop.example/') {
   const log = [];
   let timers = [], now = 0, intervals = [];
-  let href = 'https://shop.example/';
+  let href = startHref;
   let respond = initialRespond || (() => ({ show: false }));
+  const onChangedFns = [];
   let throwOnSend = false;
 
   const fakeEl = () => new Proxy({}, { get(t, k) {
@@ -55,7 +59,12 @@ function harness(initialRespond, blocked = []) {
     get location(){ const u=new URL(href); return { href, hostname:u.hostname, pathname:u.pathname, search:u.search }; },
     chrome: {
       // The content script reads the user's blocklist before touching the DOM.
-      storage: { local: { get: (_k, cb) => cb({ blocked }) } },
+      storage: {
+        local: { get: (_k, cb) => cb({ blocked }) },
+        // The user can block the site they are already on. content.js listens
+        // for that; the harness has to be able to fire it.
+        onChanged: { addListener: fn => onChangedFns.push(fn) }
+      },
       runtime: {
       id: 'test-extension-id',   // absent once the extension is reloaded
       lastError: null,
@@ -82,6 +91,7 @@ function harness(initialRespond, blocked = []) {
   };
 
   vm.createContext(sandbox);
+  vm.runInContext(HOSTMATCH, sandbox);
   vm.runInContext(SRC, sandbox);
 
   const tick = (ms) => {
@@ -101,7 +111,10 @@ function harness(initialRespond, blocked = []) {
            pollingLive: () => intervals.some(i=>i.live),
            // Simulates reloading the extension, which orphans this script.
            killContext: () => { delete sandbox.chrome.runtime.id; },
-           makeSendThrow: () => { throwOnSend = true; } };
+           makeSendThrow: () => { throwOnSend = true; },
+           isBlocked: (h, list) => sandbox.__cpIsBlockedHost(h, list),
+           setBlocked: list => onChangedFns.forEach(fn =>
+             fn({ blocked: { newValue: list } }, 'local')) };
 }
 
 let pass=0, fail=0;
@@ -217,6 +230,64 @@ const check = (name, got, want) => {
   h.tick(200);
   check('an unrelated blocklist entry does not stop a normal site',
         h.log.includes('MOUNT'), true);
+}
+
+// 8. Host matching. These assertions used to live in the engine suite against a
+// second, identical copy of this rule -- so the tested version was never the
+// version the browser loaded. Now they run against src/hostmatch.js, which is.
+{
+  const h = harness();
+  const B = (host, list) => h.isBlocked(host, list);
+  check('exact host is blocked', B('paylocity.com', ['paylocity.com']), true);
+  check('subdomains are blocked too', B('access.paylocity.com', ['paylocity.com']), true);
+  check('www is normalised', B('www.paylocity.com', ['paylocity.com']), true);
+  check('an entry with www still matches', B('access.paylocity.com', ['www.paylocity.com']), true);
+  check('a lookalike suffix is not blocked', B('notpaylocity.com', ['paylocity.com']), false);
+  check('unrelated hosts pass', B('allbirds.com', ['paylocity.com']), false);
+  check('empty list blocks nothing', B('allbirds.com', []), false);
+}
+
+// 9. Blocking the site you are already on must take effect immediately. Before
+// this, content.js read the list once at injection and never again: the dock
+// stayed up, the poll kept ticking and PAGE messages kept being sent on a domain
+// the user had just switched off.
+{
+  const h = harness(() => ({ show: true }), []);
+  h.tick(200);
+  check('dock is up before the block', h.log.includes('MOUNT'), true);
+  const before = h.log.filter(x => x === 'evaluate').length;
+
+  h.setBlocked(['shop.example']);
+  check('blocking the current site unmounts it now, without a reload',
+        h.log.includes('UNMOUNT'), true);
+  check('...and stops the poll', h.pollingLive(), false);
+
+  h.nav('https://shop.example/checkout');
+  h.tick(6000);
+  check('...and sends nothing afterwards',
+        h.log.filter(x => x === 'evaluate').length, before);
+}
+
+// Unblocking runs the same path, so removing an entry brings the dock back
+// without a reload either.
+{
+  const h = harness(() => ({ show: true }), ['shop.example']);
+  h.tick(6000);
+  check('blocked at injection, so nothing mounts', h.log.includes('MOUNT'), false);
+  h.setBlocked([]);
+  h.tick(200);
+  check('unblocking mounts it without a reload', h.log.includes('MOUNT'), true);
+  check('...and the poll is running again', h.pollingLive(), true);
+}
+
+// A change to some OTHER key must not disturb a running dock.
+{
+  const h = harness(() => ({ show: true }), []);
+  h.tick(200);
+  h.setBlocked(['other.example']);
+  h.tick(200);
+  check('an unrelated blocklist change leaves the dock alone',
+        h.log.includes('UNMOUNT'), false);
 }
 
 console.log(`\n${pass} passed, ${fail} failed`);

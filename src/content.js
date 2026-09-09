@@ -46,6 +46,12 @@
   const MAX_MISSES = 5;
   const SETTLE_MS = 2500;
 
+  // Our @font-face <style> in the page's head, held by reference rather than
+  // found by id. A fixed id like "__card-picker-fonts" was a second thing any
+  // page could look for; nothing needs to find this element but us.
+  let fontEl = null;
+  let fontFamilyStack = null;
+
   let mounted = null;      // { open, destroy } once the dock exists
   let everMounted = false; // once true, never stop watching this page
   let autoOpened = false;  // at most one auto-open per page or SPA route
@@ -56,14 +62,39 @@
   // Sites the user has excluded are checked FIRST, before any DOM is read.
   // On a blocked host this script does nothing at all: no signals collected,
   // no message sent, no timers started.
+  //
+  // The matching lives in src/hostmatch.js, loaded ahead of this file in the same
+  // isolated world. One copy, and it is the one that runs.
+  let started = false;
+
+  function applyBlocklist(blocked) {
+    const off = __cpIsBlockedHost(location.hostname, blocked);
+    if (off && started) {
+      started = false;
+      shutdown();
+    } else if (!off && !started) {
+      started = true;
+      // A page that gave up polling before must get a fresh count, or unblocking
+      // it would restart a script that immediately stops again.
+      misses = 0;
+      start();
+    }
+  }
+
   chrome.storage.local.get('blocked', ({ blocked = [] }) => {
     if (chrome.runtime.lastError) return;
-    const host = String(location.hostname || '').toLowerCase().replace(/^www\./, '');
-    const off = blocked.some(b => {
-      const d = String(b || '').toLowerCase().trim().replace(/^www\./, '');
-      return d && (host === d || host.endsWith('.' + d));
-    });
-    if (!off) start();
+    applyBlocklist(blocked);
+  });
+
+  // Blocking a site you are ALREADY ON has to take effect now, not at the next
+  // reload. Without this the dock stayed up, the poll kept ticking and PAGE
+  // messages kept being sent on a domain the user had just switched off, which
+  // made the only control they have over the extension look broken. Unblocking
+  // is handled by the same path, so removing an entry brings the dock back
+  // without a reload too.
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area !== 'local' || !changes.blocked) return;
+    applyBlocklist(changes.blocked.newValue || []);
   });
 
   function start() {
@@ -117,7 +148,9 @@
 
   function evaluate(onMiss) {
     send(
-      { type: 'PAGE', hostname: location.hostname, signals: collectSignals() },
+      { type: 'PAGE', hostname: location.hostname, signals: collectSignals(),
+        // The faces are inlined base64 now, so only ask for them once.
+        wantFont: !fontEl },
       res => {
         if (!res || !res.winner) return;
 
@@ -176,18 +209,37 @@
     const body = document.body;
     if (!body) return {};
 
-    const ldTypes = [];
-    document.querySelectorAll('script[type="application/ld+json"]').forEach(node => {
+    // Every other collector in here is bounded -- 400 nodes, 60 labels, 40000
+    // chars -- and this one was not, on the most attacker-controlled input of
+    // the lot. Unbounded recursion over hostile JSON-LD threw a RangeError that
+    // the catch quietly swallowed, and a document with thousands of @type
+    // entries built an array that then had to cross sendMessage.
+    //
+    // Deduped as it goes, which is what makes the cap safe: nothing downstream
+    // counts types, it only asks whether one is present, so 60 DISTINCT types is
+    // far past any real page and truncation can no longer hide a `Product`
+    // behind sixty `ListItem`s.
+    const LD_MAX_SCRIPTS = 20, LD_MAX_TYPES = 60, LD_MAX_DEPTH = 20, LD_MAX_CHARS = 200000;
+    const seen = new Set();
+    const scripts = document.querySelectorAll('script[type="application/ld+json"]');
+    for (let i = 0; i < scripts.length && i < LD_MAX_SCRIPTS && seen.size < LD_MAX_TYPES; i++) {
+      const raw = scripts[i].textContent || '';
+      if (!raw || raw.length > LD_MAX_CHARS) continue;
       try {
-        const walk = o => {
-          if (!o || typeof o !== 'object') return;
-          if (Array.isArray(o)) return o.forEach(walk);
-          if (o['@type']) ldTypes.push(...[].concat(o['@type']));
-          Object.values(o).forEach(walk);
+        const walk = (o, depth) => {
+          if (!o || typeof o !== 'object' || depth > LD_MAX_DEPTH || seen.size >= LD_MAX_TYPES) return;
+          if (Array.isArray(o)) { for (const v of o) walk(v, depth + 1); return; }
+          if (o['@type']) {
+            for (const t of [].concat(o['@type'])) {
+              if (typeof t === 'string' && seen.size < LD_MAX_TYPES) seen.add(t);
+            }
+          }
+          for (const v of Object.values(o)) walk(v, depth + 1);
         };
-        walk(JSON.parse(node.textContent));
+        walk(JSON.parse(raw), 0);
       } catch (e) { /* malformed JSON-LD is common; ignore it */ }
-    });
+    }
+    const ldTypes = [...seen];
 
     const og = document.querySelector('meta[property="og:type"]');
     const text = (body.textContent || '').slice(0, 40000).toLowerCase();
@@ -245,7 +297,8 @@
 
   function render(res) {
     const host = document.createElement('div');
-    host.id = '__card-picker-host';
+    // No id. Nothing looked this up -- it was only ever a fixed string for a
+    // page to find us by.
     host.style.cssText = 'all:initial;position:fixed;z-index:2147483647;';
 
     const pos = res.overlayPos || {};
@@ -256,24 +309,22 @@
     const unresolved = res.resolvedBy === 'unresolved' && res.tied.length > 1;
     const others = res.tied.filter(c => c.productId !== res.winner.productId);
 
-    const font = res.font || {};
     // The faces must live in the host page's document; Chrome ignores
-    // @font-face inside a shadow root. The family name is namespaced so it
-    // cannot collide with a face the site declares itself.
-    if (font.faces) {
-      let ff = document.getElementById('__card-picker-fonts');
-      if (!ff) {
-        ff = document.createElement('style');
-        ff.id = '__card-picker-fonts';
-        document.head.appendChild(ff);
-      }
-      ff.textContent = font.faces;
+    // @font-face inside a shadow root. Installed once and then reused: the
+    // family name is randomised per service-worker lifetime, so re-installing
+    // on a later response would leave a second face behind for no gain.
+    const font = res.font || {};
+    if (font.faces && !fontEl) {
+      fontEl = document.createElement('style');
+      fontEl.textContent = font.faces;
+      document.head.appendChild(fontEl);
+      fontFamilyStack = font.stack;
     }
 
     root.innerHTML = `
       <style>
         :host { all: initial; }
-        * { box-sizing: border-box; margin: 0; font-family: ${font.stack || '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif'}; }
+        * { box-sizing: border-box; margin: 0; font-family: ${fontFamilyStack || font.stack || '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif'}; }
 
         /* Only the dock is in flow, so host.bottom always means the dock's
            bottom edge no matter what the panel is doing. */
@@ -313,6 +364,10 @@
         .name { font-size: 15px; font-weight: 650; margin-top: 6px; }
         .rate { font-size: 13px; color: #0a7d3f; font-weight: 600; }
         .note { color: #6b7280; font-size: 11px; margin-top: 5px; }
+        /* Louder than .note on purpose: a note is extra information, this
+           says the number above it may be wrong. */
+        .stale { color: #92400e; background: #fef3c7; border-radius: 6px;
+                 font-size: 11px; line-height: 1.4; margin-top: 7px; padding: 6px 8px; }
         .why { color: #6b7280; font-size: 10px; margin-top: 4px; letter-spacing: .02em; }
         .undo { border: 0; background: none; padding: 0 0 0 2px; font: inherit; color: inherit;
                 text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
@@ -344,6 +399,7 @@
           <div class="rate">${esc(res.winner.reason)} &middot; ${money(res.winner.value)} back</div>
           <div class="why">across ${res.all.length} card${res.all.length === 1 ? '' : 's'} &middot; ${esc(WHY[res.resolvedBy] || res.resolvedBy || '?')}${res.resolvedBy === 'category_default' ? ' <button class="undo">change</button>' : ''}</div>
           ${res.winner.needsActivation ? '<div class="note">Must be activated with the issuer to earn this rate.</div>' : ''}
+          ${res.winner.staleReason ? `<div class="stale">${esc(res.winner.staleReason)}</div>` : ''}
           ${res.notes.slice(0, 1).map(n => `<div class="note">${esc(n.text)}</div>`).join('')}
           ${(unresolved && others.length) ? `
             <div class="alt">
@@ -462,8 +518,7 @@
         // Drop the listener too -- mount/unmount cycles on a SPA would
         // otherwise leak one per route.
         window.removeEventListener('resize', onResize);
-        const ff = document.getElementById('__card-picker-fonts');
-        if (ff) ff.remove();
+        if (fontEl) { fontEl.remove(); fontEl = null; fontFamilyStack = null; }
         host.remove();
       }
     };

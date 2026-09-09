@@ -1,6 +1,6 @@
 // Zero-dependency test runner:  node tools/test-engine.mjs
 import { readFileSync } from 'node:fs';
-import { rank, resolveMerchant, pruneInstances, isMerchantPage, isCheckoutPage, isCommitLabel, isBuyLabel, inferCategory, isPinned, isBlockedHost } from '../src/engine.js';
+import { rank, resolveMerchant, pruneInstances, isMerchantPage, isCheckoutPage, isCommitLabel, isBuyLabel, inferCategory, isPinned } from '../src/engine.js';
 
 const load = n => JSON.parse(readFileSync(new URL(`../data/${n}.json`, import.meta.url), 'utf8'));
 const products = load('cards'), merchants = load('merchants'), valuations = load('valuations');
@@ -641,14 +641,8 @@ eq('...but the identical signals on a storefront are',
 eq('...as they are on a known merchant',
    isMerchantPage({ billingForm: true, paymentChoice: true }, true), true);
 
-// --- user blocklist -------------------------------------------------------
-eq('exact host is blocked', isBlockedHost('paylocity.com', ['paylocity.com']), true);
-eq('subdomains are blocked too', isBlockedHost('access.paylocity.com', ['paylocity.com']), true);
-eq('www is normalised', isBlockedHost('www.paylocity.com', ['paylocity.com']), true);
-eq('an entry with www still matches', isBlockedHost('access.paylocity.com', ['www.paylocity.com']), true);
-eq('a lookalike suffix is not blocked', isBlockedHost('notpaylocity.com', ['paylocity.com']), false);
-eq('unrelated hosts pass', isBlockedHost('allbirds.com', ['paylocity.com']), false);
-eq('empty list blocks nothing', isBlockedHost('allbirds.com', []), false);
+// The blocklist assertions moved to tools/test-lifecycle.mjs, where they run
+// against src/hostmatch.js -- the copy the browser actually loads.
 
 {
   // The popup reports the band it actually used, so a changed tieBand cannot
@@ -704,6 +698,56 @@ eq('pinned:false does not', isPinned({ pinned: false }), false);
 
 // --- empty state ---------------------------------------------------------
 eq('no cards owned', run('target.com', []).resolvedBy, 'no_cards');
+
+// --- staleness: when the number on screen may simply be out of date --------
+// The bug this closes, measured on the real data: once Freedom Flex's Q3 window
+// shut, the rule stopped applying, the card dropped from 5x to its 1x base, and
+// EVERY caveat disappeared with it. The extension quietly stopped recommending a
+// card it should still have been recommending, and said nothing about why. It
+// fails closed, which is safe, but it fails silently, which is not.
+const at = d => new Date(d + 'T12:00:00');
+const flex = () => [{ productId: 'chase-freedom-flex', config: {} }];
+const gasOn = d => run('exxon.com', flex(), { now: at(d) });
+
+eq('in window and far from the end, no warning',
+   gasOn('2026-09-09').all[0].staleReason, null);
+eq('...and the 5x still applies', gasOn('2026-09-09').all[0].rate, 5);
+eq('inside the last two weeks, it says when the rate ends',
+   gasOn('2026-09-20').all[0].staleReason, 'This 5x rate ends 2026-09-30 (10 days).');
+eq('on the last day it says today',
+   gasOn('2026-09-30').all[0].staleReason, 'This 5x rate ends 2026-09-30 (today).');
+eq('once expired, it says so and says what it fell back to',
+   gasOn('2026-10-01').all[0].staleReason,
+   "5x on gas expired 2026-09-30. This card's rotating categories have not been " +
+   'updated, so it is being ranked on its base rate.');
+eq('...and the rate really has dropped', gasOn('2026-10-01').all[0].rate, 1);
+eq('the reason is mirrored into caveats, which is what the popup renders',
+   gasOn('2026-10-01').all[0].caveats.some(c => c.startsWith('5x on gas expired')), true);
+eq('rank reports one flag so a banner needs no walk of the list',
+   [gasOn('2026-09-09').stale, gasOn('2026-10-01').stale], [false, true]);
+
+// An expiry that costs nothing is not worth saying. Dining is not a rotating
+// category on this card, so the lapsed gas rule changed no outcome there.
+eq('an expiry that changed no outcome stays quiet',
+   run('doordash.com', flex(), { now: at('2026-10-01') }).all[0].staleReason, null);
+
+// Age of the product record itself, independent of any rule window.
+{
+  const old = { 'stale-card': { id: 'stale-card', name: 'Stale Card', issuer: 'x',
+                  currency: 'cash', base_rate: 1, verified: true,
+                  last_verified: '2026-01-01', rules: [] } };
+  const fresh = { 'fresh-card': { ...old['stale-card'], id: 'fresh-card',
+                  name: 'Fresh Card', last_verified: '2026-08-29' } };
+  const one = (products, id, d) => rank({ hostname: 'exxon.com', merchants: {}, products,
+    instances: [{ productId: id, config: {} }], valuations, now: at(d) }).all[0];
+  eq('a record older than the re-verification interval warns',
+     one(old, 'stale-card', '2026-09-09').staleReason,
+     'Rates last verified 2026-01-01, 251 days ago. Re-check with the issuer.');
+  eq('one inside it does not',
+     one(fresh, 'fresh-card', '2026-09-09').staleReason, null);
+  eq('...until it ages out', one(fresh, 'fresh-card', '2026-12-01').staleReason,
+     'Rates last verified 2026-08-29, 94 days ago. Re-check with the issuer.');
+}
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

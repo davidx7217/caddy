@@ -1,11 +1,43 @@
 import { rank, isMerchantPage, isCheckoutPage,
-         DEFAULT_FONT, overlayFont } from './engine.js';
+         DEFAULT_FONT, FONTS, overlayFont } from './engine.js';
 
 // One-time cleanup of the removed snooze feature's leftover key. Safe to
 // delete this line once it has run on every machine that had the old build.
 chrome.storage.local.remove('snoozes');
 
 let dataPromise = null;
+let fontPromise = null;
+
+// Rotated whenever the service worker restarts, which in MV3 is constantly. It
+// only has to stop the injected @font-face carrying a stable, guessable name.
+const FONT_NONCE = Math.random().toString(36).slice(2, 10);
+
+/**
+ * The overlay's font as data: URIs, keyed by the path overlayFont() asks for.
+ *
+ * Inlined rather than served from web_accessible_resources. A web-accessible
+ * file is a fixed chrome-extension:// URL that ANY page can fetch to prove the
+ * extension is installed -- a stronger signal than anything in the DOM, since it
+ * needs no access to the page at all. There is now no web-accessible resource to
+ * probe. Read once and cached: the worker can fetch its own bundled files
+ * without declaring them accessible to anyone.
+ */
+function fontUrls() {
+  if (!fontPromise) {
+    const faces = (FONTS[DEFAULT_FONT].faces || []).map(([, , file]) => 'src/fonts/' + file);
+    fontPromise = Promise.all(faces.map(path =>
+      fetch(chrome.runtime.getURL(path))
+        .then(r => r.arrayBuffer())
+        .then(buf => {
+          const bytes = new Uint8Array(buf);
+          let bin = '';
+          for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+          return [path, 'data:font/woff2;base64,' + btoa(bin)];
+        })
+    )).then(pairs => Object.fromEntries(pairs));
+  }
+  return fontPromise;
+}
 
 function loadData() {
   if (!dataPromise) {
@@ -32,7 +64,7 @@ async function getState() {
   };
 }
 
-export async function recommend(hostname, signals) {
+export async function recommend(hostname, signals, wantFont = false) {
   const data = await loadData();
   const st = await getState();
   const result = rank({
@@ -45,8 +77,13 @@ export async function recommend(hostname, signals) {
     prefs: st.prefs
   });
   result.overlayPos = st.overlayPos;
-  // The overlay cannot import, so hand it the font already resolved.
-  result.font = overlayFont(DEFAULT_FONT, chrome.runtime.getURL);
+  // The overlay cannot import, so hand it the font already resolved. Only when
+  // it asks: the faces are inlined as base64 now, so shipping them on every
+  // route change of an SPA would mean ~43KB per navigation for nothing.
+  if (wantFont) {
+    const urls = await fontUrls();
+    result.font = overlayFont(DEFAULT_FONT, path => urls[path], FONT_NONCE);
+  }
   // The overlay only appears on pages you can buy something on. The result is
   // still cached and still reachable from the toolbar popup either way.
   result.show = signals === undefined ||
@@ -58,7 +95,7 @@ export async function recommend(hostname, signals) {
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.type === 'PAGE') {
     (async () => {
-      const result = await recommend(msg.hostname, msg.signals || {});
+      const result = await recommend(msg.hostname, msg.signals || {}, !!msg.wantFont);
       if (sender.tab && sender.tab.id != null) {
         // storage.session survives the service worker being torn down, so the
         // popup can still read the result without any tabs/host permission.

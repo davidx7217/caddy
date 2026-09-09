@@ -58,6 +58,9 @@ $('#opts').addEventListener('click', () => chrome.runtime.openOptionsPage());
 
   $('#list').innerHTML =
     (unverified ? `<div class="banner" style="margin:10px 0">Seed data is unverified. Check rates against your issuer before trusting these numbers.</div>` : '') +
+    // Separate from the unverified banner: that one means the data was never
+    // checked, this one means it was checked and has since run out.
+    (res.stale ? `<div class="banner" style="margin:10px 0">Some rates below are expired or overdue for re-verification. See the notes on each card.</div>` : '') +
     `<h2>Ranked</h2>` +
     res.all.map((c, i) => `
       <div class="row ${i === 0 ? 'win' : ''}">
