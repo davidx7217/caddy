@@ -403,10 +403,38 @@ eq('...and a billing form does',
 eq('the cost: a commit button alone is not enough on a content site',
    SITE('netflix.com')({ ...STREAM_MARKETING, checkoutUrl: true, checkoutText: true,
                          buttonLabels: ['Start Membership'] }), false);
-// Unmeasured means unflagged. spotify.com, max.com and disneyplus.com keep the
-// old behaviour until someone reads their signals off the live sites.
-eq('spotify.com is not flagged, so a price alone still shows there',
-   SITE('spotify.com')(STREAM_MARKETING), true);
+// The remaining three, measured live 2026-09-09. They did NOT all behave alike,
+// which is the point of measuring rather than reasoning by category.
+eq('LIVE disneyplus.com is the netflix shape, so it is flagged too',
+   SITE('disneyplus.com')(STREAM_MARKETING), false);
+
+// spotify.com is measured and deliberately NOT flagged. Netflix serves the browse
+// grid and the pricing copy from one markup-free page, so no weak signal can
+// separate them. Spotify splits them across two hosts: open.spotify.com carries no
+// price at all, and spotify.com/us/premium/ is where you actually subscribe.
+// Flagging would suppress the second and gain nothing on the first.
+eq('LIVE open.spotify.com player is already dark, with no flag needed',
+   SITE('open.spotify.com')({ ...STREAM_MARKETING, price: false }), false);
+eq('...and spotify.com/us/premium/ still shows, which is the point',
+   SITE('spotify.com')({ ...STREAM_MARKETING, ldTypes: ['Organization', 'PostalAddress'],
+                         ogType: 'website' }), true);
+// The latent risk, recorded rather than guarded: the player is dark only because
+// its price is false. An upsell price in the web player would mount the dock on a
+// page you are listening to.
+eq('...but a price in the player WOULD show it, which is the thing to watch',
+   SITE('open.spotify.com')(STREAM_MARKETING), true);
+
+// max.com redirects to hbomax.com in a browser, so the old row matched almost
+// nothing -- HBO Max resolved to no merchant at all and, having no commerce
+// context either, showed nowhere. A merchant row can die by redirect; a curl
+// sweep of all 78 found this one, and would not have found it at all if the
+// redirect had been client-side only, which for max.com it very nearly was.
+eq('hbomax.com resolves now', run('www.hbomax.com').categorySource, 'merchant');
+eq('...as streaming', run('www.hbomax.com').category, 'streaming');
+eq('...and is flagged, being the netflix shape',
+   SITE('www.hbomax.com')(STREAM_MARKETING), false);
+eq('...with max.com kept for stale links, flagged the same way',
+   SITE('max.com')(STREAM_MARKETING), false);
 
 // --- dead categories, closed 2026-09-09 -----------------------------------
 // A category is dead when a card bonuses it and no page can ever resolve to it.

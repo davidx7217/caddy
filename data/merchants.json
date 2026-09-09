@@ -196,7 +196,8 @@
   },
   "spotify.com": {
     "category": "streaming",
-    "confidence": "high"
+    "confidence": "high",
+    "note": "measured 2026-09-09 and deliberately NOT content_site: unlike netflix, spotify splits the surfaces. open.spotify.com (the player) carries no price and is already dark; spotify.com/us/premium/ is where you subscribe and should show. Flagging would suppress the second and gain nothing on the first. Latent risk: the player is dark only because price is false"
   },
   "hulu.com": {
     "category": "streaming",
@@ -206,11 +207,21 @@
   },
   "disneyplus.com": {
     "category": "streaming",
-    "confidence": "high"
+    "confidence": "high",
+    "content_site": true,
+    "note": "measured 2026-09-09: no commerce markup, price only, and one domain serves both the marketing page and the signed-in browse grid -- the netflix.com shape"
   },
   "max.com": {
     "category": "streaming",
-    "confidence": "high"
+    "confidence": "high",
+    "content_site": true,
+    "note": "measured 2026-09-09: redirects to hbomax.com in a browser, so this row matches almost nothing now. Kept for stale links only"
+  },
+  "hbomax.com": {
+    "category": "streaming",
+    "confidence": "high",
+    "content_site": true,
+    "note": "measured 2026-09-09: the live HBO Max domain. Organization/WebSite markup, price only -- the netflix.com shape"
   },
   "youtube.com": {
     "category": "streaming",
