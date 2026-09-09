@@ -436,6 +436,26 @@ eq('...and is flagged, being the netflix shape',
 eq('...with max.com kept for stale links, flagged the same way',
    SITE('max.com')(STREAM_MARKETING), false);
 
+// The browser sweep of the 25 rows curl could not confirm, 2026-09-09. Twenty-one
+// resolved to themselves. exxon.com did not: it CLIENT-SIDE redirects to
+// exxonmobilfuels.com, which is the case a curl sweep is blind to by construction
+// -- plain HEAD reported "403, host unchanged" and was simply wrong. Two of the 79
+// rows were dead, and only one of the two was visible over HTTP.
+//
+// exxonmobilfuels.com is the consumer site, not a brand hub: rewards, the station
+// finder and both brand pages sit under it, and the Rewards+ account lives on
+// rewards.exxonmobilfuels.com, which resolveMerchant's suffix walk already covers.
+const EXXON = { ldTypes: ['Organization'], ogType: 'Website', cartLink: false,
+                platform: false, buttonLabels: [] };
+eq('exxonmobilfuels.com resolves', run('www.exxonmobilfuels.com').categorySource, 'merchant');
+eq('...as gas, so the three gas card rules can reach it',
+   run('www.exxonmobilfuels.com').category, 'gas');
+eq('...and the Rewards+ subdomain resolves through the suffix walk',
+   run('rewards.exxonmobilfuels.com').category, 'gas');
+eq('its signal-free home stays dark', SITE('www.exxonmobilfuels.com')(EXXON), false);
+eq('...but /en/rewards renders a price, so the dock mounts there',
+   SITE('www.exxonmobilfuels.com')({ ...EXXON, price: true }), true);
+
 // --- dead categories, closed 2026-09-09 -----------------------------------
 // A category is dead when a card bonuses it and no page can ever resolve to it.
 // ev_charging was the real one: two card rules (Freedom Flex 5x, BofA CCR 3x)

@@ -300,7 +300,13 @@
   },
   "exxon.com": {
     "category": "gas",
-    "confidence": "medium"
+    "confidence": "medium",
+    "note": "measured 2026-09-09: client-side redirect to exxonmobilfuels.com, so this row matches almost nothing now. Kept for stale links only"
+  },
+  "exxonmobilfuels.com": {
+    "category": "gas",
+    "confidence": "medium",
+    "note": "measured 2026-09-09: the live Exxon/Mobil consumer site. Rewards, station finder and both brand pages sit under it, and the Rewards+ account is on rewards.exxonmobilfuels.com, which the suffix walk covers. Home is signal-free; /en/rewards renders a price"
   },
   "ihg.com": {
     "category": "travel_hotel",
