@@ -1,5 +1,5 @@
 {
-  "_comment": "All 7 records verified against issuer sources on 2026-08-29. Each carries its source_url. Chase Freedom Flex rotating categories MUST be re-verified 2026-10-01.",
+  "_comment": "All 8 records verified against issuer sources; 7 on 2026-08-29 and Ink Business Cash on 2026-09-09. Each carries its source_url. Chase Freedom Flex rotating categories MUST be re-verified 2026-10-01.",
   "chase-sapphire-reserve": {
     "id": "chase-sapphire-reserve",
     "issuer": "chase",
@@ -287,6 +287,73 @@
       }
     ],
     "note": "Also earns 500 bonus points per $2,000 spent in a calendar month, up to 1,500/month. Not modelled: needs spend tracking."
+  },
+  "chase-ink-business-cash": {
+    "id": "chase-ink-business-cash",
+    "issuer": "chase",
+    "network": "visa",
+    "currency": "ur",
+    "name": "Chase Ink Business Cash",
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-09",
+    "source_url": "https://creditcards.chase.com/business-credit-cards/ink/cash",
+    "caution": "Business card. Both $25,000 caps run per ACCOUNT ANNIVERSARY year, not the calendar year, and each is shared across two categories.",
+    "note": "Rates read off the product page 2026-09-09; the rewards agreement is a PDF download and was not opened. Modelled as currency 'ur' for the same reason Freedom Flex and Freedom Unlimited are: Chase markets all three as cash back, but they earn Ultimate Rewards. At the default 1.5 cpp that turns the 5% into 7.5% effective, which only holds if you hold a premium Chase card to transfer into -- override the valuation in Options if you do not. network is not confirmed: the source page lists Visa and MasterCard together in a generic acceptance line. It is metadata and no code reads it.",
+    "rules": [
+      {
+        "category": "office_supply",
+        "rate": 5.0,
+        "cap": {
+          "amount": 25000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "The $25,000 cap is combined with internet, cable and phone, and runs per account anniversary year."
+      },
+      {
+        "category": "phone_internet",
+        "rate": 5.0,
+        "cap": {
+          "amount": 25000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "The $25,000 cap is combined with office supply stores, and runs per account anniversary year."
+      },
+      {
+        "category": "gas",
+        "rate": 2.0,
+        "cap": {
+          "amount": 25000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "The $25,000 cap is combined with restaurants, and runs per account anniversary year."
+      },
+      {
+        "category": "dining",
+        "rate": 2.0,
+        "cap": {
+          "amount": 25000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "The $25,000 cap is combined with gas stations, and runs per account anniversary year."
+      },
+      {
+        "category": "travel_ground",
+        "rate": 5.0,
+        "merchant_allowlist": [
+          "lyft.com"
+        ],
+        "window": {
+          "end": "2027-09-30"
+        },
+        "caveat": "Lyft rides only, and it is 5% TOTAL rather than a bonus on top. Offer ends 2027-09-30."
+      }
+    ]
   },
   "bofa-customized-cash": {
     "id": "bofa-customized-cash",

@@ -287,6 +287,16 @@
     "category": "entertainment",
     "confidence": "high"
   },
+  "staples.com": {
+    "category": "office_supply",
+    "confidence": "high",
+    "note": "measured 2026-09-09: WebSite markup only, but a real cart link and a price, so it already showed -- as everything else, until this row"
+  },
+  "officedepot.com": {
+    "category": "office_supply",
+    "confidence": "high",
+    "note": "measured 2026-09-09: Organization/WebSite markup, cart link and price. Covers OfficeMax, which redirects here"
+  },
   "homedepot.com": {
     "category": "home_improvement",
     "confidence": "high"

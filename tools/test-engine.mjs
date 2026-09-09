@@ -797,5 +797,41 @@ eq('an expiry that changed no outcome stays quiet',
      'Rates last verified 2026-08-29, 94 days ago. Re-check with the issuer.');
 }
 
+// --- Chase Ink Business Cash, verified on chase.com 2026-09-09 -------------
+// Added to make office_supply and phone_internet reachable at all: both were
+// categories no card bonused, so they resolved and then ranked nothing.
+const ink = () => [{ productId: 'chase-ink-business-cash', config: {} }];
+const inkAt = h => run(h, ink(), { now: new Date('2026-09-09T12:00:00') });
+
+eq('office_supply pays 5x, the headline category that did not exist before',
+   inkAt('staples.com').all[0].rate, 5);
+eq('...and officedepot.com reaches it too', inkAt('officedepot.com').category, 'office_supply');
+eq('phone_internet pays 5x, so t-mobile.com finally ranks something',
+   inkAt('t-mobile.com').all[0].rate, 5);
+
+// The misreading this card invites: its 5% is "office supply stores AND
+// internet, cable and phone services". Gas and restaurants are the SEPARATE 2%
+// tier, and utilities are in neither -- "internet, cable and phone" is not the
+// same thing as electricity, and Chase does not say it is.
+eq('gas is 2x, not 5x', inkAt('exxonmobilfuels.com').all[0].rate, 2);
+eq('dining is 2x, not 5x', inkAt('doordash.com').all[0].rate, 2);
+eq('utilities get the base rate, because phone_internet is not utilities',
+   inkAt('coned.com').all[0].rate, 1);
+
+// Lyft is 5% TOTAL and merchant-scoped, modelled the way the Sapphire Reserve's
+// identical benefit already is.
+eq('lyft.com gets the 5x', inkAt('lyft.com').all[0].rate, 5);
+eq('...and uber.com does not, being outside the allowlist',
+   inkAt('uber.com').all[0].rate, 1);
+eq('...and it lapses with its window',
+   run('lyft.com', ink(), { now: new Date('2027-10-01T12:00:00') }).all[0].rate, 1);
+
+// Both caps are per ACCOUNT ANNIVERSARY year and each is shared across two
+// categories, which is the kind of thing a user only discovers by overspending.
+eq('the 5% cap is surfaced, and says it is shared',
+   inkAt('staples.com').all[0].caveats,
+   ['Capped at $25,000 per year, then 1x',
+    'The $25,000 cap is combined with internet, cable and phone, and runs per account anniversary year.']);
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
