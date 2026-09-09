@@ -111,6 +111,22 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     return true;
   }
 
+  // Manual mode: the toolbar click grants activeTab for this tab, which is
+  // enough to inject the same content script for this visit only. No host
+  // permission, no prompt, and nothing persists past the page.
+  if (msg.type === 'INJECT') {
+    (async () => {
+      try {
+        await chrome.scripting.executeScript({ target: { tabId: msg.tabId }, files: CONTENT_FILES });
+        sendResponse({ ok: true });
+      } catch (e) {
+        // Chrome refuses injection on its own pages and on the Web Store.
+        sendResponse({ ok: false, error: String(e.message || e) });
+      }
+    })();
+    return true;
+  }
+
   if (msg.type === 'SET_POS') {
     chrome.storage.local.set({ overlayPos: msg.pos }).then(() => sendResponse({ ok: true }));
     return true;
@@ -139,6 +155,53 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 });
 
 chrome.tabs.onRemoved.addListener(tabId => chrome.storage.session.remove(`tab:${tabId}`));
+
+// ---------- automatic mode ----------
+//
+// The extension used to declare a static content script on <all_urls>, so the
+// install prompt read "read and change all your data on all websites" before the
+// user had agreed to anything. That permission is now OPTIONAL and off by
+// default: Options asks for it, and only once it is granted does the same pair of
+// files get registered, at runtime, for the same matches.
+//
+// Deliberately NOT narrowed to the merchant table instead. Host permissions
+// declared in the manifest are re-prompted when they change, and Chrome DISABLES
+// the extension until the user re-approves -- so a table that is meant to grow
+// would knock the extension offline on every data release. Keeping the grant
+// coarse and optional means merchants.json can grow without touching permissions
+// at all.
+const SCRIPT_ID = 'card-picker-auto';
+const CONTENT_FILES = ['src/hostmatch.js', 'src/content.js'];
+
+async function isAuto() {
+  return chrome.permissions.contains({ origins: ['<all_urls>'] });
+}
+
+/** Register or unregister to match the permission. Safe to call repeatedly. */
+export async function syncAutoMode() {
+  const want = await isAuto();
+  const existing = await chrome.scripting.getRegisteredContentScripts({ ids: [SCRIPT_ID] })
+    .catch(() => []);
+  const have = existing.length > 0;
+  if (want === have) return want;
+  if (want) {
+    await chrome.scripting.registerContentScripts([{
+      id: SCRIPT_ID,
+      matches: ['<all_urls>'],
+      js: CONTENT_FILES,
+      runAt: 'document_idle'
+    }]);
+  } else {
+    await chrome.scripting.unregisterContentScripts({ ids: [SCRIPT_ID] });
+  }
+  return want;
+}
+
+// A registration does not survive the extension being reloaded or updated, so
+// re-assert it on every worker start rather than only when the grant changes.
+syncAutoMode().catch(() => {});
+chrome.permissions.onAdded.addListener(() => syncAutoMode().catch(() => {}));
+chrome.permissions.onRemoved.addListener(() => syncAutoMode().catch(() => {}));
 
 chrome.runtime.onInstalled.addListener(details => {
   if (details.reason === 'install') chrome.runtime.openOptionsPage();

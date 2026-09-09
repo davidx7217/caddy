@@ -25,8 +25,35 @@ $('#opts').addEventListener('click', () => chrome.runtime.openOptionsPage());
   // tabs.query works without the "tabs" permission; only url/title are gated,
   // and we never need them -- the content script already told the worker.
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  let res = tab ? (await chrome.storage.session.get(`tab:${tab.id}`))[`tab:${tab.id}`] : null;
-  if (!res) res = await chrome.runtime.sendMessage({ type: 'RECOMMEND', hostname: '' });
+
+  // Opening this popup IS an action invocation, which grants activeTab for this
+  // tab -- so tab.url is readable here with no host permission at all. Before
+  // that grant existed this was always blank, and every site with no content
+  // script read as "no merchant detected".
+  let host = '';
+  try { host = tab && tab.url ? new URL(tab.url).hostname : ''; } catch (e) { /* chrome:// and friends */ }
+
+  const cached = async () =>
+    tab ? (await chrome.storage.session.get(`tab:${tab.id}`))[`tab:${tab.id}`] : null;
+
+  let res = await cached();
+
+  // Nothing cached means no content script ran here: automatic mode is off, or
+  // this page loaded before it was granted. activeTab lets us inject for this
+  // visit only, which both mounts the dock and produces a real signal-based
+  // answer instead of a table lookup.
+  if (!res && tab) {
+    const done = await chrome.runtime.sendMessage({ type: 'INJECT', tabId: tab.id });
+    if (done && done.ok) {
+      for (let i = 0; i < 8 && !res; i++) {
+        await new Promise(r => setTimeout(r, 100));
+        res = await cached();
+      }
+    }
+    // Injection is refused on chrome:// pages and the Web Store, and a page can
+    // simply be slow. The merchant table alone still answers for a known domain.
+    if (!res) res = await chrome.runtime.sendMessage({ type: 'RECOMMEND', hostname: host });
+  }
 
   if (!res || !res.all.length) {
     $('#sub').textContent = 'No cards added yet.';

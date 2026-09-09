@@ -44,6 +44,10 @@ This is the actual product. The extension is a few hundred lines; the data is th
 3. **Load unpacked** -> select this folder
 4. The options page opens on install. Add your cards there -- the extension
    ships with no wallet, by design.
+5. Still on that page, **Where Card Picker runs** -> *Turn on*, if you want the
+   dock to appear by itself. It is off by default and the install prompt asks for
+   nothing, so until you turn it on the dock appears only when you click the
+   toolbar icon.
 
 Pin it to the toolbar.
 
@@ -124,11 +128,29 @@ card wins lives there and nowhere else.
 rule shape cannot express something, add a field and handle it in the engine.
 Interpreting remote code would get the extension rejected from the Web Store.
 
-**Permissions.** The only declared permission is `storage`, and there are no
-web-accessible resources, but the content script matches `<all_urls>` so the dock can appear on merchants that are not yet in the table.
-That is a real tradeoff, taken deliberately: the install prompt reads "read and change
-all your data on all websites", and store review will scrutinise it. Revisit before
-any public listing.
+**Nothing broad is asked for at install.** Declared permissions are `storage`,
+`activeTab` and `scripting`; there are no web-accessible resources and no host
+permissions. `<all_urls>` is `optional_host_permissions`, requested only when the
+user turns on **Where Card Picker runs** in Options. Granted, `background.js`
+registers the same two content-script files at runtime for the same matches;
+revoked, it unregisters them. A registration does not survive a reload or update,
+so `syncAutoMode()` re-asserts it on every worker start, not only when the grant
+changes.
+
+Left off, the toolbar click carries `activeTab`, which is enough to inject the
+content script for that one visit. That is also what finally gave the popup a
+hostname: with no host permission `tabs.query` returns no URL, so the popup used
+to send an EMPTY hostname and every uncached site read as "no merchant detected".
+
+**Do not narrow this to the merchant table instead.** Listing the 82 domains as
+static `content_scripts` matches looks like the tighter, more honest option and is
+a trap: host permissions declared in the manifest are re-prompted when they
+change, and Chrome DISABLES the extension until the user re-approves. The table is
+meant to grow -- it grew four times in one session -- so every data release would
+knock the extension offline until someone noticed. It would also need a manifest
+generator, which is the build step this project does not have. Keeping the grant
+coarse, optional and off by default lets `merchants.json` grow without touching
+permissions at all.
 
 **Categories are inferred when the merchant is not in the table.** `merchants.json`
 is hand-verified and always wins. Failing that, `inferCategory()` reads the page's
@@ -500,6 +522,11 @@ it; run it whenever you add a card.
   fold them together to make the category light up.
 - `department_store` and `streaming` have merchants and no card bonusing them.
   Card-data dependent, not a bug -- nothing in the current eight pays extra there.
+- Nothing tests `syncAutoMode()` or the on-demand injection. `background.js` has no
+  harness -- the engine suite cannot reach `chrome.*` and the lifecycle sandbox runs
+  `content.js` alone -- so the permission plumbing is verified by loading the
+  extension and watching it, not by a test. Both suites pass either way, which is
+  exactly why that is worth writing down.
 - A hand table cannot cover US utilities; there are thousands of them and they are
   regional. coned.com is the worked example proving the mechanism, not the start of
   a list. Anything beyond a handful needs a different approach.

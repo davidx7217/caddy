@@ -18,6 +18,7 @@ const [products, baseVals] = await Promise.all([j('cards'), j('valuations')]);
 const productIds = Object.keys(products).filter(k => !k.startsWith('_'));
 
 let instances = [], valuations = {}, prefs = {}, blocked = [], dropped = 0;
+let auto = false;
 
 async function load() {
   const s = await chrome.storage.local.get(['instances', 'valuations', 'prefs', 'blocked']);
@@ -28,6 +29,7 @@ async function load() {
   blocked = s.blocked || [];
   prefs = s.prefs || {};
   prefs.categoryDefaults = prefs.categoryDefaults || {};
+  auto = await chrome.permissions.contains({ origins: ['<all_urls>'] });
   applyFont(DEFAULT_FONT);
 }
 
@@ -144,6 +146,18 @@ function cardRow(inst, i) {
 function render() {
   $('#freshness').innerHTML = freshness();
 
+  $('#auto').innerHTML = `
+    <div class="card-row">
+      <span class="body">
+        <div class="title">${auto ? 'Runs automatically' : 'Only when you ask'}</div>
+        <div class="meta">${auto
+          ? 'Card Picker reads shop pages you visit to spot a checkout. It still never sends anything anywhere.'
+          : 'Nothing runs until you click the toolbar icon on a page.'}</div>
+      </span>
+      <span class="acts"><button data-auto="${auto ? 'off' : 'on'}">${
+        auto ? 'Turn off' : 'Turn on'}</button></span>
+    </div>`;
+
   $('#owned').innerHTML =
     (dropped ? `<div class="banner" style="margin-bottom:10px">Removed ${dropped} saved card${dropped > 1 ? 's' : ''} that no longer exist.</div>` : '') +
     (instances.length ? instances.map(cardRow).join('') : `<p class="empty">No cards yet. Add some below.</p>`) +
@@ -198,6 +212,18 @@ function swap(a, b) {
   commit('instances');
 }
 
+// chrome.permissions.request must run inside a user gesture, so this lives in the
+// click handler and is never called from render() or load().
+async function setAuto(on) {
+  if (on) await chrome.permissions.request({ origins: ['<all_urls>'] });
+  else await chrome.permissions.remove({ origins: ['<all_urls>'] });
+  // Trust the permission, never the button. A user can decline the prompt, and
+  // rendering from what we asked for rather than from what we got would leave the
+  // switch reading "on" while nothing actually runs.
+  auto = await chrome.permissions.contains({ origins: ['<all_urls>'] });
+  render();
+}
+
 document.addEventListener('click', e => {
   const t = e.target.closest('button');
   if (!t) return;
@@ -210,6 +236,7 @@ document.addEventListener('click', e => {
   if (d.unpinall) { instances.forEach(i => { delete i.pinned; delete i.priority; }); commit('instances'); }
   if (d.cleardefault) { delete prefs.categoryDefaults[d.cleardefault]; commit('prefs'); }
   if (d.clearalldefaults) { prefs.categoryDefaults = {}; commit('prefs'); }
+  if (d.auto) { setAuto(d.auto === 'on'); }
 });
 
 document.addEventListener('change', e => {
