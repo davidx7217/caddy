@@ -75,6 +75,18 @@ const EDITORIAL_TYPES = new Set([
   'Report', 'QAPage', 'DiscussionForumPosting', 'ProfilePage', 'AboutPage'
 ]);
 
+// Markup that means "this page is something to watch or listen to". A video is
+// the whole point of the page it sits on, and ads, comments, shopping shelves
+// and creator descriptions scatter prices and buy controls all over it -- none
+// of which is a purchase made here. Stricter than the editorial veto below,
+// and unlike it this also overrules a known merchant: youtube.com is in
+// merchants.json, so one stray "$" from an ad was enough to put the dock on a
+// video the user was simply watching.
+const MEDIA_TYPES = new Set([
+  'VideoObject', 'MusicVideoObject', 'AudioObject', 'Movie', 'TVSeries',
+  'TVEpisode', 'Episode', 'MusicRecording', 'PodcastEpisode', 'Clip'
+]);
+
 // A button label that COMMITS a purchase.
 //
 // Bare "pay" is the dangerous one: it prefixes "PayPal", "Payment options" and
@@ -196,30 +208,45 @@ function hasCommerceContext(signals, knownMerchant) {
     || (signals.buttonLabels || []).some(isBuyLabel);
 }
 
-export function isMerchantPage(signals = {}, knownMerchant = false) {
+export function isMerchantPage(signals = {}, knownMerchant = false, contentSite = false) {
   // Nothing here sells anything, so nothing else can qualify it.
   if (!hasCommerceContext(signals, knownMerchant)) return false;
 
+  const types = signals.ldTypes || [];
+  const commerce = types.some(t => COMMERCE_TYPES.has(t))
+    || /^product/i.test(signals.ogType || '')
+    || !!signals.platform;
+
+  // A page you came to consume rather than shop, for either of two reasons:
+  // its own markup says it IS the media, or merchants.json flags the whole
+  // domain as a content site. Retail product pages routinely embed a
+  // VideoObject, so the commerce test has to win before this one.
+  const consume = !commerce &&
+    (contentSite || types.some(t => MEDIA_TYPES.has(t)) || /^video/i.test(signals.ogType || ''));
+
+  // Here nothing written in a button or in the page text proves anything -- the
+  // "Buy now" belongs to an ad or a shopping shelf, not to the video, and the
+  // "$14.99" belongs to whatever is being advertised alongside it. Only real
+  // payment machinery counts, which is what actually paying puts on screen.
+  // Checked ahead of everything else because being youtube.com settles what the
+  // SITE is, and the video playing on it is still not a purchase.
+  if (consume) return !!(signals.paymentField || signals.paymentChoice || signals.billingForm);
+
   // Being asked to pay ON a site that sells things is a purchase.
   if (isCheckoutPage(signals)) return true;
-
-  if ((signals.ldTypes || []).some(t => COMMERCE_TYPES.has(t))) return true;
-  if (/^product/i.test(signals.ogType || '')) return true;
-  if (signals.platform) return true;
+  if (commerce) return true;
 
   const buyControl = (signals.buttonLabels || []).some(isBuyLabel);
   const weak = [buyControl, signals.cartLink, signals.price].filter(Boolean).length;
-  const editorial = (signals.ldTypes || []).some(t => EDITORIAL_TYPES.has(t));
 
   // Being a known merchant settles WHAT this site is, not whether THIS page is
-  // somewhere you buy. youtube.com is a merchant; a video you are watching on
-  // it is not a purchase. So the page still has to look transactional -- one
-  // weak signal is enough, since we already trust the domain.
+  // somewhere you buy. So the page still has to look transactional -- one weak
+  // signal is enough, since we already trust the domain.
   if (knownMerchant) return weak >= 1;
 
   // On editorial pages, demand an actual cart or checkout link before
   // believing the softer signals.
-  if (editorial) return !!signals.cartLink && weak >= 2;
+  if (types.some(t => EDITORIAL_TYPES.has(t))) return !!signals.cartLink && weak >= 2;
   return weak >= 2;
 }
 

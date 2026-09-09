@@ -129,21 +129,44 @@ script reads the DOM, the engine judges, so the rule is testable in node. Preced
 
 0. The user has excluded this domain -> the script stops before reading anything.
 1. Nothing suggests the SITE sells things -> never show, whatever else is present.
-2. The page is a checkout -> show, so the auto-open has a dock to open.
-2. One strong structural signal -> show. Schema.org commerce types (`Product`,
+2. A page you came to CONSUME, not shop -> show ONLY if real payment machinery
+   is on it: a card field, a payment-method chooser or a billing form. Nothing
+   written in a button or in the page text counts here. Two ways to qualify, both
+   requiring that the page carry no commerce markup of its own: media markup
+   (`VideoObject`, `Movie`, `PodcastEpisode`, ..., or `og:type` starting `video`),
+   or `"content_site": true` on the domain's `merchants.json` entry.
+3. The page is a checkout -> show, so the auto-open has a dock to open.
+4. One strong structural signal -> show. Schema.org commerce types (`Product`,
    `Offer`, `OfferCatalog`, `Hotel`, ...), `og:type` starting `product`, or a
    storefront platform fingerprint (Shopify, WooCommerce, Magento, BigCommerce).
-3. Editorial markup (`Article`, `NewsArticle`, `BlogPosting`, ...) vetoes the weak
+5. A domain in `merchants.json` still needs one weak signal. Being in the table
+   settles WHAT a site is, not whether THIS page sells anything.
+6. Editorial markup (`Article`, `NewsArticle`, `BlogPosting`, ...) vetoes the weak
    signals unless there is a real cart or checkout link.
-4. A domain in `merchants.json` still needs one weak signal. Being in the table
-   settles WHAT a site is, not whether THIS page sells anything -- youtube.com is
-   a merchant, but a video you are watching on it is not a purchase.
-5. Otherwise two of three weak signals: a buy CONTROL, a cart link, a price.
+7. Otherwise two of three weak signals: a buy CONTROL, a cart link, a price.
 
-Step 4 exists because being in the table used to short-circuit detection
-entirely, so the dock sat on every YouTube video. Measured live: a YouTube watch
-page has zero commerce signals, while homedepot.com's homepage has one and
-netflix.com's signup page has one. One weak signal separates them cleanly.
+Steps 2 and 5 both exist because of YouTube. Being in the table used to
+short-circuit detection entirely, so the dock sat on every video; requiring one
+weak signal was not enough, because ads, comments and shopping shelves supply one
+intermittently -- a single stray `$` in the page text put the dock back on a video
+the user was simply watching. A watch page's own markup is the only stable thing
+about it, so that is what decides. Ordered ahead of the commerce checks but tested
+against them: retail product pages routinely embed a `VideoObject`, so commerce
+markup on the page beats the media markup.
+
+`content_site` covers what markup cannot. Measured live 2026-09-04,
+youtube.com's feed and youtube.com/premium are IDENTICAL in signals -- no
+JSON-LD, no `og:type`, no controls, only a price that may or may not have
+rendered -- so no weak signal can tell the page you shop on from the page you
+browse. They differ only in path, which is site-specific knowledge, and
+site-specific knowledge lives in `merchants.json`. The flag is per-domain data,
+not a rule about streaming: netflix.com is not flagged and its signup page still
+shows on plan pricing alone.
+
+The cost is that YouTube's Premium marketing page no longer shows the dock. That
+is the right trade: it is a page that quotes a price, not one that takes payment,
+and the step that does take payment puts a card field or a payment-method chooser
+on screen, which qualifies on its own.
 
 **Payment machinery is not evidence of shopping.** Payroll, banking, insurance,
 tax and HR portals all have payment-method choosers and billing-address forms.
@@ -309,6 +332,66 @@ the control that clears it in the same change.
 airline's own site, so it surfaces as a note ("book through Chase Travel instead")
 rather than as a winner.
 
+## Where the dock appears
+
+The measured spec. Every row marked MEASURED was read off the live site on the
+date given and is pinned as a test in `tools/test-engine.mjs`; break the rule and
+those are what tell you. Rows marked ASSUMED are reasoning, not evidence, and are
+called out so they are not mistaken for the former.
+
+### Shows
+
+| Page | Example | Why | Status |
+| --- | --- | --- | --- |
+| Product page, listed merchant | homedepot.com | rule 5, one weak signal | MEASURED 2026-08-30 |
+| Product page, unlisted store | allbirds.com | rule 4, Shopify fingerprint | MEASURED 2026-08-29 |
+| Hotel or airline booking | ihg.com | rule 4, `OfferCatalog` | MEASURED 2026-08-29 |
+| Any checkout | payments.wikimedia.org | rule 3 | MEASURED 2026-08-29 |
+| Payment step on a content site | netflix.com account payment | rule 2, card field | MEASURED 2026-09-09 |
+| Rental inside a content site | YouTube film rental | rule 2, payment chooser | MEASURED 2026-09-04 |
+| Telecom home and cart | t-mobile.com | rule 5, cart link + price | MEASURED 2026-09-09 |
+| Utility bill page | coned.com bill | rule 5, amount due | ASSUMED, needs a signed-in read |
+
+### Does not show
+
+| Page | Example | Why | Status |
+| --- | --- | --- | --- |
+| Article about money | en.wikipedia.org "Credit card" | rule 1 | MEASURED 2026-08-29 |
+| Docs quoting buy copy | this repo on github.com | rule 1, labels not text | MEASURED 2026-08-30 |
+| Payment-processor docs | docs.stripe.com | rule 1, frame name not src | MEASURED 2026-08-29 |
+| Video watch page | youtube.com/watch | rule 2, `VideoObject` | MEASURED 2026-09-04 |
+| Content-site browse and marketing | youtube.com feed, netflix.com, hulu.com/welcome | rule 2, `content_site` | MEASURED 2026-09-04, 2026-09-09 |
+| Cart, before checkout | amazon.com cart | rule 3 excludes "proceed to" | MEASURED 2026-08-29 |
+| Payment wallets and crypto | paypal.com, venmo.com, coinbase.com | rule 1 | MEASURED 2026-09-09 |
+| Utility and EV marketing sites | coned.com, evgo.com, electrifyamerica.com | rule 5, zero weak signals | MEASURED 2026-09-09 |
+| Payroll, banking, brokerage, tax | employer payroll, irs.gov | rule 1 | ASSUMED |
+
+### Three findings worth keeping
+
+**Payment branding is not commerce context, and needs no new mechanism.** PayPal,
+Venmo and Coinbase were expected to need a `never_show` flag. Measured, none of
+them carries a cart link, a storefront platform, commerce markup or a buy control,
+so rule 1 already vetoes all three. venmo.com renders a literal "Checkout" button
+and still does not qualify: `BUY_LABEL` does not match a bare "Checkout", and a
+button is not an `a[href*="/checkout"]`. The flag would have been dead code.
+
+**Listing a merchant is cheap only when its marketing pages are quiet.** The
+known-merchant branch still demands one weak signal, so a signal-free marketing
+site stays dark even when listed. coned.com, evgo.com and electrifyamerica.com are
+all in that class, which is what makes utilities and EV charging safe to add as
+pure data. chargepoint.com is not: it renders a price, so its row does mount the
+dock on a B2B marketing site. Accepted, recorded, and pinned as a test rather than
+left to be rediscovered.
+
+**A category can be bonused and still unreachable.** `ev_charging` had two card
+rules and zero merchants, so every charging charge ranked as "everything else".
+There is no inference path to fall back on: `EVChargingStation` is not a
+schema.org type (404 on schema.org and pending.schema.org, checked 2026-09-09), so
+the table is the only mechanism that can resolve it. Do not add an `LD_CATEGORY`
+row for it. The audit that finds this class of bug compares, per category, the
+number of card rules against the number of merchants and whether anything infers
+it; run it whenever you add a card.
+
 ## Known gaps in this build
 
 - No spend tracking, so caps are shown as warnings, not balances.
@@ -317,3 +400,18 @@ rather than as a winner.
   category is actually your top one this cycle.
 - Rotating categories (Freedom Flex) are verified for Q3 2026 and expire 2026-09-30.
 - No icons, no onboarding polish, no store listing.
+- `phone_internet` and `utilities` resolve correctly but no card in `cards.json`
+  bonuses either, so both are inert until one is added. Chase Ink Cash is the
+  obvious candidate and would also need an `office_supply` category, which does
+  not exist yet.
+- A hand table cannot cover US utilities; there are thousands of them and they are
+  regional. coned.com is the worked example proving the mechanism, not the start of
+  a list. Anything beyond a handful needs a different approach.
+- spotify.com, max.com and disneyplus.com are streaming merchants that are NOT
+  flagged `content_site`, because their signals have not been read off the live
+  sites. Netflix and Hulu were flagged only after measuring. Unmeasured means
+  unflagged.
+- Netflix's payment page qualifies on a card field alone -- measured 2026-09-09,
+  with the payment chooser and billing form both absent. There is no second signal
+  in reserve, so if it moves card entry into a frame whose name and title miss the
+  selectors in `collectSignals`, that page goes dark.

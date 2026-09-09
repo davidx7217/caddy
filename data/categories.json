@@ -14,6 +14,7 @@
   "streaming":        { "label": "Streaming services" },
   "entertainment":    { "label": "Entertainment & events" },
   "home_improvement": { "label": "Home improvement" },
-  "utilities":        { "label": "Utilities" },
+  "phone_internet":   { "label": "Phone, internet & cable" },
+  "utilities":        { "label": "Utilities (electric, gas, water)" },
   "other":            { "label": "Everything else" }
 }

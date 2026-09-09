@@ -49,7 +49,8 @@ export async function recommend(hostname, signals) {
   result.font = overlayFont(DEFAULT_FONT, chrome.runtime.getURL);
   // The overlay only appears on pages you can buy something on. The result is
   // still cached and still reachable from the toolbar popup either way.
-  result.show = signals === undefined || isMerchantPage(signals, !!result.merchant);
+  result.show = signals === undefined ||
+    isMerchantPage(signals, !!result.merchant, !!(result.merchant && result.merchant.content_site));
   result.checkout = signals !== undefined && isCheckoutPage(signals);
   return result;
 }

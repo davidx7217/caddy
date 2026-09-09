@@ -190,7 +190,9 @@
   },
   "netflix.com": {
     "category": "streaming",
-    "confidence": "high"
+    "confidence": "high",
+    "content_site": true,
+    "note": "measured 2026-09-09: no JSON-LD and no og:type on any surface, so only real payment machinery can tell the browse grid from the payment step"
   },
   "spotify.com": {
     "category": "streaming",
@@ -198,7 +200,9 @@
   },
   "hulu.com": {
     "category": "streaming",
-    "confidence": "high"
+    "confidence": "high",
+    "content_site": true,
+    "note": "measured 2026-09-09: same signal shape as netflix.com -- price only, nothing structural"
   },
   "disneyplus.com": {
     "category": "streaming",
@@ -211,7 +215,53 @@
   "youtube.com": {
     "category": "streaming",
     "confidence": "low",
+    "content_site": true,
     "note": "only YouTube Premium/TV charges code as streaming"
+  },
+  "chargepoint.com": {
+    "category": "ev_charging",
+    "confidence": "medium",
+    "note": "measured 2026-09-09: marketing home renders a price, so listing it mounts the dock there. Charging itself is paid at the charger; the web surface is account top-up"
+  },
+  "electrifyamerica.com": {
+    "category": "ev_charging",
+    "confidence": "medium",
+    "note": "measured 2026-09-09: marketing home is signal-free, so listing costs nothing. Web surface is Pass+ plan signup"
+  },
+  "evgo.com": {
+    "category": "ev_charging",
+    "confidence": "medium",
+    "note": "measured 2026-09-09: marketing home is signal-free. Web surface is plan signup"
+  },
+  "t-mobile.com": {
+    "category": "phone_internet",
+    "confidence": "medium",
+    "note": "measured 2026-09-09: already showed via cart link + price, but ranked as everything else. Handset purchases here may code as retail rather than telecom"
+  },
+  "verizon.com": {
+    "category": "phone_internet",
+    "confidence": "medium",
+    "note": "measured 2026-09-09: og:type article, no JSON-LD, price only. Same handset-vs-bill ambiguity as t-mobile.com"
+  },
+  "xfinity.com": {
+    "category": "phone_internet",
+    "confidence": "medium",
+    "note": "measured 2026-09-09: no JSON-LD, no controls, price only"
+  },
+  "att.com": {
+    "category": "phone_internet",
+    "confidence": "low",
+    "note": "UNMEASURED: category assigned from the brand, signals not read off the live site"
+  },
+  "spectrum.com": {
+    "category": "phone_internet",
+    "confidence": "low",
+    "note": "UNMEASURED: category assigned from the brand, signals not read off the live site"
+  },
+  "coned.com": {
+    "category": "utilities",
+    "confidence": "medium",
+    "note": "measured 2026-09-09: public site is entirely signal-free, so the dock only appears once a bill page renders an amount due. Listed as the worked example -- see README on why a table cannot cover US utilities"
   },
   "ticketmaster.com": {
     "category": "entertainment",

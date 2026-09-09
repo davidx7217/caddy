@@ -272,23 +272,185 @@ eq('unknown domain resolves to null', resolveMerchant('some-random-site.example'
 }
 
 // --- merchant-page detection ---------------------------------------------
-const M = (sig, known = false) => isMerchantPage(sig, known);
+const M = (sig, known = false, content = false) => isMerchantPage(sig, known, content);
 
 // Being in merchants.json settles the category, not whether this page sells.
 eq('a known merchant with no transactional signal does NOT show', M({}, true), false);
 eq('a known merchant with one weak signal does', M({ cartLink: true }, true), true);
-// Live youtube.com/watch, 2026-08-30: every commerce signal false. It showed
-// only because the domain was in the table, which is the bug this fixes.
+// Live youtube.com/watch, 2026-09-04: VideoObject markup and og:type video.other.
+// The weak signals here come and go with whatever ad, comment or shopping shelf
+// happens to render, so the page's OWN markup has to settle it.
 eq('LIVE youtube watch page does not show',
    M({ ldTypes: ['VideoObject', 'InteractionCounter'], ogType: 'video.other',
        platform: false, cartLink: false, buttonLabels: [], price: false }, true), false);
+eq('...nor when an ad on it puts a price in the page text',
+   M({ ldTypes: ['VideoObject', 'InteractionCounter'], ogType: 'video.other',
+       cartLink: false, buttonLabels: [], price: true }, true), false);
+eq('...nor when a shopping shelf renders a buy control',
+   M({ ldTypes: ['VideoObject'], ogType: 'video.other',
+       cartLink: true, buttonLabels: ['Buy now'], price: true }, true), false);
+// Renting a film on YouTube is still caught, because the payment-method chooser
+// makes it a checkout before the media veto is ever reached.
+eq('but paying for one does',
+   M({ ldTypes: ['Movie'], ogType: 'video.movie', paymentChoice: true }, true), true);
+// A retail product page routinely embeds a product video. Commerce markup on
+// the page must beat the media markup, or every such listing would vanish.
+eq('a product page with a product video still shows',
+   M({ ldTypes: ['Product', 'VideoObject'], ogType: 'product', price: true }), true);
+// youtube.com is flagged content_site in merchants.json, so its markup-free
+// surfaces need real payment machinery. Measured live 2026-09-04: the feed and
+// the Premium page are IDENTICAL in signals -- no JSON-LD, no og:type, no
+// controls, only a price that may or may not have rendered -- so no weak signal
+// can separate them, and the feed is the one the user is actually looking at.
+const YT_BARE = { ldTypes: [], ogType: '', cartLink: false, buttonLabels: [] };
+eq('LIVE youtube feed does not show', M({ ...YT_BARE, price: false }, true, true), false);
+eq('...nor when an ad on the feed renders a price',
+   M({ ...YT_BARE, price: true }, true, true), false);
+eq('...nor the Premium marketing page, which is the same page in signals',
+   M({ ...YT_BARE, price: true }, true, true), false);
+eq('but the moment a card field appears, it does',
+   M({ ...YT_BARE, price: true, paymentField: true }, true, true), true);
+eq('...and a payment-method chooser counts too',
+   M({ ...YT_BARE, paymentChoice: true }, true, true), true);
+// The flag is per-domain data, not a rule about streaming. It is carried by the
+// three domains measured to need it, and by no others -- see the streaming block
+// below for netflix.com and hulu.com, and for the ones left deliberately unflagged.
+
+// --- money-shaped sites that sell nothing, measured live 2026-09-09 --------
+// The question these answer: does payment branding alone put the dock on a site
+// where no purchase is ever made? It does not, and rule 1 is why. None of the
+// three carries ANY commerce context -- no cart link, no storefront platform, no
+// commerce markup, no buy control -- so hasCommerceContext vetoes before a price
+// or a "Checkout" button can be read. No never_show flag is needed for these.
+const PAYSITE = { cartLink: false, platform: false, buttonLabels: [], price: true,
+                 ogType: 'website', checkoutText: true };
+eq('LIVE paypal.com/us/home does not show',
+   M({ ...PAYSITE, ldTypes: ['Corporation', 'WebSite', 'WebPage', 'ImageObject', 'Article'] }), false);
+// venmo.com renders a literal "Checkout" button. BUY_LABEL does not match a bare
+// "Checkout", and a button is not an a[href*="/checkout"], so neither the
+// buy-control signal nor the cart-link signal fires.
+eq('LIVE venmo.com does not show, despite a "Checkout" button',
+   M({ ...PAYSITE, ldTypes: ['Corporation', 'WebSite', 'WebPage', 'ImageObject', 'Article'],
+       buttonLabels: ['Debit', 'Credit', 'Checkout'] }), false);
+eq('LIVE coinbase.com does not show',
+   M({ ...PAYSITE, ldTypes: ['Organization', 'ContactPoint'] }), false);
+
+// --- utility bill pay, measured live 2026-09-09 ---------------------------
+// coned.com's public site is signal-free: no JSON-LD, no og:type, no cart, no
+// price. That is the result that matters. LISTING a utility in merchants.json
+// does not spray the dock over its marketing pages, because the known-merchant
+// branch still demands one weak signal and the marketing site has none. The bill
+// page supplies one (an amount due). Listing a utility is data-only, no engine
+// change -- which is what makes the utilities category reachable at all.
+const CONED = { ldTypes: [], ogType: '', cartLink: false, platform: false,
+                buttonLabels: [], price: false };
+eq('LIVE coned.com public site does not show when unlisted', M(CONED), false);
+eq('LIVE coned.com public site does not show when listed either', M(CONED, true), false);
+eq('...but a bill page would, on the amount due alone', M({ ...CONED, price: true }, true), true);
+
+// t-mobile.com is the opposite case, and it is live TODAY. A real /cart link
+// plus a price is two weak signals, so the dock already mounts on the home page.
+// It is absent from merchants.json and carries no commerce markup, so
+// inferCategory returns null and every T-Mobile charge ranks as "everything
+// else". Showing is correct; the category is wrong.
+const TMO = { ldTypes: ['Corporation', 'ContactPoint'], ogType: 'website',
+              cartLink: true, platform: false, buttonLabels: [], price: true };
+eq('LIVE t-mobile.com home shows on cart link + price', M(TMO, true), true);
+// This is what made it wrong before the table entry: showing was never the
+// problem, the CATEGORY was. Nothing in the markup infers telecom, so without a
+// merchants.json row it ranked as "everything else".
+eq('...and nothing in its markup infers a category', inferCategory(TMO), null);
+
+// --- streaming marketing pages, measured live 2026-09-09 ------------------
+// netflix.com and hulu.com/welcome are IDENTICAL in shape to youtube.com/premium
+// -- no JSON-LD, no usable og:type, no controls, one price. Both are now flagged
+// content_site, so that shape no longer mounts the dock: on a site whose markup
+// says nothing at all, only real payment machinery can tell a browse grid from a
+// payment step.
+//
+// Resolved through merchants.json rather than hardcoded, so the flag and the
+// behaviour cannot drift apart the way priority and pinned once did.
+const SITE = host => {
+  const m = resolveMerchant(host, merchants);
+  return sig => isMerchantPage(sig, !!m, !!(m && m.content_site));
+};
+const STREAM_MARKETING = { ldTypes: [], ogType: '', cartLink: false,
+                           platform: false, buttonLabels: [], price: true };
+eq('LIVE netflix.com home no longer shows on a price alone',
+   SITE('netflix.com')(STREAM_MARKETING), false);
+eq('LIVE hulu.com/welcome no longer shows on a price alone',
+   SITE('hulu.com')(STREAM_MARKETING), false);
+// What still qualifies on a content site: a card field, a payment-method chooser,
+// or a billing form. Nothing else -- a browse grid carries stray text and a watch
+// page carries shopping shelves, so neither copy nor controls can be trusted here.
+//
+// Measured on a live netflix.com account payment page, 2026-09-09, signed in:
+// card field TRUE, payment chooser FALSE, billing form FALSE. So the flag does
+// not blind the one page that matters -- but note that the card field is the
+// ONLY thing holding it up. There is no second signal in reserve: if Netflix
+// moves card entry into a frame whose name and title miss the selectors, that
+// page goes dark and nothing else on it would qualify.
+eq('LIVE netflix payment page still shows: card field, measured 2026-09-09',
+   SITE('netflix.com')({ ...STREAM_MARKETING, paymentField: true,
+                         paymentChoice: false, billingForm: false }), true);
+eq('...and a payment-method chooser does',
+   SITE('netflix.com')({ ...STREAM_MARKETING, paymentChoice: true }), true);
+eq('...and a billing form does',
+   SITE('hulu.com')({ ...STREAM_MARKETING, billingForm: true }), true);
+// The cost of the flag, stated rather than discovered later: a payment step
+// carrying NONE of those three -- only a checkout-shaped URL, checkout copy and a
+// commit button -- stays dark. Same trade already accepted for youtube.com/premium.
+eq('the cost: a commit button alone is not enough on a content site',
+   SITE('netflix.com')({ ...STREAM_MARKETING, checkoutUrl: true, checkoutText: true,
+                         buttonLabels: ['Start Membership'] }), false);
+// Unmeasured means unflagged. spotify.com, max.com and disneyplus.com keep the
+// old behaviour until someone reads their signals off the live sites.
+eq('spotify.com is not flagged, so a price alone still shows there',
+   SITE('spotify.com')(STREAM_MARKETING), true);
+
+// --- dead categories, closed 2026-09-09 -----------------------------------
+// A category is dead when a card bonuses it and no page can ever resolve to it.
+// ev_charging was the real one: two card rules (Freedom Flex 5x, BofA CCR 3x)
+// and zero merchants, so every charging charge ranked as "everything else".
+//
+// There is no inference path to fall back on either. EVChargingStation is NOT a
+// schema.org type -- checked 2026-09-09, 404 on both schema.org and
+// pending.schema.org -- so the table is the ONLY mechanism that can resolve this
+// category, which is why the fix is a merchants.json row and not an LD_CATEGORY
+// entry. Do not add one; it would be a mapping for a type that does not exist.
+eq('ev_charging resolves from the table', run('evgo.com').category, 'ev_charging');
+eq('...from the table, not a guess', run('evgo.com').categorySource, 'merchant');
+eq('...and Freedom Flex 5x finally applies to it',
+   card(run('evgo.com'), 'chase-freedom-flex').rate, 5);
+eq('...where before the row it fell to everything else',
+   run('nowhere-ev.example', WALLET, { signals: {} }).category, 'other');
+
+// Listing a merchant is only safe if its marketing pages stay quiet. Measured
+// 2026-09-09: evgo.com and electrifyamerica.com are entirely signal-free, so the
+// rows cost nothing. chargepoint.com renders a price, so its row DOES mount the
+// dock on a B2B marketing site -- accepted and recorded rather than discovered.
+const QUIET = { ldTypes: [], ogType: '', cartLink: false, platform: false,
+                buttonLabels: [], price: false };
+eq('LIVE evgo.com marketing home stays dark', SITE('evgo.com')(QUIET), false);
+eq('LIVE electrifyamerica.com marketing home stays dark',
+   SITE('electrifyamerica.com')(QUIET), false);
+eq('the cost: LIVE chargepoint.com home renders a price, so its row shows there',
+   SITE('chargepoint.com')({ ...QUIET, price: true }), true);
+
+// phone_internet is a distinct card bucket from utilities: Ink Cash's 5% reads
+// "internet, cable and phone services", which no issuer folds into utilities.
+eq('t-mobile.com now ranks as phone_internet', run('t-mobile.com').category, 'phone_internet');
+eq('verizon.com too', run('verizon.com').category, 'phone_internet');
+eq('xfinity.com too', run('xfinity.com').category, 'phone_internet');
+
+// utilities resolves, but see the README: a hand table cannot cover ~3,000 US
+// utilities, and no card in cards.json bonuses the category yet. coned.com is
+// the worked example proving the mechanism, not the start of a list.
+eq('coned.com resolves to utilities', run('coned.com').category, 'utilities');
 // Live homedepot.com homepage, 2026-08-30: one weak signal, a real merchant.
 eq('LIVE home depot homepage still shows',
    M({ ldTypes: ['WebSite', 'Organization'], ogType: 'homepage',
        cartLink: true, buttonLabels: [], price: false }, true), true);
-// Live netflix.com, 2026-08-30: plan pricing on a signup page.
-eq('LIVE netflix signup page still shows',
-   M({ ldTypes: [], cartLink: false, buttonLabels: [], price: true }, true), true);
 // A bare payment page has no product markup at all, but must still mount the
 // dock or the checkout auto-open would have nothing to open.
 eq('a bare page does not', M({}), false);

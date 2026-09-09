@@ -5,3 +5,6 @@ node_modules/
 # Never commit a real wallet. Which cards a person holds is their business, and
 # the extension ships without one -- tools/fixtures/wallet.json is test data.
 data/wallet.json
+
+# Packaged builds for sharing. Rebuild rather than commit.
+card-picker-*.zip
