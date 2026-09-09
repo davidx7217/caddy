@@ -215,6 +215,7 @@
     "category": "streaming",
     "confidence": "high",
     "content_site": true,
+    "redirects_to": "hbomax.com",
     "note": "measured 2026-09-09: redirects to hbomax.com in a browser, so this row matches almost nothing now. Kept for stale links only"
   },
   "hbomax.com": {
@@ -301,6 +302,7 @@
   "exxon.com": {
     "category": "gas",
     "confidence": "medium",
+    "redirects_to": "exxonmobilfuels.com",
     "note": "measured 2026-09-09: client-side redirect to exxonmobilfuels.com, so this row matches almost nothing now. Kept for stale links only"
   },
   "exxonmobilfuels.com": {

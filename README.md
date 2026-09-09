@@ -64,6 +64,20 @@ node tools/test-engine.mjs
 247 assertions over the recommendation logic. Run this after any data or engine change.
 
 ```bash
+node tools/check-redirects.mjs
+```
+Requests every domain in `merchants.json` and reports any whose final host no
+longer matches its row -- the failure that killed two rows before anyone looked.
+Exits 1 on a surprise move, so it can gate a release. Rows that redirect on
+purpose declare `"redirects_to"` and are reported separately, so a deliberate
+stale-link row does not leave the script permanently red.
+
+It speaks HTTP, so it sees SERVER-side redirects only. Anything it lists as
+BLOCKED is unconfirmed, not clean, and a client-side redirect is invisible to it
+either way -- `exxon.com` was reported as "403, host unchanged", which was simply
+wrong. Open the blocked rows in a browser and compare `location.hostname`.
+
+```bash
 node tools/test-lifecycle.mjs
 ```
 40 assertions over the content script's mount/unmount/polling behaviour, its
@@ -92,6 +106,7 @@ src/
   options.css       options page styling only; ui.css holds the shared tokens
   fonts/            Outfit, bundled woff2, latin subset, never fetched remotely
 tools/
+  check-redirects.mjs  finds merchant rows that died by redirect
   make-icons.mjs    draws the icon set; zero-dependency PNG encoder
   test-engine.mjs   zero-dependency test runner for the engine
   test-lifecycle.mjs runs the real content script in a vm sandbox
