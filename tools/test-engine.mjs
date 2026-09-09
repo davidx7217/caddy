@@ -833,5 +833,53 @@ eq('the 5% cap is surfaced, and says it is shared',
    ['Capped at $25,000 per year, then 1x',
     'The $25,000 cap is combined with internet, cable and phone, and runs per account anniversary year.']);
 
+// --- four cards verified on issuer sites 2026-09-09 ------------------------
+const only = (id, h, when = '2026-09-09') =>
+  run(h, [{ productId: id, config: {} }], { now: new Date(when + 'T12:00:00') });
+
+// Amex Gold. Both 4X caps are per CALENDAR year and are SEPARATE from each
+// other -- unlike Ink Cash, where one cap is shared across two categories. Get
+// that wrong and a heavy grocery year looks like it kills the dining rate too.
+eq('Gold pays 4x on restaurants', only('amex-gold', 'doordash.com').all[0].rate, 4);
+eq('...and 4x at supermarkets', only('amex-gold', 'wholefoodsmarket.com').all[0].rate, 4);
+eq('...with caps that say they are separate, not shared',
+   [only('amex-gold', 'doordash.com').all[0].caveats[0],
+    only('amex-gold', 'wholefoodsmarket.com').all[0].caveats[0]],
+   ['Capped at $50,000 per year, then 1x', 'Capped at $25,000 per year, then 1x']);
+eq('...3x on flights, which does NOT need the portal',
+   only('amex-gold', 'delta.com').all[0].rate, 3);
+
+// The 5X hotel rate is portal_only, so it must never be ranked on the hotel's
+// own site -- it surfaces as a note instead. This is the rule that would quietly
+// overstate every hotel booking if portal_only were dropped.
+eq('...but its 5x hotels rate does NOT rank on hilton.com',
+   only('amex-gold', 'hilton.com').all[0].rate, 1);
+eq('...it surfaces as a route note instead',
+   only('amex-gold', 'hilton.com').notes[0].text,
+   'Amex Gold Card: 5x (8.00%) if you book through Amex Travel instead');
+
+// Blue Cash Preferred closes the streaming category, which had seven merchants
+// and nothing bonusing them.
+eq('BCP pays 6x on streaming', only('amex-blue-cash-preferred', 'netflix.com').all[0].rate, 6);
+eq('...6x at supermarkets, on the tightest cap in the catalogue',
+   only('amex-blue-cash-preferred', 'kroger.com').all[0].caveats[0],
+   'Capped at $6,000 per year, then 1x');
+eq('...and 3x on transit', only('amex-blue-cash-preferred', 'uber.com').all[0].rate, 3);
+
+// Citi Double Cash earns its 2% everywhere, with no category to match. A flat
+// base rate beating category cards on unbonused sites is the whole point of it.
+eq('Double Cash pays its 2x on a site with no bonus category',
+   only('citi-double-cash', 'amazon.com').all[0].rate, 2);
+eq('...and its portal rate is a note, not a ranking',
+   only('citi-double-cash', 'amazon.com').all[0].caveats, []);
+
+// Savor is currency 'cash', NOT 'c1'. It is a cash back card; the 1.4 cpp c1
+// valuation belongs to the Venture miles family and would overstate it by 40%.
+eq('Savor is valued as cash, not miles',
+   only('capitalone-savor', 'doordash.com').all[0].value, 3);
+eq('...3x on entertainment', only('capitalone-savor', 'ticketmaster.com').all[0].rate, 3);
+eq('...and 3x on streaming, so two cards now reach that category',
+   only('capitalone-savor', 'netflix.com').all[0].rate, 3);
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
