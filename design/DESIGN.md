@@ -127,12 +127,12 @@ label in the extension shrinks.
 | Role | Size | Weight | Tracking | Case | Notes |
 | --- | --- | --- | --- | --- | --- |
 | Page title | 34px | 400 | `-.03em` | UPPER | `line-height: 1.12`. Falls to 26px under 860px |
-| Numeral display | 34px | 400 | `-.03em` | - | Point values. Transparent background, no border, no spinners |
+| Numeral display | 22px | 500 | `-.02em` | - | Point values. `--surface` ground, `--line` border, `--r-sm`, no spinners |
 | Brand | 24px | 500 | `-.03em` | UPPER | Sidebar only |
 | Lede | 22px | 300 | `-.02em` | Sentence | `max-width: 26ch`. The one place weight 300 appears |
-| Section heading | 18px | 500 | `-.01em` | UPPER | Tie categories, mode tiles |
+| Section heading | 18px | 500 | `-.01em` | UPPER | Tie categories |
 | Card name | 16px | 600 | `-.015em` | Sentence | `line-height: 1.25` |
-| Row name | 15px | 600 | `-.01em` | Sentence | List rows; the overlay panel's winner |
+| Row name | 15px | 600 | `-.01em` | Sentence | List rows; the overlay panel's winner. Mode tile labels are the same size and weight but UPPER at `.01em` |
 | Body | 13px | 400 | - | Sentence | `line-height: 1.5`. The base |
 | Body small | 12.5px | 400 | - | Sentence | Mode descriptions, select values, the overlay panel |
 | Caveat | 11.5px | 400 | - | Sentence | Warn notes and banners, `line-height: 1.45` |
@@ -140,9 +140,10 @@ label in the extension shrinks.
 | Micro | 10.5px | 400 | - | Sentence | Overlay notes, rank numerals |
 | Micro-cap | 10px | 400 | `.06-.12em` | UPPER | Every label, every button, every column head |
 
-The display end came down once already: 46px read as shouting in a settings
-page and left the card grid cramped. Micro-caps did **not** move -- they are at
-the floor of legibility and shrinking them buys nothing.
+The display end came down twice. 46px read as shouting in a settings page and
+left the card grid cramped; then the point values came off 34px when they stopped
+being printed output and became fields you could type in. Micro-caps did **not**
+move -- they are at the floor of legibility and shrinking them buys nothing.
 
 **Tracking scales inversely with size.** Display type is negative
 (`-.01em` to `-.03em`); micro-caps are positive (`.06em` to `.12em`). Nothing
@@ -167,12 +168,12 @@ Not a strict 4px grid. Use a value from this set and do not invent between them:
 | Page bottom | `80px` |
 | Header | `34px 40px 26px` |
 | Sidebar block | `26px 22px` |
-| Nav item | `13px 22px` |
-| Grid cell | `20-24px` |
-| List row | `18px 4px` |
-| Table row | `14px 4px` |
+| Nav item | `12px 22px` |
+| Grid cell | `16px 18px` (mode tiles; point cells carry no padding at all) |
+| List row | `14px 4px` |
+| Table row | `13px 4px` |
 | Section top margin | `28px` |
-| Empty state | `50px` |
+| Empty state | `30px 4px` |
 
 ### Measure
 
@@ -180,7 +181,7 @@ Text gets a `ch` cap, not a `px` one.
 
 | Content | Cap |
 | --- | --- |
-| Lede | `24ch` |
+| Lede | `26ch` |
 | Section blurb | `62ch` |
 | Body paragraph | `60ch` |
 | Banner | `72ch` |
@@ -190,9 +191,8 @@ Text gets a `ch` cap, not a `px` one.
 | Region | Width |
 | --- | --- |
 | Sidebar | `250px` fixed |
-| Card grid | `minmax(340px, 1fr)` auto-fill |
-| Mode tiles | `minmax(310px, 1fr)` auto-fit, capped `840px` |
-| Point values | `minmax(230px, 1fr)` auto-fill, capped `860px` |
+| Mode tiles | `minmax(260px, 1fr)` auto-fit, capped `700px` |
+| Point values | `minmax(190px, 1fr)` auto-fill, capped `700px`, `gap: 18px 26px` |
 | List rows | `900px` |
 | Setup column | `900px`, centred |
 | Activity table | `980px` |
@@ -208,20 +208,24 @@ Text gets a `ch` cap, not a `px` one.
 
 | Token | Value | Applies to |
 | --- | --- | --- |
-| `--r-sm` | `4px` | Buttons, selects, inputs, banners, warn notes, issuer marks |
-| `--r-md` | `8px` | Grid cells, the blocklist field, the popup's winning row |
+| `--r-sm` | `4px` | Buttons, selects, inputs, banners, warn notes |
+| `--r-md` | `8px` | Grid cells, issuer marks, list-row hover blocks, the blocklist field, the popup's winning row |
 | `--r-lg` | `12px` | The dock, the overlay panel and the card dialog -- the things that float |
 
   The overlay hardcodes `4px` and `12px` as literals, because a shadow root
   cannot read a stylesheet and the values do not vary by theme.
 - **No `box-shadow`.** The one exception is `inset 3px 0 0 var(--accent)` on the
   active nav item, which is a rule, not a shadow.
-- **Grid cells are separate objects.** `gap: 12px`, each cell with its own full
+- **Grid cells are separate objects.** `gap: 10px`, each cell with its own full
   border and `--r-md`. The old seamless grid shared one hairline between
-  neighbours, which is cheaper but cannot be rounded.
+  neighbours, which is cheaper but cannot be rounded. Point cells opt out of the
+  cell chrome entirely -- see [Field](#field).
 - **Focus is `2px solid var(--accent)` at `outset: 2px`,** via `:focus-visible`.
-  Never remove it. The blocklist textarea is the sole element that drops the ring,
-  and it replaces it with a `border-color` change to `--muted`.
+  Never remove it. Two elements drop the ring and both replace it with a
+  `border-color` change to `--muted`: the blocklist textarea and the point-value
+  input. Both already carry a `--line` border that the ring only doubles, and
+  both take the same treatment on hover, so focus and hover stay one idea.
+  Nothing else qualifies -- the setup flow's search box tried and was put back.
 
 ---
 
@@ -251,8 +255,8 @@ drop the border and take `background: var(--fill)`, hovering to `--line`.
 
 ### Nav item
 
-`display: flex`, `gap: 12px`, `padding: 13px 22px`, `border-bottom` hairline.
-Three children: a `11px` ordinal at `opacity: .55`, a flexed label at `14px`, a
+`display: flex`, `gap: 12px`, `padding: 12px 22px`, `border-bottom` hairline.
+Three children: a `11px` ordinal at `opacity: .55`, a flexed label at `13px`, a
 `11px` count at `opacity: .55`. Active state takes `--surface`, `--ink`,
 `font-weight: 600`, and the inset accent rule. Set `aria-current="page"`, do not
 use a class.
@@ -295,7 +299,7 @@ pins to the top-left corner.
 
 ### List row
 
-`display: flex; align-items: center; gap: 18px; padding: 18px 4px`, hairline
+`display: flex; align-items: center; gap: 14px; padding: 14px 4px`, hairline
 bottom. Left slot is a fixed-width mark, middle is `flex: 1; min-width: 0`, right
 is the action. The `4px` horizontal padding is deliberate: rows sit flush with
 the page gutter, so the divider reads as a full-width rule.
@@ -303,14 +307,17 @@ the page gutter, so the divider reads as a full-width rule.
 ### Table row
 
 `display: grid` with an explicit column template, `gap: 14px`,
-`padding: 14px 4px`, hairline bottom. The header row is the same grid at
+`padding: 13px 4px`, hairline bottom. The header row is the same grid at
 `padding: 8px 4px` in micro-caps. Numerals right-align at `font-weight: 500`.
 
 ### Field
 
 Label is a micro-cap in `--muted`, stacked above the control with `gap: 5px`.
 Controls take `1px solid var(--line)`, `--r-sm`, `padding: 8px 10px`, and a
-`--surface` ground when they sit directly on the page.
+`--surface` ground when they sit directly on the page. The blocklist textarea is
+the one control that scales up rather than repeating that spec: it is a
+multi-line field the width of a paragraph, so it takes `--r-md` and
+`padding: 16px 18px` like a surface, not like a control.
 
 **One lifted surface per field, never two.** The point values were briefly a
 bordered input inside a bordered `--surface` cell, which read as two fields
@@ -325,22 +332,32 @@ the pane and survive a re-render.
 
 ### Selected tile
 
-Same cell geometry, but `background: var(--accent)` and `color: var(--accentInk)`
-when on. Descriptive text inside a tile uses `opacity: .78` rather than a second
-colour, because `--muted` has no contrast against the accent fill.
+Same cell geometry, but `background: var(--fill)` and `border-color: var(--muted)`
+when on, and the state micro-cap goes `--ink` at `600`.
+
+**Not an `--accent` fill.** That is `#44403c` in light, which reads as a black
+block dropped into a paper page -- the same failure principle 6 names for
+`--accent` used as a border. A tint plus a warmer border says "chosen" without
+inverting the tile out of the palette, and it leaves the descriptive text on
+`--muted` where it belongs rather than needing an opacity to survive the fill.
 
 ### Section heading
 
 `.sub-head`: micro-cap in `--muted` on a `border-top` hairline, `padding-top:
-12px`, `margin-top: 40px` (`26px` as the first child). An optional `.hint`
+12px`, `margin-top: 40px`. The **first** one in a pane drops the border and the
+padding and takes `margin-top: 24px`, because it sits directly under the header's
+own full-width rule and two hairlines that close together read as a mistake. The
+later ones keep theirs: that is what separates the blocks a merged section holds. An optional `.hint`
 follows at 12.5px `--muted`, capped at `62ch`. Whatever comes next starts
 `14px` below -- that rule is declared last in the sheet on purpose, since it has
 the same specificity as the block margins it overrides.
 
 ### Empty state
 
-`padding: 50px` (`50px 22px` inside a grid cell), `--muted`, 14px sentence case.
-Always says what to do next and where, e.g. naming the section that fixes it.
+`padding: 30px 4px`, `--muted`, 13px sentence case -- the `4px` matches the list
+rows so an empty list sits where a full one would. Inside a grid cell it drops
+the cell's border and background as well. Always says what to do next and where,
+e.g. naming the section that fixes it, or the search term to clear.
 
 ---
 
