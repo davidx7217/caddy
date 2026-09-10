@@ -27,9 +27,10 @@ Six rules generate the whole look. Everything below is a consequence of one of t
 3. **Every edge is rounded, on a three-step scale.** `4px` for controls, `8px`
    for surfaces, `12px` for anything that floats. There are no square corners
    anywhere in the product -- not on a button, not on a hover block, not on the
-   dock. A radius outside the scale is a bug, and so is the absence of one. The
-   sole exception is the toolbar popup's own window, which Chrome draws and
-   which no stylesheet here can reach.
+   dock. A radius outside the scale is a bug, and so is the absence of one.
+   The one exception is the toolbar popup's own window, which Chrome draws and
+   which no stylesheet here can reach -- which is why the popup is a fallback
+   and the in-page overlay is the real surface.
 4. **Type carries hierarchy, colour does not.** Three colours of text (ink, muted,
    warn) and a wide type ramp. Importance is signalled by size and case, never by
    tinting a label.
@@ -307,9 +308,13 @@ the page gutter, so the divider reads as a full-width rule.
 ### Field
 
 Label is a micro-cap in `--muted`, stacked above the control with `gap: 5px`.
-Controls take `1px solid var(--line)`, `background: var(--bg)` inside a
-`--surface` cell (or `--surface` on the page ground), `padding: 8px 10px`, radius
-`0`.
+Controls take `1px solid var(--line)`, `--r-sm`, `padding: 8px 10px`, and a
+`--surface` ground when they sit directly on the page.
+
+**One lifted surface per field, never two.** The point values were briefly a
+bordered input inside a bordered `--surface` cell, which read as two fields
+stacked -- and the outer one was not editable. Point cells carry no border and
+no background; the input is the only thing raised off the page.
 
 ### Note and banner
 
@@ -407,40 +412,56 @@ paragraph about schema design.
 scroll. Anything that used to be a section blurb now rides under its own
 sub-head as a `.hint`.
 
+### Toolbar icon
+
+**The click's job is to open the in-page overlay, not a popup.** A browser popup
+is a native window Chrome draws: its square corners, border and shadow sit
+outside any stylesheet this extension owns, and there is no API to change them
+-- see the Chromium issue "Cannot change extensions' popup's shape". The overlay
+is ours end to end, so wherever it can run, it wins.
+
+`manifest.json` still declares a `default_popup`, and `src/popup.html` opens for
+a few milliseconds before closing itself. That is deliberate. The alternative --
+`chrome.action.onClicked` plus per-tab `setPopup` -- has to know in advance which
+tabs are injectable, which means reading every tab's URL, which means the `tabs`
+permission, which Chrome describes at install as **"read your browsing
+history"**. This extension's whole pitch is that installing asks for nothing. A
+brief flash is the cheaper price.
+
+So the popup, on open:
+
+1. **No cards** -> opens Options and closes. Flashing an empty ranking at someone
+   who has not built a wallet answers nothing.
+2. **Injection succeeds** -> the overlay mounts, is told to `OPEN`, and the popup
+   closes. This is the normal path on every http(s) page.
+3. **Injection refused** -> the popup stays and renders the ranking itself. This
+   is the only reason it still exists.
+
+Chrome refuses `chrome://` pages, the Web Store, the PDF viewer, `view-source:`,
+other extensions' pages, and `file://` without the file-access grant. That list
+is the browser's and no permission changes it.
+
+**The click is an explicit request, so it overrides `res.show`** -- that flag is
+a guess about whether a page sells anything, and the icon is not a guess. It does
+**not** override the blocklist.
+
 ### Popup
 
-`340px` wide inside browser chrome, on `--surface` so it is the same colour as
-the dock. No border: the browser draws the edge.
-
-**The one place rule 3 does not reach.** Chrome owns this window -- it paints an
-opaque, square surface and composites the document onto it. `border-radius` on
-`body` with `html { background: transparent }`, the recipe that works in some
-builds, was tried and changed nothing. The square corners and the dark edge
-around the popup are Chrome's window chrome and no stylesheet here can reach
-them. Everything *inside* the popup still follows the scale.
+`340px` wide, on `--surface` so it is the same colour as the dock. No border: the
+browser draws the edge, square, and rule 3 cannot reach it -- which is exactly
+why it is a fallback rather than the main surface. Everything inside it follows
+the scale. The ramp compresses: the top of it is the hostname at 17px uppercase,
+and gutters drop from `40px` to `14px`.
 
 **It must fit without scrolling.** Chrome gives a popup 600px of height and no
-more, and a popup that scrolls has buried its own primary action. Two rules keep
-it inside that budget:
+more, and a popup that scrolls has buried its own primary action.
 
 - **Three cards, never more.** The fourth-best card has never changed a decision
   at the till, and the full ranking is one click away in Options.
-- **No tail.** Portal routes, alternate bookings and other secondary notes are
-  cut. They are reading work at the moment the reader least wants any.
+- **No tail.** Portal routes and other secondary notes are cut.
 
 The winning row is marked only when `resolvedBy === 'clear_winner'`, with a
-`--fill` ground at `--r-md` and nothing else. It carried the sidebar's `inset
-3px` accent rule for a while; on a rounded row the inset follows the radius into
-a bracket, and since `--accent` is near-white in dark mode it read as a stray
-hook rather than a marker. Marking the top row of an unresolved tie would claim
-a decision the ranker has not made. The ramp compresses --
-page title and lede have no place here, and the top of it is the hostname at
-17px uppercase. Gutters drop from `40px` to `14px`.
-
-**The hostname is only ever an http(s) host.** On `chrome://` pages and on the
-extension's own pages `new URL().hostname` returns the extension ID, which is
-how the popup once titled itself with a block of random letters. Anything that
-is not http(s) reads as no merchant.
+`--fill` ground at `--r-md` and nothing else.
 
 ### Injected overlay
 
@@ -469,7 +490,7 @@ All three surfaces are on-system. What each one owns:
 | Surface | Sheet | Notes |
 | --- | --- | --- |
 | Options | `src/options.css` | Reference implementation. Explicit `data-theme` switch |
-| Popup | `src/ui.css` | Popup-only despite the generic filename. Reads the stored theme, falls back to the OS |
+| Popup | `src/ui.css` | Fallback only. Reads the stored theme, falls back to the OS |
 | Overlay | style string in `src/content.js` | Tokens are set inline on the host by `applyTheme()`, because a shadow root can reach no stylesheet and must not carry a fixed attribute a page could detect. Holds the [exemption](#exemptions) |
 
 ### One theme, three surfaces
@@ -479,10 +500,6 @@ Options owns the choice and writes `theme` (`'light'` / `'dark'`) to
 system on all three surfaces.
 
 - **Options** sets `data-theme` on the root every render.
-- **Popup** reads the key on open and sets the same attribute. The stylesheet is
-  three-state: `:root` light, `:root[data-theme="dark"]` dark, and a
-  `prefers-color-scheme` block guarded with `:not([data-theme="light"])` so a
-  pinned light survives a dark OS.
 - **Overlay** receives `theme` in the recommendation payload and, separately,
   listens for the storage change so a switch repaints a dock that is already up
   without closing an open panel.

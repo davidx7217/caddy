@@ -151,18 +151,27 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     return true;
   }
 
-  // Manual mode: the toolbar click grants activeTab for this tab, which is
-  // enough to inject the same content script for this visit only. No host
-  // permission, no prompt, and nothing persists past the page.
+  // The popup asks for this the moment it opens. It cannot call
+  // chrome.scripting itself without duplicating CONTENT_FILES, and one copy of
+  // that list is the point.
+  //
+  // The click that opened the popup granted activeTab for this tab, which is
+  // enough to inject for this visit only: no host permission, no prompt,
+  // nothing that persists past the page.
   if (msg.type === 'INJECT') {
     (async () => {
       try {
         await chrome.scripting.executeScript({ target: { tabId: msg.tabId }, files: CONTENT_FILES });
-        sendResponse({ ok: true });
       } catch (e) {
-        // Chrome refuses injection on its own pages and on the Web Store.
-        sendResponse({ ok: false, error: String(e.message || e) });
+        // Chrome refuses its own pages, the Web Store and the PDF viewer. The
+        // popup stays open and renders the ranking itself.
+        sendResponse({ ok: false });
+        return;
       }
+      // Injected. Tell it to open rather than waiting for the checkout
+      // heuristic -- the user asked for this by clicking.
+      try { await chrome.tabs.sendMessage(msg.tabId, { type: 'OPEN' }); } catch (e) {}
+      sendResponse({ ok: true });
     })();
     return true;
   }

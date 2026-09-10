@@ -159,14 +159,19 @@ h1 { font-size: 34px; font-weight: 400; letter-spacing: -.03em; line-height: 1.1
 .count { font-size: 11px; color: var(--muted); }
 
 /* ---------- point values ---------- */
-.grid.points { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); max-width: 700px; }
-.pt { padding: 14px 16px; }
+/* No cell chrome here. The only lifted surface in this block is the input --
+   a bordered box inside a bordered box read as two fields, and the outer one
+   is not editable. */
+.grid.points { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+               gap: 18px 26px; max-width: 700px; }
+.grid.points > * { border: 0; background: transparent; }
+.pt { padding: 0; }
 .pt-label { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 /* The number used to sit borderless on the cell ground, which read as printed
    output rather than something you could change. It is a field now. */
 .pt-in { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
 .pt-in input { font-size: 22px; font-weight: 500; letter-spacing: -.02em; width: 88px;
-               background: transparent; border: 1px solid var(--line);
+               background: var(--surface); border: 1px solid var(--line);
                border-radius: var(--r-sm); padding: 6px 10px; }
 .pt-in input:hover { border-color: var(--muted); }
 .pt-in input:focus { outline: none; border-color: var(--muted); }
@@ -234,7 +239,10 @@ a.btn { text-decoration: none; display: inline-block; }
 .sub-head { font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
             color: var(--muted); border-top: 1px solid var(--line);
             padding-top: 12px; margin-top: 40px; }
-.sub-head:first-child { margin-top: 26px; }
+/* The first sub-head in a pane sits right under the header's own full-width
+   rule, so its border-top doubled the line. The later ones keep theirs -- that
+   is what separates the two blocks a merged section holds. */
+.sub-head:first-child { margin-top: 24px; border-top: 0; padding-top: 0; }
 .hint { font-size: 12.5px; line-height: 1.5; color: var(--muted); max-width: 62ch; margin-top: 8px; }
 .sub-head + *, .hint + * { margin-top: 14px; }
 
