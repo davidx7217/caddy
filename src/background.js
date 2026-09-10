@@ -1,5 +1,5 @@
 import { rank, isMerchantPage, isCheckoutPage,
-         DEFAULT_FONT, FONTS, overlayFont } from './engine.js';
+         FONT_FILE, overlayFont } from './engine.js';
 
 // One-time cleanup of the removed snooze feature's leftover key. Safe to
 // delete this line once it has run on every machine that had the old build.
@@ -13,7 +13,7 @@ let fontPromise = null;
 const FONT_NONCE = Math.random().toString(36).slice(2, 10);
 
 /**
- * The overlay's font as data: URIs, keyed by the path overlayFont() asks for.
+ * The overlay's font as a data: URI.
  *
  * Inlined rather than served from web_accessible_resources. A web-accessible
  * file is a fixed chrome-extension:// URL that ANY page can fetch to prove the
@@ -22,19 +22,16 @@ const FONT_NONCE = Math.random().toString(36).slice(2, 10);
  * probe. Read once and cached: the worker can fetch its own bundled files
  * without declaring them accessible to anyone.
  */
-function fontUrls() {
+function fontUrl() {
   if (!fontPromise) {
-    const faces = (FONTS[DEFAULT_FONT].faces || []).map(([, , file]) => 'src/fonts/' + file);
-    fontPromise = Promise.all(faces.map(path =>
-      fetch(chrome.runtime.getURL(path))
-        .then(r => r.arrayBuffer())
-        .then(buf => {
-          const bytes = new Uint8Array(buf);
-          let bin = '';
-          for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
-          return [path, 'data:font/woff2;base64,' + btoa(bin)];
-        })
-    )).then(pairs => Object.fromEntries(pairs));
+    fontPromise = fetch(chrome.runtime.getURL(FONT_FILE))
+      .then(r => r.arrayBuffer())
+      .then(buf => {
+        const bytes = new Uint8Array(buf);
+        let bin = '';
+        for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+        return 'data:font/woff2;base64,' + btoa(bin);
+      });
   }
   return fontPromise;
 }
@@ -81,8 +78,8 @@ export async function recommend(hostname, signals, wantFont = false) {
   // it asks: the faces are inlined as base64 now, so shipping them on every
   // route change of an SPA would mean ~43KB per navigation for nothing.
   if (wantFont) {
-    const urls = await fontUrls();
-    result.font = overlayFont(DEFAULT_FONT, path => urls[path], FONT_NONCE);
+    const url = await fontUrl();
+    result.font = overlayFont(() => url, FONT_NONCE);
   }
   // The overlay only appears on pages you can buy something on. The result is
   // still cached and still reachable from the toolbar popup either way.

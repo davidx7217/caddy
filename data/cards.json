@@ -1,5 +1,5 @@
 {
-  "_comment": "All 12 records verified against issuer sources; 7 on 2026-08-29 and 5 on 2026-09-09. Each carries its source_url. Chase Freedom Flex rotating categories MUST be re-verified 2026-10-01.",
+  "_comment": "All 14 records verified against issuer sources; 7 on 2026-08-29 and 7 on 2026-09-09. Each carries its source_url. Chase Freedom Flex rotating categories MUST be re-verified 2026-10-01.",
   "chase-sapphire-reserve": {
     "id": "chase-sapphire-reserve",
     "issuer": "chase",
@@ -493,6 +493,92 @@
       }
     ]
   },
+  "discover-it-cash-back": {
+    "id": "discover-it-cash-back",
+    "issuer": "discover",
+    "network": "discover",
+    "currency": "disco",
+    "name": "Discover it Cash Back",
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-09",
+    "source_url": "https://www.discover.com/credit-cards/cash-back/cashback-calendar.html",
+    "caution": "Each quarter's 5% must be ACTIVATED with Discover, and it stops at $1,500 of spend in that quarter.",
+    "note": "Unlike Chase, Discover publishes the whole year's calendar in advance, so Q4 2026 is modelled here already and this card will not go stale on 2026-10-01. Past quarters are deliberately NOT modelled: an expired rule with no current rule in its category would fire a staleness warning that is noise, since the quarter ended on schedule. First-year Cashback Match is not modelled either -- it doubles everything at year end and needs spend tracking.",
+    "rules": [
+      {
+        "category": "gas",
+        "rate": 5.0,
+        "window": { "start": "2026-07-01", "end": "2026-09-30" },
+        "requires_activation": true,
+        "cap": { "amount": 1500, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "Q3 2026 rotating category. The $1,500 cap is combined across all three Q3 categories."
+      },
+      {
+        "category": "travel_ground",
+        "rate": 5.0,
+        "window": { "start": "2026-07-01", "end": "2026-09-30" },
+        "requires_activation": true,
+        "cap": { "amount": 1500, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "Q3 2026 rotating category (Transportation). The $1,500 cap is combined across all three Q3 categories."
+      },
+      {
+        "category": "drugstore",
+        "rate": 5.0,
+        "window": { "start": "2026-07-01", "end": "2026-09-30" },
+        "requires_activation": true,
+        "cap": { "amount": 1500, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "Q3 2026 rotating category. The $1,500 cap is combined across all three Q3 categories."
+      },
+      {
+        "category": "dining",
+        "rate": 5.0,
+        "window": { "start": "2026-10-01", "end": "2026-12-31" },
+        "requires_activation": true,
+        "cap": { "amount": 1500, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "Q4 2026 rotating category. The $1,500 cap is combined across all three Q4 categories."
+      },
+      {
+        "category": "entertainment",
+        "rate": 5.0,
+        "window": { "start": "2026-10-01", "end": "2026-12-31" },
+        "requires_activation": true,
+        "cap": { "amount": 1500, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "Q4 2026 rotating category. The $1,500 cap is combined across all three Q4 categories."
+      },
+      {
+        "category": "utilities",
+        "rate": 5.0,
+        "window": { "start": "2026-10-01", "end": "2026-12-31" },
+        "requires_activation": true,
+        "cap": { "amount": 1500, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "Q4 2026 rotating category. The $1,500 cap is combined across all three Q4 categories."
+      }
+    ]
+  },
+  "capitalone-venture": {
+    "id": "capitalone-venture",
+    "issuer": "capitalone",
+    "network": "visa",
+    "currency": "c1",
+    "name": "Capital One Venture Rewards",
+    "annual_fee": 95,
+    "base_rate": 2.0,
+    "verified": true,
+    "last_verified": "2026-09-09",
+    "source_url": "https://www.capitalone.com/credit-cards/venture/",
+    "note": "The card the 'c1' valuation was written for: Venture miles transfer to airline and hotel partners, which is what the default 1.4 cpp assumes. Redeemed as a straight travel statement credit they are worth 1.0 -- override in Options if that is how you use them. Also earns 5X on the Capital One Entertainment ticketing platform, not modelled for the same reason as Savor: it is one first-party storefront, not a category.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Capital One Travel",
+        "caveat": "Hotels, vacation rentals and rental cars booked through Capital One Travel."
+      }
+    ]
+  },
   "bofa-customized-cash": {
     "id": "bofa-customized-cash",
     "issuer": "bofa",
@@ -504,7 +590,7 @@
     "verified": true,
     "last_verified": "2026-08-29",
     "source_url": "https://www.bankofamerica.com/credit-cards/products/cash-back-credit-card/cash-back-category-choices/",
-    "note": "Not in David's wallet. Kept in the catalog because it is the only card exercising selection groups and tier multipliers.",
+    "note": "Kept because people hold it, not because it exercises the schema. Its 3% is ONE category the cardholder picks from eleven, which is what selection_group is for: without it the only choices are giving all eleven 3% (overstates badly) or picking for the user (worse). tier_multiplier is the Preferred Rewards relationship bonus and is the difference between 3% and 5.25%, so dropping it would understate the card by up to 75%.",
     "user_config": {
       "selection": {
         "label": "Your chosen 3% category",

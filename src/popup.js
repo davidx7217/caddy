@@ -1,19 +1,19 @@
-import { DEFAULT_FONT, fontFaceCss, fontStack } from './engine.js';
+import { fontFaceCss, fontStack } from './engine.js';
 
 const $ = s => document.querySelector(s);
 
 // One font across every surface, so the extension looks like one thing.
-applyFont(DEFAULT_FONT);
+applyFont();
 
-function applyFont(key) {
+function applyFont() {
   let tag = document.getElementById('font-faces');
   if (!tag) {
     tag = document.createElement('style');
     tag.id = 'font-faces';
     document.head.appendChild(tag);
   }
-  tag.textContent = fontFaceCss(key, chrome.runtime.getURL);
-  document.documentElement.style.setProperty('--font', fontStack(key));
+  tag.textContent = fontFaceCss(chrome.runtime.getURL);
+  document.documentElement.style.setProperty('--font', fontStack());
 }
 const money = v => `${v.toFixed(2)}%`;
 const esc = s => String(s).replace(/[&<>"']/g, c =>
@@ -76,7 +76,6 @@ $('#opts').addEventListener('click', () => chrome.runtime.openOptionsPage());
     clear_winner:     'clear winner',
     unresolved:       'tied \u2014 the overlay asks you to pick',
     category_default: 'your saved choice for this category',
-    priority:         'resolved by your pinned card order',
     no_cards:         'no cards added'
   };
   $('#why').textContent = `${res.all.length} card${res.all.length === 1 ? '' : 's'} \u00b7 ` +

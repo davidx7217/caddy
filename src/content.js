@@ -25,7 +25,6 @@
     clear_winner:     'clear winner',
     unresolved:       'tied, pick one below',
     category_default: 'your saved choice for this category',
-    priority:         'your pinned card order',
     no_cards:         'no cards added'
   };
   const esc = s => String(s).replace(/[&<>"']/g, c =>

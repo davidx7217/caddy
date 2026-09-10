@@ -8,3 +8,7 @@ data/wallet.json
 
 # Packaged builds for sharing. Rebuild rather than commit.
 card-picker-*.zip
+
+# Seeded design canvas. A build product of design/*.dc.html + canvas.json --
+# regenerate it rather than editing it, and never hand-edit the seeded file.
+design/card-picker-ui.html
