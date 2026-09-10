@@ -608,6 +608,15 @@ it; run it whenever you add a card.
   `exxon.com` as "403, host unchanged" and was simply wrong, because the redirect is
   CLIENT-SIDE and an HTTP sweep cannot see those by construction. Re-run both passes
   after any long gap; `tools/` has no script for it yet.
+- audible.com is `content_site` and audible.com/pd/ pages still show. Measured
+  2026-09-10: the homepage is the netflix.com shape (Organization and FAQPage
+  markup, `og:type` `book`, a price, no cart link, no buy control) and one domain
+  serves the store, the marketing page and the player. Product pages carry
+  `Product` and `Offer`, and commerce markup beats the flag inside
+  `isMerchantPage`, so flagging darkens the homepage and the library while the
+  pages you actually buy on still show. That is the opposite call from
+  spotify.com for the opposite reason: Spotify's purchase surface has no markup
+  to save it, Audible's does.
 - Netflix's payment page qualifies on a card field alone -- measured 2026-09-09,
   with the payment chooser and billing form both absent. There is no second signal
   in reserve, so if it moves card entry into a frame whose name and title miss the

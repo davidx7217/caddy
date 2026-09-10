@@ -92,6 +92,12 @@
     "category": "wholesale_club",
     "confidence": "high"
   },
+  "audible.com": {
+    "category": "online_retail",
+    "confidence": "high",
+    "content_site": true,
+    "note": "Named in Prime Visa's 5% allowlist and missing from this table until 2026-09-10, which made that rule dead: audible.com resolved to no merchant, fell to `other`, and the card earned its 1% base. Category is online_retail because that is the rule the allowlist sits on, and because Audible sells digital goods. content_site is MEASURED 2026-09-10: the homepage carries Organization and FAQPage markup, og:type `book`, a price, no cart link and no buy control -- price only and nothing structural, which is the netflix.com shape, and one domain serves both the store and the player you listen in. Product pages carry Product and Offer, and commerce markup on the page beats content_site in isMerchantPage, so flagging darkens the homepage and the library while /pd/ pages and checkout still show. That is the opposite call from spotify.com for the opposite reason: Spotify's purchase surface has no markup to save it, Audible's does."
+  },
   "amazon.com": {
     "category": "online_retail",
     "confidence": "high",

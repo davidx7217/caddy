@@ -415,6 +415,35 @@ eq('the cost: a commit button alone is not enough on a content site',
                          buttonLabels: ['Start Membership'] }), false);
 // The remaining three, measured live 2026-09-09. They did NOT all behave alike,
 // which is the point of measuring rather than reasoning by category.
+// audible.com, measured 2026-09-10. One domain serves the store, the marketing
+// page and the player you listen in, which is the netflix.com problem -- but
+// unlike Netflix its PRODUCT pages carry real commerce markup, so flagging it
+// costs nothing. commerce beats content_site inside isMerchantPage, and these
+// two cases are what say so out loud.
+//
+// Homepage: Organization + FAQPage, og:type "book", a price, no cart link and
+// no buy control. Price only, nothing structural.
+const AUDIBLE_HOME = { ldTypes: ['Organization', 'FAQPage'], ogType: 'book',
+                       cartLink: false, platform: false, buttonLabels: [], price: true };
+// Product page: Product + Offer (and Audiobook + Offer), same og:type and price.
+const AUDIBLE_PDP = { ...AUDIBLE_HOME,
+                      ldTypes: ['Product', 'Offer', 'Audiobook', 'BreadcrumbList'] };
+eq('LIVE audible.com home stays dark: price only, measured 2026-09-10',
+   SITE('audible.com')(AUDIBLE_HOME), false);
+eq('...but a /pd/ page shows, because Product markup beats the content_site flag',
+   SITE('audible.com')(AUDIBLE_PDP), true);
+eq('...and payment machinery still qualifies the flagged surfaces',
+   SITE('audible.com')({ ...AUDIBLE_HOME, paymentField: true }), true);
+// The row exists at all because Prime Visa names audible.com in a
+// merchant_allowlist. Without it the domain resolved to nothing, fell to
+// `other`, and the card earned its 1% base on a 5% purchase.
+{
+  const r = run('audible.com', own('chase-prime-visa'));
+  eq('audible.com resolves as a merchant, not a default',
+     [r.category, r.categorySource], ['online_retail', 'merchant']);
+  eq('...so Prime Visa\'s allowlisted 5% actually fires', r.winner.rate, 5);
+}
+
 eq('LIVE disneyplus.com is the netflix shape, so it is flagged too',
    SITE('disneyplus.com')(STREAM_MARKETING), false);
 
