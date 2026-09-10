@@ -134,7 +134,9 @@ src/
   options.css       the paper theme; ui.css is the popup's, the overlay inlines its own
   fonts/            Outfit, bundled woff2, latin subset, never fetched remotely
 tools/
-  check-redirects.mjs  finds merchant rows that died by redirect
+  check-redirects.mjs  merchant redirect sweep, HTTP pass. Server-side moves only
+  check-redirects-browser.mjs  the browser pass, over CDP. Catches client-side moves
+  redirect-sweep.mjs   what both passes must agree on: rows, verdicts, the report
   make-icons.mjs    draws the icon set; zero-dependency PNG encoder
   fake-chrome.mjs   promise-style chrome.* for the worker; NOT the lifecycle stub
   test-engine.mjs   zero-dependency test runner for the engine
@@ -647,8 +649,18 @@ it; run it whenever you add a card.
   left 25 unconfirmable behind bot protection. A browser pass over those 25 cleared
   21 and found `exxon.com`. That second pass is the one that mattered: curl reported
   `exxon.com` as "403, host unchanged" and was simply wrong, because the redirect is
-  CLIENT-SIDE and an HTTP sweep cannot see those by construction. Re-run both passes
-  after any long gap; `tools/` has no script for it yet.
+  CLIENT-SIDE and an HTTP sweep cannot see those by construction.
+
+  Both passes are scripted now. `node tools/check-redirects-browser.mjs` runs the
+  HTTP sweep first and opens whatever it could not confirm in a real Chrome,
+  driven over the DevTools Protocol with no dependency. Run that rather than the
+  HTTP script alone after any long gap.
+
+  **Do not use `--headless`.** Measured 2026-09-10, same machine, same minute:
+  headed Chrome saw `exxon.com` move to `exxonmobilfuels.com`; headless reported
+  the row CLEAN. Not blocked -- clean. A sweep that silently says "fine" is worse
+  than the HTTP pass it exists to cover for, because that one at least says
+  UNCONFIRMED when it cannot see.
 - audible.com is `content_site` and audible.com/pd/ pages still show. Measured
   2026-09-10: the homepage is the netflix.com shape (Organization and FAQPage
   markup, `og:type` `book`, a price, no cart link, no buy control) and one domain
