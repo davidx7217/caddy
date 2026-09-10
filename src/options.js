@@ -1,5 +1,5 @@
 import { pruneInstances, fontFaceCss, fontStack } from './engine.js';
-import { CURRENCY, ISSUER, mark, money } from './issuers.js';
+import { CURRENCY, ISSUER, KIND_LABEL, kindOf, mark, money } from './issuers.js';
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c =>
@@ -28,7 +28,11 @@ const VERSION = chrome.runtime.getManifest().version;
 let instances = [], valuations = {}, prefs = {}, blocked = [], activity = [], dropped = 0;
 let auto = false, bytes = 0;
 let section = 'cards';
-let detail = null;   // index into instances, or null when the dialog is shut
+let detail = null;   // productId whose dialog is open, or null when it is shut
+// Catalogue filters. Everything here narrows the ADD A CARD list and nothing
+// else; none of it is stored, because a filter you have to remember turning off
+// is a filter that makes the catalogue look permanently short.
+let f = { q: '', kind: '', scope: '', fee: '', cat: '' };
 let theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 
 async function load() {
@@ -154,10 +158,10 @@ function blockOwned() {
   // The row is a div holding two buttons, not one button: Remove has to live
   // out here as well as in the dialog, and a button inside a button is invalid
   // markup that never fires.
-  return `<div class="list">${instances.map((inst, i) => {
+  return `<div class="list">${instances.map(inst => {
     const p = products[inst.productId];
     return `<div class="card-row">
-      <button class="card-open" data-open="${i}">
+      <button class="card-open" data-open="${esc(inst.productId)}">
         ${mark(p.issuer)}
         <span class="grow">
           <span class="row-name">${esc(p.name)}</span>
@@ -166,9 +170,57 @@ function blockOwned() {
         ${p.caution ? '<span class="flag" title="Has a caution">!</span>' : ''}
         <span class="chev" aria-hidden="true">&rsaquo;</span>
       </button>
-      <button class="btn" data-rm="${i}">REMOVE</button>
+      <button class="btn" data-rm="${esc(inst.productId)}">REMOVE</button>
     </div>`;
   }).join('')}</div>`;
+}
+
+// Categories worth offering: the ones some card in the catalogue actually
+// bonuses. `other` is the base rate, which is not a bonus category.
+const bonusCats = () => [...new Set(productIds.flatMap(id =>
+  (products[id].rules || []).map(r => r.category)))]
+  .filter(k => k !== 'other').sort((a, b) => catLabel(a).localeCompare(catLabel(b)));
+
+function blockFilters(shown, total) {
+  const opt = (v, label, sel) =>
+    `<option value="${esc(v)}" ${sel === v ? 'selected' : ''}>${esc(label)}</option>`;
+  // No issuer dropdown: the search box already matches issuer names, so typing
+  // "chase" does the same job with one less control on screen.
+  return `<div class="cfg filters">
+    <label>Search
+      <input type="search" data-f="q" value="${esc(f.q)}" placeholder="Card or bank"
+             spellcheck="false" autocomplete="off"></label>
+    <label>Earns
+      <select data-f="kind">${opt('', 'Any', f.kind)}
+        ${opt('cash', KIND_LABEL.cash, f.kind)}${opt('points', KIND_LABEL.points, f.kind)}
+      </select></label>
+    <label>Account
+      <select data-f="scope">${opt('', 'Any', f.scope)}
+        ${opt('personal', 'Personal', f.scope)}${opt('business', 'Business', f.scope)}
+      </select></label>
+    <label>Annual fee
+      <select data-f="fee">${opt('', 'Any', f.fee)}
+        ${opt('none', 'No annual fee', f.fee)}${opt('has', 'Has a fee', f.fee)}
+      </select></label>
+    <label>Bonuses
+      <select data-f="cat">${opt('', 'Any category', f.cat)}
+        ${bonusCats().map(k => opt(k, catLabel(k), f.cat)).join('')}
+      </select></label>
+    <div class="filter-count"><span>${shown} of ${total}</span>${
+      Object.values(f).some(Boolean) ? '<button class="btn" data-clearfilters="1">CLEAR</button>' : ''}</div>
+  </div>`;
+}
+
+function matchesFilters(id) {
+  const p = products[id];
+  const q = f.q.trim().toLowerCase();
+  if (q && !`${p.name} ${ISSUER[p.issuer] || p.issuer}`.toLowerCase().includes(q)) return false;
+  if (f.kind && kindOf(p.currency) !== f.kind) return false;
+  if (f.scope && (f.scope === 'business') !== !!p.business) return false;
+  if (f.fee === 'none' && p.annual_fee) return false;
+  if (f.fee === 'has' && !p.annual_fee) return false;
+  if (f.cat && !(p.rules || []).some(r => r.category === f.cat)) return false;
+  return true;
 }
 
 // ADD is a ghost button, not a solid one. Solid marks the single forward action
@@ -179,14 +231,26 @@ function blockCatalog() {
   const owned = new Set(instances.map(x => x.productId));
   const rest = productIds.filter(id => !owned.has(id));
   if (!rest.length) return `<div class="empty">Every card in the catalogue is already in your list.</div>`;
-  return `<div class="list">${rest.map(id => {
+  const hits = rest.filter(matchesFilters);
+  const bar = blockFilters(hits.length, rest.length);
+  if (!hits.length) {
+    return bar + `<div class="empty">No card matches these filters. Clear them to see all ${rest.length}.</div>`;
+  }
+  // Same two-button row as YOUR CARDS: the body opens the dialog, the button on
+  // the end adds the card. One button cannot do both, and a button inside a
+  // button is invalid markup that never fires.
+  return bar + `<div class="list">${hits.map(id => {
     const p = products[id];
-    return `<div class="row">
-      ${mark(p.issuer)}
-      <div class="grow">
-        <div class="row-name">${esc(p.name)}</div>
-        <div class="row-meta">${esc(p.network)} &middot; ${money(p.annual_fee)}</div>
-      </div>
+    return `<div class="card-row">
+      <button class="card-open" data-open="${esc(id)}">
+        ${mark(p.issuer)}
+        <span class="grow">
+          <span class="row-name">${esc(p.name)}</span>
+          <span class="row-meta">${esc(ISSUER[p.issuer] || p.issuer)} &middot; ${money(p.annual_fee)} &middot; ${esc(CURRENCY[p.currency] || p.currency)}</span>
+        </span>
+        ${p.caution ? '<span class="flag" title="Has a caution">!</span>' : ''}
+        <span class="chev" aria-hidden="true">&rsaquo;</span>
+      </button>
       <button class="btn" data-add="${esc(id)}">ADD</button>
     </div>`;
   }).join('')}</div>`;
@@ -219,12 +283,14 @@ function ruleLine(r) {
 
 function renderDetail() {
   const dlg = $('#detail');
-  if (detail === null || !instances[detail]) { if (dlg.open) dlg.close(); return; }
-  const i = detail;
-  const inst = instances[i];
-  const p = products[inst.productId];
+  if (detail === null || !products[detail]) { if (dlg.open) dlg.close(); return; }
+  const p = products[detail];
+  // The catalogue opens this dialog too, so the card may not be in the wallet.
+  // Everything above the footer reads the same either way -- what a card earns
+  // is a fact about the card, not about owning it.
+  const inst = instances.find(x => x.productId === detail) || null;
   const uc = p.user_config || {};
-  const cfg = inst.config || {};
+  const cfg = (inst && inst.config) || {};
 
   let controls = '';
   for (const g of uc.selections || []) {
@@ -233,7 +299,7 @@ function renderDetail() {
     const chosen = (cfg.selections || []).filter(id => g.options[id]);
     for (let slot = 0; slot < (g.max || 1); slot++) {
       controls += `<label>${esc(g.label)}${(g.max || 1) > 1 ? ` ${slot + 1}` : ''}
-        <select data-i="${i}" data-k="cat">
+        <select data-id="${esc(p.id)}" data-k="cat">
           <option value="">choose...</option>
           ${Object.entries(g.options).map(([id, label]) =>
             `<option value="${esc(id)}" ${chosen[slot] === id ? 'selected' : ''}>${esc(label)}</option>`).join('')}
@@ -242,7 +308,7 @@ function renderDetail() {
   }
   if (uc.tier_multiplier) {
     controls += `<label>${esc(uc.tier_multiplier.label)}
-      <select data-i="${i}" data-k="tier">
+      <select data-id="${esc(p.id)}" data-k="tier">
         ${Object.entries(uc.tier_multiplier.options).map(([k, v]) =>
           `<option value="${v}" ${(cfg.tier_multiplier || 1) === v ? 'selected' : ''}>${esc(k)}</option>`).join('')}
       </select></label>`;
@@ -266,7 +332,8 @@ function renderDetail() {
         <div><span>BASE RATE</span><span>${p.base_rate}x</span></div>
         <div><span>RATES VERIFIED</span><span>${esc(day(p.last_verified) || 'unverified')}</span></div>
       </div>
-      ${controls ? `<div class="cfg">${controls}</div>` : ''}
+      ${inst && controls ? `<div class="cfg">${controls}</div>` : ''}
+      ${!inst && controls ? `<p class="rule-note">Add this card to choose its categories.</p>` : ''}
       <div>
         <div class="sub-head" style="margin-top:0">Bonus categories</div>
         ${rules.length
@@ -275,7 +342,9 @@ function renderDetail() {
       </div>
     </div>
     <div class="dlg-foot">
-      <button class="btn" data-rm="${i}">REMOVE CARD</button>
+      ${inst
+        ? `<button class="btn" data-rm="${esc(p.id)}">REMOVE CARD</button>`
+        : `<button class="btn" data-add="${esc(p.id)}">ADD CARD</button>`}
       <a class="btn solid" href="${esc(p.source_url)}" target="_blank" rel="noopener noreferrer">ISSUER TERMS &nearr;</a>
     </div>`;
   if (!dlg.open) dlg.showModal();
@@ -519,13 +588,18 @@ document.addEventListener('click', e => {
   if (!t) return;
   const d = t.dataset;
   if (d.section) { section = d.section; render(); return; }
-  if (d.open) { detail = +d.open; renderDetail(); return; }
+  if (d.open) { detail = d.open; renderDetail(); return; }
   if (d.close) { $('#detail').close(); return; }
   if (d.theme)   { theme = d.theme; commit('theme'); return; }
   if (d.add)  { instances.push({ productId: d.add, config: {} }); commit('instances'); }
   // Closing first: the dialog is showing a card that is about to stop existing,
   // and commit() re-renders from storage.
-  if (d.rm)   { $('#detail').close(); instances.splice(+d.rm, 1); commit('instances'); }
+  if (d.rm)   {
+    $('#detail').close();
+    instances.splice(instances.findIndex(x => x.productId === d.rm), 1);
+    commit('instances');
+  }
+  if (d.clearfilters) { f = { q: '', kind: '', scope: '', fee: '', cat: '' }; render(); return; }
   if (d.cleardefault) { delete prefs.categoryDefaults[d.cleardefault]; commit('prefs'); }
   if (d.clearalldefaults) { prefs.categoryDefaults = {}; commit('prefs'); }
   if (d.clearactivity) { activity = []; commit('activity'); }
@@ -540,10 +614,23 @@ $('#detail').addEventListener('close', () => { detail = null; });
 // lands on the element itself rather than on its content is a backdrop click.
 $('#detail').addEventListener('click', e => { if (e.target.id === 'detail') e.target.close(); });
 
+// Filters are view state, not settings: they redraw the pane and write nothing.
+document.addEventListener('input', e => {
+  if (e.target.dataset.f !== 'q') return;
+  f.q = e.target.value;
+  const at = e.target.selectionStart;
+  render();
+  // render() replaced the field, so put the cursor back where it was typed.
+  const box = document.querySelector('[data-f="q"]');
+  if (box) { box.focus(); box.setSelectionRange(at, at); }
+});
+
 document.addEventListener('change', e => {
   const t = e.target, d = t.dataset;
+  if (d.f && d.f !== 'q') { f[d.f] = t.value; render(); return; }
   if (d.k === 'cat') {
-    const inst = instances[+d.i];
+    const inst = instances.find(x => x.productId === d.id);
+    if (!inst) return;
     inst.config = inst.config || {};
     const picks = [...t.closest('.cfg').querySelectorAll('select[data-k="cat"]')]
       .map(x => x.value).filter(Boolean);
@@ -551,7 +638,8 @@ document.addEventListener('change', e => {
     commit('instances');
   }
   if (d.k === 'tier') {
-    const inst = instances[+d.i];
+    const inst = instances.find(x => x.productId === d.id);
+    if (!inst) return;
     inst.config = inst.config || {};
     inst.config.tier_multiplier = parseFloat(t.value);
     commit('instances');

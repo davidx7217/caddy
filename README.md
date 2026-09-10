@@ -21,6 +21,10 @@ All 20 card records were verified against issuer sources -- 7 on **2026-08-29**,
 **2026-09-09** and 6 on **2026-09-10**. Each carries `verified: true`, `last_verified`,
 and a `source_url`.
 
+Each also carries `business: true` if it is issued on business underwriting -- absent
+means personal, so there is nothing to keep in sync on the other nineteen records. It
+filters the catalogue and the ranker never reads it.
+
 Each also carries `common`, a 1-20 popularity rank that orders the setup picker. It is
 the one **editorial** field in the file and is labelled as such in `_common_note`: there
 is no public card-level ranking of US cardholders, so it is judgement, not a sourced
@@ -402,6 +406,17 @@ always shown.
 "all seed rates are unverified" long after every card was verified, telling the
 user to go edit `cards.json`. The freshness chip is now derived from the owned
 cards' `verified` and `last_verified` fields, so it cannot drift again.
+
+**Cash back and points are told apart by currency, not by marketing.** The catalogue
+filter splits on `currency`: `cash` and `disco` are cash back, everything else is
+points and miles. That puts Freedom Unlimited, Freedom Flex, Ink Business Cash and
+Citi Double Cash under points, and all four are sold as cash back cards.
+
+It is the right answer anyway, because `valuations.json` prices `ur` at 1.5 cents and
+`citi` at 1.4, and those numbers are the reason those cards win the rankings they win.
+A filter that called Freedom Unlimited a cash back card would contradict the ranking
+on the very next screen. The label says "Points & miles", which is what the currency
+is, rather than what the issuer's homepage calls the product.
 
 **`caution` is for users, `note` is for maintainers.** Card records carry both.
 Only `caution` is rendered -- one short line, the thing that changes a decision

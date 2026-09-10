@@ -294,12 +294,39 @@ below it go transparent so the hover block has clean edges. Issuer mark, then na
 `--warn` `!` when the card carries a caution, then a chevron. Opens the detail
 dialog.
 
+**Both lists use it.** YOUR CARDS and ADD A CARD are the same row: the body opens
+the dialog, the button on the end removes or adds. The catalogue used to be a
+plain row with an ADD button and no way to look at a card before taking it, which
+made the one screen that should answer "what does this card do?" the one screen
+that could not.
+
 It replaced a `340px` grid cell. The cell only had to be that tall because it
 held the caution text and the per-card dropdowns; both moved into the dialog, so
 the summary needs nothing but enough to identify the card. Six cards now occupy
 the height four used to.
 
+### Filter bar
+
+Not a component. It is the [Field](#field) spec laid out in a row -- micro-cap
+label over a control -- with the result count pushed to the far end at
+`margin-left: auto` and a ghost CLEAR beside it that appears only once something
+is filtering. Three CSS rules, no new tokens.
+
+**No issuer dropdown.** The search box already matches issuer names, so typing
+"chase" does that job with one less control on screen. Every filter that survived
+answers a question the data can settle: what it earns, whose name is on the
+account, whether it costs anything, and which categories it bonuses.
+
+**Filters are view state and are never stored.** A filter you have to remember
+turning off is a filter that makes the catalogue look permanently short.
+
 ### Dialog
+
+**Keyed by product, not by wallet position.** The catalogue opens it too, so the
+card may not be owned: everything above the footer reads the same either way,
+because what a card earns is a fact about the card. The footer flips between
+REMOVE CARD and ADD CARD, and the per-card selects appear only once there is an
+instance to write them to -- until then the dialog says so in one line.
 
 `<dialog>` with `showModal()` -- native, so focus trapping and Esc come free.
 `--r-lg`, `1px solid var(--line)`, `--surface`, capped at `560px`. Head (mark,

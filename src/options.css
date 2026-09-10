@@ -131,8 +131,17 @@ h1 { font-size: 34px; font-weight: 400; letter-spacing: -.03em; line-height: 1.1
 .cfg { display: flex; flex-wrap: wrap; gap: 14px; }
 .cfg label { font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
              color: var(--muted); display: flex; flex-direction: column; gap: 5px; }
-.cfg select { font-size: 12.5px; background: var(--bg); border: 1px solid var(--line);
-             border-radius: var(--r-sm); padding: 8px 10px; }
+.cfg select, .cfg input { font-size: 12.5px; background: var(--bg);
+             border: 1px solid var(--line); border-radius: var(--r-sm); padding: 8px 10px; }
+.cfg select:hover, .cfg input:hover { border-color: var(--muted); }
+
+/* The catalogue filter bar. Not a new component: it is the Field spec laid out
+   in a row, which is why this is three rules rather than a block of its own. */
+.filters { align-items: flex-end; margin-top: 28px; }
+.filters input { width: 190px; }
+.filter-count { margin-left: auto; padding-bottom: 8px; display: flex;
+                align-items: center; gap: 12px; font-size: 10px;
+                letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
 
 /* ---------- list rows ---------- */
 .list { border-top: 1px solid var(--line); margin-top: 28px; max-width: var(--content); }

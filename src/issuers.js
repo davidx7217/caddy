@@ -40,6 +40,23 @@ export const CURRENCY = {
 
 export const money = c => c ? `$${c}/yr` : 'no annual fee';
 
+// What a card pays you in, for filtering. Split on the CURRENCY, not on how the
+// issuer advertises the card, because the currency is what `valuations.json`
+// prices and therefore what the ranker actually reasons about.
+//
+// This puts Freedom Unlimited, Freedom Flex, Ink Business Cash and Citi Double
+// Cash under "Points & miles" even though all four are sold as cash back. They
+// earn transferable points that Caddy values above a cent -- 1.5 for `ur`, 1.4
+// for `citi` -- and that number is why they win the rankings they win. A filter
+// that called them cash back would contradict the ranking on the next screen.
+const KIND = {
+  cash: 'cash', disco: 'cash',
+  ur: 'points', mr: 'points', c1: 'points', citi: 'points', aeroplan: 'points'
+};
+
+export const kindOf = currency => KIND[currency] || 'points';
+export const KIND_LABEL = { cash: 'Cash back', points: 'Points & miles' };
+
 export const mark = issuer =>
   `<span class="chip" style="--mark:${CHIP[issuer] || '#635e58'}">` +
   `<i>${MONOGRAM[issuer] || '?'}</i></span>`;

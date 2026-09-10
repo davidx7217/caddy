@@ -1,5 +1,6 @@
 {
   "_note_field": "MAINTAINER-ONLY. `note` records why a card is modelled the way it is -- provenance, schema reasoning, what was deliberately not modelled. Never render it in the UI. `caution` is the user-facing field.",
+  "_business_note": "`business` marks a card issued on business underwriting rather than personal. Absent means personal -- only the field's presence is meaningful, so there is nothing to keep in sync on nineteen records. It filters the catalogue and nothing else reads it: the ranker does not care whose name is on the account.",
   "_common_note": "`common` is a POPULARITY RANK, 1 to 20, and it is EDITORIAL. There is no public card-level ranking of US cardholders -- Nilson publishes issuer volume, not how many people hold a Freedom Unlimited -- so this is judgement, not a sourced fact, and it is the only field here that is. It orders the setup picker so a new user meets mass-market cards first. Re-rank it freely; nothing computes from it.",
   "_comment": "All 20 records verified against issuer sources; 7 on 2026-08-29, 7 on 2026-09-09 and 6 on 2026-09-10. Each carries its source_url. Chase Freedom Flex rotating categories MUST be re-verified 2026-10-01. Amex Platinum is deliberately absent: its 5X flight and prepaid-hotel rates are published, but no reachable americanexpress.com page stated the annual fee or the base rate on 2026-09-10, and a card modelled without those two numbers ranks wrong.",
   "chase-sapphire-reserve": {
@@ -303,6 +304,7 @@
     "currency": "ur",
     "name": "Chase Ink Business Cash",
     "common": 19,
+    "business": true,
     "annual_fee": 0,
     "base_rate": 1.0,
     "verified": true,
