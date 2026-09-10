@@ -255,8 +255,12 @@ use a class.
 
 ### Card row
 
-A `<button>`, not a div: `display: flex`, `gap: 14px`, `padding: 12px 10px` with
-a matching `-10px` margin, `--r-md`, `--surface` on hover.
+A `div` holding two buttons, not one button: `.card-open` takes the mark, name,
+meta, caution flag and chevron and opens the dialog; a `.btn` beside it removes
+the card. It cannot be a single button -- Remove has to be reachable without
+opening the dialog, and a button inside a button is invalid markup that never
+fires. `padding: 8px 10px` with a matching `-10px` margin, `--r-md`,
+`--surface` on hover.
 
 **The divider is an inset `::after`, not a `border-bottom`.** A border on a
 rounded row is clipped at the corners, and the hover block has to be rounded --
@@ -404,7 +408,10 @@ sub-head as a `.hint`.
 ### Popup
 
 `340px` wide inside browser chrome, on `--surface` so it is the same colour as
-the dock. No frame: the browser already draws the edge.
+the dock, at `--r-lg` like anything else that floats. Chrome paints the popup
+window square, so the radius goes on `body` and `html` is set to
+`background: transparent` -- otherwise it paints over the corners the body just
+rounded. No border: the browser draws the edge.
 
 **It must fit without scrolling.** Chrome gives a popup 600px of height and no
 more, and a popup that scrolls has buried its own primary action. Two rules keep

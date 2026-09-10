@@ -173,17 +173,23 @@ function blockOwned() {
   // A row, not a card: everything that made the old cell tall -- the caution,
   // the per-card dropdowns -- lives in the detail dialog now, so the summary
   // only has to be identifiable.
+  // The row is a div holding two buttons, not one button: Remove has to live
+  // out here as well as in the dialog, and a button inside a button is invalid
+  // markup that never fires.
   return `<div class="list">${instances.map((inst, i) => {
     const p = products[inst.productId];
-    return `<button class="card-row" data-open="${i}">
-      ${mark(p.issuer)}
-      <span class="grow">
-        <span class="row-name">${esc(p.name)}</span>
-        <span class="row-meta">${esc(p.network)} &middot; ${money(p.annual_fee)} &middot; ${esc(CURRENCY[p.currency] || p.currency)}</span>
-      </span>
-      ${p.caution ? '<span class="flag" title="Has a caution">!</span>' : ''}
-      <span class="chev" aria-hidden="true">&rsaquo;</span>
-    </button>`;
+    return `<div class="card-row">
+      <button class="card-open" data-open="${i}">
+        ${mark(p.issuer)}
+        <span class="grow">
+          <span class="row-name">${esc(p.name)}</span>
+          <span class="row-meta">${esc(p.network)} &middot; ${money(p.annual_fee)} &middot; ${esc(CURRENCY[p.currency] || p.currency)}</span>
+        </span>
+        ${p.caution ? '<span class="flag" title="Has a caution">!</span>' : ''}
+        <span class="chev" aria-hidden="true">&rsaquo;</span>
+      </button>
+      <button class="btn" data-rm="${i}">REMOVE</button>
+    </div>`;
   }).join('')}</div>`;
 }
 
