@@ -133,6 +133,11 @@ h1 { font-size: 34px; font-weight: 400; letter-spacing: -.03em; line-height: 1.1
              text-align: left; padding: 6px 0; border: 0; border-radius: var(--r-sm);
              background: transparent; color: inherit; cursor: pointer; }
 .card-open .grow { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+/* One line each, always. --row-h is a reserved height in the catalogue, and a
+   row that wraps to three lines on a narrow window makes that reservation a
+   guess. Truncating keeps the row a constant by construction. */
+.card-open .row-name, .card-open .row-meta {
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .card-open .flag { color: var(--warn); font-weight: 600; flex: none; }
 .card-open .chev { color: var(--muted); font-size: 15px; flex: none; padding-right: 4px; }
 .card-row .btn { flex: none; }
@@ -150,11 +155,9 @@ h1 { font-size: 34px; font-weight: 400; letter-spacing: -.03em; line-height: 1.1
    in a row, which is why this is three rules rather than a block of its own. */
 .filters { align-items: flex-end; margin-top: 28px; }
 .filters input { width: 190px; }
+/* Holds CLEAR, and holds its height when CLEAR is not there. */
 .filter-count { margin-left: auto; padding-bottom: 8px; display: flex;
-                align-items: center; gap: 12px; font-size: 10px;
-                letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
-                /* Holds its height whether or not CLEAR is showing. */
-                min-height: calc(var(--ctl-h) + 8px); }
+                align-items: center; min-height: calc(var(--ctl-h) + 8px); }
 
 /* ---------- list rows ---------- */
 .list { border-top: 1px solid var(--line); margin-top: 28px; max-width: var(--content); }
@@ -176,9 +179,11 @@ h1 { font-size: 34px; font-weight: 400; letter-spacing: -.03em; line-height: 1.1
 /* The row is always here even when there is nothing to page through, so that
    crossing the ten-card line does not move the page under the reader. Same
    reason the list reserves ten rows rather than shrinking to fit. */
-.pager { display: flex; align-items: center; justify-content: flex-end; gap: 14px;
+.pager { display: flex; align-items: center; justify-content: space-between; gap: 14px;
          margin-top: 18px; min-height: var(--ctl-h); }
-.pager-at { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.pager-nav { display: flex; align-items: center; gap: 14px; }
+.pager-at, .pager-count { font-size: 10px; letter-spacing: .1em;
+                          text-transform: uppercase; color: var(--muted); }
 .pager .btn[disabled] { opacity: .42; cursor: not-allowed; }
 .pager .btn[disabled]:hover { color: var(--muted); border-color: var(--line); }
 .row { display: flex; align-items: center; gap: 14px; padding: 14px 4px;

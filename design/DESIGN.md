@@ -314,8 +314,15 @@ the height four used to.
 
 ### Pagination
 
+One row, `space-between`: the count at the left end, the controls at the right.
 Ghost `&lsaquo; PREV` and `NEXT &rsaquo;` either side of a micro-cap
-`Page n of m`, right-aligned, disabled at each end. Ten rows to a page.
+`Page n of m`, disabled at each end. Ten rows to a page.
+
+**The count says what is on the screen, not what exists.** `10 of 19` means ten
+rows are in front of you out of nineteen that matched; page two of the same
+result set says `9 of 19`. It lives here rather than up in the filter bar because
+this is where the number is decided -- the filters choose the nineteen, the pager
+chooses the ten. CLEAR stays with the filters, because that is what it clears.
 
 **The row is always in the DOM, even at one page.** See
 [Reserve, do not reflow](#reserve-do-not-reflow).
@@ -326,6 +333,10 @@ Not a component. It is the [Field](#field) spec laid out in a row -- micro-cap
 label over a control -- with the result count pushed to the far end at
 `margin-left: auto` and a ghost CLEAR beside it that appears only once something
 is filtering. Three CSS rules, no new tokens.
+
+**The result count is not here.** It moved to the [pager](#pagination), where
+the number it describes is decided. This row holds the labelled controls and a
+CLEAR that appears only once something is filtering.
 
 **No issuer dropdown.** The search box already matches issuer names, so typing
 "chase" does that job with one less control on screen. Every filter that survived
@@ -437,7 +448,13 @@ instead of fitting its content:
 | --- | --- | --- |
 | Catalogue list | Ten rows, whatever this page holds | `--row-h`, `69px`, measured |
 | Pager row | One button, even with one page | `--ctl-h`, `33px`, measured |
-| Filter count | One button, whether or not CLEAR is showing | `--ctl-h` |
+| CLEAR slot | One button, whether or not CLEAR is showing | `--ctl-h` |
+
+**A reserved height is only as good as the row it multiplies.** `--row-h` was a
+desktop measurement, and on a narrow window the name and meta wrapped to three
+lines, making rows `108px` and the reservation a 40% under-estimate. Card rows
+truncate both lines with an ellipsis now, so the height is a constant by
+construction rather than an assumption that holds at one width.
 
 Both tokens are **measured off the running page**, not chosen: `--row-h` is a
 chip, two lines of text and the row's own padding. Anything that changes a row's

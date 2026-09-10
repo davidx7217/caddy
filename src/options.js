@@ -183,7 +183,7 @@ const bonusCats = () => [...new Set(productIds.flatMap(id =>
   (products[id].rules || []).map(r => r.category)))]
   .filter(k => k !== 'other').sort((a, b) => catLabel(a).localeCompare(catLabel(b)));
 
-function blockFilters(shown, total) {
+function blockFilters() {
   const opt = (v, label, sel) =>
     `<option value="${esc(v)}" ${sel === v ? 'selected' : ''}>${esc(label)}</option>`;
   // No issuer dropdown: the search box already matches issuer names, so typing
@@ -208,16 +208,19 @@ function blockFilters(shown, total) {
       <select data-f="cat">${opt('', 'Any category', f.cat)}
         ${bonusCats().map(k => opt(k, catLabel(k), f.cat)).join('')}
       </select></label>
-    <div class="filter-count"><span>${shown} of ${total}</span>${
+    <div class="filter-count">${
       Object.values(f).some(Boolean) ? '<button class="btn" data-clearfilters="1">CLEAR</button>' : ''}</div>
   </div>`;
 }
 
-function blockPager(pages) {
-  return `<div class="pager">${pages < 2 ? '' : `
-    <button class="btn" data-page="prev" ${page === 1 ? 'disabled' : ''}>&lsaquo; PREV</button>
-    <span class="pager-at">Page ${page} of ${pages}</span>
-    <button class="btn" data-page="next" ${page === pages ? 'disabled' : ''}>NEXT &rsaquo;</button>`}
+function blockPager(shown, matched, pages) {
+  return `<div class="pager">
+    <span class="pager-count">${shown} of ${matched}</span>
+    <span class="pager-nav">${pages < 2 ? '' : `
+      <button class="btn" data-page="prev" ${page === 1 ? 'disabled' : ''}>&lsaquo; PREV</button>
+      <span class="pager-at">Page ${page} of ${pages}</span>
+      <button class="btn" data-page="next" ${page === pages ? 'disabled' : ''}>NEXT &rsaquo;</button>`}
+    </span>
   </div>`;
 }
 
@@ -246,12 +249,12 @@ function blockCatalog() {
   // A filter that empties the last page would otherwise leave you on a page that
   // no longer exists, looking at nothing.
   if (page > pages) page = pages;
-  const bar = blockFilters(hits.length, rest.length);
+  const bar = blockFilters();
   if (!hits.length) {
     return `<div class="catalogue">${bar}
       <div class="list" style="--rows:${PER_PAGE}"><div class="empty">No card matches
         these filters. Clear them to see all ${rest.length}.</div></div>
-      ${blockPager(1)}</div>`;
+      ${blockPager(0, 0, 1)}</div>`;
   }
   const shown = hits.slice((page - 1) * PER_PAGE, page * PER_PAGE);
   // Same two-button row as YOUR CARDS: the body opens the dialog, the button on
@@ -274,7 +277,7 @@ function blockCatalog() {
       </button>
       <button class="btn" data-add="${esc(id)}">ADD</button>
     </div>`;
-  }).join('')}</div>${blockPager(pages)}</div>`;
+  }).join('')}</div>${blockPager(shown.length, hits.length, pages)}</div>`;
 }
 
 // ---------- card detail ----------
