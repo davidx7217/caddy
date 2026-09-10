@@ -25,8 +25,8 @@ Each renders light and dark side by side.
 
 ## Where the real thing lives
 
-The popup and options page are ordinary HTML sharing `src/ui.css`, so a change
-there is a normal edit. The dock and panel are NOT: their markup and 67 lines of
+The popup is ordinary HTML on `src/ui.css` and the options page is ordinary HTML
+on its own `src/options.css`, so a change to either is a normal edit. The dock and panel are NOT: their markup and 67 lines of
 CSS are template strings inside `src/content.js`, in a closed shadow root, and
 cannot reach `ui.css`. A redesign of those is an edit to a string literal.
 

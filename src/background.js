@@ -50,14 +50,17 @@ function loadData() {
 }
 
 async function getState() {
-  const s = await chrome.storage.local.get(['instances', 'prefs', 'valuations', 'overlayPos']);
+  const s = await chrome.storage.local.get(['instances', 'prefs', 'valuations', 'overlayPos', 'theme']);
   return {
     instances: s.instances || [],
     prefs: s.prefs || { categoryDefaults: {}, tieBand: 0.10 },
     valuationOverrides: s.valuations || {},
     // Sent down with the recommendation so the badge paints in the right
     // place on the first frame instead of jumping after a second read.
-    overlayPos: s.overlayPos || { bottom: 16 }
+    overlayPos: s.overlayPos || { bottom: 16 },
+    // 'light' | 'dark' | undefined. Undefined means follow the OS, which is
+    // the only thing the overlay can decide for itself.
+    theme: s.theme
   };
 }
 
@@ -74,6 +77,7 @@ export async function recommend(hostname, signals, wantFont = false) {
     prefs: st.prefs
   });
   result.overlayPos = st.overlayPos;
+  result.theme = st.theme;
   // The overlay cannot import, so hand it the font already resolved. Only when
   // it asks: the faces are inlined as base64 now, so shipping them on every
   // route change of an SPA would mean ~43KB per navigation for nothing.

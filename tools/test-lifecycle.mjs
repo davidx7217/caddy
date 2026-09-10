@@ -25,7 +25,12 @@ function harness(initialRespond, blocked = [], startHref = 'https://shop.example
 
   const fakeEl = () => new Proxy({}, { get(t, k) {
     if (k === 'classList') return { add(){}, remove(){}, toggle(){}, contains(){return false} };
-    if (k === 'style') return new Proxy({}, { get:()=> '' , set:()=>true });
+    // setProperty has to be a real function: content.js writes the overlay's
+    // theme tokens through it, and a proxy that answers '' for every key
+    // makes that call throw and the dock never mount.
+    if (k === 'style') return new Proxy({}, {
+      get: (t, key) => key === 'setProperty' || key === 'removeProperty' ? () => {} : '',
+      set: () => true });
     if (k === 'dataset') return {};
     if (k === 'attachShadow') return () => shadow;
     if (k === 'querySelector') return () => fakeEl();

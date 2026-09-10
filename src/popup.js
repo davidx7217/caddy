@@ -2,7 +2,11 @@ import { fontFaceCss, fontStack } from './engine.js';
 
 const $ = s => document.querySelector(s);
 
-// One font across every surface, so the extension looks like one thing.
+// One font AND one theme across every surface, so the extension looks like one
+// thing. Options owns the theme choice; unset means follow the OS, which is
+// what the stylesheet does on its own.
+const { theme } = await chrome.storage.local.get('theme');
+if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
 applyFont();
 
 function applyFont() {
