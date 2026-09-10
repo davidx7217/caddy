@@ -581,6 +581,11 @@ divider is an `::after` inside the padding rather than a border on the element
 take `--fill` and flip their micro-cap from `ADD` to `ADDED`, which is the
 [selected tile](#selected-tile) pattern at row scale.
 
+**The flow's decisions are not in the flow.** `src/setup.js` holds which steps
+exist, which currencies raise a field, and the wallet shape that gets written;
+`welcome.js` renders them. That split is not tidiness -- it is the line between
+what a test can reach in node and what needs a browser.
+
 **Step three exists only when the picks earn it.** Fine-tune renders the
 per-card config and the point values for currencies the wallet actually earns.
 A cash-back-only wallet skips the step entirely rather than being shown a form

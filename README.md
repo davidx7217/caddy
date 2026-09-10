@@ -124,6 +124,7 @@ src/
   content.js        shadow-DOM overlay. Dumb renderer, no logic
   popup.js/.html    hands off to the overlay; renders only where it cannot
   options.js/.html  four-section settings page: cards, ranking, where it runs, data
+  setup.js          what the setup flow DECIDES. No DOM, no chrome.*, testable
   welcome.js/.html  first-run setup: what it is, your cards, tuning, the permission
   welcome.css       the stepper only; the theme is options.css, which it loads first
   issuers.js        issuer marks, names and currency labels. One copy, two surfaces
@@ -134,6 +135,7 @@ tools/
   make-icons.mjs    draws the icon set; zero-dependency PNG encoder
   fake-chrome.mjs   promise-style chrome.* for the worker; NOT the lifecycle stub
   test-engine.mjs   zero-dependency test runner for the engine
+  test-setup.mjs    the setup flow's decisions, against the real cards.json
   test-lifecycle.mjs runs the real content script in a vm sandbox
   test-worker.mjs   runs the real service worker against fake-chrome.mjs
   fixtures/         test-only data; never shipped with the extension
@@ -571,17 +573,22 @@ it; run it whenever you add a card.
 - No store listing. Icons ship now, drawn by `tools/make-icons.mjs`, and setup
   is a real flow rather than a bare catalogue, but nothing here is written for a
   listing page.
-- Nothing tests `src/welcome.js`, and the worker harness does not change that.
-  Its `chrome.*` half would run against `fake-chrome.mjs` today; its DOM half
-  would not. The file renders by assigning `innerHTML` and then querying the
-  result, so testing it in node needs an HTML parser, and this project has no
-  dependencies. It is still verified by driving all four steps in a browser
-  against a stubbed `chrome.*` and reading the storage it wrote.
+- `src/welcome.js` is half covered, and the half that is not is the markup.
+  Every decision the flow makes moved to `src/setup.js` on **2026-09-10** --
+  which steps a given set of picks earns, which currencies raise a
+  cents-per-point field, and the shape of the wallet that gets written -- under
+  the same contract as `engine.js`: no DOM, no `chrome.*`, no network.
+  `tools/test-setup.mjs` covers it against the real `cards.json`, so a card that
+  gains or loses a `user_config` changes the result rather than a fixture.
 
-  The tractable half is the step logic -- which steps exist for a given set of
-  picks, and which currencies earn a cents-per-point field. Both are decisions
-  rather than markup, and both would become testable by exporting them. That is
-  a refactor of `welcome.js`, not a harness, so it has not been done.
+  What is left in `welcome.js` is rendering, and that still cannot run in node:
+  it assigns `innerHTML` and then queries the result, which needs an HTML parser
+  this project has no dependency for. It stays browser-verified.
+
+  Mutation-checked, and one mutation SURVIVED: deleting the `_`-prefix filter in
+  `liveCurrencies` broke nothing, because the currency set already excludes any
+  key no card earns. The guard was dead and the test written for it could never
+  fail. Both are gone.
 - ~~`utilities` is inert~~ **Closed 2026-09-10** by U.S. Bank Cash+, whose "home
   utilities" 5% choice is electricity, gas and water. Ink Business Cash never closed
   it and still does not: its 5% is "internet, cable and phone services", which is

@@ -6,6 +6,6 @@
   "description": "Chrome extension: best card to use, per merchant. No build step, no dependencies.",
   "license": "MIT",
   "scripts": {
-    "test": "node tools/test-engine.mjs && node tools/test-lifecycle.mjs && node tools/test-worker.mjs"
+    "test": "node tools/test-engine.mjs && node tools/test-setup.mjs && node tools/test-lifecycle.mjs && node tools/test-worker.mjs"
   }
 }

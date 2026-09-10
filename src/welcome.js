@@ -14,6 +14,7 @@
 
 import { fontFaceCss, fontStack } from './engine.js';
 import { CURRENCY, ISSUER, mark, money } from './issuers.js';
+import * as setup from './setup.js';
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c =>
@@ -60,28 +61,17 @@ async function load() {
 // after picking their cards keeps their cards; the alternative is a flow that
 // throws the work away unless it is finished in one sitting.
 const save = () => chrome.storage.local.set({
-  instances: [...picked].map(id => ({ productId: id, config: configs[id] || {} })),
+  instances: setup.toInstances(picked, configs),
   valuations
 });
 
 // ---------- steps ----------
-// Both of these are derived from the picks, which is why step three exists only
-// when the picks earn it. A cash-back-only wallet has nothing to answer here.
-const tunableCards = () => [...picked].filter(id => products[id].user_config);
-const liveCurrencies = () => {
-  const live = new Set([...picked].map(id => products[id].currency));
-  // cash is 1.0 by definition. An input for it is a question with one answer.
-  return Object.keys(baseVals)
-    .filter(k => !k.startsWith('_') && k !== 'cash' && live.has(k));
-};
-
-const steps = () => [
-  { id: 'intro', label: 'Welcome' },
-  { id: 'cards', label: 'Your cards' },
-  ...(tunableCards().length || liveCurrencies().length
-    ? [{ id: 'tune', label: 'Fine-tune' }] : []),
-  { id: 'mode', label: 'Turn it on' }
-];
+// Bound to this flow's state. The decisions themselves are in src/setup.js,
+// which has no DOM in it and is covered by tools/test-setup.mjs -- everything a
+// reader could be shown wrongly is decided there rather than here.
+const tunableCards = () => setup.tunableCards(picked, products);
+const liveCurrencies = () => setup.liveCurrencies(picked, products, baseVals);
+const steps = () => setup.steps(picked, products, baseVals);
 
 // ---------- panes ----------
 function pickRow(id) {
