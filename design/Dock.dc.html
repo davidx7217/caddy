@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body { margin: 0; font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; }
+    a { color: #0a7d3f; } a:hover { color: #075c2e; }
+    .label { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; font-weight: 600; }
+  </style>
+</helmet>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); height: 100%">
+
+  <div style="background: #e9ecef; padding: 28px; display: flex; flex-direction: column; gap: 18px">
+    <div class="label" style="color: #6b7280">Light</div>
+    <div style="display: flex; align-items: center; height: 44px; border-radius: 999px; background: #0a7d3f; color: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.28); overflow: hidden; width: max-content">
+      <div style="width: 44px; height: 44px; display: grid; place-items: center">
+        <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true">
+          <rect x="2.5" y="5" width="19" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="2"></rect>
+          <path d="M2.5 10h19" stroke="currentColor" stroke-width="2"></path>
+        </svg>
+      </div>
+      <div style="width: 30px; height: 44px; background: rgba(0,0,0,.14); display: grid; place-items: center; opacity: .75; fill: currentColor">
+        <svg viewBox="0 0 10 16" width="10" height="16" aria-hidden="true">
+          <circle cx="3" cy="3" r="1.3"></circle><circle cx="7" cy="3" r="1.3"></circle>
+          <circle cx="3" cy="8" r="1.3"></circle><circle cx="7" cy="8" r="1.3"></circle>
+          <circle cx="3" cy="13" r="1.3"></circle><circle cx="7" cy="13" r="1.3"></circle>
+        </svg>
+      </div>
+    </div>
+    <div style="font-size: 11px; color: #6b7280; max-width: 24ch; line-height: 1.45">44px tall. Icon opens the panel, dotted grip drags it up and down the right rail.</div>
+  </div>
+
+  <div style="background: #0d0f12; padding: 28px; display: flex; flex-direction: column; gap: 18px">
+    <div class="label" style="color: #9aa1ab">Dark</div>
+    <div style="display: flex; align-items: center; height: 44px; border-radius: 999px; background: #22c55e; color: #0b1410; box-shadow: 0 4px 14px rgba(0,0,0,.28); overflow: hidden; width: max-content">
+      <div style="width: 44px; height: 44px; display: grid; place-items: center">
+        <svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true">
+          <rect x="2.5" y="5" width="19" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="2"></rect>
+          <path d="M2.5 10h19" stroke="currentColor" stroke-width="2"></path>
+        </svg>
+      </div>
+      <div style="width: 30px; height: 44px; background: rgba(0,0,0,.14); display: grid; place-items: center; opacity: .75; fill: currentColor">
+        <svg viewBox="0 0 10 16" width="10" height="16" aria-hidden="true">
+          <circle cx="3" cy="3" r="1.3"></circle><circle cx="7" cy="3" r="1.3"></circle>
+          <circle cx="3" cy="8" r="1.3"></circle><circle cx="7" cy="8" r="1.3"></circle>
+          <circle cx="3" cy="13" r="1.3"></circle><circle cx="7" cy="13" r="1.3"></circle>
+        </svg>
+      </div>
+    </div>
+    <div style="font-size: 11px; color: #9aa1ab; max-width: 24ch; line-height: 1.45">This is all most people ever see. It sits over someone else's checkout.</div>
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

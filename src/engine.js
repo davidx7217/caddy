@@ -6,63 +6,54 @@
 
 const DEFAULT_TIE_BAND = 0.10;
 
-/**
- * Fonts the extension can use, bundled as woff2 -- never fetched from a CDN,
- * because the whole product claim is that it makes no network calls.
- * `faces` is [family, weight, file]; a single entry means a variable font.
- */
+// The one font, bundled as woff2 and never fetched from a CDN, because the whole
+// product claim is that the extension makes no network calls.
+//
+// This used to be a registry: a FONTS map, a DEFAULT_FONT key, and every function
+// here taking a `key` to look up. The picker that justified it was deleted in
+// e630093 and the map was not, so 52 lines of lookup survived to serve exactly
+// one value -- every call site passed the same constant.
+//
+// size-adjust is not cosmetic: Outfit's x-height measures 47.5 at 100px against a
+// 53.4 reference, so the same px value would render visibly smaller without it.
+const FILE = 'src/fonts/outfit-400-700.woff2';
+const WEIGHT = '400 700';
+const ADJUST = 'size-adjust:112.4%;';
 const FALLBACK = ', -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif';
 
-// One font, applied to every surface. `adjust` is a size-adjust percentage:
-// Outfit's x-height measures 47.5 at 100px against a 53.4 reference, so the
-// same px value would otherwise render visibly smaller than it should.
-export const FONTS = {
-  outfit: { label: 'Outfit', stack: '"Outfit"' + FALLBACK, adjust: 112.4,
-            faces: [['Outfit', '400 700', 'outfit-400-700.woff2']] }
-};
+const face = (family, url) =>
+  `@font-face{font-family:"${family}";font-style:normal;font-weight:${WEIGHT};` +
+  `font-display:swap;${ADJUST}src:url("${url}") format("woff2");}`;
 
-export const DEFAULT_FONT = 'outfit';
+/** For the popup and Options, which are extension pages and can load the file. */
+export function fontFaceCss(urlFor) {
+  return face('Outfit', urlFor(FILE));
+}
 
-/** @font-face rules for one font. urlFor keeps chrome.* out of the engine. */
-export function fontFaceCss(key, urlFor) {
-  const f = FONTS[key] || FONTS[DEFAULT_FONT];
-  const adj = f.adjust && f.adjust !== 100 ? `size-adjust:${f.adjust}%;` : '';
-  return f.faces.map(([family, weight, file]) =>
-    `@font-face{font-family:"${family}";font-style:normal;font-weight:${weight};` +
-    `font-display:swap;${adj}src:url("${urlFor('src/fonts/' + file)}") format("woff2");}`
-  ).join('');
+export function fontStack() {
+  return '"Outfit"' + FALLBACK;
 }
 
 /**
  * Font for the injected overlay.
  *
  * Chrome ignores @font-face declared inside a shadow root -- measured, not
- * assumed: the same rule applies at document scope and does nothing in a shadow
- * tree. So the overlay's faces have to go into the HOST PAGE's head, which
+ * assumed. So the overlay's faces have to go into the HOST PAGE's head, which
  * means the family name must be namespaced or it could override a face the site
- * itself declares under the same name.
+ * declares under the same name.
  *
- * `nonce` makes that namespace random instead of branded. A fixed
- * "CardPicker-outfit" in the page's stylesheets is a name any site can scan
- * document.styleSheets for, which told a merchant it was talking to someone
- * running a card optimiser. A random name namespaces just as well and says
- * nothing. `urlFor` returns a data: URI, so there is no extension URL to probe
- * either -- see the note on web_accessible_resources in the README.
+ * `nonce` makes that namespace random instead of branded. A fixed name in the
+ * page's stylesheets is something any site can scan document.styleSheets for,
+ * which told a merchant it was talking to someone running a card optimiser.
+ * `urlFor` returns a data: URI, so there is no extension URL to probe either.
  */
-export function overlayFont(key, urlFor, nonce = '') {
-  const f = FONTS[key] || FONTS[DEFAULT_FONT];
-  const family = nonce ? 'f' + nonce : 'CardPicker-' + (FONTS[key] ? key : DEFAULT_FONT);
-  const adj = f.adjust && f.adjust !== 100 ? `size-adjust:${f.adjust}%;` : '';
-  const faces = f.faces.map(([, weight, file]) =>
-    `@font-face{font-family:"${family}";font-style:normal;font-weight:${weight};` +
-    `font-display:swap;${adj}src:url("${urlFor('src/fonts/' + file)}") format("woff2");}`
-  ).join('');
-  return { family, faces, stack: `"${family}"${FALLBACK}` };
+export function overlayFont(urlFor, nonce) {
+  const family = 'f' + nonce;
+  return { family, faces: face(family, urlFor(FILE)), stack: `"${family}"${FALLBACK}` };
 }
 
-export function fontStack(key) {
-  return (FONTS[key] || FONTS[DEFAULT_FONT]).stack;
-}
+/** The one file the worker has to inline. Exported so it has a single home. */
+export const FONT_FILE = FILE;
 
 // Schema.org types that mean "you can buy something on this page".
 const COMMERCE_TYPES = new Set([
@@ -315,18 +306,6 @@ function daysSince(dateStr, now) {
 // portal instead" note there would be nonsense.
 const PORTAL_BOOKABLE = new Set(['travel_air', 'travel_hotel']);
 
-/**
- * Is this card deliberately ordered by the user?
- *
- * Exported because the options page must show exactly what the ranker acts
- * on. These drifted once: the ranker honoured `priority`, the UI only showed
- * `pinned`, so a card could silently decide every tie while Options claimed
- * nothing was pinned.
- */
-export function isPinned(inst) {
-  return inst.pinned === true || inst.priority != null;
-}
-
 /** Drops instances whose product no longer exists in cards.json. */
 export function pruneInstances(instances, products) {
   return instances.filter(i => products[i.productId]);
@@ -362,10 +341,29 @@ function ruleApplies(rule, ctx) {
  * Returns a string to show, or null. Deliberately one string: a stack of
  * warnings on a badge nobody asked for is how people learn to ignore badges.
  */
+/**
+ * Has this card's calendar been kept up to date past the rule that lapsed?
+ *
+ * A category whose quarter simply ended is not stale data. Discover publishes its
+ * whole year in advance, so on 1 October its Q3 gas rule expires while a Q4 rule
+ * already sits in the same card: the categories rotated, nothing went out of
+ * date. Warning there would be crying wolf, and a warning that cries wolf is one
+ * people stop reading.
+ *
+ * So the lapsed rule only means "stale" when it is the LAST word the card has.
+ * Dates are YYYY-MM-DD, which compares correctly as a string.
+ */
+function hasLaterWindow(product, expired) {
+  const end = expired.window && expired.window.end;
+  if (!end) return false;
+  return (product.rules || []).some(r =>
+    r !== expired && r.window && r.window.end && r.window.end > end);
+}
+
 function stalenessFor(product, best, expired, now) {
   // Only worth saying if the expiry actually cost something. If another rule
   // still pays more, the lapsed one changed nothing and the warning is noise.
-  if (expired && (!best || expired.rate > best.rate)) {
+  if (expired && (!best || expired.rate > best.rate) && !hasLaterWindow(product, expired)) {
     return `${expired.rate}x on ${expired.category.replace(/_/g, ' ')} expired ` +
            `${expired.window.end}. This card's rotating categories have not been updated, ` +
            `so it is being ranked on its base rate.`;
@@ -409,7 +407,7 @@ function caveatsFor(rule, product) {
 /**
  * rank({hostname, merchants, products, instances, valuations, prefs, now})
  *
- * instances: [{ productId, config: {selections:[], tier_multiplier:1}, priority, pinned }]
+ * instances: [{ productId, config: {selections:[], tier_multiplier:1} }]
  * prefs:     { categoryDefaults: {category: productId}, tieBand: 0.10 }
  *
  * Returns { hostname, merchant, category, all, winner, tied, resolvedBy, notes }
@@ -510,15 +508,14 @@ export function rank(input) {
       // Surfaced on its own in the overlay: without activation this rate is
       // simply not earned, which is different in kind from a cap or an exclusion.
       needsActivation: !!(best && best.requires_activation),
-      // Position in the list is only a stable sort key. It counts as a real
-      // tiebreak signal ONLY if the user deliberately ordered this card --
-      // otherwise a tie would silently resolve itself and never be shown.
-      priority: inst.priority ?? idx,
-      pinned: isPinned(inst)
+      // Position in the wallet, used only to keep the sort stable. It is NOT a
+      // preference: the user cannot order their cards, so it must never break a
+      // tie -- a tie the user has not settled has to be shown, not guessed at.
+      order: idx
     });
   });
 
-  entries.sort((a, b) => b.value - a.value || a.priority - b.priority);
+  entries.sort((a, b) => b.value - a.value || a.order - b.order);
   notes.sort((a, b) => b.value - a.value);
 
   if (entries.length === 0) {
@@ -540,9 +537,6 @@ export function rank(input) {
     if (hit) {
       winner = hit;
       resolvedBy = 'category_default';
-    } else if (tied.some(e => e.pinned)) {
-      winner = tied.slice().sort((a, b) => a.priority - b.priority)[0];
-      resolvedBy = 'priority';
     } else {
       resolvedBy = 'unresolved';
     }

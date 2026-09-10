@@ -25,7 +25,6 @@
     clear_winner:     'clear winner',
     unresolved:       'tied, pick one below',
     category_default: 'your saved choice for this category',
-    priority:         'your pinned card order',
     no_cards:         'no cards added'
   };
   const esc = s => String(s).replace(/[&<>"']/g, c =>
@@ -39,6 +38,27 @@
   const GRIP = `<svg viewBox="0 0 10 16" width="10" height="16" aria-hidden="true">
       ${[3, 8, 13].map(y => `<circle cx="3" cy="${y}" r="1.3"/><circle cx="7" cy="${y}" r="1.3"/>`).join('')}
     </svg>`;
+
+  const TOKENS = {
+    // Dock and panel sit on the theme's own ground, like the popup: a light
+    // theme means light overlay chrome. --fill is a block lifted off that
+    // ground without a border.
+    light: { surface: '#f6f4f0', ink: '#1a1917', muted: '#635e58', line: '#cfcbc2',
+             warn: '#7c5310', warnLine: '#d4b483', fill: 'rgba(26,25,23,.05)',
+             hover: 'rgba(26,25,23,.07)', grip: 'rgba(26,25,23,.10)' },
+    dark:  { surface: '#1f1e1b', ink: '#efece5', muted: '#9c968c', line: '#35332e',
+             warn: '#dcbb74', warnLine: '#6b5a33', fill: 'rgba(239,236,229,.06)',
+             hover: 'rgba(239,236,229,.08)', grip: 'rgba(239,236,229,.10)' }
+  };
+
+  /** `stored` is 'light', 'dark', or undefined for "whatever the OS says". */
+  function applyTheme(host, stored) {
+    const dark = stored === 'dark' || (stored !== 'light' &&
+      typeof matchMedia === 'function' && matchMedia('(prefers-color-scheme: dark)').matches);
+    for (const [k, v] of Object.entries(TOKENS[dark ? 'dark' : 'light'])) {
+      host.style.setProperty('--' + k, v);
+    }
+  }
 
   // Give up polling after this many misses in a row on a site that has never
   // shown the dock. Generous on purpose: a client-rendered store whose landing
@@ -93,8 +113,11 @@
   // is handled by the same path, so removing an entry brings the dock back
   // without a reload too.
   chrome.storage.onChanged.addListener((changes, area) => {
-    if (area !== 'local' || !changes.blocked) return;
-    applyBlocklist(changes.blocked.newValue || []);
+    if (area !== 'local') return;
+    if (changes.blocked) applyBlocklist(changes.blocked.newValue || []);
+    // Repaint in place rather than remount: switching theme in Options must not
+    // close a panel the user has open.
+    if (changes.theme && mounted) mounted.setTheme(changes.theme.newValue);
   });
 
   function start() {
@@ -301,6 +324,8 @@
     // page to find us by.
     host.style.cssText = 'all:initial;position:fixed;z-index:2147483647;';
 
+    applyTheme(host, res.theme);
+
     const pos = res.overlayPos || {};
     host.style.right = RAIL_RIGHT + 'px';
     host.style.bottom = clampY(pos.bottom ?? 16) + 'px';
@@ -323,6 +348,10 @@
 
     root.innerHTML = `
       <style>
+        /* Tokens are set inline on the host by applyTheme(), not declared
+           here: the overlay follows the theme chosen in Options, and a shadow
+           root cannot read that. It also keeps a fixed attribute off the host
+           for a page to detect us by. */
         :host { all: initial; }
         * { box-sizing: border-box; margin: 0; font-family: ${fontFamilyStack || font.stack || '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif'}; }
 
@@ -330,23 +359,27 @@
            bottom edge no matter what the panel is doing. */
         .wrap { position: relative; width: max-content; }
 
-        .dock { display: flex; align-items: center; height: ${DOCK_H}px; border-radius: 999px;
-                background: #0a7d3f; color: #fff; box-shadow: 0 4px 14px rgba(0,0,0,.28);
-                overflow: hidden; }
+        /* design/DESIGN.md forbids drop shadows and border radius everywhere
+           else. This is the exemption, and the reason for it: both of these
+           float over a page the extension does not control, so a hairline has
+           nothing reliable to sit against. The radius still goes. */
+        .dock { display: flex; align-items: center; height: ${DOCK_H}px; border-radius: 12px;
+                background: var(--surface); color: var(--ink);
+                box-shadow: 0 4px 14px rgba(0,0,0,.28); overflow: hidden; }
         .icon { width: 44px; height: ${DOCK_H}px; border: 0; background: none; color: inherit;
                 cursor: pointer; display: grid; place-items: center; padding: 0; }
-        .icon:hover { background: rgba(255,255,255,.12); }
-        .icon:focus-visible { outline: 2px solid #fff; outline-offset: -3px; }
-        .grip { width: 30px; height: ${DOCK_H}px; border: 0; background: rgba(0,0,0,.14); color: inherit;
+        .icon:hover { background: var(--hover); }
+        .icon:focus-visible { outline: 2px solid currentColor; outline-offset: -3px; }
+        .grip { width: 30px; height: ${DOCK_H}px; border: 0; background: var(--grip); color: inherit;
                 display: grid; place-items: center; padding: 0; cursor: grab; touch-action: none;
-                fill: currentColor; opacity: .75; }
-        .grip:hover { opacity: 1; background: rgba(0,0,0,.22); }
+                fill: currentColor; opacity: .7; }
+        .grip:hover { opacity: 1; }
 
         .panel { position: absolute; right: 0; bottom: calc(100% + ${GAP}px);
                  width: 300px; max-height: calc(100vh - ${DOCK_H + GAP + EDGE * 2}px); overflow-y: auto;
-                 background: #fff; color: #14161a; border: 1px solid #e3e6ea;
-                 border-radius: 12px; box-shadow: 0 8px 28px rgba(0,0,0,.16);
-                 padding: 14px 14px 12px; font-size: 13px; line-height: 1.45;
+                 background: var(--surface); color: var(--ink); border: 0; border-radius: 12px;
+                 box-shadow: 0 8px 28px rgba(0,0,0,.16);
+                 padding: 14px; font-size: 12.5px; line-height: 1.5;
                  visibility: hidden; opacity: 0; transform: translateY(6px) scale(.98);
                  transform-origin: bottom right;
                  transition: opacity .13s ease, transform .13s ease, visibility 0s linear .13s; }
@@ -357,37 +390,29 @@
         .wrap.dragging .panel { visibility: hidden; opacity: 0; transition: none; }
 
         .top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-        .eyebrow { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: #6b7280; font-weight: 600; }
-        .guess { opacity: .65; font-weight: 500; }
-        .x { cursor: pointer; border: 0; background: none; color: #9aa1ab; font-size: 16px; line-height: 1; padding: 0 2px; }
-        .x:hover { color: #14161a; }
-        .name { font-size: 15px; font-weight: 650; margin-top: 6px; }
-        .rate { font-size: 13px; color: #0a7d3f; font-weight: 600; }
-        .note { color: #6b7280; font-size: 11px; margin-top: 5px; }
+        .eyebrow { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+        .guess { opacity: .6; }
+        .x { cursor: pointer; border: 0; background: none; color: var(--muted); font-size: 16px; line-height: 1; padding: 0 2px; }
+        .x:hover { color: var(--ink); }
+        .name { font-size: 15px; font-weight: 600; letter-spacing: -.01em; line-height: 1.3; margin-top: 8px; }
+        .rate { font-size: 12.5px; font-weight: 600; margin-top: 2px; }
+        .note { color: var(--muted); font-size: 10.5px; line-height: 1.45; margin-top: 6px; }
         /* Louder than .note on purpose: a note is extra information, this
            says the number above it may be wrong. */
-        .stale { color: #92400e; background: #fef3c7; border-radius: 6px;
-                 font-size: 11px; line-height: 1.4; margin-top: 7px; padding: 6px 8px; }
-        .why { color: #6b7280; font-size: 10px; margin-top: 4px; letter-spacing: .02em; }
+        .stale { color: var(--warn); border: 1px solid var(--warnLine); border-radius: 4px;
+                 font-size: 11px; line-height: 1.45; margin-top: 8px; padding: 7px 9px; }
+        .why { color: var(--muted); font-size: 10px; margin-top: 5px; }
         .undo { border: 0; background: none; padding: 0 0 0 2px; font: inherit; color: inherit;
                 text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
-        .undo:hover { color: #14161a; }
-        .alt { margin-top: 10px; border-top: 1px solid #eef0f3; padding-top: 9px; }
-        .alt h4 { font-size: 10px; letter-spacing: .07em; text-transform: uppercase; color: #6b7280; font-weight: 600; margin-bottom: 6px; }
-        .row { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 3px 0; }
-        .pin { cursor: pointer; border: 1px solid #d6dae0; background: #fff; border-radius: 6px;
-               font-size: 10px; padding: 3px 7px; color: #374151; white-space: nowrap; }
-        .pin:hover { background: #f4f6f8; }
-
-        @media (prefers-color-scheme: dark) {
-          .panel { background: #16181c; color: #e8eaed; border-color: #2a2e35; }
-          .alt { border-top-color: #2a2e35; }
-          .pin { background: #1f2228; border-color: #353a42; color: #cbd0d6; }
-          .rate { color: #4ade80; }
-          .x:hover { color: #e8eaed; }
-          .undo:hover { color: #e8eaed; }
-          .dock { background: #22c55e; color: #0b1410; }
-        }
+        .undo:hover { color: var(--ink); }
+        .alt { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 10px; }
+        .alt h4 { font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+                  color: var(--muted); font-weight: 400; margin-bottom: 8px; }
+        .row { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 5px 0; }
+        .pin { cursor: pointer; border: 0; border-radius: 4px; background: var(--fill);
+               font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+               padding: 6px 10px; color: var(--ink); white-space: nowrap; }
+        .pin:hover { background: var(--line); }
       </style>
       <div class="wrap">
         <div class="panel" role="dialog" aria-label="Card recommendation">
@@ -514,6 +539,7 @@
         icon.setAttribute('aria-expanded', 'true');
         reflow();
       },
+      setTheme(stored) { applyTheme(host, stored); },
       destroy() {
         // Drop the listener too -- mount/unmount cycles on a SPA would
         // otherwise leak one per route.

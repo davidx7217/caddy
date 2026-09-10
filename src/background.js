@@ -1,5 +1,5 @@
-import { rank, isMerchantPage, isCheckoutPage,
-         DEFAULT_FONT, FONTS, overlayFont } from './engine.js';
+import { rank, isMerchantPage, isCheckoutPage, normalizeHost,
+         FONT_FILE, overlayFont } from './engine.js';
 
 // One-time cleanup of the removed snooze feature's leftover key. Safe to
 // delete this line once it has run on every machine that had the old build.
@@ -13,7 +13,7 @@ let fontPromise = null;
 const FONT_NONCE = Math.random().toString(36).slice(2, 10);
 
 /**
- * The overlay's font as data: URIs, keyed by the path overlayFont() asks for.
+ * The overlay's font as a data: URI.
  *
  * Inlined rather than served from web_accessible_resources. A web-accessible
  * file is a fixed chrome-extension:// URL that ANY page can fetch to prove the
@@ -22,19 +22,16 @@ const FONT_NONCE = Math.random().toString(36).slice(2, 10);
  * probe. Read once and cached: the worker can fetch its own bundled files
  * without declaring them accessible to anyone.
  */
-function fontUrls() {
+function fontUrl() {
   if (!fontPromise) {
-    const faces = (FONTS[DEFAULT_FONT].faces || []).map(([, , file]) => 'src/fonts/' + file);
-    fontPromise = Promise.all(faces.map(path =>
-      fetch(chrome.runtime.getURL(path))
-        .then(r => r.arrayBuffer())
-        .then(buf => {
-          const bytes = new Uint8Array(buf);
-          let bin = '';
-          for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
-          return [path, 'data:font/woff2;base64,' + btoa(bin)];
-        })
-    )).then(pairs => Object.fromEntries(pairs));
+    fontPromise = fetch(chrome.runtime.getURL(FONT_FILE))
+      .then(r => r.arrayBuffer())
+      .then(buf => {
+        const bytes = new Uint8Array(buf);
+        let bin = '';
+        for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+        return 'data:font/woff2;base64,' + btoa(bin);
+      });
   }
   return fontPromise;
 }
@@ -53,14 +50,17 @@ function loadData() {
 }
 
 async function getState() {
-  const s = await chrome.storage.local.get(['instances', 'prefs', 'valuations', 'overlayPos']);
+  const s = await chrome.storage.local.get(['instances', 'prefs', 'valuations', 'overlayPos', 'theme']);
   return {
     instances: s.instances || [],
     prefs: s.prefs || { categoryDefaults: {}, tieBand: 0.10 },
     valuationOverrides: s.valuations || {},
     // Sent down with the recommendation so the badge paints in the right
     // place on the first frame instead of jumping after a second read.
-    overlayPos: s.overlayPos || { bottom: 16 }
+    overlayPos: s.overlayPos || { bottom: 16 },
+    // 'light' | 'dark' | undefined. Undefined means follow the OS, which is
+    // the only thing the overlay can decide for itself.
+    theme: s.theme
   };
 }
 
@@ -77,12 +77,13 @@ export async function recommend(hostname, signals, wantFont = false) {
     prefs: st.prefs
   });
   result.overlayPos = st.overlayPos;
+  result.theme = st.theme;
   // The overlay cannot import, so hand it the font already resolved. Only when
   // it asks: the faces are inlined as base64 now, so shipping them on every
   // route change of an SPA would mean ~43KB per navigation for nothing.
   if (wantFont) {
-    const urls = await fontUrls();
-    result.font = overlayFont(DEFAULT_FONT, path => urls[path], FONT_NONCE);
+    const url = await fontUrl();
+    result.font = overlayFont(() => url, FONT_NONCE);
   }
   // The overlay only appears on pages you can buy something on. The result is
   // still cached and still reachable from the toolbar popup either way.
@@ -90,6 +91,42 @@ export async function recommend(hostname, signals, wantFont = false) {
     isMerchantPage(signals, !!result.merchant, !!(result.merchant && result.merchant.content_site));
   result.checkout = signals !== undefined && isCheckoutPage(signals);
   return result;
+}
+
+// ---------- activity ----------
+//
+// The last thirty recommendations, so Options can show what the ranker decided
+// and the user can check it. Domain, category, card and rate only -- no URL, no
+// path, no amount, no card number -- and it never leaves this machine.
+//
+// OFF unless prefs.activityLog is explicitly true. This is the only place the
+// extension keeps a record of where you have been, so it is the one feature that
+// has to be asked for rather than arrived at. The flag is read on every write,
+// not cached: turning it off in Options must stop the next page, not the next
+// service worker.
+const ACTIVITY_MAX = 30;
+let activityWrite = Promise.resolve();
+
+/** Read-modify-write, and two tabs can land together, so the writes are chained. */
+function logActivity(result) {
+  activityWrite = activityWrite.then(async () => {
+    const { activity = [], prefs = {} } = await chrome.storage.local.get(['activity', 'prefs']);
+    if (!prefs.activityLog) return;
+    const entry = {
+      at: Date.now(),
+      host: result.merchant ? result.merchant.domain : normalizeHost(result.hostname),
+      category: result.category,
+      card: result.winner.name,
+      value: result.winner.value
+    };
+    // An SPA fires PAGE on every route change, so collapse a repeat of the same
+    // answer on the same site into the row that is already there.
+    const head = activity[0];
+    const next = head && head.host === entry.host && head.card === entry.card
+      ? [entry, ...activity.slice(1)]
+      : [entry, ...activity];
+    await chrome.storage.local.set({ activity: next.slice(0, ACTIVITY_MAX) });
+  }).catch(() => {});
 }
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
@@ -101,6 +138,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         // popup can still read the result without any tabs/host permission.
         await chrome.storage.session.set({ [`tab:${sender.tab.id}`]: result });
       }
+      // Only what the user was actually shown, and never awaited: the overlay
+      // must not wait on a history write to paint.
+      if (result.show && result.winner) logActivity(result);
       sendResponse(result);
     })();
     return true;

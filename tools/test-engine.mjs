@@ -1,6 +1,6 @@
 // Zero-dependency test runner:  node tools/test-engine.mjs
 import { readFileSync } from 'node:fs';
-import { rank, resolveMerchant, pruneInstances, isMerchantPage, isCheckoutPage, isCommitLabel, isBuyLabel, inferCategory, isPinned } from '../src/engine.js';
+import { rank, resolveMerchant, pruneInstances, isMerchantPage, isCheckoutPage, isCommitLabel, isBuyLabel, inferCategory } from '../src/engine.js';
 
 const load = n => JSON.parse(readFileSync(new URL(`../data/${n}.json`, import.meta.url), 'utf8'));
 const products = load('cards'), merchants = load('merchants'), valuations = load('valuations');
@@ -99,13 +99,18 @@ eq('unknown domain resolves to null', resolveMerchant('some-random-site.example'
   eq('resolvedBy reports the default', r.resolvedBy, 'category_default');
 }
 {
-  const insts = [
-    { productId: 'amex-blue-cash-everyday', config: {}, priority: 9 },
-    { productId: 'robinhood-gold', config: {}, priority: 1 }
-  ];
-  const r = run('amazon.com', insts);
-  eq('explicit priority breaks the tie', r.winner.productId, 'robinhood-gold');
-  eq('resolvedBy reports priority', r.resolvedBy, 'priority');
+  // Wallet order is a stable sort key and NOTHING else. There is no way for a
+  // user to rank their cards, so position must never settle a tie -- if it did,
+  // whichever card happened to be added first would silently decide, and the
+  // user would never be asked.
+  const a = run('amazon.com', [{ productId: 'amex-blue-cash-everyday', config: {} },
+                               { productId: 'robinhood-gold', config: {} }]);
+  const b = run('amazon.com', [{ productId: 'robinhood-gold', config: {} },
+                               { productId: 'amex-blue-cash-everyday', config: {} }]);
+  eq('reversing the wallet does not change who is tied',
+     [a.tied.length, b.tied.length], [2, 2]);
+  eq('...and neither order silently resolves it',
+     [a.resolvedBy, b.resolvedBy], ['unresolved', 'unresolved']);
 }
 
 // --- rotating categories -------------------------------------------------
@@ -369,7 +374,8 @@ eq('...and nothing in its markup infers a category', inferCategory(TMO), null);
 // payment step.
 //
 // Resolved through merchants.json rather than hardcoded, so the flag and the
-// behaviour cannot drift apart the way priority and pinned once did.
+// behaviour cannot drift apart -- the same class of bug as a rule the tests
+// exercise and the browser never runs.
 const SITE = host => {
   const m = resolveMerchant(host, merchants);
   return sig => isMerchantPage(sig, !!m, !!(m && m.content_site));
@@ -699,49 +705,31 @@ eq('...as they are on a known merchant',
   eq('rank reports the tie band it used', r.tieBand, 0.10);
   // Exactly equal values are tied at ANY band, zero included: (top-v)/top is
   // 0, and 0 <= 0. So no tieBand setting can explain away a missing tie
-  // between cards that earn identically -- only a saved default, a pinned
-  // card, or a card not being owned can.
+  // between cards that earn identically -- only a saved default, or a card not
+  // being owned, can.
   const tight = run('doordash.com', WALLET, { prefs: { tieBand: 0 } });
   eq('a zero band still groups an EXACT tie', tight.tied.length, 4);
   eq('...and still reports it as unresolved', tight.resolvedBy, 'unresolved');
   eq('...and reports the band responsible', tight.tieBand, 0);
 }
 
-// --- pinned state, one definition ----------------------------------------
-// These drifted: the ranker honoured `priority`, the options page only showed
-// `pinned`, so a card silently decided every tie while Options showed nothing.
-eq('explicit pinned flag counts', isPinned({ pinned: true }), true);
-eq('a priority number counts too', isPinned({ priority: 3 }), true);
-eq('priority 0 counts (not falsy-tested)', isPinned({ priority: 0 }), true);
-eq('a plain instance does not', isPinned({ productId: 'x', config: {} }), false);
-eq('pinned:false does not', isPinned({ pinned: false }), false);
+// --- wallet order is not a preference ------------------------------------
+// Top-to-bottom ordering, and the pinning that went with it, were removed: a
+// second way to settle a tie that the user could trigger by accident, on a list
+// they were never told was meaningful. A tie the user has not deliberately
+// settled is now always SHOWN, which is what the prompt was for.
 {
-  // Reproduces exactly what David saw: 6 cards, a 4-way dining tie, silently
-  // settled by one pinned card, with no tie prompt shown.
-  // Semantics: a pin marks the LIST ORDER as deliberate. The earliest tied
-  // card then wins -- which is not necessarily the pinned one.
   const cfuFirst = [
-    { productId: 'chase-freedom-unlimited', config: {}, pinned: true },
+    { productId: 'chase-freedom-unlimited', config: {} },
     ...WALLET.filter(i => i.productId !== 'chase-freedom-unlimited')
   ];
   const r = run('doordash.com', cfuFirst);
-  eq('a pin settles a 4-way tie', r.resolvedBy, 'priority');
-  eq('...in favour of the earliest tied card', r.winner.productId, 'chase-freedom-unlimited');
-  eq('...and the tie group is still reported so the UI can explain itself',
-     r.tied.length, 4);
-
-  // The subtle part, asserted so it cannot regress into a surprise: pinning a
-  // card that sits BELOW an unpinned one hands the win to the unpinned card.
-  const pinnedLow = WALLET.map(i =>
-    i.productId === 'chase-freedom-unlimited' ? { ...i, pinned: true } : i);
-  const r3 = run('doordash.com', pinnedLow);
-  eq('pinning a lower card lets a higher unpinned card win',
-     r3.winner.productId, 'chase-sapphire-reserve');
-  eq('...still reported as priority resolution', r3.resolvedBy, 'priority');
-
-  const unpinned = cfuFirst.map(({ pinned, priority, ...rest }) => rest);
-  const r2 = run('doordash.com', unpinned);
-  eq('unpinning restores the prompt', r2.resolvedBy, 'unresolved');
+  eq('being first in the wallet does not win a 4-way tie', r.resolvedBy, 'unresolved');
+  eq('...and the whole tie group is still reported', r.tied.length, 4);
+  eq('...with only a saved default able to settle it',
+     run('doordash.com', cfuFirst,
+         { prefs: { categoryDefaults: { dining: 'chase-aeroplan' } } }).resolvedBy,
+     'category_default');
 }
 
 // --- empty state ---------------------------------------------------------
@@ -880,6 +868,50 @@ eq('Savor is valued as cash, not miles',
 eq('...3x on entertainment', only('capitalone-savor', 'ticketmaster.com').all[0].rate, 3);
 eq('...and 3x on streaming, so two cards now reach that category',
    only('capitalone-savor', 'netflix.com').all[0].rate, 3);
+
+// --- Discover it and Venture, verified on issuer sites 2026-09-09 ----------
+// Discover publishes its whole year in advance, so BOTH live quarters are
+// modelled and this card does not go stale on 2026-10-01 the way Freedom Flex
+// does. Q3 is Gas, Transportation, Drug Stores; Q4 is Restaurants,
+// Entertainment and Utilities -- which is what finally closes `utilities`.
+const disco = (h, when) => only('discover-it-cash-back', h, when);
+
+eq('Q3 pays 5x at the pump', disco('exxonmobilfuels.com', '2026-09-09').all[0].rate, 5);
+eq('...on transport', disco('uber.com', '2026-09-09').all[0].rate, 5);
+eq('...and at the drugstore', disco('cvs.com', '2026-09-09').all[0].rate, 5);
+eq('Q4 is already live in the data, so it just works on 15 October',
+   [disco('doordash.com', '2026-10-15').all[0].rate,
+    disco('ticketmaster.com', '2026-10-15').all[0].rate,
+    disco('coned.com', '2026-10-15').all[0].rate], [5, 5, 5]);
+eq('...which is what finally makes utilities rank something',
+   disco('coned.com', '2026-10-15').category, 'utilities');
+eq('...and every quarter needs activating', disco('coned.com', '2026-10-15').all[0].needsActivation, true);
+
+// ROTATION IS NOT STALENESS. This is the bug Discover exposed: on 15 October the
+// Q3 gas rule has expired, but a Q4 rule is sitting right there in the same card,
+// so the calendar is current and gas has simply had its turn. Warning here would
+// be crying wolf, and a warning that cries wolf stops being read.
+eq('a category whose quarter ended does NOT claim the data is stale',
+   disco('exxonmobilfuels.com', '2026-10-15').all[0].staleReason, null);
+eq('...but once the LAST modelled quarter lapses, it does say so',
+   disco('doordash.com', '2027-01-05').all[0].staleReason,
+   "5x on dining expired 2026-12-31. This card's rotating categories have not been " +
+   'updated, so it is being ranked on its base rate.');
+// Freedom Flex models one quarter only, so its lapse is genuinely stale data and
+// must still warn. The fix had to tell these two cases apart, not silence both.
+eq('Freedom Flex, with no later quarter modelled, still warns',
+   only('chase-freedom-flex', 'exxonmobilfuels.com', '2026-10-01').all[0].staleReason,
+   "5x on gas expired 2026-09-30. This card's rotating categories have not been " +
+   'updated, so it is being ranked on its base rate.');
+
+// Venture is the card the 'c1' valuation was written for: transferable miles, so
+// 2x at 1.4 cpp is 2.80% rather than a flat 2%.
+eq('Venture earns 2x on everything', only('capitalone-venture', 'amazon.com').all[0].rate, 2);
+eq('...valued as transferable miles', only('capitalone-venture', 'amazon.com').all[0].value, 2.8);
+eq('...and its 5x hotels rate stays a portal note, never a ranking',
+   [only('capitalone-venture', 'hilton.com').all[0].rate,
+    only('capitalone-venture', 'hilton.com').notes[0].text],
+   [2, 'Capital One Venture Rewards: 5x (7.00%) if you book through Capital One Travel instead']);
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

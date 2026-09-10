@@ -4,8 +4,8 @@
 //
 // This is the ONLY copy. engine.js used to export a second, identical one that
 // the engine tests exercised and the browser never ran -- the tested version was
-// not the executing version, which is precisely the drift that once let the
-// ranker honour `priority` while Options only showed `pinned`.
+// not the executing version -- the copy with the tests was not the copy that
+// ran.
 globalThis.__cpIsBlockedHost = function (hostname, blocked) {
   const host = String(hostname || '').toLowerCase().replace(/^www\./, '');
   if (!host) return false;

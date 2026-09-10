@@ -1,0 +1,25 @@
+{
+  "artboards": [
+    { "file": "Dock.dc.html",       "title": "A · Collapsed dock",        "x": 0,    "y": 0,    "w": 460,  "h": 260 },
+    { "file": "Main.dc.html",       "title": "B · Panel · clear winner",  "x": 560,  "y": 0,    "w": 700,  "h": 300 },
+    { "file": "PanelTie.dc.html",   "title": "C · Panel · unresolved tie","x": 0,    "y": 420,  "w": 700,  "h": 480 },
+    { "file": "PanelStale.dc.html", "title": "D · Panel · expired rate",  "x": 800,  "y": 420,  "w": 700,  "h": 420 },
+    { "file": "PanelNotes.dc.html", "title": "E · Panel · activation + portal note", "x": 0, "y": 1020, "w": 700, "h": 520 },
+    { "file": "Popup.dc.html",      "title": "F · Popup · full ranking",  "x": 0,    "y": 1660, "w": 780,  "h": 620 },
+    { "file": "PopupEmpty.dc.html", "title": "G · Popup · empty wallet",  "x": 880,  "y": 1660, "w": 780,  "h": 300 },
+    { "file": "Options.dc.html",    "title": "H · Options page",          "x": 0,    "y": 2400, "w": 1500, "h": 1360 }
+  ],
+  "annotations": [
+    { "id": "c-width", "x": -340, "y": 0, "w": 280,
+      "text": "300px, always.\nThe panel opens over someone else's checkout, at the moment they are paying. Every state has to fit that width and stay readable on an unknown background." },
+    { "id": "c-anchor", "x": -340, "y": 420, "w": 280,
+      "text": "The panel is absolutely positioned AGAINST the dock — never a flex sibling.\n\nAs a sibling it changed the wrapper's height, which moved the dock out from under the cursor mid-drag and left it hidden behind its own panel. Do not reparent it." },
+    { "id": "c-flip", "x": -340, "y": 1020, "w": 280,
+      "text": "The panel flips above or below the dock depending on room, and transform-origin follows it. A redesign has to work opening in both directions." },
+    { "id": "c-shadow", "x": -340, "y": 1660, "w": 280,
+      "text": "Popup and Options are ordinary HTML and share ui.css.\n\nThe dock and panel are NOT: their markup and 67 lines of CSS live as template strings inside content.js, in a closed shadow root, and cannot use ui.css. Changes there are edits to a string literal." },
+    { "id": "c-nonumbers", "x": -340, "y": 2400, "w": 280,
+      "text": "No position numbers on the card list. Wallet order carries no meaning any more — top-to-bottom priority was removed, and numbering the rows would keep implying a ranking the ranker does not read.\n\nThe popup's 1-6 is different: that IS the ranking." }
+  ],
+  "launch": { "view": "canvas" }
+}
