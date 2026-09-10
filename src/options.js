@@ -167,6 +167,10 @@ function blockOwned() {
   }).join('')}</div>`;
 }
 
+// ADD is a ghost button, not a solid one. Solid marks the single forward action
+// in a view and there is never more than one on screen; a catalogue of twelve
+// unowned cards put twelve of them on this pane, which made the list read as
+// twelve competing calls to action rather than a list you pick from.
 function blockCatalog() {
   const owned = new Set(instances.map(x => x.productId));
   const rest = productIds.filter(id => !owned.has(id));
@@ -179,7 +183,7 @@ function blockCatalog() {
         <div class="row-name">${esc(p.name)}</div>
         <div class="row-meta">${esc(p.network)} &middot; ${money(p.annual_fee)}</div>
       </div>
-      <button class="btn solid" data-add="${esc(id)}">ADD</button>
+      <button class="btn" data-add="${esc(id)}">ADD</button>
     </div>`;
   }).join('')}</div>`;
 }
@@ -364,8 +368,12 @@ function blockAbout() {
       <div><span>RATE DATA</span><span>${esc(ratesDate() || 'unknown')}</span></div>
       <div><span>STORAGE</span><span>${kb} KB LOCAL</span></div>
     </div>
+    <!-- Both ghost. They are a matched pair of utilities, and solid on one of
+         them implied a hierarchy that is not there. It also put a second solid
+         button on this pane beside START RECORDING, which is the one forward
+         action the Data pane actually has. -->
     <div class="about-acts">
-      <button class="btn solid" data-export="1">EXPORT SETTINGS</button>
+      <button class="btn" data-export="1">EXPORT SETTINGS</button>
       <button class="btn" data-import="1">IMPORT</button>
     </div>
   </div>`;

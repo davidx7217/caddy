@@ -247,7 +247,13 @@ Two variants and nothing else.
 | Hover | text `--ink`, border `--muted` | `opacity: .88` |
 
 Ghost is the default. Solid marks the single forward action in a view, and there
-is never more than one on screen.
+is never more than one on screen. Today that is START RECORDING on the Data pane
+(until it is on), ISSUER TERMS in the card dialog, and CONTINUE in setup. Cards,
+Ranking and Where it runs carry none, which is correct: a list you pick from has
+no single forward action. The catalogue used to give every unowned card a solid
+ADD, which put twelve of them on one pane and made a list read as twelve
+competing demands. Export and Import are both ghost for the same reason -- they
+are a matched pair, and solid on one implied a hierarchy that is not there.
 
 **In the popup and the overlay there is no ghost.** At those sizes a hairline
 around a 10px label reads as a frame rather than a control, so those buttons
