@@ -3,7 +3,9 @@
    A second copy of the theme is how the popup and Options drifted apart, and
    there is no reason for a third. */
 
-.w-shell { max-width: 900px; margin: 0 auto; min-height: 100vh;
+/* The same column Options uses: 900px of content inside a 40px gutter. The two
+   full-page surfaces line up when you land on Settings at the end of setup. */
+.w-shell { max-width: calc(var(--content) + 80px); margin: 0 auto; min-height: 100vh;
            display: flex; flex-direction: column; }
 .w-head { padding: 30px 40px 0; }
 

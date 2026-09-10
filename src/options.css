@@ -11,6 +11,10 @@
   --fill: rgba(26,25,23,.05); --warnLine: #d4b483;
   /* Three steps, and nothing outside them: controls, surfaces, floating things. */
   --r-sm: 4px; --r-md: 8px; --r-lg: 12px;
+  /* One content width for every block on every pane, plus a 40px gutter each
+     side. Blocks used to cap anywhere between 620px and 980px, which left the
+     narrow panes reading as left-aligned inside a centred column. */
+  --content: 900px;
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
@@ -50,7 +54,19 @@ nav .label { flex: 1; }
 
 /* ---------- header ---------- */
 main { flex: 1; min-width: 0; }
-.head { border-bottom: 1px solid var(--line); padding: 34px 40px 26px; display: flex;
+
+/* Every pane caps its blocks somewhere between 620px and 980px, so on a wide
+   window the content hugged the left edge of main and left the rest of the
+   screen empty. The gutter grows to centre the column instead.
+   Done with padding rather than a max-width on these elements, because the
+   header's rule and the pane's dividers are full-width and have to stay that
+   way -- capping the elements themselves would stop those short. */
+.head, #alerts:not(:empty), .page {
+  padding-left: max(40px, (100% - var(--content)) / 2);
+  padding-right: max(40px, (100% - var(--content)) / 2);
+}
+.head { border-bottom: 1px solid var(--line); padding-top: 34px; padding-bottom: 26px;
+        display: flex;
         align-items: flex-end; justify-content: space-between; gap: 30px; flex-wrap: wrap; }
 .crumb { font-size: 11px; letter-spacing: .1em; color: var(--muted); }
 h1 { font-size: 34px; font-weight: 400; letter-spacing: -.03em; line-height: 1.12;
@@ -59,12 +75,12 @@ h1 { font-size: 34px; font-weight: 400; letter-spacing: -.03em; line-height: 1.1
 .head-meta { font-size: 11px; color: var(--muted); text-align: right; line-height: 1.8; }
 .head-meta .warn { color: var(--warn); }
 
-#alerts:not(:empty) { padding: 24px 40px 0; }
+#alerts:not(:empty) { padding-top: 24px; }
 .banner { border: 1px solid var(--warnLine); color: var(--warn); padding: 10px 12px;
           font-size: 11.5px; line-height: 1.5; max-width: 72ch; }
 .banner + .banner { margin-top: 8px; }
 
-.page { padding: 0 40px 80px; }
+.page { padding-bottom: 80px; }
 .page > .banner { margin-top: 24px; }
 .empty { padding: 30px 4px; color: var(--muted); font-size: 13px; }
 
@@ -119,7 +135,7 @@ h1 { font-size: 34px; font-weight: 400; letter-spacing: -.03em; line-height: 1.1
              border-radius: var(--r-sm); padding: 8px 10px; }
 
 /* ---------- list rows ---------- */
-.list { border-top: 1px solid var(--line); margin-top: 28px; max-width: 900px; }
+.list { border-top: 1px solid var(--line); margin-top: 28px; max-width: var(--content); }
 .row { display: flex; align-items: center; gap: 14px; padding: 14px 4px;
        border-bottom: 1px solid var(--line); }
 .row .grow { flex: 1; min-width: 0; }
@@ -138,7 +154,7 @@ h1 { font-size: 34px; font-weight: 400; letter-spacing: -.03em; line-height: 1.1
             background: var(--surface); }
 .grid .empty { border: 0; background: transparent; padding: 30px 4px; }
 
-.grid.modes { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); max-width: 700px; }
+.grid.modes { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); max-width: var(--content); }
 /* Selected is a tint plus a warmer border, never a near-black block: an
    --accent fill is #44403c in light, which reads as a black box. */
 .mode { cursor: pointer; padding: 16px 18px; text-align: left; color: var(--ink);
@@ -151,7 +167,7 @@ h1 { font-size: 34px; font-weight: 400; letter-spacing: -.03em; line-height: 1.1
 .mode-desc { font-size: 12.5px; line-height: 1.5; color: var(--muted); margin-top: 6px; }
 
 /* ---------- blocklist ---------- */
-.blocked { max-width: 620px; display: flex; flex-direction: column; gap: 12px; margin-top: 28px; }
+.blocked { max-width: var(--content); display: flex; flex-direction: column; gap: 12px; margin-top: 28px; }
 .blocked textarea { font-size: 12.5px; line-height: 2; background: var(--surface);
                     border: 1px solid var(--line); border-radius: var(--r-md);
                     padding: 16px 18px; min-height: 190px; resize: vertical; }
@@ -163,7 +179,7 @@ h1 { font-size: 34px; font-weight: 400; letter-spacing: -.03em; line-height: 1.1
    a bordered box inside a bordered box read as two fields, and the outer one
    is not editable. */
 .grid.points { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-               gap: 18px 26px; max-width: 700px; }
+               gap: 18px 26px; max-width: var(--content); }
 .grid.points > * { border: 0; background: transparent; }
 .pt { padding: 0; }
 .pt-label { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
@@ -181,7 +197,7 @@ h1 { font-size: 34px; font-weight: 400; letter-spacing: -.03em; line-height: 1.1
 .pt-in span { font-size: 11px; color: var(--muted); }
 
 /* ---------- activity ---------- */
-.act { max-width: 980px; margin-top: 28px; }
+.act { max-width: var(--content); margin-top: 28px; }
 .act-row { display: grid; grid-template-columns: 90px 1fr 150px 1fr 80px; gap: 14px;
            padding: 13px 4px; border-bottom: 1px solid var(--line); font-size: 13px;
            align-items: center; }
@@ -197,7 +213,7 @@ h1 { font-size: 34px; font-weight: 400; letter-spacing: -.03em; line-height: 1.1
 .act-foot .acts { display: flex; gap: 8px; }
 
 /* ---------- about ---------- */
-.about { max-width: 720px; margin-top: 28px; display: flex; flex-direction: column; gap: 24px; }
+.about { max-width: var(--content); margin-top: 28px; display: flex; flex-direction: column; gap: 24px; }
 .lede { font-size: 22px; font-weight: 300; line-height: 1.35; letter-spacing: -.02em; max-width: 26ch; }
 .spec { border-top: 1px solid var(--line); font-size: 12px; }
 .spec div { display: flex; justify-content: space-between; padding: 12px 4px;

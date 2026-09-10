@@ -164,7 +164,7 @@ Not a strict 4px grid. Use a value from this set and do not invent between them:
 
 | Context | Value |
 | --- | --- |
-| Page gutter | `40px` (`22px` under 860px) |
+| Page gutter | `40px` minimum, growing to centre the column (`22px` under 860px) |
 | Page bottom | `80px` |
 | Header | `34px 40px 26px` |
 | Sidebar block | `26px 22px` |
@@ -188,16 +188,26 @@ Text gets a `ch` cap, not a `px` one.
 
 ### Container widths
 
+**One content width, `--content: 900px`.** Every block on every pane caps
+there: list rows, mode tiles, point values, the activity table, the blocklist
+and About. They used to cap anywhere between `620px` and `980px`, which made
+the narrow panes read as left-aligned even inside a centred column -- a `700px`
+grid of tiles stopping short under a full-width section rule.
+
 | Region | Width |
 | --- | --- |
 | Sidebar | `250px` fixed |
-| Mode tiles | `minmax(260px, 1fr)` auto-fit, capped `700px` |
-| Point values | `minmax(190px, 1fr)` auto-fill, capped `700px`, `gap: 18px 26px` |
-| List rows | `900px` |
-| Setup column | `900px`, centred |
-| Activity table | `980px` |
-| About | `720px` |
-| Blocklist | `620px` |
+| Any content block | `var(--content)`, `900px` |
+| Mode tiles | `minmax(260px, 1fr)` auto-fit |
+| Point values | `minmax(190px, 1fr)` auto-fill, `gap: 18px 26px` |
+| Setup shell | `calc(var(--content) + 80px)`, centred in the window |
+
+**The column is centred by the gutter, not by a `max-width`.** `.head`,
+`#alerts` and `.page` take
+`padding-inline: max(40px, (100% - var(--content)) / 2)`, so the gutter grows
+past `40px` to centre the content and never falls below it. Capping those
+elements themselves would work for the blocks and stop the header's rule and
+the pane's dividers short, and those are full-width rules by design.
 
 ---
 
@@ -444,9 +454,11 @@ third copy of the palette is how the popup and Options drifted apart in the
 first place. The issuer marks, rows, buttons, mode tiles and point-value cells
 are the Options components, unchanged.
 
-**A centred `900px` column, not the sidebar shell.** Setup is a sequence, not a
-place to navigate around, so the nav that makes Options legible would be four
-dead links here.
+**A centred column, not the sidebar shell.** Setup is a sequence, not a place to
+navigate around, so the nav that makes Options legible would be four dead links
+here. The shell is `var(--content)` plus its own `40px` gutters, so the content
+lands on the same `900px` measure Options uses and the two line up when setup
+hands over to Settings at the end.
 
 **Progress is carried by the label, not by the rule.** Each step is a flex cell
 under a `1px --line` hairline; reached steps take `--ink` and `600`, the rest
