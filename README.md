@@ -41,12 +41,14 @@ This is the actual product. The extension is a few hundred lines; the data is th
 1. Chrome -> `chrome://extensions`
 2. Turn on **Developer mode** (top right)
 3. **Load unpacked** -> select this folder
-4. The options page opens on install. Add your cards there -- the extension
-   ships with no wallet, by design.
-5. Still on that page, **Where it runs** -> *Turn on*, if you want the
-   dock to appear by itself. It is off by default and the install prompt asks for
-   nothing, so until you turn it on the dock appears only when you click the
-   toolbar icon.
+4. Setup opens on install and asks four things: what Caddy is, which cards you
+   carry, the questions those picks raise, and whether it may run by itself. The
+   extension ships with no wallet by design, so step two is the one it cannot do
+   for you. It takes about a minute and lands you in Settings when it is done.
+5. Automatic mode is the last step of setup and is **off** unless you pick it
+   there. The install prompt asks for nothing, so until you turn it on the dock
+   appears only when you click the toolbar icon. Settings -> **Where it runs**
+   changes it later.
 
 Pin it to the toolbar.
 
@@ -107,6 +109,9 @@ src/
   content.js        shadow-DOM overlay. Dumb renderer, no logic
   popup.js/.html    hands off to the overlay; renders only where it cannot
   options.js/.html  four-section settings page: cards, ranking, where it runs, data
+  welcome.js/.html  first-run setup: what it is, your cards, tuning, the permission
+  welcome.css       the stepper only; the theme is options.css, which it loads first
+  issuers.js        issuer marks, names and currency labels. One copy, two surfaces
   options.css       the paper theme; ui.css is the popup's, the overlay inlines its own
   fonts/            Outfit, bundled woff2, latin subset, never fetched remotely
 tools/
@@ -528,8 +533,14 @@ it; run it whenever you add a card.
   is the replacement Citi itself names. Add Custom Cash as `verified: false` if you
   hold one -- the popup already banners unverified data.
 - Rotating categories (Freedom Flex) are verified for Q3 2026 and expire 2026-09-30.
-- No onboarding polish and no store listing. Icons ship now, drawn by
-  `tools/make-icons.mjs`.
+- No store listing. Icons ship now, drawn by `tools/make-icons.mjs`, and setup
+  is a real flow rather than a bare catalogue, but nothing here is written for a
+  listing page.
+- Nothing tests `src/welcome.js`. It is a DOM surface talking to `chrome.storage`
+  and `chrome.permissions`, which neither suite can reach, so it was verified by
+  driving all four steps in a browser against a stubbed `chrome.*` and reading
+  the storage it wrote. That is the same gap `background.js` has, for the same
+  reason, and worth the same suspicion.
 - `utilities` resolves but no card in `cards.json` bonuses it, so it is still
   inert. Ink Business Cash does NOT close this one: its 5% is "internet, cable and
   phone services", which is `phone_internet`, not electricity, gas or water. Do not

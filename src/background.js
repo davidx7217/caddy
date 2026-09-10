@@ -252,6 +252,13 @@ syncAutoMode().catch(() => {});
 chrome.permissions.onAdded.addListener(() => syncAutoMode().catch(() => {}));
 chrome.permissions.onRemoved.addListener(() => syncAutoMode().catch(() => {}));
 
+// First run goes to the setup flow, not to Options. Options is a settings page
+// -- it opens on a catalogue of fourteen cards with no explanation of what the
+// extension does, why nothing appears on any site yet, or that automatic mode
+// exists. Only on `install`: an update must never interrupt someone who is
+// already set up.
 chrome.runtime.onInstalled.addListener(details => {
-  if (details.reason === 'install') chrome.runtime.openOptionsPage();
+  if (details.reason === 'install') {
+    chrome.tabs.create({ url: chrome.runtime.getURL('src/welcome.html') });
+  }
 });

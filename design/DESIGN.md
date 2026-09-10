@@ -194,6 +194,7 @@ Text gets a `ch` cap, not a `px` one.
 | Mode tiles | `minmax(310px, 1fr)` auto-fit, capped `840px` |
 | Point values | `minmax(230px, 1fr)` auto-fill, capped `860px` |
 | List rows | `900px` |
+| Setup column | `900px`, centred |
 | Activity table | `980px` |
 | About | `720px` |
 | Blocklist | `620px` |
@@ -387,7 +388,7 @@ Neither carries a border: the shadow is the whole separation, and both sit at
 
 ## Per-surface rules
 
-Three surfaces, one system, different constraints.
+Four surfaces, one system, different constraints.
 
 ### Options page
 
@@ -411,6 +412,38 @@ paragraph about schema design.
 `.sub-head`, so a merged section still reads as two things rather than one long
 scroll. Anything that used to be a section blurb now rides under its own
 sub-head as a `.hint`.
+
+### Setup flow
+
+The install flow, `src/welcome.html`. It borrows the theme wholesale -- it loads
+`options.css` first and adds `welcome.css` for the stepper alone -- because a
+third copy of the palette is how the popup and Options drifted apart in the
+first place. The issuer marks, rows, buttons, mode tiles and point-value cells
+are the Options components, unchanged.
+
+**A centred `900px` column, not the sidebar shell.** Setup is a sequence, not a
+place to navigate around, so the nav that makes Options legible would be four
+dead links here.
+
+**Progress is a rule per step, not a dot or a number.** Each step is a flex cell
+with a `2px` top border, `--line` ahead of you and `--accent` up to where you
+are. It is the same idea as the active nav item: a rule marks position, a fill
+never does.
+
+**The footer is sticky and sits on `--bg`.** It is the page's own ground
+continuing under a long catalogue, not a raised bar, so it takes a `1px` top
+hairline and no `--surface`.
+
+**The card picker is one button per row.** The whole row is the control, so the
+divider is an `::after` inside the padding rather than a border on the element
+-- a hard-edged wash inside a rounded system reads as a mistake. Chosen rows
+take `--fill` and flip their micro-cap from `ADD` to `ADDED`, which is the
+[selected tile](#selected-tile) pattern at row scale.
+
+**Step three exists only when the picks earn it.** Fine-tune renders the
+per-card config and the point values for currencies the wallet actually earns.
+A cash-back-only wallet skips the step entirely rather than being shown a form
+whose every field is `1.0 cpp` by definition.
 
 ### Toolbar icon
 
@@ -485,21 +518,24 @@ The hard one. Markup and CSS are template strings inside `src/content.js`, in a
 
 ## Compliance
 
-All three surfaces are on-system. What each one owns:
+All four surfaces are on-system. What each one owns:
 
 | Surface | Sheet | Notes |
 | --- | --- | --- |
 | Options | `src/options.css` | Reference implementation. Explicit `data-theme` switch |
+| Setup | `src/options.css` + `src/welcome.css` | Borrows the theme; owns only the stepper. Reads the stored theme, falls back to the OS |
 | Popup | `src/ui.css` | Fallback only. Reads the stored theme, falls back to the OS |
 | Overlay | style string in `src/content.js` | Tokens are set inline on the host by `applyTheme()`, because a shadow root can reach no stylesheet and must not carry a fixed attribute a page could detect. Holds the [exemption](#exemptions) |
 
-### One theme, three surfaces
+### One theme, four surfaces
 
 Options owns the choice and writes `theme` (`'light'` / `'dark'`) to
 `chrome.storage.local`. Unset means follow the OS, so a fresh install matches the
-system on all three surfaces.
+system on all four surfaces.
 
 - **Options** sets `data-theme` on the root every render.
+- **Setup** sets it once at load. There is no theme switch in the flow: it is a
+  minute long, it follows whatever is already stored, and Options owns the toggle.
 - **Overlay** receives `theme` in the recommendation payload and, separately,
   listens for the storage change so a switch repaints a dock that is already up
   without closing an open panel.

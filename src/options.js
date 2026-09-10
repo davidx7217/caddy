@@ -1,31 +1,9 @@
 import { pruneInstances, fontFaceCss, fontStack } from './engine.js';
+import { CURRENCY, mark, money } from './issuers.js';
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-
-const CURRENCY = {
-  cash: 'Cash back', ur: 'Chase points', mr: 'Amex points',
-  aeroplan: 'Aeroplan points', c1: 'Capital One miles', citi: 'Citi points',
-  disco: 'Discover cash back'
-};
-// Issuer marks: two letters on a wash of the issuer's colour. Deliberately NOT
-// logos -- bundling issuer artwork into a distributed extension means shipping
-// someone else's trademark, and a bare colour block asked the reader to
-// remember which blue was which.
-//
-// The colour is a low-opacity tint, never a fill. At full strength these are
-// cold saturated brand primaries and they fight a warm paper palette; at 16%
-// they read as a soft wash that still tells Chase from Robinhood. The letters
-// are --ink, so nothing here needs a per-theme contrast check.
-const CHIP = {
-  chase: '#1c4d8f', robinhood: '#0f9d58', bofa: '#a3232b', amex: '#2e6fb8',
-  citi: '#0a4a86', capitalone: '#c0392b', discover: '#e8620c'
-};
-const MONOGRAM = {
-  chase: 'CH', robinhood: 'RH', bofa: 'BA', amex: 'AX',
-  citi: 'CT', capitalone: 'C1', discover: 'DS'
-};
 
 const SECTIONS = [
   { id: 'cards',   num: '01', label: 'Cards',         title: 'Cards',
@@ -159,10 +137,6 @@ function liveCurrencies() {
   return Object.keys(baseVals).filter(k => !k.startsWith('_') && live.has(k));
 }
 
-const chipFor = issuer => CHIP[issuer] || '#635e58';
-const mark = issuer =>
-  `<span class="chip" style="--mark:${chipFor(issuer)}"><i>${esc(MONOGRAM[issuer] || '?')}</i></span>`;
-const money = c => c ? `$${c}/yr` : 'no annual fee';
 const catLabel = k => (categories[k] && categories[k].label) || String(k).replace(/_/g, ' ');
 
 // ---------- section renderers ----------

@@ -1,6 +1,6 @@
 # Design canvas
 
-Source for the design canvas of the extension's three UI surfaces. These are
+Source for the design canvas of the extension's UI surfaces. These are
 working files: the published canvas is regenerated from them, never edited in
 place.
 
@@ -22,6 +22,11 @@ gitignored, ~2.5MB because the canvas editor is baked into it.
 | `Options` | options page | every section |
 
 Each renders light and dark side by side.
+
+The setup flow (`src/welcome.html`) has no artboard. It is assembled from
+Options components on `options.css` -- rows, issuer marks, mode tiles, point
+cells -- so the `Options` artboard already covers everything in it except the
+stepper and the picker row, which were designed against the running page.
 
 ## Where the real thing lives
 

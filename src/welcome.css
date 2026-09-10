@@ -1,0 +1,70 @@
+/* The setup flow, and only the setup flow. The palette, the buttons, the rows
+   and the issuer marks all come from options.css, which this page loads first.
+   A second copy of the theme is how the popup and Options drifted apart, and
+   there is no reason for a third. */
+
+.w-shell { max-width: 900px; margin: 0 auto; min-height: 100vh;
+           display: flex; flex-direction: column; }
+.w-head { padding: 30px 40px 0; }
+
+/* Progress. A 2px top rule per step, filled for everything reached: the same
+   trick as the active nav item, which is the one place in the system where a
+   rule rather than a fill marks position. */
+.w-steps { display: flex; gap: 20px; list-style: none; padding: 0; margin: 24px 0 0; }
+.w-steps li { flex: 1; border-top: 2px solid var(--line); padding-top: 10px;
+              font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+              color: var(--muted); }
+.w-steps li[data-on] { border-top-color: var(--accent); color: var(--ink); font-weight: 600; }
+
+.w-main { flex: 1; padding: 34px 40px 44px; }
+.w-title { font-size: 34px; font-weight: 400; letter-spacing: -.03em; line-height: 1.12;
+           text-transform: uppercase; }
+.w-blurb { margin-top: 12px; font-size: 13px; line-height: 1.55; color: var(--muted);
+           max-width: 62ch; }
+.lede + .w-blurb, .w-spec + .w-blurb { margin-top: 24px; }
+.w-spec { margin-top: 30px; max-width: 620px; }
+
+/* The footer follows the reader down a long catalogue. It sits on --bg rather
+   than --surface: it is the page's own ground continuing, not a raised bar. */
+.w-foot { position: sticky; bottom: 0; background: var(--bg);
+          border-top: 1px solid var(--line); padding: 16px 40px;
+          display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.w-note { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.w-foot .btn[disabled] { opacity: .42; cursor: not-allowed; }
+.w-foot .btn[disabled]:hover { color: var(--muted); border-color: var(--line); }
+.w-foot .btn[hidden] { display: none; }
+
+/* ---------- card picker ---------- */
+.w-search { display: block; width: 100%; max-width: 420px; margin-top: 26px;
+            background: var(--surface); border: 1px solid var(--line);
+            border-radius: var(--r-sm); padding: 10px 12px; font-size: 13px; }
+.w-search:hover { border-color: var(--muted); }
+.w-search:focus { outline: none; border-color: var(--muted); }
+
+.w-group { font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+           color: var(--muted); margin-top: 28px; }
+.w-list { margin-top: 6px; }
+
+/* The whole row is the control, so the hairline is an ::after inside the
+   padding rather than a border on it -- a hard-edged wash inside a rounded
+   system reads as a mistake. Same construction as the card rows in Options. */
+.pick { position: relative; display: flex; align-items: center; gap: 14px;
+        width: 100%; text-align: left; padding: 12px 10px; margin: 0 -10px;
+        background: transparent; border: 0; border-radius: var(--r-md);
+        color: var(--ink); cursor: pointer; }
+.pick::after { content: ''; position: absolute; left: 10px; right: 10px; bottom: 0;
+               height: 1px; background: var(--line); }
+.pick:last-child::after { display: none; }
+.pick:hover { background: var(--surface); }
+.pick:hover::after, .pick:hover + .pick::after { background: transparent; }
+.pick[aria-pressed="true"] { background: var(--fill); }
+.pick[aria-pressed="true"]::after,
+.pick[aria-pressed="true"] + .pick::after { background: transparent; }
+.pick .grow { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.pick .state { flex: none; font-size: 10px; letter-spacing: .12em; color: var(--muted); }
+.pick[aria-pressed="true"] .state { color: var(--ink); font-weight: 600; }
+
+/* ---------- fine-tune ---------- */
+.w-tune { margin-top: 22px; }
+.w-tune-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.w-tune .cfg { padding-left: 46px; }
