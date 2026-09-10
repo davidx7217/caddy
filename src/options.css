@@ -9,18 +9,29 @@
   /* A borderless block lifted off the ground, and the soft edge for warn
      surfaces -- --warn itself is dark enough to read as a black outline. */
   --fill: rgba(26,25,23,.05); --warnLine: #d4b483;
+  /* One step BELOW the page ground, for a block that is a well rather than a
+     raised surface. --surface goes up from --bg, this goes down. */
+  --well: #e3e0d9;
   /* Three steps, and nothing outside them: controls, surfaces, floating things. */
   --r-sm: 4px; --r-md: 8px; --r-lg: 12px;
   /* One content width for every block on every pane, plus a 40px gutter each
      side. Blocks used to cap anywhere between 620px and 980px, which left the
      narrow panes reading as left-aligned inside a centred column. */
   --content: 900px;
+  /* One catalogue row, MEASURED off the running page (chip, two lines of text,
+     the row's own padding). The reserved height of a card list is a multiple of
+     it, so anything that changes a row's height has to change this too. */
+  --row-h: 69px;
+  /* One ghost button, measured. Rows that a button moves in and out of reserve
+     this so the page below them does not move. */
+  --ctl-h: 33px;
 }
 :root[data-theme="dark"] {
   color-scheme: dark;
   --bg: #171614; --surface: #1f1e1b; --ink: #efece5; --muted: #9c968c;
   --line: #35332e; --accent: #efece5; --accentInk: #1a1917; --warn: #dcbb74;
   --fill: rgba(239,236,229,.06); --warnLine: #6b5a33;
+  --well: #121110;
 }
 
 * { box-sizing: border-box; margin: 0; }
@@ -141,10 +152,35 @@ h1 { font-size: 34px; font-weight: 400; letter-spacing: -.03em; line-height: 1.1
 .filters input { width: 190px; }
 .filter-count { margin-left: auto; padding-bottom: 8px; display: flex;
                 align-items: center; gap: 12px; font-size: 10px;
-                letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+                letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
+                /* Holds its height whether or not CLEAR is showing. */
+                min-height: calc(var(--ctl-h) + 8px); }
 
 /* ---------- list rows ---------- */
 .list { border-top: 1px solid var(--line); margin-top: 28px; max-width: var(--content); }
+
+/* ---------- catalogue well ---------- */
+/* ADD A CARD is a tool, not a document: it has its own controls, its own paging
+   and its own result set. Sinking it one step below the page ground says so,
+   and gives the filters and the pager something to belong to. */
+.catalogue { background: var(--well); border-radius: var(--r-md);
+             padding: 22px 24px 24px; margin-top: 28px; max-width: var(--content); }
+.catalogue .filters { margin-top: 0; }
+.catalogue .list { margin-top: 20px; max-width: none;
+                   /* Reserve the full page height so filtering shortens the
+                      RESULTS and not the document under the reader's cursor.
+                      --rows is set by the renderer, which owns the page size. */
+                   min-height: calc(var(--rows, 10) * var(--row-h)); }
+.catalogue .empty { padding: 30px 4px; }
+
+/* The row is always here even when there is nothing to page through, so that
+   crossing the ten-card line does not move the page under the reader. Same
+   reason the list reserves ten rows rather than shrinking to fit. */
+.pager { display: flex; align-items: center; justify-content: flex-end; gap: 14px;
+         margin-top: 18px; min-height: var(--ctl-h); }
+.pager-at { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.pager .btn[disabled] { opacity: .42; cursor: not-allowed; }
+.pager .btn[disabled]:hover { color: var(--muted); border-color: var(--line); }
 .row { display: flex; align-items: center; gap: 14px; padding: 14px 4px;
        border-bottom: 1px solid var(--line); }
 .row .grow { flex: 1; min-width: 0; }

@@ -33,6 +33,8 @@ let detail = null;   // productId whose dialog is open, or null when it is shut
 // else; none of it is stored, because a filter you have to remember turning off
 // is a filter that makes the catalogue look permanently short.
 let f = { q: '', kind: '', scope: '', fee: '', cat: '' };
+let page = 1;
+const PER_PAGE = 10;
 let theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 
 async function load() {
@@ -211,6 +213,14 @@ function blockFilters(shown, total) {
   </div>`;
 }
 
+function blockPager(pages) {
+  return `<div class="pager">${pages < 2 ? '' : `
+    <button class="btn" data-page="prev" ${page === 1 ? 'disabled' : ''}>&lsaquo; PREV</button>
+    <span class="pager-at">Page ${page} of ${pages}</span>
+    <button class="btn" data-page="next" ${page === pages ? 'disabled' : ''}>NEXT &rsaquo;</button>`}
+  </div>`;
+}
+
 function matchesFilters(id) {
   const p = products[id];
   const q = f.q.trim().toLowerCase();
@@ -232,14 +242,25 @@ function blockCatalog() {
   const rest = productIds.filter(id => !owned.has(id));
   if (!rest.length) return `<div class="empty">Every card in the catalogue is already in your list.</div>`;
   const hits = rest.filter(matchesFilters);
+  const pages = Math.max(1, Math.ceil(hits.length / PER_PAGE));
+  // A filter that empties the last page would otherwise leave you on a page that
+  // no longer exists, looking at nothing.
+  if (page > pages) page = pages;
   const bar = blockFilters(hits.length, rest.length);
   if (!hits.length) {
-    return bar + `<div class="empty">No card matches these filters. Clear them to see all ${rest.length}.</div>`;
+    return `<div class="catalogue">${bar}
+      <div class="list" style="--rows:${PER_PAGE}"><div class="empty">No card matches
+        these filters. Clear them to see all ${rest.length}.</div></div>
+      ${blockPager(1)}</div>`;
   }
+  const shown = hits.slice((page - 1) * PER_PAGE, page * PER_PAGE);
   // Same two-button row as YOUR CARDS: the body opens the dialog, the button on
   // the end adds the card. One button cannot do both, and a button inside a
   // button is invalid markup that never fires.
-  return bar + `<div class="list">${hits.map(id => {
+  // --rows is what stops the page jumping: the list reserves ten rows' height
+  // whatever this page holds, so narrowing a search shortens the RESULTS and
+  // not the document under the reader's cursor.
+  return `<div class="catalogue">${bar}<div class="list" style="--rows:${PER_PAGE}">${shown.map(id => {
     const p = products[id];
     return `<div class="card-row">
       <button class="card-open" data-open="${esc(id)}">
@@ -253,7 +274,7 @@ function blockCatalog() {
       </button>
       <button class="btn" data-add="${esc(id)}">ADD</button>
     </div>`;
-  }).join('')}</div>`;
+  }).join('')}</div>${blockPager(pages)}</div>`;
 }
 
 // ---------- card detail ----------
@@ -599,7 +620,8 @@ document.addEventListener('click', e => {
     instances.splice(instances.findIndex(x => x.productId === d.rm), 1);
     commit('instances');
   }
-  if (d.clearfilters) { f = { q: '', kind: '', scope: '', fee: '', cat: '' }; render(); return; }
+  if (d.clearfilters) { f = { q: '', kind: '', scope: '', fee: '', cat: '' }; page = 1; render(); return; }
+  if (d.page) { page += d.page === 'next' ? 1 : -1; render(); return; }
   if (d.cleardefault) { delete prefs.categoryDefaults[d.cleardefault]; commit('prefs'); }
   if (d.clearalldefaults) { prefs.categoryDefaults = {}; commit('prefs'); }
   if (d.clearactivity) { activity = []; commit('activity'); }
@@ -618,6 +640,7 @@ $('#detail').addEventListener('click', e => { if (e.target.id === 'detail') e.ta
 document.addEventListener('input', e => {
   if (e.target.dataset.f !== 'q') return;
   f.q = e.target.value;
+  page = 1;
   const at = e.target.selectionStart;
   render();
   // render() replaced the field, so put the cursor back where it was typed.
@@ -627,7 +650,7 @@ document.addEventListener('input', e => {
 
 document.addEventListener('change', e => {
   const t = e.target, d = t.dataset;
-  if (d.f && d.f !== 'q') { f[d.f] = t.value; render(); return; }
+  if (d.f && d.f !== 'q') { f[d.f] = t.value; page = 1; render(); return; }
   if (d.k === 'cat') {
     const inst = instances.find(x => x.productId === d.id);
     if (!inst) return;

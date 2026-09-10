@@ -62,9 +62,16 @@ controls and scrollbars follow.
 | `--accent` | `#44403c` | `#efece5` | Solid buttons, selected tiles, the active-nav rule, focus rings |
 | `--accentInk` | `#f6f4f0` | `#1a1917` | Text on `--accent` |
 | `--warn` | `#7c5310` | `#dcbb74` | Caveats and banners, as both border and text |
+| `--well` | `#e3e0d9` | `#121110` | One step **below** the page ground. The catalogue block, and nothing else so far |
 
 | `--fill` | `rgba(26,25,23,.05)` | `rgba(239,236,229,.06)` | A block lifted off the ground with no border: the winning row, a selected tile, a button in the popup or overlay |
 | `--warnLine` | `#d4b483` | `#6b5a33` | **Every warn border.** `--warn` is dark enough to read as a black outline, so it is text only |
+
+**`--surface` goes up from `--bg`, `--well` goes down.** Both are the same
+paper; one is a block lifted off the page and one is a block sunk into it. A
+well is for a region that is a tool rather than a document -- it has its own
+controls, its own result set and its own paging, and the recess says the
+controls belong to what is inside it. There is exactly one today.
 
 **Every surface follows the theme's own ground.** Light theme means a light
 popup, a light dock and a light panel; dark means all three are dark. `--accent`
@@ -305,6 +312,14 @@ held the caution text and the per-card dropdowns; both moved into the dialog, so
 the summary needs nothing but enough to identify the card. Six cards now occupy
 the height four used to.
 
+### Pagination
+
+Ghost `&lsaquo; PREV` and `NEXT &rsaquo;` either side of a micro-cap
+`Page n of m`, right-aligned, disabled at each end. Ten rows to a page.
+
+**The row is always in the DOM, even at one page.** See
+[Reserve, do not reflow](#reserve-do-not-reflow).
+
 ### Filter bar
 
 Not a component. It is the [Field](#field) spec laid out in a row -- micro-cap
@@ -405,6 +420,35 @@ the same specificity as the block margins it overrides.
 rows so an empty list sits where a full one would. Inside a grid cell it drops
 the cell's border and background as well. Always says what to do next and where,
 e.g. naming the section that fixes it, or the search term to clear.
+
+---
+
+## Reserve, do not reflow
+
+**A list that shrinks as you filter it drags the page up under the reader's
+hands.** Typing into a search box is the worst case: every keystroke removes
+rows, the document gets shorter, and the thing you were reading moves before you
+have finished the word.
+
+So anything whose height depends on a result count reserves its full height
+instead of fitting its content:
+
+| Element | Reserves | Token |
+| --- | --- | --- |
+| Catalogue list | Ten rows, whatever this page holds | `--row-h`, `69px`, measured |
+| Pager row | One button, even with one page | `--ctl-h`, `33px`, measured |
+| Filter count | One button, whether or not CLEAR is showing | `--ctl-h` |
+
+Both tokens are **measured off the running page**, not chosen: `--row-h` is a
+chip, two lines of text and the row's own padding. Anything that changes a row's
+height has to change the token with it, which is why they are declared next to
+each other with that warning on them.
+
+The page-size constant lives in the renderer, not the sheet: the list carries
+`style="--rows:10"` so `PER_PAGE` has one definition.
+
+Measured across search terms narrowing 19 results to 0: document height holds at
+1389-1390px. The 1px is a border, not a reflow.
 
 ---
 
