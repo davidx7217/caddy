@@ -132,8 +132,10 @@ src/
 tools/
   check-redirects.mjs  finds merchant rows that died by redirect
   make-icons.mjs    draws the icon set; zero-dependency PNG encoder
+  fake-chrome.mjs   promise-style chrome.* for the worker; NOT the lifecycle stub
   test-engine.mjs   zero-dependency test runner for the engine
   test-lifecycle.mjs runs the real content script in a vm sandbox
+  test-worker.mjs   runs the real service worker against fake-chrome.mjs
   fixtures/         test-only data; never shipped with the extension
 ```
 
@@ -569,11 +571,17 @@ it; run it whenever you add a card.
 - No store listing. Icons ship now, drawn by `tools/make-icons.mjs`, and setup
   is a real flow rather than a bare catalogue, but nothing here is written for a
   listing page.
-- Nothing tests `src/welcome.js`. It is a DOM surface talking to `chrome.storage`
-  and `chrome.permissions`, which neither suite can reach, so it was verified by
-  driving all four steps in a browser against a stubbed `chrome.*` and reading
-  the storage it wrote. That is the same gap `background.js` has, for the same
-  reason, and worth the same suspicion.
+- Nothing tests `src/welcome.js`, and the worker harness does not change that.
+  Its `chrome.*` half would run against `fake-chrome.mjs` today; its DOM half
+  would not. The file renders by assigning `innerHTML` and then querying the
+  result, so testing it in node needs an HTML parser, and this project has no
+  dependencies. It is still verified by driving all four steps in a browser
+  against a stubbed `chrome.*` and reading the storage it wrote.
+
+  The tractable half is the step logic -- which steps exist for a given set of
+  picks, and which currencies earn a cents-per-point field. Both are decisions
+  rather than markup, and both would become testable by exporting them. That is
+  a refactor of `welcome.js`, not a harness, so it has not been done.
 - ~~`utilities` is inert~~ **Closed 2026-09-10** by U.S. Bank Cash+, whose "home
   utilities" 5% choice is electricity, gas and water. Ink Business Cash never closed
   it and still does not: its 5% is "internet, cable and phone services", which is
@@ -584,11 +592,22 @@ it; run it whenever you add a card.
 - Every valuation now has a card using it. Savor is deliberately NOT `c1`: it is a
   cash back card, and the 1.4 cpp `c1` figure belongs to the Venture miles family,
   which is why Venture Rewards carries it instead.
-- Nothing tests `syncAutoMode()` or the on-demand injection. `background.js` has no
-  harness -- the engine suite cannot reach `chrome.*` and the lifecycle sandbox runs
-  `content.js` alone -- so the permission plumbing is verified by loading the
-  extension and watching it, not by a test. Both suites pass either way, which is
-  exactly why that is worth writing down.
+- ~~Nothing tests `syncAutoMode()` or the on-demand injection~~ **Closed
+  2026-09-10** by `tools/test-worker.mjs`, which runs the real `background.js`
+  against a fake `chrome.*` and the real data files: registration against the
+  grant, the INJECT-then-OPEN handshake and both of its failure shapes, the
+  per-tab cache and its eviction, tie-break defaults, and the activity log's
+  off-by-default, collapse and thirty-row cap.
+
+  It is a SECOND fake, not a shared one. `test-lifecycle.mjs` stubs the
+  content-script world -- callback-style, six methods, inside a `vm` sandbox --
+  and the worker lives in the promise half of the API. One module pretending to
+  be both would model each of them worse.
+
+  Checked by mutation, not by going green: dropping the OPEN message, opening
+  setup on every `onInstalled` reason, registering scripts regardless of the
+  grant, logging activity with the pref off, and removing the cap each fail
+  exactly the test that names them.
 - A hand table cannot cover US utilities; there are thousands of them and they are
   regional. coned.com is the worked example proving the mechanism, not the start of
   a list. Anything beyond a handful needs a different approach.
