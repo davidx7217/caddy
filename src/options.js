@@ -9,31 +9,33 @@ const CURRENCY = {
   aeroplan: 'Aeroplan points', c1: 'Capital One miles', citi: 'Citi points',
   disco: 'Discover cash back'
 };
-// Issuer marks, used only as a colour block. Nothing here is a logo, so no
-// issuer artwork ships with the extension.
+// Issuer marks: two letters on a wash of the issuer's colour. Deliberately NOT
+// logos -- bundling issuer artwork into a distributed extension means shipping
+// someone else's trademark, and a bare colour block asked the reader to
+// remember which blue was which.
+//
+// The colour is a low-opacity tint, never a fill. At full strength these are
+// cold saturated brand primaries and they fight a warm paper palette; at 16%
+// they read as a soft wash that still tells Chase from Robinhood. The letters
+// are --ink, so nothing here needs a per-theme contrast check.
 const CHIP = {
   chase: '#1c4d8f', robinhood: '#0f9d58', bofa: '#a3232b', amex: '#2e6fb8',
-  citi: '#0a4a86', capitalone: '#a8232b', discover: '#e8620c'
+  citi: '#0a4a86', capitalone: '#c0392b', discover: '#e8620c'
 };
-const money = c => c ? `$${c}/yr` : 'no annual fee';
+const MONOGRAM = {
+  chase: 'CH', robinhood: 'RH', bofa: 'BA', amex: 'AX',
+  citi: 'CT', capitalone: 'C1', discover: 'DS'
+};
 
 const SECTIONS = [
-  { id: 'cards',    num: '01', label: 'My cards',      title: 'My cards',
+  { id: 'cards',   num: '01', label: 'Cards',         title: 'Cards',
     blurb: 'Every card Card Picker ranks, with the fees, categories and caps it reasons over.' },
-  { id: 'add',      num: '02', label: 'Add a card',    title: 'Add a card',
-    blurb: 'Rates come from published issuer terms, each with a source and a date.' },
-  { id: 'ties',     num: '03', label: 'Tie-breakers',  title: 'Tie-breakers',
-    blurb: 'Saved by "Always use" at checkout. Clear one to be asked again.' },
-  { id: 'runs',     num: '04', label: 'Where it runs', title: 'Where it runs',
+  { id: 'ranking', num: '02', label: 'Ranking',       title: 'Ranking',
+    blurb: 'The two things you can change that decide which card wins a close call.' },
+  { id: 'runs',    num: '03', label: 'Where it runs', title: 'Where it runs',
     blurb: 'Off by default, which is why installing asks for nothing.' },
-  { id: 'blocked',  num: '05', label: 'Blocked sites', title: 'Blocked sites',
-    blurb: 'One domain per line. On these, Card Picker never even reads the page.' },
-  { id: 'points',   num: '06', label: 'Point values',  title: 'Point values',
-    blurb: 'Cents per point. These are opinions, and they decide which card wins.' },
-  { id: 'activity', num: '07', label: 'Activity',      title: 'Activity',
-    blurb: 'Off until you turn it on. Then: the last thirty recommendations, so you can check its judgement.' },
-  { id: 'about',    num: '08', label: 'About & data',  title: 'About & data',
-    blurb: 'What Card Picker stores, where, and how to take it with you.' }
+  { id: 'data',    num: '04', label: 'Data',          title: 'Data',
+    blurb: 'What Card Picker keeps, where it keeps it, and how to take it with you.' }
 ];
 
 const j = n => fetch(chrome.runtime.getURL(`data/${n}.json`)).then(r => r.json());
@@ -44,6 +46,7 @@ const VERSION = chrome.runtime.getManifest().version;
 let instances = [], valuations = {}, prefs = {}, blocked = [], activity = [], dropped = 0;
 let auto = false, bytes = 0;
 let section = 'cards';
+let detail = null;   // index into instances, or null when the dialog is shut
 let theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 
 async function load() {
@@ -143,16 +146,11 @@ function ratesDate() {
 }
 
 function counts() {
-  const owned = new Set(instances.map(x => x.productId));
   return {
     cards: instances.length,
-    add: productIds.filter(id => !owned.has(id)).length,
-    ties: Object.entries(prefs.categoryDefaults).filter(([, id]) => products[id]).length,
-    runs: '',
-    blocked: blocked.length,
-    points: liveCurrencies().length,
-    activity: activity.length,
-    about: ''
+    ranking: Object.entries(prefs.categoryDefaults).filter(([, id]) => products[id]).length,
+    runs: blocked.length,
+    data: activity.length
   };
 }
 
@@ -162,70 +160,135 @@ function liveCurrencies() {
 }
 
 const chipFor = issuer => CHIP[issuer] || '#635e58';
+const mark = issuer =>
+  `<span class="chip" style="--mark:${chipFor(issuer)}"><i>${esc(MONOGRAM[issuer] || '?')}</i></span>`;
+const money = c => c ? `$${c}/yr` : 'no annual fee';
 const catLabel = k => (categories[k] && categories[k].label) || String(k).replace(/_/g, ' ');
 
 // ---------- section renderers ----------
-function paneCards() {
-  const pruneNote = dropped
-    ? `<div class="banner">Removed ${dropped} saved card${dropped > 1 ? 's' : ''} that no longer exist.</div>`
-    : '';
+function blockOwned() {
   if (!instances.length) {
-    return `${pruneNote}<div class="grid cards"><div class="empty">No cards. Add one in 02.</div></div>`;
+    return `<div class="list"><div class="empty">No cards yet. Add one below.</div></div>`;
   }
-  return `${pruneNote}<div class="grid cards">${instances.map((inst, i) => {
+  // A row, not a card: everything that made the old cell tall -- the caution,
+  // the per-card dropdowns -- lives in the detail dialog now, so the summary
+  // only has to be identifiable.
+  return `<div class="list">${instances.map((inst, i) => {
     const p = products[inst.productId];
-    const uc = p.user_config || {};
-    const cfg = inst.config || {};
-    let controls = '';
-    if (uc.selection) {
-      controls += `<label>${esc(uc.selection.label)}
-        <select data-i="${i}" data-k="cat">
-          <option value="">choose...</option>
-          ${Object.entries(uc.selection.options).map(([id, label]) =>
-            `<option value="${esc(id)}" ${(cfg.selections || []).includes(id) ? 'selected' : ''}>${esc(label)}</option>`).join('')}
-        </select></label>`;
-    }
-    if (uc.tier_multiplier) {
-      controls += `<label>${esc(uc.tier_multiplier.label)}
-        <select data-i="${i}" data-k="tier">
-          ${Object.entries(uc.tier_multiplier.options).map(([k, v]) =>
-            `<option value="${v}" ${(cfg.tier_multiplier || 1) === v ? 'selected' : ''}>${esc(k)}</option>`).join('')}
-        </select></label>`;
-    }
-    // No position number: the wallet has no order any more, and numbering the
-    // cards would go on implying a ranking the ranker does not read.
-    return `<div class="card">
-      <div class="card-top">
-        <div class="chip" style="background:${chipFor(p.issuer)}"></div>
-        <div class="issuer">${esc(p.issuer)}</div>
-      </div>
-      <div class="card-name">${esc(p.name)}</div>
-      <div class="card-meta">${money(p.annual_fee)} &middot; ${esc(CURRENCY[p.currency] || p.currency)}</div>
-      ${p.caution ? `<div class="note">${esc(p.caution)}</div>` : ''}
-      ${controls ? `<div class="cfg">${controls}</div>` : ''}
-      <button class="btn" data-rm="${i}">REMOVE</button>
-    </div>`;
+    return `<button class="card-row" data-open="${i}">
+      ${mark(p.issuer)}
+      <span class="grow">
+        <span class="row-name">${esc(p.name)}</span>
+        <span class="row-meta">${esc(p.network)} &middot; ${money(p.annual_fee)} &middot; ${esc(CURRENCY[p.currency] || p.currency)}</span>
+      </span>
+      ${p.caution ? '<span class="flag" title="Has a caution">!</span>' : ''}
+      <span class="chev" aria-hidden="true">&rsaquo;</span>
+    </button>`;
   }).join('')}</div>`;
 }
 
-function paneAdd() {
+function blockCatalog() {
   const owned = new Set(instances.map(x => x.productId));
   const rest = productIds.filter(id => !owned.has(id));
   if (!rest.length) return `<div class="empty">Every card in the catalogue is already in your list.</div>`;
   return `<div class="list">${rest.map(id => {
     const p = products[id];
     return `<div class="row">
-      <div class="chip" style="background:${chipFor(p.issuer)}"></div>
+      ${mark(p.issuer)}
       <div class="grow">
         <div class="row-name">${esc(p.name)}</div>
-        <div class="row-meta">${esc(p.issuer)} &middot; ${money(p.annual_fee)}</div>
+        <div class="row-meta">${esc(p.network)} &middot; ${money(p.annual_fee)}</div>
       </div>
       <button class="btn solid" data-add="${esc(id)}">ADD</button>
     </div>`;
   }).join('')}</div>`;
 }
 
-function paneTies() {
+// ---------- card detail ----------
+const day = d => d
+  ? new Date(d + 'T00:00:00').toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })
+  : '';
+
+/** One earn rule, with every qualifier the ranker actually reads. */
+function ruleLine(r) {
+  const notes = [];
+  if (r.portal_only) notes.push(`${r.portal || 'Issuer portal'} only`);
+  if (r.cap) notes.push(`capped at $${r.cap.amount.toLocaleString()} per ${r.cap.period}, then ${r.cap.then_rate}x`);
+  if (r.window && r.window.end) notes.push(`ends ${day(r.window.end)}`);
+  if (r.requires_activation) notes.push('needs activation with the issuer');
+  if (r.merchant_allowlist) notes.push(`only at ${r.merchant_allowlist.join(', ')}`);
+  if (r.merchant_denylist) notes.push(`not at ${r.merchant_denylist.slice(0, 3).join(', ')}` +
+    (r.merchant_denylist.length > 3 ? ` and ${r.merchant_denylist.length - 3} more` : ''));
+  if (r.caveat) notes.push(r.caveat);
+  return `<div class="rule">
+    <span class="rule-rate">${r.rate}x</span>
+    <span>
+      <span class="rule-cat">${esc(catLabel(r.category))}</span>
+      ${notes.length ? `<div class="rule-note">${notes.map(esc).join(' &middot; ')}</div>` : ''}
+    </span>
+  </div>`;
+}
+
+function renderDetail() {
+  const dlg = $('#detail');
+  if (detail === null || !instances[detail]) { if (dlg.open) dlg.close(); return; }
+  const i = detail;
+  const inst = instances[i];
+  const p = products[inst.productId];
+  const uc = p.user_config || {};
+  const cfg = inst.config || {};
+
+  let controls = '';
+  if (uc.selection) {
+    controls += `<label>${esc(uc.selection.label)}
+      <select data-i="${i}" data-k="cat">
+        <option value="">choose...</option>
+        ${Object.entries(uc.selection.options).map(([id, label]) =>
+          `<option value="${esc(id)}" ${(cfg.selections || []).includes(id) ? 'selected' : ''}>${esc(label)}</option>`).join('')}
+      </select></label>`;
+  }
+  if (uc.tier_multiplier) {
+    controls += `<label>${esc(uc.tier_multiplier.label)}
+      <select data-i="${i}" data-k="tier">
+        ${Object.entries(uc.tier_multiplier.options).map(([k, v]) =>
+          `<option value="${v}" ${(cfg.tier_multiplier || 1) === v ? 'selected' : ''}>${esc(k)}</option>`).join('')}
+      </select></label>`;
+  }
+
+  const rules = (p.rules || []).slice().sort((a, b) => b.rate - a.rate);
+
+  dlg.innerHTML = `
+    <div class="dlg-head">
+      ${mark(p.issuer)}
+      <span class="dlg-title">${esc(p.name)}</span>
+      <button class="icon-btn" data-close="1" aria-label="Close">&times;</button>
+    </div>
+    <div class="dlg-body">
+      ${p.caution ? `<div class="note">${esc(p.caution)}</div>` : ''}
+      <div class="spec">
+        <div><span>ISSUER</span><span>${esc(p.issuer)}</span></div>
+        <div><span>NETWORK</span><span>${esc(p.network)}</span></div>
+        <div><span>ANNUAL FEE</span><span>${money(p.annual_fee)}</span></div>
+        <div><span>EARNS</span><span>${esc(CURRENCY[p.currency] || p.currency)}</span></div>
+        <div><span>BASE RATE</span><span>${p.base_rate}x</span></div>
+        <div><span>RATES VERIFIED</span><span>${esc(day(p.last_verified) || 'unverified')}</span></div>
+      </div>
+      ${controls ? `<div class="cfg">${controls}</div>` : ''}
+      <div>
+        <div class="sub-head" style="margin-top:0">Bonus categories</div>
+        ${rules.length
+          ? `<div class="rules">${rules.map(ruleLine).join('')}</div>`
+          : `<p class="rule-note" style="margin-top:12px">No bonus categories. Everything earns the base rate.</p>`}
+      </div>
+    </div>
+    <div class="dlg-foot">
+      <button class="btn" data-rm="${i}">REMOVE CARD</button>
+      <a class="btn solid" href="${esc(p.source_url)}" target="_blank" rel="noopener noreferrer">ISSUER TERMS &nearr;</a>
+    </div>`;
+  if (!dlg.open) dlg.showModal();
+}
+
+function blockTies() {
   const chosen = Object.entries(prefs.categoryDefaults).filter(([, id]) => products[id]);
   if (!chosen.length) {
     return `<div class="empty">Nothing saved. You'll be asked at the moment of purchase.</div>`;
@@ -240,7 +303,7 @@ function paneTies() {
   </div>`;
 }
 
-function paneRuns() {
+function blockModes() {
   const modes = [
     { key: 'ask', label: 'Only when you ask', on: !auto,
       desc: 'Nothing runs until you click the toolbar icon on a page.' },
@@ -255,14 +318,14 @@ function paneRuns() {
     </button>`).join('')}</div>`;
 }
 
-function paneBlocked() {
+function blockBlocked() {
   return `<div class="blocked">
     <textarea id="blocked" spellcheck="false" placeholder="paylocity.com&#10;mybank.com"></textarea>
     <div class="count">${blocked.length} DOMAIN${blocked.length === 1 ? '' : 'S'} &middot; SUBDOMAINS INCLUDED</div>
   </div>`;
 }
 
-function panePoints() {
+function blockPoints() {
   const live = liveCurrencies();
   if (!live.length) return `<div class="empty">Add a card to set what its points are worth.</div>`;
   return `<div class="grid points">${live.map(k => `
@@ -276,7 +339,7 @@ function panePoints() {
     </div>`).join('')}</div>`;
 }
 
-function paneActivity() {
+function blockActivity() {
   const on = !!prefs.activityLog;
   const day = at => new Date(at)
     .toLocaleDateString(undefined, { day: 'numeric', month: 'short' }).toUpperCase();
@@ -312,7 +375,7 @@ function paneActivity() {
   </div>`;
 }
 
-function paneAbout() {
+function blockAbout() {
   const kb = Math.max(1, Math.round(bytes / 1024));
   return `<div class="about">
     <p class="lede">Card Picker reads the domain of the page you are on. Nothing else leaves your browser.</p>
@@ -328,9 +391,29 @@ function paneAbout() {
   </div>`;
 }
 
+const head = (title, hint) =>
+  `<div class="sub-head">${title}</div>` + (hint ? `<p class="hint">${hint}</p>` : '');
+
 const PANES = {
-  cards: paneCards, add: paneAdd, ties: paneTies, runs: paneRuns,
-  blocked: paneBlocked, points: panePoints, activity: paneActivity, about: paneAbout
+  cards: () =>
+    (dropped ? `<div class="banner">Removed ${dropped} saved card${dropped > 1 ? 's' : ''} that no longer exist.</div>` : '') +
+    head('Your cards') + blockOwned() +
+    head('Add a card', 'Rates come from published issuer terms, each with a source and a date.') +
+    blockCatalog(),
+
+  ranking: () =>
+    head('Tie-breakers', 'Saved by "Always use" at checkout. Clear one to be asked again.') + blockTies() +
+    head('Point values', 'Cents per point. These are opinions, and they decide which card wins.') + blockPoints(),
+
+  runs: () =>
+    head('Mode') + blockModes() +
+    head('Blocked sites', 'One domain per line. On these, Card Picker never even reads the page.') +
+    blockBlocked(),
+
+  data: () =>
+    head('Activity', 'Off until you turn it on. Then: the last thirty recommendations, so you can check its judgement.') +
+    blockActivity() +
+    head('About') + blockAbout()
 };
 
 // ---------- render ----------
@@ -362,6 +445,8 @@ function render() {
     (unverified ? `<div class="warn">${unverified} CARD${unverified > 1 ? 'S' : ''} UNVERIFIED</div>` : '');
 
   $('#pane').innerHTML = PANES[s.id]();
+
+  renderDetail();
 
   // Only repaint the textarea when it is not being edited, or typing would
   // fight the re-render.
@@ -437,9 +522,13 @@ document.addEventListener('click', e => {
   if (!t) return;
   const d = t.dataset;
   if (d.section) { section = d.section; render(); return; }
+  if (d.open) { detail = +d.open; renderDetail(); return; }
+  if (d.close) { $('#detail').close(); return; }
   if (d.theme)   { theme = d.theme; commit('theme'); return; }
   if (d.add)  { instances.push({ productId: d.add, config: {} }); commit('instances'); }
-  if (d.rm)   { instances.splice(+d.rm, 1); commit('instances'); }
+  // Closing first: the dialog is showing a card that is about to stop existing,
+  // and commit() re-renders from storage.
+  if (d.rm)   { $('#detail').close(); instances.splice(+d.rm, 1); commit('instances'); }
   if (d.cleardefault) { delete prefs.categoryDefaults[d.cleardefault]; commit('prefs'); }
   if (d.clearalldefaults) { prefs.categoryDefaults = {}; commit('prefs'); }
   if (d.clearactivity) { activity = []; commit('activity'); }
@@ -448,6 +537,11 @@ document.addEventListener('click', e => {
   if (d.export) { exportSettings(); }
   if (d.import) { $('#importfile').click(); }
 });
+
+$('#detail').addEventListener('close', () => { detail = null; });
+// A native dialog's backdrop is part of the dialog element, so a click that
+// lands on the element itself rather than on its content is a backdrop click.
+$('#detail').addEventListener('click', e => { if (e.target.id === 'detail') e.target.close(); });
 
 document.addEventListener('change', e => {
   const t = e.target, d = t.dataset;

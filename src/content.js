@@ -40,16 +40,15 @@
     </svg>`;
 
   const TOKENS = {
-    // Dock and panel are both the accent fill, so everything inside them needs
-    // the on-accent variants: --muted, --line and --warn have no contrast there.
-    light: { accent: '#44403c', accentInk: '#f6f4f0',
-             onMuted: 'rgba(246,244,240,.62)', onLine: 'rgba(246,244,240,.20)',
-             onSurface: 'rgba(246,244,240,.08)', onWarn: '#dcbb74',
-             hover: 'rgba(246,244,240,.12)', grip: 'rgba(0,0,0,.16)' },
-    dark:  { accent: '#efece5', accentInk: '#1a1917',
-             onMuted: 'rgba(26,25,23,.60)', onLine: 'rgba(26,25,23,.20)',
-             onSurface: 'rgba(26,25,23,.08)', onWarn: '#7c5310',
-             hover: 'rgba(26,25,23,.10)', grip: 'rgba(26,25,23,.14)' }
+    // Dock and panel sit on the theme's own ground, like the popup: a light
+    // theme means light overlay chrome. --fill is a block lifted off that
+    // ground without a border.
+    light: { surface: '#f6f4f0', ink: '#1a1917', muted: '#635e58', line: '#cfcbc2',
+             warn: '#7c5310', warnLine: '#d4b483', fill: 'rgba(26,25,23,.05)',
+             hover: 'rgba(26,25,23,.07)', grip: 'rgba(26,25,23,.10)' },
+    dark:  { surface: '#1f1e1b', ink: '#efece5', muted: '#9c968c', line: '#35332e',
+             warn: '#dcbb74', warnLine: '#6b5a33', fill: 'rgba(239,236,229,.06)',
+             hover: 'rgba(239,236,229,.08)', grip: 'rgba(239,236,229,.10)' }
   };
 
   /** `stored` is 'light', 'dark', or undefined for "whatever the OS says". */
@@ -364,8 +363,8 @@
            else. This is the exemption, and the reason for it: both of these
            float over a page the extension does not control, so a hairline has
            nothing reliable to sit against. The radius still goes. */
-        .dock { display: flex; align-items: center; height: ${DOCK_H}px;
-                background: var(--accent); color: var(--accentInk);
+        .dock { display: flex; align-items: center; height: ${DOCK_H}px; border-radius: 12px;
+                background: var(--surface); color: var(--ink);
                 box-shadow: 0 4px 14px rgba(0,0,0,.28); overflow: hidden; }
         .icon { width: 44px; height: ${DOCK_H}px; border: 0; background: none; color: inherit;
                 cursor: pointer; display: grid; place-items: center; padding: 0; }
@@ -378,9 +377,9 @@
 
         .panel { position: absolute; right: 0; bottom: calc(100% + ${GAP}px);
                  width: 300px; max-height: calc(100vh - ${DOCK_H + GAP + EDGE * 2}px); overflow-y: auto;
-                 background: var(--accent); color: var(--accentInk); border: 0;
+                 background: var(--surface); color: var(--ink); border: 0; border-radius: 12px;
                  box-shadow: 0 8px 28px rgba(0,0,0,.16);
-                 padding: 14px; font-size: 13px; line-height: 1.5;
+                 padding: 14px; font-size: 12.5px; line-height: 1.5;
                  visibility: hidden; opacity: 0; transform: translateY(6px) scale(.98);
                  transform-origin: bottom right;
                  transition: opacity .13s ease, transform .13s ease, visibility 0s linear .13s; }
@@ -391,29 +390,29 @@
         .wrap.dragging .panel { visibility: hidden; opacity: 0; transition: none; }
 
         .top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-        .eyebrow { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--onMuted); }
+        .eyebrow { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
         .guess { opacity: .6; }
-        .x { cursor: pointer; border: 0; background: none; color: var(--onMuted); font-size: 16px; line-height: 1; padding: 0 2px; }
-        .x:hover { color: var(--accentInk); }
-        .name { font-size: 17px; font-weight: 600; letter-spacing: -.015em; line-height: 1.25; margin-top: 8px; }
-        .rate { font-size: 13px; font-weight: 600; margin-top: 2px; }
-        .note { color: var(--onMuted); font-size: 11px; line-height: 1.45; margin-top: 6px; }
+        .x { cursor: pointer; border: 0; background: none; color: var(--muted); font-size: 16px; line-height: 1; padding: 0 2px; }
+        .x:hover { color: var(--ink); }
+        .name { font-size: 15px; font-weight: 600; letter-spacing: -.01em; line-height: 1.3; margin-top: 8px; }
+        .rate { font-size: 12.5px; font-weight: 600; margin-top: 2px; }
+        .note { color: var(--muted); font-size: 10.5px; line-height: 1.45; margin-top: 6px; }
         /* Louder than .note on purpose: a note is extra information, this
            says the number above it may be wrong. */
-        .stale { color: var(--onWarn); border: 1px solid var(--onWarn);
+        .stale { color: var(--warn); border: 1px solid var(--warnLine); border-radius: 4px;
                  font-size: 11px; line-height: 1.45; margin-top: 8px; padding: 7px 9px; }
-        .why { color: var(--onMuted); font-size: 10px; margin-top: 5px; }
+        .why { color: var(--muted); font-size: 10px; margin-top: 5px; }
         .undo { border: 0; background: none; padding: 0 0 0 2px; font: inherit; color: inherit;
                 text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
-        .undo:hover { color: var(--accentInk); }
-        .alt { margin-top: 12px; border-top: 1px solid var(--onLine); padding-top: 10px; }
+        .undo:hover { color: var(--ink); }
+        .alt { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 10px; }
         .alt h4 { font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
-                  color: var(--onMuted); font-weight: 400; margin-bottom: 8px; }
+                  color: var(--muted); font-weight: 400; margin-bottom: 8px; }
         .row { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 5px 0; }
-        .pin { cursor: pointer; border: 0; background: var(--onSurface);
+        .pin { cursor: pointer; border: 0; border-radius: 4px; background: var(--fill);
                font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
-               padding: 6px 10px; color: var(--accentInk); white-space: nowrap; }
-        .pin:hover { background: var(--onLine); }
+               padding: 6px 10px; color: var(--ink); white-space: nowrap; }
+        .pin:hover { background: var(--line); }
       </style>
       <div class="wrap">
         <div class="panel" role="dialog" aria-label="Card recommendation">

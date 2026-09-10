@@ -24,15 +24,21 @@ Six rules generate the whole look. Everything below is a consequence of one of t
 2. **Hairlines do the work of shadows.** Structure comes from `1px` dividers.
    There is exactly one `box-shadow` in the entire system and it is a 3px inset
    rule marking the active nav item.
-3. **Zero radius, everywhere.** Including form controls, which have to be reset.
-   This is the single most load-bearing choice: it is what stops the UI reading
-   as a generic component library.
+3. **Every edge is rounded, on a three-step scale.** `4px` for controls, `8px`
+   for surfaces, `12px` for anything that floats. There are no square corners
+   anywhere in the product -- not on a button, not on a hover block, not on the
+   dock. A radius outside the scale is a bug, and so is the absence of one.
 4. **Type carries hierarchy, colour does not.** Three colours of text (ink, muted,
    warn) and a wide type ramp. Importance is signalled by size and case, never by
    tinting a label.
 5. **Micro-caps label, sentence case explains.** Anything that names a thing is
    10-11px uppercase with wide tracking. Anything that says something to the
    reader is 13-14px sentence case.
+6. **No border is ever near-black.** Borders are `--line` or `--warnLine` and
+   nothing else. `--warn` and `--accent` are text and fill values; either one
+   used as a border draws a black box, which is what a warn note and a selected
+   tile both used to look like.
+
 Rule 2 breaks at the overlay. See [Exemptions](#exemptions).
 
 ---
@@ -54,21 +60,14 @@ controls and scrollbars follow.
 | `--accentInk` | `#f6f4f0` | `#1a1917` | Text on `--accent` |
 | `--warn` | `#7c5310` | `#dcbb74` | Caveats and banners, as both border and text |
 
-### On-accent tokens
+| `--fill` | `rgba(26,25,23,.05)` | `rgba(239,236,229,.06)` | A block lifted off the ground with no border: the winning row, a selected tile, a button in the popup or overlay |
+| `--warnLine` | `#d4b483` | `#6b5a33` | **Every warn border.** `--warn` is dark enough to read as a black outline, so it is text only |
 
-The popup and the whole injected overlay are filled with `--accent`, where
-`--muted`, `--line` and `--warn` have no contrast at all. Four tokens exist only
-for text and structure sitting on that fill.
-
-| Token | Light | Dark | Use |
-| --- | --- | --- | --- |
-| `--onMuted` | `rgba(246,244,240,.62)` | `rgba(26,25,23,.60)` | Secondary text on the fill |
-| `--onLine` | `rgba(246,244,240,.20)` | `rgba(26,25,23,.20)` | Dividers on the fill |
-| `--onSurface` | `rgba(246,244,240,.08)` | `rgba(26,25,23,.08)` | A raised block on the fill: the winning row, a button |
-| `--onWarn` | `#dcbb74` | `#7c5310` | Caveats on the fill |
-
-`--onWarn` is deliberately the *other* theme's warn: the ground it sits on is
-the other theme's ground.
+**Every surface follows the theme's own ground.** Light theme means a light
+popup, a light dock and a light panel; dark means all three are dark. `--accent`
+is for marks *on* a surface -- solid buttons, the selected tile, the active nav
+rule, focus rings -- never for the ground of a whole surface. Getting that
+backwards inverts the extension against the setting the user just chose.
 
 **The accent inverts between themes.** In light it is near-black; in dark it is
 near-white. It is a contrast device, not a brand colour. Do not give it a hue.
@@ -78,17 +77,35 @@ and it always appears as a `1px` border plus matching text, never as a fill.
 
 ### Issuer marks
 
-Card issuers get a `40x26` colour block, never a logo (no issuer artwork ships
-with the extension). Defined in `src/options.js`:
+A `32x32` tile at `--r-md`: two letters in `--ink` over a **wash** of the
+issuer's colour, never a fill. **Never a logo** either -- bundling issuer
+artwork into a distributed extension means shipping someone else's trademark,
+and it would be seven more files to keep current.
 
-`chase #1c4d8f` &middot; `robinhood #0f9d58` &middot; `bofa #a3232b` &middot;
-`amex #2e6fb8` &middot; `citi #0a4a86` &middot; `capitalone #a8232b` &middot;
-`discover #e8620c` &middot; fallback `#635e58`
+| Issuer | Tint | Mark |
+| --- | --- | --- |
+| chase | `#1c4d8f` | CH |
+| robinhood | `#0f9d58` | RH |
+| amex | `#2e6fb8` | AX |
+| citi | `#0a4a86` | CT |
+| capitalone | `#c0392b` | C1 |
+| discover | `#e8620c` | DS |
+| bofa | `#a3232b` | BA |
+| *(unknown)* | `#635e58` | ? |
 
-These are the one place saturated colour is allowed, because they are data, not
-chrome.
+The tile is a `::before` at `opacity: .16`, rising to `.34` in dark. Two earlier
+attempts failed and are worth not repeating:
 
----
+- **A bare colour block** made the reader remember which blue was Chase and
+  which was Citi.
+- **Letters in white on the solid brand colour** put the only saturated,
+  cold-primary surfaces in the product against a warm paper ground, and they
+  fought it. It also forced three of the colours darker to hold 4.5:1.
+
+At 16% the colour still separates Chase from Robinhood at a glance, the letters
+do the identifying, and because they are `--ink` no tint needs a per-theme
+contrast check. These tiles are the one place saturated colour is allowed,
+because they are data, not chrome.
 
 ## Typography
 
@@ -106,24 +123,27 @@ label in the extension shrinks.
 
 | Role | Size | Weight | Tracking | Case | Notes |
 | --- | --- | --- | --- | --- | --- |
-| Page title | 46px | 400 | `-.03em` | UPPER | `line-height: 1.08`. Falls to 34px under 860px |
-| Numeral display | 46px | 400 | `-.035em` | - | Point values. Transparent background, no border, no spinners |
-| Brand | 30px | 500 | `-.03em` | UPPER | Sidebar only |
-| Lede | 28px | 300 | `-.02em` | Sentence | `max-width: 24ch`. The one place weight 300 appears |
-| Section heading | 22px | 500 | `-.01em` | UPPER | Tie categories, mode tiles |
-| Card name | 20px | 600 | `-.02em` | Sentence | `line-height: 1.2` |
-| Row name | 17px | 600 | `-.015em` | Sentence | List rows |
-| Body | 14px | 400 | - | Sentence | `line-height: 1.5`. The base |
-| Body small | 13.5px | 400 | - | Sentence | Mode descriptions; blocklist textarea at `line-height: 2` |
-| Control | 13px | 400 | - | Sentence | Select values |
-| Caveat | 12.5px | 400 | - | Sentence | Warn notes and banners, `line-height: 1.5` |
-| Meta | 11.5px | 400 | - | Sentence | Fee and issuer lines under a name |
-| Micro | 11px | 400 | `.1em` | UPPER | Breadcrumb, counts, header meta |
-| Micro-cap | 10px | 400 | `.08-.12em` | UPPER | Every label, every button, every column head |
+| Page title | 34px | 400 | `-.03em` | UPPER | `line-height: 1.12`. Falls to 26px under 860px |
+| Numeral display | 34px | 400 | `-.03em` | - | Point values. Transparent background, no border, no spinners |
+| Brand | 24px | 500 | `-.03em` | UPPER | Sidebar only |
+| Lede | 22px | 300 | `-.02em` | Sentence | `max-width: 26ch`. The one place weight 300 appears |
+| Section heading | 18px | 500 | `-.01em` | UPPER | Tie categories, mode tiles |
+| Card name | 16px | 600 | `-.015em` | Sentence | `line-height: 1.25` |
+| Row name | 15px | 600 | `-.01em` | Sentence | List rows; the overlay panel's winner |
+| Body | 13px | 400 | - | Sentence | `line-height: 1.5`. The base |
+| Body small | 12.5px | 400 | - | Sentence | Mode descriptions, select values, the overlay panel |
+| Caveat | 11.5px | 400 | - | Sentence | Warn notes and banners, `line-height: 1.45` |
+| Meta | 11px | 400 | - | Sentence | Fee and issuer lines under a name |
+| Micro | 10.5px | 400 | - | Sentence | Overlay notes, rank numerals |
+| Micro-cap | 10px | 400 | `.06-.12em` | UPPER | Every label, every button, every column head |
+
+The display end came down once already: 46px read as shouting in a settings
+page and left the card grid cramped. Micro-caps did **not** move -- they are at
+the floor of legibility and shrinking them buys nothing.
 
 **Tracking scales inversely with size.** Display type is negative
-(`-.01em` to `-.035em`); micro-caps are positive (`.06em` to `.12em`). Nothing
-between 12px and 17px carries tracking at all.
+(`-.01em` to `-.03em`); micro-caps are positive (`.06em` to `.12em`). Nothing
+between 10.5px and 15px carries tracking at all.
 
 **Weight is used sparingly.** 300 appears once (lede). 400 is the default. 500
 marks display type. 600 marks a name inside a row. There is no 700.
@@ -177,16 +197,24 @@ Text gets a `ch` cap, not a `px` one.
 
 ---
 
-## Borders instead of elevation
+## Borders, radius, elevation
 
 - **Every border is `1px solid var(--line)`.** There is no second border weight.
-- **Radius is `0`.** Reset it explicitly on `button, select, input, textarea`,
-  because user agents supply their own.
+- **Radius comes from the scale, and only from the scale.**
+
+| Token | Value | Applies to |
+| --- | --- | --- |
+| `--r-sm` | `4px` | Buttons, selects, inputs, banners, warn notes, issuer marks |
+| `--r-md` | `8px` | Grid cells, the blocklist field, the popup's winning row |
+| `--r-lg` | `12px` | The dock, the overlay panel and the card dialog -- the things that float |
+
+  The overlay hardcodes `4px` and `12px` as literals, because a shadow root
+  cannot read a stylesheet and the values do not vary by theme.
 - **No `box-shadow`.** The one exception is `inset 3px 0 0 var(--accent)` on the
   active nav item, which is a rule, not a shadow.
-- **Grids draw borders on two sides only.** The container takes
-  `border-left` + `border-top`; children take `border-right` + `border-bottom`.
-  This is what keeps interior lines a single pixel instead of two.
+- **Grid cells are separate objects.** `gap: 12px`, each cell with its own full
+  border and `--r-md`. The old seamless grid shared one hairline between
+  neighbours, which is cheaper but cannot be rounded.
 - **Focus is `2px solid var(--accent)` at `outset: 2px`,** via `:focus-visible`.
   Never remove it. The blocklist textarea is the sole element that drops the ring,
   and it replaces it with a `border-color` change to `--muted`.
@@ -213,10 +241,9 @@ Two variants and nothing else.
 Ghost is the default. Solid marks the single forward action in a view, and there
 is never more than one on screen.
 
-**On an accent fill there is no ghost.** A hairline there is either invisible or
-reads as a second frame, so buttons in the popup and the overlay drop the border
-and take `background: var(--onSurface)` with `--accentInk` text, hovering to
-`--onLine`.
+**In the popup and the overlay there is no ghost.** At those sizes a hairline
+around a 10px label reads as a frame rather than a control, so those buttons
+drop the border and take `background: var(--fill)`, hovering to `--line`.
 
 ### Nav item
 
@@ -226,11 +253,37 @@ Three children: a `11px` ordinal at `opacity: .55`, a flexed label at `14px`, a
 `font-weight: 600`, and the inset accent rule. Set `aria-current="page"`, do not
 use a class.
 
-### Grid cell
+### Card row
 
-`padding: 22px`, `background: var(--surface)`, `display: flex; flex-direction:
-column; gap: 14px`. The trailing action is pushed down with `margin-top: auto`
-so cells of unequal height still line their buttons up.
+A `<button>`, not a div: `display: flex`, `gap: 14px`, `padding: 12px 10px` with
+a matching `-10px` margin, `--r-md`, `--surface` on hover.
+
+**The divider is an inset `::after`, not a `border-bottom`.** A border on a
+rounded row is clipped at the corners, and the hover block has to be rounded --
+a hard-edged wash inside a rounded system reads as a mistake. The rule sits
+`10px` in from each end, and both the hovered row's own divider and the one
+below it go transparent so the hover block has clean edges. Issuer mark, then name over meta, then a
+`--warn` `!` when the card carries a caution, then a chevron. Opens the detail
+dialog.
+
+It replaced a `340px` grid cell. The cell only had to be that tall because it
+held the caution text and the per-card dropdowns; both moved into the dialog, so
+the summary needs nothing but enough to identify the card. Six cards now occupy
+the height four used to.
+
+### Dialog
+
+`<dialog>` with `showModal()` -- native, so focus trapping and Esc come free.
+`--r-lg`, `1px solid var(--line)`, `--surface`, capped at `560px`. Head (mark,
+title, close), a scrolling body at `max-height: min(60vh, 460px)`, and a foot
+holding the destructive action on the left and the outbound link on the right.
+
+**No shadow.** `::backdrop` at `rgba(0,0,0,.45)` is the separation, which keeps
+the overlay's two the only shadows in the system.
+
+**`margin: auto` has to be restated.** The `* { margin: 0 }` reset at the top of
+`options.css` wipes the UA rule that centres a modal, and without it the dialog
+pins to the top-left corner.
 
 ### List row
 
@@ -263,6 +316,14 @@ the pane and survive a re-render.
 Same cell geometry, but `background: var(--accent)` and `color: var(--accentInk)`
 when on. Descriptive text inside a tile uses `opacity: .78` rather than a second
 colour, because `--muted` has no contrast against the accent fill.
+
+### Section heading
+
+`.sub-head`: micro-cap in `--muted` on a `border-top` hairline, `padding-top:
+12px`, `margin-top: 40px` (`26px` as the first child). An optional `.hint`
+follows at 12.5px `--muted`, capped at `62ch`. Whatever comes next starts
+`14px` below -- that rule is declared last in the sheet on purpose, since it has
+the same specificity as the block margins it overrides.
 
 ### Empty state
 
@@ -308,9 +369,8 @@ the extension does not control and cannot predict -- a `--line` hairline against
 an arbitrary photograph, gradient or dark hero section separates nothing. The
 shadow is the only thing guaranteeing the dock is visible as an object.
 
-**The radius exemption was not granted.** Both are square. Radius was the
-decorative half of the old treatment; the shadow is the functional half. Neither
-carries a border either: the shadow is the whole separation.
+Neither carries a border: the shadow is the whole separation, and both sit at
+`--r-lg` like any other floating thing.
 
 ---
 
@@ -323,13 +383,51 @@ Three surfaces, one system, different constraints.
 The reference implementation. Full-page, sidebar plus main, one section visible
 at a time. Sole owner of `src/options.css`.
 
+**Card details live in a dialog, not the page.** Clicking a card opens
+everything the ranker knows about it: the spec table, the per-card config, every
+bonus rule with its caps and windows and caveats, and a link to the issuer's own
+terms page (`source_url`, present on all 14 records).
+
+**`note` is never rendered.** It is a maintainer field -- why a card is modelled
+the way it is, what was deliberately left out, where a rate was read from.
+`caution` is the user-facing one. This is written into `data/cards.json` as
+`_note_field` too, because it was rendered once by mistake and showed a reader a
+paragraph about schema design.
+
+**Four sections, not eight.** Cards (owned plus catalogue), Ranking
+(tie-breakers plus point values), Where it runs (mode plus blocklist), Data
+(activity plus about plus export). Each pane holds two blocks separated by a
+`.sub-head`, so a merged section still reads as two things rather than one long
+scroll. Anything that used to be a section blurb now rides under its own
+sub-head as a `.hint`.
+
 ### Popup
 
-`340px` wide inside browser chrome, and **filled with `--accent`** so it reads as
-the same object as the dock. No frame: the browser already draws the edge. The
-ramp compresses -- page title and lede have no place here, and the top of the
-ramp is the hostname at 20px uppercase. Gutters drop from `40px` to `14px`.
-Structure uses the [on-accent tokens](#on-accent-tokens) throughout.
+`340px` wide inside browser chrome, on `--surface` so it is the same colour as
+the dock. No frame: the browser already draws the edge.
+
+**It must fit without scrolling.** Chrome gives a popup 600px of height and no
+more, and a popup that scrolls has buried its own primary action. Two rules keep
+it inside that budget:
+
+- **Three cards, never more.** The fourth-best card has never changed a decision
+  at the till, and the full ranking is one click away in Options.
+- **No tail.** Portal routes, alternate bookings and other secondary notes are
+  cut. They are reading work at the moment the reader least wants any.
+
+The winning row is marked only when `resolvedBy === 'clear_winner'`, with a
+`--fill` ground at `--r-md` and nothing else. It carried the sidebar's `inset
+3px` accent rule for a while; on a rounded row the inset follows the radius into
+a bracket, and since `--accent` is near-white in dark mode it read as a stray
+hook rather than a marker. Marking the top row of an unresolved tie would claim
+a decision the ranker has not made. The ramp compresses --
+page title and lede have no place here, and the top of it is the hostname at
+17px uppercase. Gutters drop from `40px` to `14px`.
+
+**The hostname is only ever an http(s) host.** On `chrome://` pages and on the
+extension's own pages `new URL().hostname` returns the extension ID, which is
+how the popup once titled itself with a block of random letters. Anything that
+is not http(s) reads as no merchant.
 
 ### Injected overlay
 
@@ -342,7 +440,7 @@ The hard one. Markup and CSS are template strings inside `src/content.js`, in a
   overlay receives its face from the service worker as a `data:` URI under a
   random `f<nonce>` family, injected into the host page's head and removed on
   unmount. Never hardcode the family name.
-- **Dock and panel are one object.** Both take the `--accent` fill with no
+- **Dock and panel are one object.** Both take `--surface` at `--r-lg` with no
   border at all; only the `10px` gap separates them. This is the one place a
   `1px` hairline is not enough separation from what is behind, so the shadow
   does that job instead.
@@ -380,10 +478,11 @@ system on all three surfaces.
 
 ## Don'ts
 
-- Do not add a border radius. Not on buttons, not on the dock, not "just this once".
+- Do not invent a radius. Three values exist; a fourth is a bug.
 - Do not add a drop shadow. Use a hairline or a `--surface` fill. The overlay's two are exempt and no third one is coming.
 - Do not introduce a hue. The accent is a value, not a colour.
 - Do not tint text to signal importance. Change size or case.
 - Do not add a third button variant.
 - Do not fetch a font, a stylesheet or an icon set. Nothing goes over the network.
-- Do not use `--warn` as a fill.
+- Do not use `--warn` as a fill, or as a border. It is text. Borders are `--warnLine`.
+- Do not use `--accent` as a border or as the ground of a whole surface. It inverts with the theme, and at `#44403c` it is a black box.

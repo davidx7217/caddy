@@ -106,7 +106,7 @@ src/
   background.js     service worker: loads data, runs the engine, caches per tab
   content.js        shadow-DOM overlay. Dumb renderer, no logic
   popup.js/.html    full ranking for the current tab
-  options.js/.html  eight-section settings page: cards, ties, blocklist, activity
+  options.js/.html  four-section settings page: cards, ranking, where it runs, data
   options.css       standalone paper theme; the popup keeps ui.css, they diverged
   fonts/            Outfit, bundled woff2, latin subset, never fetched remotely
 tools/

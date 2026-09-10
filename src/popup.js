@@ -34,8 +34,14 @@ $('#opts').addEventListener('click', () => chrome.runtime.openOptionsPage());
   // tab -- so tab.url is readable here with no host permission at all. Before
   // that grant existed this was always blank, and every site with no content
   // script read as "no merchant detected".
+  // Only http(s) has a hostname worth showing. On chrome:// and on the
+  // extension's own pages, new URL().hostname is the extension ID, which is how
+  // the popup ended up titled with a block of random letters.
   let host = '';
-  try { host = tab && tab.url ? new URL(tab.url).hostname : ''; } catch (e) { /* chrome:// and friends */ }
+  try {
+    const u = tab && tab.url ? new URL(tab.url) : null;
+    if (u && (u.protocol === 'http:' || u.protocol === 'https:')) host = u.hostname;
+  } catch (e) { /* opaque URLs */ }
 
   const cached = async () =>
     tab ? (await chrome.storage.session.get(`tab:${tab.id}`))[`tab:${tab.id}`] : null;
@@ -86,14 +92,22 @@ $('#opts').addEventListener('click', () => chrome.runtime.openOptionsPage());
     (WHY[res.resolvedBy] || res.resolvedBy) +
     (res.tied.length > 1 ? ` (${res.tied.length} within ${Math.round((res.tieBand ?? 0.10) * 100)}%)` : '');
 
+  // Three, never more. The whole popup has to fit without scrolling, and the
+  // fourth-best card has never changed anyone's mind at the till. The full
+  // ranking is a click away in Options.
+  const TOP = 3;
+  // Only mark a winner the ranker actually settled. Painting the top row when
+  // the result was a tie would claim a decision that has not been made.
+  const clear = res.resolvedBy === 'clear_winner';
+
   $('#list').innerHTML =
-    (unverified ? `<div class="banner" style="margin:10px 0">Seed data is unverified. Check rates against your issuer before trusting these numbers.</div>` : '') +
+    (unverified ? `<div class="banner">Seed data is unverified. Check rates against your issuer before trusting these numbers.</div>` : '') +
     // Separate from the unverified banner: that one means the data was never
     // checked, this one means it was checked and has since run out.
-    (res.stale ? `<div class="banner" style="margin:10px 0">Some rates below are expired or overdue for re-verification. See the notes on each card.</div>` : '') +
+    (res.stale ? `<div class="banner">Some rates below are expired or overdue for re-verification.</div>` : '') +
     `<h2>Ranked</h2>` +
-    res.all.map((c, i) => `
-      <div class="row ${i === 0 ? 'win' : ''}">
+    res.all.slice(0, TOP).map((c, i) => `
+      <div class="row ${i === 0 && clear ? 'win' : ''}">
         <span class="rank">${i + 1}</span>
         <span class="grow">
           <div class="name">${esc(c.name)}</div>
@@ -103,9 +117,4 @@ $('#opts').addEventListener('click', () => chrome.runtime.openOptionsPage());
         </span>
         <span class="val">${money(c.value)}</span>
       </div>`).join('');
-
-  if (res.notes.length) {
-    $('#notes').innerHTML = `<h2>Other routes</h2>` +
-      res.notes.map(n => `<div class="sub">${esc(n.text)}</div>`).join('');
-  }
 })();
