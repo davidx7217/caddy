@@ -7,16 +7,18 @@
            display: flex; flex-direction: column; }
 .w-head { padding: 30px 40px 0; }
 
-/* Progress. A 2px top rule per step, filled for everything reached: the same
-   trick as the active nav item, which is the one place in the system where a
-   rule rather than a fill marks position. */
+/* Progress. One hairline per step, and the label carries the position: reached
+   steps go --ink and 600, the rest stay --muted. This was briefly a 2px rule
+   filling to --accent, which broke two rules at once -- there is no second
+   border weight, and --accent as a border draws a black box. Type carries
+   hierarchy, colour does not. */
 .w-steps { display: flex; gap: 20px; list-style: none; padding: 0; margin: 24px 0 0; }
-.w-steps li { flex: 1; border-top: 2px solid var(--line); padding-top: 10px;
+.w-steps li { flex: 1; border-top: 1px solid var(--line); padding-top: 10px;
               font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
               color: var(--muted); }
-.w-steps li[data-on] { border-top-color: var(--accent); color: var(--ink); font-weight: 600; }
+.w-steps li[data-on] { color: var(--ink); font-weight: 600; }
 
-.w-main { flex: 1; padding: 34px 40px 44px; }
+.w-main { flex: 1; padding: 34px 40px 40px; }
 .w-title { font-size: 34px; font-weight: 400; letter-spacing: -.03em; line-height: 1.12;
            text-transform: uppercase; }
 .w-blurb { margin-top: 12px; font-size: 13px; line-height: 1.55; color: var(--muted);
@@ -39,7 +41,6 @@
             background: var(--surface); border: 1px solid var(--line);
             border-radius: var(--r-sm); padding: 10px 12px; font-size: 13px; }
 .w-search:hover { border-color: var(--muted); }
-.w-search:focus { outline: none; border-color: var(--muted); }
 
 .w-group { font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
            color: var(--muted); margin-top: 28px; }
@@ -62,9 +63,20 @@
 .pick[aria-pressed="true"] + .pick::after { background: transparent; }
 .pick .grow { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .pick .state { flex: none; font-size: 10px; letter-spacing: .12em; color: var(--muted); }
+.pick .caution { font-size: 11.5px; line-height: 1.45; color: var(--warn); max-width: 60ch; }
 .pick[aria-pressed="true"] .state { color: var(--ink); font-weight: 600; }
 
 /* ---------- fine-tune ---------- */
 .w-tune { margin-top: 22px; }
 .w-tune-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-.w-tune .cfg { padding-left: 46px; }
+.w-tune .cfg { margin-top: 12px; }
+
+/* Same breakpoint Options uses, and for the same reasons: the gutter drops to
+   22px and the page title falls to 26px. Four step labels in a row stop fitting
+   well before that, so they wrap instead of squashing. */
+@media (max-width: 860px) {
+  .w-head, .w-main, .w-foot { padding-left: 22px; padding-right: 22px; }
+  .w-title { font-size: 26px; }
+  .w-steps { flex-wrap: wrap; gap: 10px 20px; }
+  .w-steps li { flex: 1 1 40%; }
+}

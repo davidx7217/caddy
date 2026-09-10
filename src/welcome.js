@@ -89,6 +89,7 @@ function pickRow(id) {
     <span class="grow">
       <span class="row-name">${esc(p.name)}</span>
       <span class="row-meta">${esc(p.network)} &middot; ${money(p.annual_fee)} &middot; ${esc(CURRENCY[p.currency] || p.currency)}</span>
+      ${p.caution ? `<span class="caution">${esc(p.caution)}</span>` : ''}
     </span>
     <span class="state">${on ? '&#9632; ADDED' : '&#9633; ADD'}</span>
   </button>`;
@@ -107,7 +108,8 @@ function paneCards() {
     ? [...groups].map(([issuer, ids]) => `
         <div class="w-group">${esc(ISSUER[issuer] || issuer)}</div>
         <div class="w-list">${ids.map(pickRow).join('')}</div>`).join('')
-    : `<div class="empty">Nothing in the catalogue matches "${esc(query.trim())}".</div>`;
+    : `<div class="empty">Nothing in the catalogue matches "${esc(query.trim())}".
+         Clear the search to see all ${productIds.length}.</div>`;
 
   return `<div class="w-title">Your cards</div>
     <p class="w-blurb">Pick every card you carry. Caddy ranks these and nothing else, and it

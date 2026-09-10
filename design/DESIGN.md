@@ -425,14 +425,21 @@ are the Options components, unchanged.
 place to navigate around, so the nav that makes Options legible would be four
 dead links here.
 
-**Progress is a rule per step, not a dot or a number.** Each step is a flex cell
-with a `2px` top border, `--line` ahead of you and `--accent` up to where you
-are. It is the same idea as the active nav item: a rule marks position, a fill
-never does.
+**Progress is carried by the label, not by the rule.** Each step is a flex cell
+under a `1px --line` hairline; reached steps take `--ink` and `600`, the rest
+stay `--muted`. It was briefly a `2px` rule filling to `--accent`, which broke
+two rules at once: there is no second border weight, and `--accent` as a border
+draws a black box. Type carries hierarchy, colour does not.
 
 **The footer is sticky and sits on `--bg`.** It is the page's own ground
 continuing under a long catalogue, not a raised bar, so it takes a `1px` top
 hairline and no `--surface`.
+
+**A card's `caution` is on the picker row.** This is the screen where it changes
+a decision: "Robinhood Gold Card, no annual fee" is true and misleading on its
+own, because the 3% needs a paid subscription. It renders as a `--warn` caveat
+line under the meta, capped at `60ch`. `note` stays out of the UI, here as
+everywhere.
 
 **The card picker is one button per row.** The whole row is the control, so the
 divider is an `::after` inside the padding rather than a border on the element
@@ -444,6 +451,10 @@ take `--fill` and flip their micro-cap from `ADD` to `ADDED`, which is the
 per-card config and the point values for currencies the wallet actually earns.
 A cash-back-only wallet skips the step entirely rather than being shown a form
 whose every field is `1.0 cpp` by definition.
+
+**It honours the 860px breakpoint.** Same as Options: the gutter falls to
+`22px` and the page title to `26px`. The four step labels wrap two-up rather
+than squashing.
 
 ### Toolbar icon
 
