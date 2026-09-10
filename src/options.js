@@ -1,5 +1,5 @@
 import { pruneInstances, fontFaceCss, fontStack } from './engine.js';
-import { CURRENCY, mark, money } from './issuers.js';
+import { CURRENCY, ISSUER, mark, money } from './issuers.js';
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c =>
@@ -18,7 +18,11 @@ const SECTIONS = [
 
 const j = n => fetch(chrome.runtime.getURL(`data/${n}.json`)).then(r => r.json());
 const [products, baseVals, categories] = await Promise.all([j('cards'), j('valuations'), j('categories')]);
-const productIds = Object.keys(products).filter(k => !k.startsWith('_'));
+// Sorted by `common`, the editorial popularity rank in cards.json. File order
+// is arrival order, which put five Chase cards at the top of the catalogue for
+// no reason but the order they happened to be written.
+const productIds = Object.keys(products).filter(k => !k.startsWith('_'))
+  .sort((a, b) => products[a].common - products[b].common);
 const VERSION = chrome.runtime.getManifest().version;
 
 let instances = [], valuations = {}, prefs = {}, blocked = [], activity = [], dropped = 0;
@@ -223,13 +227,18 @@ function renderDetail() {
   const cfg = inst.config || {};
 
   let controls = '';
-  if (uc.selection) {
-    controls += `<label>${esc(uc.selection.label)}
-      <select data-i="${i}" data-k="cat">
-        <option value="">choose...</option>
-        ${Object.entries(uc.selection.options).map(([id, label]) =>
-          `<option value="${esc(id)}" ${(cfg.selections || []).includes(id) ? 'selected' : ''}>${esc(label)}</option>`).join('')}
-      </select></label>`;
+  for (const g of uc.selections || []) {
+    // A group's picks are just its own option ids, so the chosen ones are the
+    // saved selections filtered to this group -- slot n takes the nth of them.
+    const chosen = (cfg.selections || []).filter(id => g.options[id]);
+    for (let slot = 0; slot < (g.max || 1); slot++) {
+      controls += `<label>${esc(g.label)}${(g.max || 1) > 1 ? ` ${slot + 1}` : ''}
+        <select data-i="${i}" data-k="cat">
+          <option value="">choose...</option>
+          ${Object.entries(g.options).map(([id, label]) =>
+            `<option value="${esc(id)}" ${chosen[slot] === id ? 'selected' : ''}>${esc(label)}</option>`).join('')}
+        </select></label>`;
+    }
   }
   if (uc.tier_multiplier) {
     controls += `<label>${esc(uc.tier_multiplier.label)}
@@ -250,7 +259,7 @@ function renderDetail() {
     <div class="dlg-body">
       ${p.caution ? `<div class="note">${esc(p.caution)}</div>` : ''}
       <div class="spec">
-        <div><span>ISSUER</span><span>${esc(p.issuer)}</span></div>
+        <div><span>ISSUER</span><span>${esc(ISSUER[p.issuer] || p.issuer)}</span></div>
         <div><span>NETWORK</span><span>${esc(p.network)}</span></div>
         <div><span>ANNUAL FEE</span><span>${money(p.annual_fee)}</span></div>
         <div><span>EARNS</span><span>${esc(CURRENCY[p.currency] || p.currency)}</span></div>
@@ -536,7 +545,9 @@ document.addEventListener('change', e => {
   if (d.k === 'cat') {
     const inst = instances[+d.i];
     inst.config = inst.config || {};
-    inst.config.selections = t.value ? [t.value] : [];
+    const picks = [...t.closest('.cfg').querySelectorAll('select[data-k="cat"]')]
+      .map(x => x.value).filter(Boolean);
+    inst.config.selections = [...new Set(picks)];
     commit('instances');
   }
   if (d.k === 'tier') {

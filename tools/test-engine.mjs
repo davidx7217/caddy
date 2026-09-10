@@ -175,7 +175,11 @@ eq('unknown domain resolves to null', resolveMerchant('some-random-site.example'
      r2.all.some(c => c.caveats.includes('Unverified data')), true);
 }
 {
-  const stale = [{ productId: 'chase-sapphire-preferred', config: {} },
+  // Deliberately not a real id. This used to say 'chase-sapphire-preferred',
+  // which stopped being a missing product the day that card was added to the
+  // catalogue -- a fixture that names a plausible card is a fixture waiting to
+  // come true.
+  const stale = [{ productId: 'no-such-card-in-any-catalogue', config: {} },
                  { productId: 'robinhood-gold', config: {} }];
   eq('AUDIT-C pruneInstances drops products that no longer exist',
      pruneInstances(stale, products).map(i => i.productId), ['robinhood-gold']);

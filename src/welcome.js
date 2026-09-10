@@ -21,7 +21,10 @@ const esc = s => String(s).replace(/[&<>"']/g, c =>
 
 const j = n => fetch(chrome.runtime.getURL(`data/${n}.json`)).then(r => r.json());
 const [products, baseVals] = await Promise.all([j('cards'), j('valuations')]);
-const productIds = Object.keys(products).filter(k => !k.startsWith('_'));
+// Sorted by `common`, the editorial popularity rank in cards.json. See the
+// _common_note there for what that rank is and is not.
+const productIds = Object.keys(products).filter(k => !k.startsWith('_'))
+  .sort((a, b) => products[a].common - products[b].common);
 
 const fonts = document.createElement('style');
 fonts.textContent = fontFaceCss(chrome.runtime.getURL);
@@ -88,7 +91,7 @@ function pickRow(id) {
     ${mark(p.issuer)}
     <span class="grow">
       <span class="row-name">${esc(p.name)}</span>
-      <span class="row-meta">${esc(p.network)} &middot; ${money(p.annual_fee)} &middot; ${esc(CURRENCY[p.currency] || p.currency)}</span>
+      <span class="row-meta">${esc(ISSUER[p.issuer] || p.issuer)} &middot; ${money(p.annual_fee)} &middot; ${esc(CURRENCY[p.currency] || p.currency)}</span>
       ${p.caution ? `<span class="caution">${esc(p.caution)}</span>` : ''}
     </span>
     <span class="state">${on ? '&#9632; ADDED' : '&#9633; ADD'}</span>
@@ -97,17 +100,11 @@ function pickRow(id) {
 
 function paneCards() {
   const q = query.trim().toLowerCase();
-  const groups = new Map();
-  for (const id of productIds) {
-    const p = products[id];
-    if (q && !`${p.name} ${ISSUER[p.issuer] || p.issuer}`.toLowerCase().includes(q)) continue;
-    if (!groups.has(p.issuer)) groups.set(p.issuer, []);
-    groups.get(p.issuer).push(id);
-  }
-  const body = groups.size
-    ? [...groups].map(([issuer, ids]) => `
-        <div class="w-group">${esc(ISSUER[issuer] || issuer)}</div>
-        <div class="w-list">${ids.map(pickRow).join('')}</div>`).join('')
+  const hits = productIds.filter(id => !q ||
+    `${products[id].name} ${ISSUER[products[id].issuer] || products[id].issuer}`
+      .toLowerCase().includes(q));
+  const body = hits.length
+    ? `<div class="w-list">${hits.map(pickRow).join('')}</div>`
     : `<div class="empty">Nothing in the catalogue matches "${esc(query.trim())}".
          Clear the search to see all ${productIds.length}.</div>`;
 
@@ -115,7 +112,7 @@ function paneCards() {
     <p class="w-blurb">Pick every card you carry. Caddy ranks these and nothing else, and it
       ships with no wallet by design, so this is the one step it cannot do for you. Rates come
       from published issuer terms, each with a source and a date you can check later.</p>
-    <input class="w-search" id="q" placeholder="Search cards" value="${esc(query)}"
+    <input class="w-search" id="q" placeholder="Search by card or bank" value="${esc(query)}"
            spellcheck="false" autocomplete="off">
     ${body}`;
 }
@@ -124,13 +121,18 @@ function paneTune() {
   const cards = tunableCards().map(id => {
     const p = products[id], uc = p.user_config, cfg = configs[id] || {};
     let controls = '';
-    if (uc.selection) {
-      controls += `<label>${esc(uc.selection.label)}
-        <select data-k="cat" data-id="${esc(id)}">
-          <option value="">choose...</option>
-          ${Object.entries(uc.selection.options).map(([k, label]) =>
-            `<option value="${esc(k)}" ${(cfg.selections || []).includes(k) ? 'selected' : ''}>${esc(label)}</option>`).join('')}
-        </select></label>`;
+    for (const g of uc.selections || []) {
+      // A group's picks are its own option ids, so slot n is the nth saved
+      // selection that belongs to this group.
+      const chosen = (cfg.selections || []).filter(k => g.options[k]);
+      for (let slot = 0; slot < (g.max || 1); slot++) {
+        controls += `<label>${esc(g.label)}${(g.max || 1) > 1 ? ` ${slot + 1}` : ''}
+          <select data-k="cat" data-id="${esc(id)}">
+            <option value="">choose...</option>
+            ${Object.entries(g.options).map(([k, label]) =>
+              `<option value="${esc(k)}" ${chosen[slot] === k ? 'selected' : ''}>${esc(label)}</option>`).join('')}
+          </select></label>`;
+      }
     }
     if (uc.tier_multiplier) {
       controls += `<label>${esc(uc.tier_multiplier.label)}
@@ -276,7 +278,10 @@ document.addEventListener('change', e => {
   const d = e.target.dataset;
   if (d.k === 'cat') {
     configs[d.id] = configs[d.id] || {};
-    configs[d.id].selections = e.target.value ? [e.target.value] : [];
+    // Read every control in this card's block: the engine takes one flat array.
+    const picks = [...e.target.closest('.cfg').querySelectorAll('select[data-k="cat"]')]
+      .map(x => x.value).filter(Boolean);
+    configs[d.id].selections = [...new Set(picks)];
   }
   if (d.k === 'tier') {
     configs[d.id] = configs[d.id] || {};

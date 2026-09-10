@@ -17,8 +17,14 @@ Not financial advice. Verify any rate against your issuer before relying on it.
 
 ## Data status
 
-All 14 card records were verified against issuer sources -- 7 on **2026-08-29** and 7 on
-**2026-09-09**. Each carries `verified: true`, `last_verified`, and a `source_url`.
+All 20 card records were verified against issuer sources -- 7 on **2026-08-29**, 7 on
+**2026-09-09** and 6 on **2026-09-10**. Each carries `verified: true`, `last_verified`,
+and a `source_url`.
+
+Each also carries `common`, a 1-20 popularity rank that orders the setup picker. It is
+the one **editorial** field in the file and is labelled as such in `_common_note`: there
+is no public card-level ranking of US cardholders, so it is judgement, not a sourced
+fact. Nothing computes from it; re-rank it freely.
 
 **Standing obligations:**
 
@@ -27,7 +33,12 @@ All 14 card records were verified against issuer sources -- 7 on **2026-08-29** 
   and in the popup -- but it cannot invent the new quarter's categories for you.
 - Merchant categories in `merchants.json` are still hand-assigned and unverified.
 - Robinhood's rumoured 5% travel-portal rate is deliberately **not** modelled: several
-  third-party sites report it, robinhood.com does not confirm it.
+  third-party sites report it, robinhood.com does not confirm it. Capital One
+  Quicksilver's Capital One Travel rates are left out on exactly the same grounds.
+- **Amex Platinum is absent, not forgotten.** Its 5X flights and 5X prepaid hotels are
+  published, but no reachable americanexpress.com page stated the annual fee or the base
+  rate on 2026-09-10, and a card modelled without those two numbers ranks wrong against
+  everything else. Add it when the issuer states them.
 
 Re-verify any card whose `last_verified` is over 90 days old. The popup shows an
 "unverified data" banner while any owned card has `verified: false`.
@@ -459,6 +470,13 @@ it. Ink Business Cash was added to close both, and its 5% is exactly those two
 categories. Run the audit in both directions whenever you add a card OR a
 category: rules without merchants are dead, merchants without rules are inert.
 
+**Every category is now behind a card.** `utilities` and `department_store` were the
+last two dead ones, and U.S. Bank Cash+ closed both at once -- they are two of the
+eight 5% choices it offers. Four of its other choices (electronics stores, gyms,
+clothing, sporting goods) are deliberately NOT modelled, because giving them a
+category would create the opposite failure: a category with no merchant rows behind
+it. The audit runs clean in both directions as of 2026-09-10.
+
 **Portal rates are not ranked.** A 5x issuer-portal rate does not apply on the
 airline's own site, so it surfaces as a note ("book through Chase Travel instead")
 rather than as a winner.
@@ -541,14 +559,13 @@ it; run it whenever you add a card.
   driving all four steps in a browser against a stubbed `chrome.*` and reading
   the storage it wrote. That is the same gap `background.js` has, for the same
   reason, and worth the same suspicion.
-- `utilities` resolves but no card in `cards.json` bonuses it, so it is still
-  inert. Ink Business Cash does NOT close this one: its 5% is "internet, cable and
-  phone services", which is `phone_internet`, not electricity, gas or water. Do not
-  fold them together to make the category light up.
-- `department_store` is the last category with merchants and no card bonusing
-  them. Mainstream cards mostly do not bonus department stores; closing it likely
-  means a store card, which would be the first in the catalogue. `streaming` and
-  `utilities` were both on this list earlier in the day.
+- ~~`utilities` is inert~~ **Closed 2026-09-10** by U.S. Bank Cash+, whose "home
+  utilities" 5% choice is electricity, gas and water. Ink Business Cash never closed
+  it and still does not: its 5% is "internet, cable and phone services", which is
+  `phone_internet`. Do not fold them together.
+- ~~`department_store` has no card behind it~~ **Closed 2026-09-10** by U.S. Bank
+  Cash+, and without the store card this note predicted: "department stores" is one
+  of its eight 5% choices. `streaming` and `utilities` were the two before it.
 - Every valuation now has a card using it. Savor is deliberately NOT `c1`: it is a
   cash back card, and the 1.4 cpp `c1` figure belongs to the Venture miles family,
   which is why Venture Rewards carries it instead.

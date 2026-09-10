@@ -44,9 +44,7 @@
             border-radius: var(--r-sm); padding: 10px 12px; font-size: 13px; }
 .w-search:hover { border-color: var(--muted); }
 
-.w-group { font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
-           color: var(--muted); margin-top: 28px; }
-.w-list { margin-top: 6px; }
+.w-list { margin-top: 26px; }
 
 /* The whole row is the control, so the hairline is an ::after inside the
    padding rather than a border on it -- a hard-edged wash inside a rounded

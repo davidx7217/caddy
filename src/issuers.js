@@ -16,18 +16,20 @@
 // are --ink, so nothing here needs a per-theme contrast check.
 const CHIP = {
   chase: '#1c4d8f', robinhood: '#0f9d58', bofa: '#a3232b', amex: '#2e6fb8',
-  citi: '#0a4a86', capitalone: '#c0392b', discover: '#e8620c'
+  citi: '#0a4a86', capitalone: '#c0392b', discover: '#e8620c',
+  wellsfargo: '#b3232c', usbank: '#1b4a7a'
 };
 const MONOGRAM = {
   chase: 'CH', robinhood: 'RH', bofa: 'BA', amex: 'AX',
-  citi: 'CT', capitalone: 'C1', discover: 'DS'
+  citi: 'CT', capitalone: 'C1', discover: 'DS',
+  wellsfargo: 'WF', usbank: 'US'
 };
 
 /** Full issuer names, for anywhere the two-letter mark is not enough on its own. */
 export const ISSUER = {
   chase: 'Chase', robinhood: 'Robinhood', bofa: 'Bank of America',
   amex: 'American Express', citi: 'Citi', capitalone: 'Capital One',
-  discover: 'Discover'
+  discover: 'Discover', wellsfargo: 'Wells Fargo', usbank: 'U.S. Bank'
 };
 
 export const CURRENCY = {

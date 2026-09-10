@@ -1,12 +1,14 @@
 {
   "_note_field": "MAINTAINER-ONLY. `note` records why a card is modelled the way it is -- provenance, schema reasoning, what was deliberately not modelled. Never render it in the UI. `caution` is the user-facing field.",
-  "_comment": "All 14 records verified against issuer sources; 7 on 2026-08-29 and 7 on 2026-09-09. Each carries its source_url. Chase Freedom Flex rotating categories MUST be re-verified 2026-10-01.",
+  "_common_note": "`common` is a POPULARITY RANK, 1 to 20, and it is EDITORIAL. There is no public card-level ranking of US cardholders -- Nilson publishes issuer volume, not how many people hold a Freedom Unlimited -- so this is judgement, not a sourced fact, and it is the only field here that is. It orders the setup picker so a new user meets mass-market cards first. Re-rank it freely; nothing computes from it.",
+  "_comment": "All 20 records verified against issuer sources; 7 on 2026-08-29, 7 on 2026-09-09 and 6 on 2026-09-10. Each carries its source_url. Chase Freedom Flex rotating categories MUST be re-verified 2026-10-01. Amex Platinum is deliberately absent: its 5X flight and prepaid-hotel rates are published, but no reachable americanexpress.com page stated the annual fee or the base rate on 2026-09-10, and a card modelled without those two numbers ranks wrong.",
   "chase-sapphire-reserve": {
     "id": "chase-sapphire-reserve",
     "issuer": "chase",
     "network": "visa",
     "currency": "ur",
     "name": "Chase Sapphire Reserve",
+    "common": 15,
     "annual_fee": 795,
     "base_rate": 1.0,
     "verified": true,
@@ -76,6 +78,7 @@
     "network": "visa",
     "currency": "ur",
     "name": "Chase Freedom Unlimited",
+    "common": 1,
     "annual_fee": 0,
     "base_rate": 1.5,
     "verified": true,
@@ -104,6 +107,7 @@
     "network": "mastercard",
     "currency": "ur",
     "name": "Chase Freedom Flex",
+    "common": 6,
     "annual_fee": 0,
     "base_rate": 1.0,
     "verified": true,
@@ -198,6 +202,7 @@
     "network": "visa",
     "currency": "cash",
     "name": "Robinhood Gold Card",
+    "common": 20,
     "annual_fee": 0,
     "base_rate": 3.0,
     "verified": true,
@@ -213,6 +218,7 @@
     "network": "amex",
     "currency": "cash",
     "name": "Amex Blue Cash Everyday",
+    "common": 9,
     "annual_fee": 0,
     "base_rate": 1.0,
     "verified": true,
@@ -265,6 +271,7 @@
     "network": "visa",
     "currency": "aeroplan",
     "name": "Chase Aeroplan",
+    "common": 18,
     "annual_fee": 95,
     "base_rate": 1.0,
     "verified": true,
@@ -295,6 +302,7 @@
     "network": "visa",
     "currency": "ur",
     "name": "Chase Ink Business Cash",
+    "common": 19,
     "annual_fee": 0,
     "base_rate": 1.0,
     "verified": true,
@@ -362,6 +370,7 @@
     "network": "amex",
     "currency": "mr",
     "name": "Amex Gold Card",
+    "common": 16,
     "annual_fee": 325,
     "base_rate": 1.0,
     "verified": true,
@@ -401,6 +410,7 @@
     "network": "amex",
     "currency": "cash",
     "name": "Amex Blue Cash Preferred",
+    "common": 11,
     "annual_fee": 95,
     "base_rate": 1.0,
     "verified": true,
@@ -437,6 +447,7 @@
     "network": "mastercard",
     "currency": "citi",
     "name": "Citi Double Cash",
+    "common": 4,
     "annual_fee": 0,
     "base_rate": 2.0,
     "verified": true,
@@ -460,6 +471,7 @@
     "network": "mastercard",
     "currency": "cash",
     "name": "Capital One Savor",
+    "common": 10,
     "annual_fee": 0,
     "base_rate": 1.0,
     "verified": true,
@@ -500,6 +512,7 @@
     "network": "discover",
     "currency": "disco",
     "name": "Discover it Cash Back",
+    "common": 5,
     "annual_fee": 0,
     "base_rate": 1.0,
     "verified": true,
@@ -564,6 +577,7 @@
     "network": "visa",
     "currency": "c1",
     "name": "Capital One Venture Rewards",
+    "common": 14,
     "annual_fee": 95,
     "base_rate": 2.0,
     "verified": true,
@@ -586,6 +600,7 @@
     "network": "visa",
     "currency": "cash",
     "name": "BofA Customized Cash Rewards",
+    "common": 12,
     "annual_fee": 0,
     "base_rate": 1.0,
     "verified": true,
@@ -593,17 +608,21 @@
     "source_url": "https://www.bankofamerica.com/credit-cards/products/cash-back-credit-card/cash-back-category-choices/",
     "note": "Kept because people hold it, not because it exercises the schema. Its 3% is ONE category the cardholder picks from eleven, which is what selection_group is for: without it the only choices are giving all eleven 3% (overstates badly) or picking for the user (worse). tier_multiplier is the Preferred Rewards relationship bonus and is the difference between 3% and 5.25%, so dropping it would understate the card by up to 75%.",
     "user_config": {
-      "selection": {
-        "label": "Your chosen 3% category",
-        "options": {
-          "gas_ev": "Gas & EV Charging Stations",
-          "online": "Online Shopping",
-          "dining": "Dining",
-          "travel": "Travel",
-          "drug": "Drug Stores",
-          "home": "Home Improvement & Furnishings"
+      "selections": [
+        {
+          "key": "three",
+          "label": "Your chosen 3% category",
+          "max": 1,
+          "options": {
+            "gas_ev": "Gas & EV Charging Stations",
+            "online": "Online Shopping",
+            "dining": "Dining",
+            "travel": "Travel",
+            "drug": "Drug Stores",
+            "home": "Home Improvement & Furnishings"
+          }
         }
-      },
+      ],
       "tier_multiplier": {
         "label": "Preferred Rewards tier",
         "options": {
@@ -733,6 +752,309 @@
           "then_rate": 1.0
         },
         "caveat": "The $2,500 quarterly cap is COMBINED across the 3% choice category and the 2% grocery/wholesale spend."
+      }
+    ]
+  },
+  "chase-sapphire-preferred": {
+    "id": "chase-sapphire-preferred",
+    "issuer": "chase",
+    "network": "visa",
+    "currency": "ur",
+    "name": "Chase Sapphire Preferred",
+    "common": 7,
+    "annual_fee": 95,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-10",
+    "source_url": "https://creditcards.chase.com/rewards-credit-cards/sapphire/preferred",
+    "note": "The 3x 'vacation homes at top brands' rate is deliberately NOT modelled: Chase does not publish the brand list, and travel_hotel already earns 2x here, so the only honest options were an unsourced allowlist or this. The 5x Peloton rate through 2027-12-31 is one first-party storefront rather than a category, left out for the same reason as Savor's Capital One Entertainment rate.",
+    "rules": [
+      {
+        "category": "travel_portal",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Chase Travel"
+      },
+      {
+        "category": "dining",
+        "rate": 3.0
+      },
+      {
+        "category": "gas",
+        "rate": 3.0
+      },
+      {
+        "category": "ev_charging",
+        "rate": 3.0
+      },
+      {
+        "category": "streaming",
+        "rate": 3.0,
+        "caveat": "Top streaming services only."
+      },
+      {
+        "category": "groceries",
+        "rate": 3.0,
+        "caveat": "Online grocery only. Target, Walmart and wholesale clubs are excluded.",
+        "merchant_denylist": [
+          "target.com",
+          "walmart.com",
+          "costco.com",
+          "samsclub.com",
+          "bjs.com"
+        ]
+      },
+      {
+        "category": "travel_ground",
+        "rate": 5.0,
+        "merchant_allowlist": [
+          "lyft.com"
+        ],
+        "window": { "end": "2027-09-30" },
+        "caveat": "Requires the card set as default payment in the Lyft app. Offer ends 2027-09-30."
+      },
+      {
+        "category": "travel_air",
+        "rate": 2.0
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 2.0
+      },
+      {
+        "category": "travel_ground",
+        "rate": 2.0
+      }
+    ]
+  },
+  "chase-prime-visa": {
+    "id": "chase-prime-visa",
+    "issuer": "chase",
+    "network": "visa",
+    "currency": "cash",
+    "name": "Prime Visa",
+    "common": 8,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-10",
+    "source_url": "https://creditcards.chase.com/cash-back-credit-cards/amazon-prime-rewards",
+    "caution": "The 5% needs an eligible Prime membership. Without one, every 5% rate here is 3%.",
+    "note": "currency is 'cash', NOT 'ur'. These points redeem against an Amazon order at one cent each and do not transfer to Ultimate Rewards partners, so valuing them at the 1.5 cpp 'ur' figure would overrank this card against every other Chase product in the set.",
+    "rules": [
+      {
+        "category": "online_retail",
+        "rate": 5.0,
+        "merchant_allowlist": [
+          "amazon.com",
+          "audible.com"
+        ]
+      },
+      {
+        "category": "groceries",
+        "rate": 5.0,
+        "merchant_allowlist": [
+          "wholefoodsmarket.com"
+        ]
+      },
+      {
+        "category": "travel_portal",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Chase Travel"
+      },
+      {
+        "category": "gas",
+        "rate": 2.0
+      },
+      {
+        "category": "dining",
+        "rate": 2.0
+      },
+      {
+        "category": "travel_ground",
+        "rate": 2.0
+      }
+    ]
+  },
+  "wellsfargo-active-cash": {
+    "id": "wellsfargo-active-cash",
+    "issuer": "wellsfargo",
+    "network": "visa",
+    "currency": "cash",
+    "name": "Wells Fargo Active Cash",
+    "common": 2,
+    "annual_fee": 0,
+    "base_rate": 2.0,
+    "verified": true,
+    "last_verified": "2026-09-10",
+    "source_url": "https://creditcards.wellsfargo.com/active-cash-credit-card",
+    "note": "No rules by design: the card is a flat 2% with, in Wells Fargo's own words, zero categories to track. An empty rules array is the correct model, exactly as for Robinhood Gold.",
+    "rules": []
+  },
+  "capitalone-quicksilver": {
+    "id": "capitalone-quicksilver",
+    "issuer": "capitalone",
+    "network": "visa",
+    "currency": "cash",
+    "name": "Capital One Quicksilver",
+    "common": 3,
+    "annual_fee": 0,
+    "base_rate": 1.5,
+    "verified": true,
+    "last_verified": "2026-09-10",
+    "source_url": "https://www.capitalone.com/credit-cards/cash-back/",
+    "note": "Third-party sites report elevated rates on hotels and rental cars booked through Capital One Travel. No page on capitalone.com stated them on 2026-09-10, so they are NOT modelled -- the same call made for Robinhood's rumoured 5% travel portal rate. Add them if the issuer ever publishes them.",
+    "rules": []
+  },
+  "discover-it-miles": {
+    "id": "discover-it-miles",
+    "issuer": "discover",
+    "network": "discover",
+    "currency": "disco",
+    "name": "Discover it Miles",
+    "common": 17,
+    "annual_fee": 0,
+    "base_rate": 1.5,
+    "verified": true,
+    "last_verified": "2026-09-10",
+    "source_url": "https://www.discover.com/credit-cards/travel/miles-card.html",
+    "note": "Shares the 'disco' currency with Discover it Cash Back. Discover Miles redeem for a statement credit at one cent each, which is what that valuation already says, so a separate currency would be a second name for the same number. The first-year miles match is a sign-up bonus, not an earn rate, and is not modelled.",
+    "rules": []
+  },
+  "usbank-cash-plus": {
+    "id": "usbank-cash-plus",
+    "issuer": "usbank",
+    "network": "visa",
+    "currency": "cash",
+    "name": "U.S. Bank Cash+",
+    "common": 13,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-10",
+    "source_url": "https://www.usbank.com/credit-cards/cash-plus-visa-signature-credit-card.html",
+    "caution": "You pick the categories each quarter, and they reset. Two 5% picks share one $2,000 quarterly cap.",
+    "note": "Four of the issuer's 5% choices are not modelled because Caddy has no category for them and no merchants behind one: electronics stores, gym and fitness centres, select clothing stores, and sporting goods stores. Adding a category with no merchant rows is the dead-category failure the README warns about in both directions. The eight that are modelled all map onto categories that already resolve.",
+    "user_config": {
+      "selections": [
+        {
+          "key": "five",
+          "label": "Your two 5% categories",
+          "max": 2,
+          "options": {
+            "five_department": "Department stores",
+            "five_utilities": "Home utilities",
+            "five_tv": "TV, internet & streaming",
+            "five_phone": "Cell phone providers",
+            "five_fastfood": "Fast food",
+            "five_ground": "Ground transportation",
+            "five_movies": "Movie theaters",
+            "five_furniture": "Furniture stores"
+          }
+        },
+        {
+          "key": "two",
+          "label": "Your 2% category",
+          "max": 1,
+          "options": {
+            "two_gas": "Gas & EV charging stations",
+            "two_grocery": "Grocery stores",
+            "two_dining": "Restaurants"
+          }
+        }
+      ]
+    },
+    "rules": [
+      {
+        "category": "travel_portal",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "U.S. Bank Travel Center",
+        "caveat": "Prepaid travel booked through the Travel Center."
+      },
+      {
+        "category": "department_store",
+        "rate": 5.0,
+        "selection_group": "five_department",
+        "cap": { "amount": 2000, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "The $2,000 quarterly cap is COMBINED across both 5% choices."
+      },
+      {
+        "category": "utilities",
+        "rate": 5.0,
+        "selection_group": "five_utilities",
+        "cap": { "amount": 2000, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "The $2,000 quarterly cap is COMBINED across both 5% choices."
+      },
+      {
+        "category": "streaming",
+        "rate": 5.0,
+        "selection_group": "five_tv",
+        "cap": { "amount": 2000, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "The $2,000 quarterly cap is COMBINED across both 5% choices."
+      },
+      {
+        "category": "phone_internet",
+        "rate": 5.0,
+        "selection_group": "five_tv",
+        "cap": { "amount": 2000, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "The $2,000 quarterly cap is COMBINED across both 5% choices."
+      },
+      {
+        "category": "phone_internet",
+        "rate": 5.0,
+        "selection_group": "five_phone",
+        "cap": { "amount": 2000, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "The $2,000 quarterly cap is COMBINED across both 5% choices."
+      },
+      {
+        "category": "dining",
+        "rate": 5.0,
+        "selection_group": "five_fastfood",
+        "cap": { "amount": 2000, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "Fast food only, not restaurants generally. The $2,000 quarterly cap is COMBINED across both 5% choices."
+      },
+      {
+        "category": "travel_ground",
+        "rate": 5.0,
+        "selection_group": "five_ground",
+        "cap": { "amount": 2000, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "The $2,000 quarterly cap is COMBINED across both 5% choices."
+      },
+      {
+        "category": "entertainment",
+        "rate": 5.0,
+        "selection_group": "five_movies",
+        "cap": { "amount": 2000, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "Movie theatres only. The $2,000 quarterly cap is COMBINED across both 5% choices."
+      },
+      {
+        "category": "home_improvement",
+        "rate": 5.0,
+        "selection_group": "five_furniture",
+        "cap": { "amount": 2000, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "Furniture stores only, not home improvement generally. The $2,000 quarterly cap is COMBINED across both 5% choices."
+      },
+      {
+        "category": "gas",
+        "rate": 2.0,
+        "selection_group": "two_gas"
+      },
+      {
+        "category": "ev_charging",
+        "rate": 2.0,
+        "selection_group": "two_gas"
+      },
+      {
+        "category": "groceries",
+        "rate": 2.0,
+        "selection_group": "two_grocery"
+      },
+      {
+        "category": "dining",
+        "rate": 2.0,
+        "selection_group": "two_dining"
       }
     ]
   }

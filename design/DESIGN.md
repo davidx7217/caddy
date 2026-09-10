@@ -328,7 +328,11 @@ the page gutter, so the divider reads as a full-width rule.
 
 ### Field
 
-Label is a micro-cap in `--muted`, stacked above the control with `gap: 5px`.
+Label is a micro-cap in `--muted`, stacked above the control with `gap: 5px`. A
+card that asks for more than one pick gets one control per pick, numbered in the
+label (`YOUR TWO 5% CATEGORIES 1`, `... 2`) -- `user_config.selections` is a list
+of groups, each with its own `max`, and the saved value is one flat array of
+option ids that the ranker reads directly.
 Controls take `1px solid var(--line)`, `--r-sm`, `padding: 8px 10px`, and a
 `--surface` ground when they sit directly on the page. The blocklist textarea is
 the one control that scales up rather than repeating that spec: it is a
@@ -475,6 +479,13 @@ a decision: "Robinhood Gold Card, no annual fee" is true and misleading on its
 own, because the 3% needs a paid subscription. It renders as a `--warn` caveat
 line under the meta, capped at `60ch`. `note` stays out of the UI, here as
 everywhere.
+
+**The catalogue is one flat ranked list, not issuer groups.** Rows are ordered by
+`common`, the editorial popularity rank in `cards.json`, so a new reader meets
+mass-market cards first. Grouping by issuer put whichever bank was written into
+the file first at the top and buried the ordering entirely; with the groups gone,
+each row names its bank in the meta line instead of relying on the two-letter
+mark alone. Search matches card name and bank name.
 
 **The card picker is one button per row.** The whole row is the control, so the
 divider is an `::after` inside the padding rather than a border on the element
