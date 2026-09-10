@@ -208,14 +208,14 @@ function blockFilters() {
       <select data-f="cat">${opt('', 'Any category', f.cat)}
         ${bonusCats().map(k => opt(k, catLabel(k), f.cat)).join('')}
       </select></label>
-    <div class="filter-count">${
-      Object.values(f).some(Boolean) ? '<button class="btn" data-clearfilters="1">CLEAR</button>' : ''}</div>
   </div>`;
 }
 
 function blockPager(shown, matched, pages) {
+  const filtering = Object.values(f).some(Boolean);
   return `<div class="pager">
     <span class="pager-count">${shown} of ${matched}</span>
+    ${filtering ? '<button class="btn" data-clearfilters="1">CLEAR FILTERS</button>' : ''}
     <span class="pager-nav">${pages < 2 ? '' : `
       <button class="btn" data-page="prev" ${page === 1 ? 'disabled' : ''}>&lsaquo; PREV</button>
       <span class="pager-at">Page ${page} of ${pages}</span>

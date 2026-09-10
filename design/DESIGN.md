@@ -314,7 +314,8 @@ the height four used to.
 
 ### Pagination
 
-One row, `space-between`: the count at the left end, the controls at the right.
+One row: the count at the left end, then CLEAR FILTERS when anything is
+filtering, and the paging controls pushed to the right with `margin-left: auto`.
 Ghost `&lsaquo; PREV` and `NEXT &rsaquo;` either side of a micro-cap
 `Page n of m`, disabled at each end. Ten rows to a page.
 
@@ -334,9 +335,16 @@ label over a control -- with the result count pushed to the far end at
 `margin-left: auto` and a ghost CLEAR beside it that appears only once something
 is filtering. Three CSS rules, no new tokens.
 
-**The result count is not here.** It moved to the [pager](#pagination), where
-the number it describes is decided. This row holds the labelled controls and a
-CLEAR that appears only once something is filtering.
+**Neither the count nor CLEAR is here.** Both are in the [pager](#pagination):
+the count because that is where the number is decided, and CLEAR because it
+clears the filters that produced that count. This row holds labelled controls
+and nothing else.
+
+CLEAR was briefly a slot in this bar, and it taught the general rule. An empty
+flex item still wraps: once the controls filled the first line, the empty slot
+took a second one, and a 41px band of nothing sat across the middle of the
+panel. **Reserve height inside a row that is always there, never in a row that
+exists only to hold something optional.**
 
 **No issuer dropdown.** The search box already matches issuer names, so typing
 "chase" does that job with one less control on screen. Every filter that survived

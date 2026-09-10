@@ -33,11 +33,7 @@
 // Navigation failure is read from Page.navigate's errorText now, and a row that
 // cannot be reached is UNCONFIRMED. A sweep may say "I could not tell". It may
 // not invent a move.
-import { spawn } from 'node:child_process';
-import { mkdtemp, rm } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
-import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { launch, newPage, goto, evaluate, sleep } from './cdp.mjs';
 import { merchants, rows, normalise, classify, pool, report } from './redirect-sweep.mjs';
 import { httpSweep } from './check-redirects.mjs';
 
@@ -65,85 +61,22 @@ const LOAD_TIMEOUT_MS = 25000;
 // the mistake the HTTP pass makes structurally, so wait before believing it.
 const SETTLE_MS = 3500;
 
-const CANDIDATES = [
-  process.env.CHROME,
-  '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-  '/Applications/Chromium.app/Contents/MacOS/Chromium',
-  '/usr/bin/google-chrome',
-  '/usr/bin/chromium',
-  '/usr/bin/chromium-browser'
-].filter(Boolean);
-
-const chromePath = CANDIDATES.find(p => existsSync(p));
-if (!chromePath) {
-  console.error('No Chrome found. Set CHROME to the binary:\n' +
-    "  CHROME='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' \\\n" +
-    '    node tools/check-redirects-browser.mjs');
-  process.exit(2);
-}
-
-// ---------- CDP over one socket ----------
-function connect(wsUrl) {
-  const ws = new WebSocket(wsUrl);
-  const pending = new Map();
-  const listeners = new Set();
-  let id = 0;
-  const ready = new Promise((res, rej) => {
-    ws.addEventListener('open', res, { once: true });
-    ws.addEventListener('error', rej, { once: true });
-  });
-  ws.addEventListener('message', ev => {
-    const m = JSON.parse(ev.data);
-    if (m.id && pending.has(m.id)) {
-      const { resolve, reject } = pending.get(m.id);
-      pending.delete(m.id);
-      m.error ? reject(new Error(m.error.message)) : resolve(m.result);
-    } else if (m.method) {
-      for (const fn of listeners) fn(m);
-    }
-  });
-  return {
-    ready,
-    send(method, params = {}, sessionId) {
-      const msgId = ++id;
-      return new Promise((resolve, reject) => {
-        pending.set(msgId, { resolve, reject });
-        ws.send(JSON.stringify({ id: msgId, method, params, ...(sessionId ? { sessionId } : {}) }));
-      });
-    },
-    on(fn) { listeners.add(fn); return () => listeners.delete(fn); },
-    close() { try { ws.close(); } catch {} }
-  };
-}
-
 /** Where a domain ends up in a real renderer, after it has stopped moving. */
 async function finalHost(cdp, domain) {
   let targetId, sessionId;
   try {
-    ({ targetId } = await cdp.send('Target.createTarget', { url: 'about:blank' }));
-    ({ sessionId } = await cdp.send('Target.attachToTarget', { targetId, flatten: true }));
-    await cdp.send('Page.enable', {}, sessionId);
-
-    const loaded = new Promise(resolve => {
-      const off = cdp.on(m => {
-        if (m.sessionId === sessionId && m.method === 'Page.loadEventFired') { off(); resolve(true); }
-      });
-      setTimeout(() => { off(); resolve(false); }, LOAD_TIMEOUT_MS);
-    });
+    ({ targetId, sessionId } = await newPage(cdp));
     // errorText is how a navigation says it FAILED. Trust it over the address
     // bar: a failed navigation still leaves a document behind, and reading its
     // hostname is how the first version of this script reported delta.com as
     // having "moved to chromewebdata". A row that could not be reached is
     // UNCONFIRMED. Reporting it as moved is the one wrong answer a sweep must
     // never give, because it sends someone to edit a row that was fine.
-    const nav = await cdp.send('Page.navigate', { url: `https://${domain}` }, sessionId);
-    if (nav && nav.errorText) return { host: null, status: nav.errorText };
-    await loaded;
-    await new Promise(r => setTimeout(r, SETTLE_MS));
+    const nav = await goto(cdp, sessionId, `https://${domain}`, LOAD_TIMEOUT_MS);
+    if (nav.error) return { host: null, status: nav.error };
+    await sleep(SETTLE_MS);
 
-    const { result } = await cdp.send('Runtime.evaluate',
-      { expression: 'location.hostname', returnByValue: true }, sessionId);
-    const host = result && result.value;
+    const host = await evaluate(cdp, sessionId, 'location.hostname');
     // Chrome's error page reports its own hostname as `chromewebdata`, and
     // about:blank reports ''. Neither is a site.
     if (!host || host === 'chromewebdata') return { host: null, status: 'no-load' };
@@ -180,29 +113,7 @@ if (ONLY.length) {
 }
 
 // ---------- run ----------
-const profile = await mkdtemp(join(tmpdir(), 'caddy-sweep-'));
-const chrome = spawn(chromePath, [
-  HEADLESS ? '--headless=new' : '--no-startup-window',
-  '--remote-debugging-port=0',
-  `--user-data-dir=${profile}`,
-  '--no-first-run', '--no-default-browser-check',
-  '--disable-background-networking', '--disable-sync',
-  '--disable-features=Translate,MediaRouter'
-], { stdio: ['ignore', 'ignore', 'pipe'] });
-
-const wsUrl = await new Promise((resolve, reject) => {
-  let buf = '';
-  const t = setTimeout(() => reject(new Error('Chrome did not report a DevTools endpoint')), 20000);
-  chrome.stderr.on('data', d => {
-    buf += d;
-    const m = buf.match(/ws:\/\/[^\s]+/);
-    if (m) { clearTimeout(t); resolve(m[0]); }
-  });
-  chrome.on('exit', c => { clearTimeout(t); reject(new Error(`Chrome exited (${c})`)); });
-});
-
-const cdp = connect(wsUrl);
-await cdp.ready;
+const { cdp, close } = await launch({ headless: HEADLESS });
 
 console.log(`\nBrowsing ${list.length} row${list.length === 1 ? '' : 's'} in ` +
             `${HEADLESS ? 'headless' : 'a real'} Chrome, ${CONCURRENCY} at a time...`);
@@ -215,9 +126,7 @@ const results = await pool(list, CONCURRENCY, async ([domain, row]) => {
   return r;
 });
 
-cdp.close();
-chrome.kill();
-await rm(profile, { recursive: true, force: true }).catch(() => {});
+await close();
 
 process.exit(report(results, {
   unconfirmedNote:

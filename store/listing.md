@@ -224,7 +224,7 @@ without the first one.
 
 | Asset | Spec | Status |
 | --- | --- | --- |
-| Screenshots | 1280x800 or 640x400, 1-5, at least 1 required | **Not made** |
+| Screenshots | 1280x800, 1-5, at least 1 required | **2 of 3 made** -- `node tools/make-screenshots.mjs` |
 | Small promo tile | 440x280 | Optional, not made |
 | Marquee promo tile | 1400x560 | Optional, not made |
 | Store icon | 128x128 | `icons/icon128.png` ships already |

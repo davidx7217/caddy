@@ -155,9 +155,12 @@ h1 { font-size: 34px; font-weight: 400; letter-spacing: -.03em; line-height: 1.1
    in a row, which is why this is three rules rather than a block of its own. */
 .filters { align-items: flex-end; margin-top: 28px; }
 .filters input { width: 190px; }
-/* Holds CLEAR, and holds its height when CLEAR is not there. */
-.filter-count { margin-left: auto; padding-bottom: 8px; display: flex;
-                align-items: center; min-height: calc(var(--ctl-h) + 8px); }
+/* CLEAR FILTERS is in the pager row, not here. As a slot in this bar it was
+   empty whenever nothing was filtering, and an empty flex item still wrapped
+   onto a line of its own once the controls filled the first -- 41px of dead
+   band across the middle of the panel, visible in the first store screenshot.
+   Next to the count it modifies, it costs no height at all: that row is
+   always present. */
 
 /* ---------- list rows ---------- */
 .list { border-top: 1px solid var(--line); margin-top: 28px; max-width: var(--content); }
@@ -179,9 +182,9 @@ h1 { font-size: 34px; font-weight: 400; letter-spacing: -.03em; line-height: 1.1
 /* The row is always here even when there is nothing to page through, so that
    crossing the ten-card line does not move the page under the reader. Same
    reason the list reserves ten rows rather than shrinking to fit. */
-.pager { display: flex; align-items: center; justify-content: space-between; gap: 14px;
+.pager { display: flex; align-items: center; gap: 14px;
          margin-top: 18px; min-height: var(--ctl-h); }
-.pager-nav { display: flex; align-items: center; gap: 14px; }
+.pager-nav { display: flex; align-items: center; gap: 14px; margin-left: auto; }
 .pager-at, .pager-count { font-size: 10px; letter-spacing: .1em;
                           text-transform: uppercase; color: var(--muted); }
 .pager .btn[disabled] { opacity: .42; cursor: not-allowed; }
