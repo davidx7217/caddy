@@ -1,4 +1,4 @@
-# Card Picker DESIGN.md
+# Caddy DESIGN.md
 
 The system the extension is built to. It was not chosen from a template: it was
 derived from the paper canvas in this directory and first shipped in
@@ -27,7 +27,9 @@ Six rules generate the whole look. Everything below is a consequence of one of t
 3. **Every edge is rounded, on a three-step scale.** `4px` for controls, `8px`
    for surfaces, `12px` for anything that floats. There are no square corners
    anywhere in the product -- not on a button, not on a hover block, not on the
-   dock. A radius outside the scale is a bug, and so is the absence of one.
+   dock. A radius outside the scale is a bug, and so is the absence of one. The
+   sole exception is the toolbar popup's own window, which Chrome draws and
+   which no stylesheet here can reach.
 4. **Type carries hierarchy, colour does not.** Three colours of text (ink, muted,
    warn) and a wide type ramp. Importance is signalled by size and case, never by
    tinting a label.
@@ -408,10 +410,14 @@ sub-head as a `.hint`.
 ### Popup
 
 `340px` wide inside browser chrome, on `--surface` so it is the same colour as
-the dock, at `--r-lg` like anything else that floats. Chrome paints the popup
-window square, so the radius goes on `body` and `html` is set to
-`background: transparent` -- otherwise it paints over the corners the body just
-rounded. No border: the browser draws the edge.
+the dock. No border: the browser draws the edge.
+
+**The one place rule 3 does not reach.** Chrome owns this window -- it paints an
+opaque, square surface and composites the document onto it. `border-radius` on
+`body` with `html { background: transparent }`, the recipe that works in some
+builds, was tried and changed nothing. The square corners and the dark edge
+around the popup are Chrome's window chrome and no stylesheet here can reach
+them. Everything *inside* the popup still follows the scale.
 
 **It must fit without scrolling.** Chrome gives a popup 600px of height and no
 more, and a popup that scrolls has buried its own primary action. Two rules keep

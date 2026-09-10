@@ -29,13 +29,13 @@ const MONOGRAM = {
 
 const SECTIONS = [
   { id: 'cards',   num: '01', label: 'Cards',         title: 'Cards',
-    blurb: 'Every card Card Picker ranks, with the fees, categories and caps it reasons over.' },
+    blurb: 'Every card Caddy ranks, with the fees, categories and caps it reasons over.' },
   { id: 'ranking', num: '02', label: 'Ranking',       title: 'Ranking',
     blurb: 'The two things you can change that decide which card wins a close call.' },
   { id: 'runs',    num: '03', label: 'Where it runs', title: 'Where it runs',
     blurb: 'Off by default, which is why installing asks for nothing.' },
   { id: 'data',    num: '04', label: 'Data',          title: 'Data',
-    blurb: 'What Card Picker keeps, where it keeps it, and how to take it with you.' }
+    blurb: 'What Caddy keeps, where it keeps it, and how to take it with you.' }
 ];
 
 const j = n => fetch(chrome.runtime.getURL(`data/${n}.json`)).then(r => r.json());
@@ -371,7 +371,7 @@ function blockActivity() {
     <div class="act-foot">
       <p>${on
         ? 'Recording. Domain, category and card only -- no amounts, no card numbers -- stored on this computer and never sent anywhere.'
-        : 'This is the only record Card Picker keeps of where you have been, so it stays off until you ask for it. Turned on, it holds the last thirty recommendations on this computer and sends nothing anywhere.'}</p>
+        : 'This is the only record Caddy keeps of where you have been, so it stays off until you ask for it. Turned on, it holds the last thirty recommendations on this computer and sends nothing anywhere.'}</p>
       <div class="acts">
         ${activity.length ? `<button class="btn" data-clearactivity="1">CLEAR HISTORY</button>` : ''}
         <button class="btn${on ? '' : ' solid'}" data-activitylog="${on ? 'off' : 'on'}">${
@@ -384,7 +384,7 @@ function blockActivity() {
 function blockAbout() {
   const kb = Math.max(1, Math.round(bytes / 1024));
   return `<div class="about">
-    <p class="lede">Card Picker reads the domain of the page you are on. Nothing else leaves your browser.</p>
+    <p class="lede">Caddy reads the domain of the page you are on. Nothing else leaves your browser.</p>
     <div class="spec">
       <div><span>VERSION</span><span>${esc(VERSION)}</span></div>
       <div><span>RATE DATA</span><span>${esc(ratesDate() || 'unknown')}</span></div>
@@ -413,7 +413,7 @@ const PANES = {
 
   runs: () =>
     head('Mode') + blockModes() +
-    head('Blocked sites', 'One domain per line. On these, Card Picker never even reads the page.') +
+    head('Blocked sites', 'One domain per line. On these, Caddy never even reads the page.') +
     blockBlocked(),
 
   data: () =>
@@ -476,11 +476,11 @@ async function setAuto(on) {
 async function exportSettings() {
   const data = await chrome.storage.local.get(['instances', 'valuations', 'prefs', 'blocked']);
   const blob = new Blob(
-    [JSON.stringify({ app: 'card-picker', version: VERSION, exported: new Date().toISOString(), ...data }, null, 2)],
+    [JSON.stringify({ app: 'caddy', version: VERSION, exported: new Date().toISOString(), ...data }, null, 2)],
     { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `card-picker-settings-${new Date().toISOString().slice(0, 10)}.json`;
+  a.download = `caddy-settings-${new Date().toISOString().slice(0, 10)}.json`;
   a.click();
   URL.revokeObjectURL(a.href);
 }
@@ -512,7 +512,7 @@ async function importSettings(file) {
     : null;
 
   if (!nextInstances && !nextVals && !nextBlocked && !nextDefaults) {
-    flash('Nothing in that file looked like Card Picker settings.');
+    flash('Nothing in that file looked like Caddy settings.');
     return;
   }
   if (nextInstances) { instances = nextInstances; await commit('instances', { redraw: false }); }

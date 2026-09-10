@@ -40,7 +40,7 @@ rather than hardcoding a path. Then, from this directory:
 
 ```
 node "<base>/seed-canvas.mjs" --template "<base>/payload.template.html" \
-  --out card-picker-ui.html --title "Card Picker UI" \
+  --out card-picker-ui.html --title "Caddy UI" \
   --artboard Main.dc.html --artboard Dock.dc.html --artboard PanelTie.dc.html \
   --artboard PanelStale.dc.html --artboard PanelNotes.dc.html \
   --artboard Popup.dc.html --artboard PopupEmpty.dc.html \

@@ -1,4 +1,4 @@
-# Card Picker
+# Caddy
 
 Chrome extension that tells you the best credit card to use on the site you are on.
 
@@ -43,7 +43,7 @@ This is the actual product. The extension is a few hundred lines; the data is th
 3. **Load unpacked** -> select this folder
 4. The options page opens on install. Add your cards there -- the extension
    ships with no wallet, by design.
-5. Still on that page, **Where Card Picker runs** -> *Turn on*, if you want the
+5. Still on that page, **Where it runs** -> *Turn on*, if you want the
    dock to appear by itself. It is off by default and the install prompt asks for
    nothing, so until you turn it on the dock appears only when you click the
    toolbar icon.
@@ -130,7 +130,7 @@ Interpreting remote code would get the extension rejected from the Web Store.
 **Nothing broad is asked for at install.** Declared permissions are `storage`,
 `activeTab` and `scripting`; there are no web-accessible resources and no host
 permissions. `<all_urls>` is `optional_host_permissions`, requested only when the
-user turns on **Where Card Picker runs** in Options. Granted, `background.js`
+user turns on **Where it runs** in Options. Granted, `background.js`
 registers the same two content-script files at runtime for the same matches;
 revoked, it unregisters them. A registration does not survive a reload or update,
 so `syncAutoMode()` re-asserts it on every worker start, not only when the grant
