@@ -1,4 +1,4 @@
-import { rank, isMerchantPage, isCheckoutPage,
+import { rank, isMerchantPage, isCheckoutPage, normalizeHost,
          FONT_FILE, overlayFont } from './engine.js';
 
 // One-time cleanup of the removed snooze feature's leftover key. Safe to
@@ -89,6 +89,42 @@ export async function recommend(hostname, signals, wantFont = false) {
   return result;
 }
 
+// ---------- activity ----------
+//
+// The last thirty recommendations, so Options can show what the ranker decided
+// and the user can check it. Domain, category, card and rate only -- no URL, no
+// path, no amount, no card number -- and it never leaves this machine.
+//
+// OFF unless prefs.activityLog is explicitly true. This is the only place the
+// extension keeps a record of where you have been, so it is the one feature that
+// has to be asked for rather than arrived at. The flag is read on every write,
+// not cached: turning it off in Options must stop the next page, not the next
+// service worker.
+const ACTIVITY_MAX = 30;
+let activityWrite = Promise.resolve();
+
+/** Read-modify-write, and two tabs can land together, so the writes are chained. */
+function logActivity(result) {
+  activityWrite = activityWrite.then(async () => {
+    const { activity = [], prefs = {} } = await chrome.storage.local.get(['activity', 'prefs']);
+    if (!prefs.activityLog) return;
+    const entry = {
+      at: Date.now(),
+      host: result.merchant ? result.merchant.domain : normalizeHost(result.hostname),
+      category: result.category,
+      card: result.winner.name,
+      value: result.winner.value
+    };
+    // An SPA fires PAGE on every route change, so collapse a repeat of the same
+    // answer on the same site into the row that is already there.
+    const head = activity[0];
+    const next = head && head.host === entry.host && head.card === entry.card
+      ? [entry, ...activity.slice(1)]
+      : [entry, ...activity];
+    await chrome.storage.local.set({ activity: next.slice(0, ACTIVITY_MAX) });
+  }).catch(() => {});
+}
+
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.type === 'PAGE') {
     (async () => {
@@ -98,6 +134,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         // popup can still read the result without any tabs/host permission.
         await chrome.storage.session.set({ [`tab:${sender.tab.id}`]: result });
       }
+      // Only what the user was actually shown, and never awaited: the overlay
+      // must not wait on a history write to paint.
+      if (result.show && result.winner) logActivity(result);
       sendResponse(result);
     })();
     return true;

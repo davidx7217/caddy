@@ -1,55 +1,32 @@
 <!doctype html>
 <meta charset="utf-8">
 <title>Card Picker</title>
-<link rel="stylesheet" href="ui.css">
 <link rel="stylesheet" href="options.css">
-<div class="page">
-  <header class="head">
-    <div>
-      <h1>Card Picker</h1>
-      <p class="sub">Which of your cards to use, on every site.</p>
+<div class="shell">
+  <aside class="side">
+    <div class="brand">
+      <div class="brand-name">Card Picker</div>
+      <div class="brand-sub" id="brandsub"></div>
     </div>
-    <div id="freshness"></div>
-  </header>
+    <nav id="nav"></nav>
+    <div class="theme">
+      <button data-theme="light">LIGHT</button>
+      <button data-theme="dark">DARK</button>
+    </div>
+  </aside>
 
-  <section>
-    <h2>My cards</h2>
-    <p class="sub hint">Top to bottom is your preference order. Reordering two cards
-      <strong>pins</strong> them, so future ties are settled silently instead of asking.</p>
-    <div id="owned"></div>
-  </section>
-
-  <section>
-    <h2>Add a card</h2>
-    <div id="available"></div>
-  </section>
-
-  <section>
-    <h2>When two cards tie</h2>
-    <p class="sub hint">Saved by "Always use" at checkout. Clear one to be asked again.</p>
-    <div id="defaults"></div>
-  </section>
-
-  <section>
-    <h2>Where Card Picker runs</h2>
-    <p class="sub hint">Off by default, which is why installing asks for nothing.
-      Turned on, the dock appears by itself on any shop you visit. Left off, it
-      appears only when you click the toolbar icon.</p>
-    <div id="auto"></div>
-  </section>
-
-  <section>
-    <h2>Never run on these sites</h2>
-    <p class="sub hint">One domain per line. Subdomains are covered. On these sites the
-      extension does nothing at all -- it never even reads the page.</p>
-    <textarea id="blocked" rows="4" spellcheck="false"
-      placeholder="paylocity.com&#10;mybank.com"></textarea>
-  </section>
-
-  <section>
-    <h2>What your points are worth</h2>
-    <p class="sub hint">Cents per point. These are opinions, and they decide which card wins.</p>
-    <div id="vals"></div>
-  </section>
+  <main>
+    <header class="head">
+      <div>
+        <div class="crumb" id="crumb"></div>
+        <h1 id="title"></h1>
+        <p class="blurb" id="blurb"></p>
+      </div>
+      <div class="head-meta" id="headmeta"></div>
+    </header>
+    <div id="alerts"></div>
+    <div class="page" id="pane"></div>
+  </main>
 </div>
+<input type="file" id="importfile" accept="application/json" hidden>
 <script type="module" src="options.js"></script>
