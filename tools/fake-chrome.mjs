@@ -48,7 +48,7 @@ export function makeChrome({ granted = false, local = {},
   const sessionArea = area();
   const onMessage = [], onInstalled = [], onRemoved = [];
   const permAdded = [], permRemoved = [];
-  const log = { created: [], injected: [], sentToTab: [], registered: [] };
+  const log = { created: [], injected: [], sentToTab: [], registered: [], options: 0 };
   let scripts = [];   // what registerContentScripts holds
 
   const chrome = {
@@ -58,7 +58,8 @@ export function makeChrome({ granted = false, local = {},
       lastError: null,
       id: 'test-worker-id',
       onMessage: { addListener: fn => onMessage.push(fn) },
-      onInstalled: { addListener: fn => onInstalled.push(fn) }
+      onInstalled: { addListener: fn => onInstalled.push(fn) },
+      openOptionsPage: () => { log.options++; }
     },
     storage: {
       local: localArea.api,

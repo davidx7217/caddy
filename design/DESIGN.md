@@ -656,6 +656,18 @@ The winning row is marked only when `resolvedBy === 'clear_winner'`, with a
 
 ### Injected overlay
 
+**The panel carries the way into Settings.** A micro-cap `Settings` beside the
+close button, which messages the worker, because a content script cannot open
+the options page itself.
+
+It has to live here, and that is the lesson rather than the detail. When the
+toolbar click was handed to the overlay, the popup that used to carry the only
+Settings button started closing itself on every injectable page -- so with
+automatic mode ON, a reader could not reach their own settings at all. Every
+surface still worked in isolation, which is why nothing caught it. **When a
+surface takes over another surface's job, it inherits that surface's
+responsibilities, not just its content.**
+
 The hard one. Markup and CSS are template strings inside `src/content.js`, in a
 **closed shadow root**, on a page the extension does not control.
 

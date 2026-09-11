@@ -9,6 +9,7 @@
 // Everything here was previously verified by loading the extension and watching
 // it, which is why the INJECT path had already shipped one bug that looked like a
 // refused injection and was really an unanswered message.
+import { readFileSync } from 'node:fs';
 import { startWorker } from './fake-chrome.mjs';
 
 let pass = 0, fail = 0;
@@ -131,6 +132,27 @@ const WALLET = [{ productId: 'chase-freedom-unlimited', config: {} },
   await w.send({ type: 'SET_POS', pos: { bottom: 240 } });
   eq('SET_POS stores the dock position globally',
      w.localStore.read().overlayPos, { bottom: 240 });
+}
+
+// ---------- reaching Settings ----------
+{
+  // The overlay's Settings control goes through the worker, because a content
+  // script cannot open the options page itself.
+  const w = await startWorker({ local: { instances: WALLET } });
+  const res = await w.send({ type: 'OPEN_OPTIONS' });
+  eq('OPEN_OPTIONS opens the options page', [res, w.log.options], [{ ok: true }, 1]);
+}
+{
+  // A source-level guard, and deliberately so. The toolbar click hands off to
+  // the overlay and closes the popup, so for one release the ONLY route to
+  // Settings was a popup that never stayed open -- with automatic mode on, a
+  // reader could not reach their own settings at all. Nothing caught it,
+  // because every surface still worked in isolation. What was missing was the
+  // claim that a route EXISTS.
+  const src = f => readFileSync(new URL(`../src/${f}`, import.meta.url), 'utf8');
+  eq('the overlay carries a way into Settings', src('content.js').includes('OPEN_OPTIONS'), true);
+  eq('...and so does the popup, which is what runs where the overlay cannot',
+     src('popup.js').includes('openOptionsPage'), true);
 }
 
 // ---------- the activity log ----------

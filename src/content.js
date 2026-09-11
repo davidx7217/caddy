@@ -422,6 +422,14 @@
         .eyebrow { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
         .guess { opacity: .6; }
         .x { cursor: pointer; border: 0; background: none; color: var(--muted); font-size: 16px; line-height: 1; padding: 0 2px; }
+        /* The way into Settings. It has to be HERE, on the overlay, because
+           the toolbar click hands off to this panel and closes the popup that
+           used to carry it -- with automatic mode on, a reader may never open
+           that popup at all. */
+        .top-acts { display: flex; align-items: baseline; gap: 10px; flex: none; }
+        .cog { cursor: pointer; border: 0; background: none; padding: 0; color: var(--muted);
+               font-size: 10px; letter-spacing: .1em; text-transform: uppercase; }
+        .cog:hover, .x:hover { color: var(--ink); }
         .x:hover { color: var(--ink); }
         .name { font-size: 15px; font-weight: 600; letter-spacing: -.01em; line-height: 1.3; margin-top: 8px; }
         .rate { font-size: 12.5px; font-weight: 600; margin-top: 2px; }
@@ -447,7 +455,10 @@
         <div class="panel" role="dialog" aria-label="Card recommendation">
           <div class="top">
             <span class="eyebrow">${esc((res.category || 'other').replace(/_/g, ' '))}${res.categorySource === 'inferred' ? ' <span class="guess">&middot; guess</span>' : ''}</span>
-            <button class="x" title="Close" aria-label="Close">&times;</button>
+            <span class="top-acts">
+              <button class="cog" title="Open Caddy settings">Settings</button>
+              <button class="x" title="Close" aria-label="Close">&times;</button>
+            </span>
           </div>
           <div class="name">${esc(res.winner.name)}</div>
           <div class="rate">${esc(res.winner.reason)} &middot; ${money(res.winner.value)} back</div>
@@ -476,6 +487,10 @@
     const panel = root.querySelector('.panel');
     const icon = root.querySelector('.icon');
     const grip = root.querySelector('.grip');
+
+    // A content script cannot call chrome.runtime.openOptionsPage, so the
+    // worker does it. Same reason INJECT lives there.
+    root.querySelector('.cog').addEventListener('click', () => send({ type: 'OPEN_OPTIONS' }));
 
     icon.addEventListener('click', () => {
       const open = wrap.classList.toggle('open');

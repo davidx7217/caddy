@@ -176,6 +176,15 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     return true;
   }
 
+  // The overlay's Settings control. A content script cannot open the options
+  // page itself, and with automatic mode on the reader may never open the popup
+  // that used to be the only way in.
+  if (msg.type === 'OPEN_OPTIONS') {
+    chrome.runtime.openOptionsPage();
+    sendResponse({ ok: true });
+    return true;
+  }
+
   if (msg.type === 'SET_POS') {
     chrome.storage.local.set({ overlayPos: msg.pos }).then(() => sendResponse({ ok: true }));
     return true;
