@@ -396,8 +396,19 @@
         .guess { opacity: .6; }
         .x { cursor: pointer; border: 0; background: none; color: var(--muted); font-size: 16px; line-height: 1; padding: 0 2px; }
         .x:hover { color: var(--ink); }
-        .name { font-size: 15px; font-weight: 600; letter-spacing: -.01em; line-height: 1.3; margin-top: 8px; }
-        .rate { font-size: 12.5px; font-weight: 600; margin-top: 2px; }
+        /* The answer is a card AND a number, and the number was the smaller
+           of the two. It moves to the right at display size, where the panel
+           had empty space, so the thing being compared is the thing you see
+           first. The name is the only part that gives way if it must. */
+        .win { display: flex; align-items: baseline; gap: 12px; margin-top: 8px; }
+        .win-text { flex: 1; min-width: 0; }
+        .name { font-size: 15px; font-weight: 600; letter-spacing: -.01em; line-height: 1.3; }
+        .rate { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+        /* The ramp's Numeral display role, the same one the point-value fields
+           in Options use: 22px/500/-.02em. 26px read better in isolation and is
+           not on the ramp, which is how a type scale stops being one. */
+        .win-val { flex: none; font-size: 22px; font-weight: 500; letter-spacing: -.02em;
+                   line-height: 1; font-variant-numeric: tabular-nums; }
         .note { color: var(--muted); font-size: 10.5px; line-height: 1.45; margin-top: 6px; }
         /* Louder than .note on purpose: a note is extra information, this
            says the number above it may be wrong. */
@@ -430,8 +441,13 @@
             <span class="eyebrow">${esc((res.category || 'other').replace(/_/g, ' '))}${res.categorySource === 'inferred' ? ' <span class="guess">&middot; guess</span>' : ''}</span>
             <button class="x" title="Close" aria-label="Close">&times;</button>
           </div>
-          <div class="name">${esc(res.winner.name)}</div>
-          <div class="rate">${esc(res.winner.reason)} &middot; ${money(res.winner.value)} back</div>
+          <div class="win">
+            <div class="win-text">
+              <div class="name">${esc(res.winner.name)}</div>
+              <div class="rate">${esc(res.winner.reason)}</div>
+            </div>
+            <div class="win-val">${money(res.winner.value)}</div>
+          </div>
           <div class="why">across ${res.all.length} card${res.all.length === 1 ? '' : 's'} &middot; ${esc(WHY[res.resolvedBy] || res.resolvedBy || '?')}${res.resolvedBy === 'category_default' ? ' <button class="undo">change</button>' : ''}</div>
           ${res.winner.needsActivation ? '<div class="note">Must be activated with the issuer to earn this rate.</div>' : ''}
           ${res.winner.staleReason ? `<div class="stale">${esc(res.winner.staleReason)}</div>` : ''}
