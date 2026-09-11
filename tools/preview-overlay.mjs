@@ -21,6 +21,7 @@
 //   node tools/preview-overlay.mjs --long          # longest name, widest rate
 //   node tools/preview-overlay.mjs --dark
 //   node tools/preview-overlay.mjs --closed        # dock only, panel shut
+//   node tools/preview-overlay.mjs --saved         # a saved choice, with `change`
 //
 // `checkout: true` is what makes the panel open by itself, which is the whole
 // reason this can be screenshotted without driving a click.
@@ -52,7 +53,10 @@ const RESULT = {
   show: true,
   checkout: !has('--closed'),
   category: 'online_retail', categorySource: 'merchant',
-  resolvedBy: tied.length ? 'unresolved' : 'clear_winner',
+  // --saved is the one case that still renders a why-line, because that line
+  // carries the control which clears the saved choice.
+  resolvedBy: has('--saved') ? 'category_default'
+            : tied.length ? 'unresolved' : 'clear_winner',
   theme: has('--dark') ? 'dark' : 'light',
   overlayPos: { bottom: 16 }, notes: [],
   winner, tied,

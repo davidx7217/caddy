@@ -21,12 +21,11 @@
 
   // Why this card won. Without it, "saved choice" and "genuinely the only
   // winner" look identical, which made a real bug impossible to diagnose.
-  const WHY = {
-    clear_winner:     'clear winner',
-    unresolved:       'tied, pick one below',
-    category_default: 'your saved choice for this category',
-    no_cards:         'no cards added'
-  };
+  // Only the saved-choice case is still rendered. The others narrated the
+  // ranker's working -- "across 6 cards - clear winner" -- which the card name
+  // and the rate beside it already say. This one stays because it is the label
+  // on a control: a choice you made here has to be undoable here.
+  const WHY = { category_default: 'your saved choice for this category' };
   const esc = s => String(s).replace(/[&<>"']/g, c =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
@@ -480,7 +479,9 @@
             </div>
             <div class="win-val">${money(res.winner.value)}</div>
           </div>
-          <div class="why">across ${res.all.length} card${res.all.length === 1 ? '' : 's'} &middot; ${esc(WHY[res.resolvedBy] || res.resolvedBy || '?')}${res.resolvedBy === 'category_default' ? ' <button class="undo">change</button>' : ''}</div>
+          ${res.resolvedBy === 'category_default'
+            ? `<div class="why">${esc(WHY.category_default)} <button class="undo">change</button></div>`
+            : ''}
           ${res.winner.needsActivation ? '<div class="note">Must be activated with the issuer to earn this rate.</div>' : ''}
           ${res.winner.staleReason ? `<div class="stale">${esc(res.winner.staleReason)}</div>` : ''}
           ${res.notes.slice(0, 1).map(n => `<div class="note">${esc(n.text)}</div>`).join('')}

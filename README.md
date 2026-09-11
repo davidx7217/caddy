@@ -433,8 +433,8 @@ Three rules govern the dock's lifetime, all covered by `test-lifecycle.mjs`:
   write look successful -- a cleared tie choice vanished from the screen, was
   never saved, and came back on the next site. `commit(key)` now writes only the
   key that changed, re-reads, and renders what storage actually returned.
-- **A saved tie choice is clearable from the overlay itself** ("change" on the
-  why-line). Making a one-click decision take a trip to another page to undo is
+- **A saved tie choice is clearable from the overlay itself** ("change", on the
+  only line of working the panel still shows). Making a one-click decision take a trip to another page to undo is
   what left the user stuck in an invisible state in the first place.
 - **The options page detects the same orphaning.** A reload orphans an open
   options tab too, and it used to keep updating the screen while every
