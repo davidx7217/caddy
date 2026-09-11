@@ -41,7 +41,12 @@ const WALLET = [
 const STUB = seed => `
 const store = ${JSON.stringify(seed)};
 globalThis.chrome = {
-  runtime: { getURL: p => '/' + p, getManifest: () => ({ version: '1.0.0' }), id: 'shot' },
+  runtime: { getURL: p => '/' + p, getManifest: () => ({ version: '1.0.0' }), id: 'shot',
+    // Options asks the worker for the real automatic-mode state on load. Without
+    // this the call throws SYNCHRONOUSLY -- there is no promise for the .catch()
+    // to catch -- so load() dies and the page renders nothing at all.
+    sendMessage: async msg => msg && msg.type === 'AUTO_STATE'
+      ? { wanted: true, permitted: true, registered: true } : null },
   storage: { local: {
     get: keys => Promise.resolve(Object.fromEntries(
       (Array.isArray(keys) ? keys : keys === null ? Object.keys(store) : [keys])
