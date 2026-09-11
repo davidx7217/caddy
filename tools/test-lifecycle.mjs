@@ -143,8 +143,13 @@ const check = (name, got, want) => {
   for (let i=0;i<12;i++){ h.nav('https://mail.example/#inbox/'+i); h.tick(4000); }
   check('non-merchant site stops polling', h.log.includes('stopPolling'), true);
   check('...and never mounts', h.log.includes('MOUNT'), false);
-  check('...and stops evaluating (<=8 evaluations for 12 routes)',
-        h.log.filter(x=>x==='evaluate').length <= 8, true);
+  // 17: five on the load ladder, then three on each of four route ladders
+  // before the fifth give-up stops the poll. It was 8 when a miss meant one
+  // re-check 2.5s later. The budget is spent in GIVE-UPS now, not attempts --
+  // counting attempts would have burned all five inside a single slow page
+  // load and killed the route poll on an SPA that was only hydrating.
+  check('...and stops evaluating well short of 12 routes',
+        h.log.filter(x=>x==='evaluate').length, 17);
 }
 
 // 2. Commerce SPA: mount, then a non-merchant route unmounts only after settle.
@@ -205,14 +210,36 @@ const check = (name, got, want) => {
         [first, h.log.filter(x=>x==='OPEN').length], [1, 1]);
 }
 
-// 3. Slow client-rendered store: first miss then a hit on settle.
+// 3. Slow client-rendered store: first miss then a hit on the re-check.
 {
   let calls=0;
   const h = harness(() => ({ show: ++calls > 1 }));
   h.tick(100);
   check('nothing on the first pass', h.log.includes('MOUNT'), false);
   h.tick(3000);
-  check('mounts after the settle re-check', h.log.includes('MOUNT'), true);
+  check('mounts after the re-check', h.log.includes('MOUNT'), true);
+}
+
+// 3b. How FAST that re-check is, which is the whole reason the ladder exists.
+// hotels.com serves no commerce markup at all -- it arrives with the framework
+// -- so on sites like it the dock's speed is entirely the second look's speed.
+// A single fixed 2.5s wait made every one of them take 2.5s.
+{
+  let calls=0;
+  const h = harness(() => ({ show: ++calls > 1 }));
+  h.tick(450);
+  check('a page that hydrates fast gets its dock in well under half a second',
+        h.log.includes('MOUNT'), true);
+}
+{
+  // And a page that is genuinely slow is still waited for, rather than the
+  // ladder giving up early in the name of speed.
+  let calls=0;
+  const h = harness(() => ({ show: ++calls > 4 }));
+  h.tick(3000);
+  check('nothing yet on a page that hydrates slowly', h.log.includes('MOUNT'), false);
+  h.tick(1000);
+  check('...but the last rung still catches it', h.log.includes('MOUNT'), true);
 }
 
 // 4. Checkout auto-opens once, and again on the next route.

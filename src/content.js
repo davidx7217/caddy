@@ -64,7 +64,21 @@
   // shown the dock. Generous on purpose: a client-rendered store whose landing
   // page exposes nothing still gets several routes to prove itself.
   const MAX_MISSES = 5;
-  const SETTLE_MS = 2500;
+  // Gaps between re-checks after a miss. Two ladders, because the two cases are
+  // not the same problem.
+  //
+  // ON LOAD the page may not have rendered itself yet. hotels.com serves 25KB
+  // with no JSON-LD, no og:type, no cart link and no price -- everything
+  // arrives with the framework -- so the dock's speed there IS the speed of the
+  // re-check. One fixed 2.5s wait made every such site take 2.5s. A ladder
+  // takes the first attempt that hits: hydrate in half a second and the dock is
+  // there in half a second, and a slow page still gets its 3.5s.
+  //
+  // ON A ROUTE CHANGE the framework is already running, so signals appear
+  // quickly or not at all. A long ladder there only delays UNMOUNTING a dock
+  // that is now wrong, so it is short: 1.5s, where the old single wait took 2.5.
+  const LOAD_RETRY_MS = [400, 600, 1000, 1500];
+  const ROUTE_RETRY_MS = [400, 1100];
 
   // Our @font-face <style> in the page's head, held by reference rather than
   // found by id. A fixed id like "__card-picker-fonts" was a second thing any
@@ -120,12 +134,33 @@
     if (changes.theme && mounted) mounted.setTheme(changes.theme.newValue);
   });
 
+  /**
+   * Look now, and keep looking on a curve until something is there.
+   *
+   * A miss is the WHOLE ladder coming up empty, not each attempt in it.
+   * Counting attempts would spend the give-up budget inside a single page load
+   * and kill the route poll on an SPA that was merely slow to hydrate.
+   */
+  function settle(step, onGiveUp, ladder) {
+    evaluate(() => {
+      if (step < ladder.length) {
+        setTimeout(() => settle(step + 1, onGiveUp, ladder), ladder[step]);
+        return;
+      }
+      misses++;
+      // Sites that never sell anything -- mail, docs, dashboards -- change
+      // their URL constantly. Stop re-evaluating them.
+      if (!everMounted && misses >= MAX_MISSES) stopPolling();
+      if (onGiveUp) onGiveUp();
+    });
+  }
+
   function start() {
     // Runs at document_end, so the dock appears as soon as the DOM is usable
     // rather than after every image and ad tag has loaded. Client-rendered
-    // storefronts often have nothing to detect that early, so a single miss is
-    // never conclusive -- always re-check once it settles.
-    evaluate(() => setTimeout(() => evaluate(null), SETTLE_MS));
+    // storefronts often have nothing to detect that early, so a miss is never
+    // conclusive -- keep re-checking on the RETRY_MS curve.
+    settle(0, null, LOAD_RETRY_MS);
 
     // Checkout is nearly always a client-side route change, which fires no page
     // load at all. A once-a-second href comparison is cheap and catches it.
@@ -140,7 +175,7 @@
       // Same rule on a new route: only unmount once a settled re-check agrees
       // the page really is not a merchant, so a mid-render miss cannot flicker
       // the dock away.
-      evaluate(() => setTimeout(() => evaluate(unmount), SETTLE_MS));
+      settle(0, unmount, ROUTE_RETRY_MS);
     }, 1000);
   }
 
@@ -179,14 +214,7 @@
       res => {
         if (!res || !res.winner) return;
 
-        if (!res.show) {
-          misses++;
-          // Sites that never sell anything -- mail, docs, dashboards -- change
-          // their URL constantly. Stop re-evaluating them.
-          if (!everMounted && misses >= MAX_MISSES) stopPolling();
-          if (onMiss) onMiss();
-          return;
-        }
+        if (!res.show) { if (onMiss) onMiss(); return; }
 
         misses = 0;
         if (!mounted) { mounted = render(res); everMounted = true; }

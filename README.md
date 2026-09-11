@@ -356,9 +356,22 @@ seconds after the DOM is usable. Measured 2026-09-11 on bestbuy.com:
 DOMContentLoaded ended at 3.77s, load at 7.15s. `idle` was costing 3.4 seconds of
 a dock that already had everything it needed.
 
-Client-rendered storefronts often expose nothing that early, so the content
-script re-checks once after 2.5s and then stops. That re-check is what makes the
-earlier injection safe: a first miss is never conclusive.
+Client-rendered storefronts often expose nothing that early, so a miss is never
+conclusive and the content script keeps looking. Two ladders, because the two
+cases are different problems:
+
+- **On load**, re-checks at 400ms, 1.0s, 2.0s and 3.5s. hotels.com serves 25KB
+  with no JSON-LD, no `og:type`, no cart link and no price -- all of it arrives
+  with the framework -- so on sites like it the dock's speed IS the re-check's
+  speed. One fixed 2.5s wait made every such site take 2.5 seconds. The ladder
+  takes the first rung that hits.
+- **On a route change**, 400ms then 1.5s. The framework is already running, so
+  signals appear quickly or not at all, and a long ladder there only delays
+  unmounting a dock that has gone wrong. This is faster than the 2.5s it replaced.
+
+**A miss is a whole ladder coming up empty, not each attempt in it.** Counting
+attempts would spend the five-miss give-up budget inside one slow page load and
+kill the route poll on an SPA that was merely hydrating.
 
 **The panel opens itself at checkout.** `isCheckoutPage()` takes any one of:
 
