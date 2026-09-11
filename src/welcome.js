@@ -54,7 +54,8 @@ async function load() {
   document.documentElement.dataset.theme =
     s.theme === 'light' || s.theme === 'dark' ? s.theme
       : matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  auto = await chrome.permissions.contains({ origins: ['<all_urls>'] });
+  const { prefs = {} } = await chrome.storage.local.get('prefs');
+  auto = prefs.autoMode !== false;   // absent means ON
 }
 
 // Written on every step change, not at the end. Someone who closes the tab
@@ -161,23 +162,24 @@ function paneTune() {
 
 function paneMode() {
   const modes = [
-    { key: 'ask', label: 'Only when you ask', on: !auto,
-      desc: 'Nothing runs until you click the toolbar icon on a page. Caddy asks for no permissions at all.' },
     { key: 'auto', label: 'On every shop', on: auto,
-      desc: 'The dock appears by itself on any store you visit. Chrome will ask you to allow it. It still never sends anything anywhere.' }
+      desc: 'The default. The dock appears by itself on any store you visit, and tells you which card wins before you pay.' },
+    { key: 'ask', label: 'Only when you ask', on: !auto,
+      desc: 'Nothing appears on a page unless you click the toolbar icon. The ranking is still one click away.' }
   ];
-  return `<div class="w-title">Turn it on</div>
-    <p class="w-blurb">Caddy can wait to be asked, or it can watch for stores by itself. The
-      second one needs Chrome's permission to read the pages you visit. That is why it is off
-      until you choose it here, and why installing this extension prompted you for nothing.</p>
+  return `<div class="w-title">How it runs</div>
+    <p class="w-blurb">Caddy watches for stores by itself, which is what makes the dock appear
+      without you asking. That is the default and you can leave it. Switching to the second
+      option stops it reading any page until you click the toolbar icon.</p>
     <div class="grid modes">${modes.map(m => `
       <button class="mode${m.on ? ' on' : ''}" data-auto="${m.key}" aria-pressed="${m.on}">
         <div class="mode-state">${m.on ? '&#9632; SELECTED' : '&#9633; SELECT'}</div>
         <div class="mode-label">${esc(m.label)}</div>
         <div class="mode-desc">${esc(m.desc)}</div>
       </button>`).join('')}</div>
-    <p class="hint">Either way, nothing leaves your browser. You can switch modes, block
-      individual sites, and change any of this in Settings.</p>`;
+    <p class="hint">Either way, nothing leaves your browser: no account, no bank linking, and
+      no network calls of any kind. You can switch modes, block individual sites, and change
+      any of this later in Settings.</p>`;
 }
 
 const PANES = {
@@ -227,15 +229,13 @@ async function go(delta) {
   scrollTo(0, 0);
 }
 
-// chrome.permissions.request must run inside a user gesture, so nothing may be
-// awaited before it -- this is called straight from the click handler.
+// A stored preference, not a permission request. <all_urls> is declared in the
+// manifest now, so there is nothing to prompt for and nothing to decline.
 async function setAuto(on) {
-  if (on) await chrome.permissions.request({ origins: ['<all_urls>'] });
-  else await chrome.permissions.remove({ origins: ['<all_urls>'] });
-  // Trust the permission, never the button. A user can decline the prompt, and
-  // rendering what we asked for rather than what we got would leave the tile
-  // reading "selected" while nothing actually runs.
-  auto = await chrome.permissions.contains({ origins: ['<all_urls>'] });
+  const { prefs = {} } = await chrome.storage.local.get('prefs');
+  prefs.autoMode = on;
+  await chrome.storage.local.set({ prefs });
+  auto = on;
   render();
 }
 

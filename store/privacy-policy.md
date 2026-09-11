@@ -58,6 +58,20 @@ page you are on for:
 All of this happens **inside your browser** and the result goes nowhere. It is
 used to render the overlay and then discarded when you leave the page.
 
+## What "read your data on all websites" means here
+
+Chrome's install prompt says Caddy can read and change your data on all websites.
+That is the permission's name, not a description of what Caddy does with it.
+
+What it reads is listed above: a domain, a page's own published markup, and
+whether certain controls exist. What it changes is one thing -- it adds its own
+dock to the corner of the page. It does not read what you type, it does not
+touch other extensions or other tabs, and nothing it reads leaves your browser,
+because it makes no network requests at all.
+
+If you would rather it read nothing until asked, Settings -> Where it runs ->
+"Only when you ask" unregisters the content scripts entirely.
+
 ## Network activity
 
 Caddy makes no network requests of any kind. There is no analytics, no telemetry,
@@ -85,9 +99,11 @@ machine, and Settings has a one-click button to clear it.
 - **activeTab** - when you click the toolbar icon, lets Caddy see that one tab's
   address and show the overlay on it, for that visit only.
 - **scripting** - injects the overlay that displays the recommendation.
-- **&lt;all_urls&gt; (optional)** - off by default and requested only if you choose
-  to let the dock appear on stores without clicking the icon. Revocable at any
-  time in Settings; Caddy keeps working without it.
+- **&lt;all_urls&gt;** - lets Caddy read the page you are on in order to tell a
+  shop from a checkout from an article. It is asked for at install, because the
+  extension does nothing useful without it. Settings -> Where it runs switches to
+  click-to-run, which unregisters the content scripts so nothing reads any page
+  until you click the toolbar icon.
 
 ## Your control
 

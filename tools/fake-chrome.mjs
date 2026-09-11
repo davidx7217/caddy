@@ -35,14 +35,16 @@ const area = (initial = {}) => {
 };
 
 /**
- * @param granted  whether <all_urls> is held at start
+ * @param granted  whether <all_urls> is held. Defaults TRUE, because the
+ *                 manifest declares it -- only Chrome's own site-access control
+ *                 can take it away now
  * @param local    seed for chrome.storage.local
  * @param injectFails  make chrome.scripting.executeScript throw, as Chrome does
  *                     on its own pages, the Web Store and the PDF viewer
  * @param tabSendFails make chrome.tabs.sendMessage reject, which is what an
  *                     unanswered OPEN looks like from the worker's side
  */
-export function makeChrome({ granted = false, local = {}, injectFails = false,
+export function makeChrome({ granted = true, local = {}, injectFails = false,
                              tabSendFails = false, registerFails = 0 } = {}) {
   const localArea = area(local);
   const sessionArea = area();

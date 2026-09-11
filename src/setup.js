@@ -52,7 +52,7 @@ export function steps(picked, products, baseVals) {
     { id: 'intro', label: 'Welcome' },
     { id: 'cards', label: 'Your cards' },
     ...(earned ? [{ id: 'tune', label: 'Fine-tune' }] : []),
-    { id: 'mode', label: 'Turn it on' }
+    { id: 'mode', label: 'How it runs' }
   ];
 }
 

@@ -61,7 +61,7 @@ eq('U.S. Bank Cash+ earns it the same way',
    ids(['usbank-cash-plus']), ['intro', 'cards', 'tune', 'mode']);
 eq('the step labels are what the stepper renders',
    steps([], products, baseVals).map(s => s.label),
-   ['Welcome', 'Your cards', 'Turn it on']);
+   ['Welcome', 'Your cards', 'How it runs']);
 
 // ---------- the wallet that gets written ----------
 eq('picks become the shape Options reads',

@@ -57,13 +57,13 @@ This is the actual product. The extension is a few hundred lines; the data is th
 2. Turn on **Developer mode** (top right)
 3. **Load unpacked** -> select this folder
 4. Setup opens on install and asks four things: what Caddy is, which cards you
-   carry, the questions those picks raise, and whether it may run by itself. The
-   extension ships with no wallet by design, so step two is the one it cannot do
-   for you. It takes about a minute and lands you in Settings when it is done.
-5. Automatic mode is the last step of setup and is **off** unless you pick it
-   there. The install prompt asks for nothing, so until you turn it on the dock
-   appears only when you click the toolbar icon. Settings -> **Where it runs**
-   changes it later.
+   carry, the questions those picks raise, and how it should run. The extension
+   ships with no wallet by design, so step two is the one it cannot do for you.
+   It takes about a minute and lands you in Settings when it is done.
+5. The dock appears by itself on stores from the moment you add a card. That is
+   the default and setup's last step only confirms it. Settings -> **Where it
+   runs** switches to click-to-run, and the blocklist there turns Caddy off
+   completely on any domain you name.
 
 Pin it to the toolbar.
 
@@ -159,10 +159,30 @@ card wins lives there and nowhere else.
 rule shape cannot express something, add a field and handle it in the engine.
 Interpreting remote code would get the extension rejected from the Web Store.
 
+**`<all_urls>` is declared, and that is a deliberate reversal.** It used to be
+`optional_host_permissions`, off until the user found a switch -- so a new user
+installed Caddy, visited a shop, saw nothing, and had no way to tell whether the
+extension was broken or the page did not qualify. The switch could not even tell
+them: it reported the PERMISSION rather than the registration, so it said ALWAYS
+ON while nothing was registered.
+
+The install prompt now says "read and change all your data on all websites",
+which is the honest price of a dock that works on the first page you visit. What
+did NOT change is what the extension does with that access: it reads the domain
+and the page's own markup, in your browser, and makes no network request of any
+kind. Automatic mode is a stored preference now, on by default, and turning it
+off unregisters the content scripts rather than merely hiding the dock.
+
+The older text below is kept because its reasoning still holds for the parts it
+covers, with one correction: the argument against declaring host permissions was
+about NARROWING to the merchant table, a list that changes on every data release
+and re-prompts when it does. A static `<all_urls>` never changes and never
+re-prompts, so that objection never applied to this.
+
 **Nothing broad is asked for at install.** Declared permissions are `storage`,
 `activeTab` and `scripting`; there are no web-accessible resources and no host
-permissions. `<all_urls>` is `optional_host_permissions`, requested only when the
-user turns on **Where it runs** in Options. Granted, `background.js`
+permissions. `<all_urls>` WAS `optional_host_permissions`, requested only when the
+user turned on **Where it runs** in Options. Granted, `background.js`
 registers the same two content-script files at runtime for the same matches;
 revoked, it unregisters them. A registration does not survive a reload or update,
 so `syncAutoMode()` re-asserts it on every worker start, not only when the grant

@@ -86,16 +86,21 @@ crowd-sourced, not copied from a blog. When an issuer's page could not confirm a
 rate, that rate is not in here -- there are cards deliberately left out of the
 catalogue for exactly that reason, and the repository names them and says why.
 
-PERMISSIONS, AND WHY INSTALLING ASKS FOR NOTHING
+PERMISSIONS
 
-Installing Caddy prompts you for no permissions at all. Out of the box it runs
-only when you click its toolbar icon, on that one page, for that one visit.
+Caddy asks to read the pages you visit, because that is the only way to tell a
+shop from a checkout from an article. Chrome will say so at install, plainly.
 
-If you want the dock to appear by itself on stores, setup offers to turn that on,
-and Chrome asks you then. You can turn it off again in Settings, and you can add
-any domain to a blocklist where Caddy will not read the page at all -- checked
-before it looks at anything, so on a blocked site it collects nothing, sends
-nothing and starts no timers.
+What it does with that access is the part worth reading. It looks at the domain,
+the page's own structured markup, and whether commerce controls exist -- as
+existence checks, never values. It does not read what you type. All of it happens
+in your browser and none of it is transmitted anywhere, because the extension
+makes no network requests of any kind.
+
+Two switches, both in Settings. "Only when you ask" unregisters the content
+scripts entirely, so nothing runs until you click the toolbar icon. The blocklist
+turns Caddy off on any domain you name, checked before it reads anything at all,
+so on a blocked site it collects nothing, sends nothing and starts no timers.
 
 OPEN SOURCE
 
@@ -161,17 +166,27 @@ element's tag and type are both checked first so that a text field wearing
 role="button" cannot be read that way.
 ```
 
-`<all_urls>` (optional host permission)
+`<all_urls>`
 
 ```
-Optional and off by default. Requested only if the user explicitly chooses
-"On every shop" during setup or in Settings, which is what lets the dock appear
-without clicking the toolbar icon. It is coarse rather than a list of merchant
-domains on purpose: the merchant table grows with data releases, and a declared
-host-permission list that changes causes Chrome to disable the extension until
-the user re-approves it. The user can revoke this at any time in Settings, and
-the extension keeps working in click-to-run mode. No page content is transmitted
-anywhere.
+This is the extension's core function: Caddy shows which of the user's own cards
+earns the most on the store they are looking at, which requires reading the page
+they are on. It is declared rather than optional because the feature is useless
+until it is granted -- a user who installs Caddy, visits a shop and sees nothing
+cannot tell whether the extension is broken or the page does not qualify.
+
+It is coarse rather than a list of merchant domains on purpose. The merchant
+table grows with data releases, and a declared host-permission list that changes
+causes Chrome to disable the extension until the user re-approves it, which
+would take the extension offline on every data update.
+
+What is read: the page's domain, its Schema.org and Open Graph markup, and
+whether commerce controls exist (a cart link, a buy button, a card field) as
+existence checks only. It never reads the value of a form field the user has
+typed into. Nothing read from a page is transmitted anywhere -- the extension
+makes no network requests at all. Settings has a switch that unregisters the
+content scripts entirely, and a per-domain blocklist checked before any page is
+read.
 ```
 
 **Data usage disclosures**

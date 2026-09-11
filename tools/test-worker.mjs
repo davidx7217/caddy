@@ -22,39 +22,48 @@ const eq = (name, got, want) => {
 
 // ---------- automatic mode ----------
 {
-  const w = await startWorker({ granted: false });
-  eq('worker start with no grant registers nothing', w.registeredIds(), []);
-}
-{
-  // A registration does not survive a reload or an update, so the worker
-  // re-asserts on every start rather than only when the grant changes. Starting
-  // granted with an empty registry IS that case.
-  const w = await startWorker({ granted: true });
-  eq('worker start with the grant re-asserts the registration',
+  // THE DEFAULT, and the reason this all changed. A fresh install has no prefs
+  // at all, and the dock has to appear anyway. It used to require finding a
+  // switch, which meant a new user saw nothing on any site and had no way to
+  // tell whether that was the extension or the page.
+  const w = await startWorker();
+  eq('a fresh install registers automatically, with no prefs and no prompt',
      w.registeredIds(), ['card-picker-auto']);
-  eq('...for both content files, in manifest order',
+  eq('...for both content files, under one id',
      w.log.registered[0], ['register', ['card-picker-auto']]);
+  eq('...and reports itself wanted, permitted and running',
+     await w.mod.syncAutoMode(), { wanted: true, permitted: true, registered: true });
 }
 {
+  const w = await startWorker({ local: { prefs: { autoMode: false } } });
+  eq('turning it off unregisters everything', w.registeredIds(), []);
+  eq('...and says the reader asked for that, not that anything failed',
+     await w.mod.syncAutoMode(), { wanted: false, permitted: true, registered: false });
+}
+{
+  // Chrome's own site-access control can withhold the host permission even
+  // though the manifest declares it. That is NOT the reader turning it off, and
+  // the two must not read the same: one is a choice, the other is a fault.
   const w = await startWorker({ granted: false });
-  w.grant();
-  await new Promise(r => setTimeout(r, 0));
-  eq('granting <all_urls> registers the scripts', w.registeredIds(), ['card-picker-auto']);
-  w.revoke();
-  await new Promise(r => setTimeout(r, 0));
-  eq('revoking it unregisters them', w.registeredIds(), []);
+  eq('a withheld host permission registers nothing', w.registeredIds(), []);
+  eq('...and is reported as wanted but not permitted',
+     await w.mod.syncAutoMode(), { wanted: true, permitted: false, registered: false });
 }
 {
-  // syncAutoMode is called on every worker start AND by both permission events,
-  // so it has to be safe to call when nothing has changed.
-  const w = await startWorker({ granted: true });
+  const w = await startWorker({ local: { prefs: { autoMode: false } } });
+  await w.localStore.write({ prefs: { autoMode: true } });
+  await w.mod.syncAutoMode();
+  eq('switching it back on re-registers', w.registeredIds(), ['card-picker-auto']);
+}
+{
+  // syncAutoMode runs on every worker start and on every prefs write, so it has
+  // to be safe to call when nothing has changed.
+  const w = await startWorker();
   const before = w.log.registered.length;
   await w.mod.syncAutoMode();
   await w.mod.syncAutoMode();
-  eq('syncAutoMode is a no-op when the registry already matches the grant',
+  eq('syncAutoMode is a no-op when the registry already matches',
      w.log.registered.length, before);
-  eq('...and still reports the real state every time',
-     await w.mod.syncAutoMode(), { granted: true, registered: true });
 }
 
 {
@@ -67,7 +76,7 @@ const eq = (name, got, want) => {
   // later call. Written the other way first, it passed under a mutation that
   // deleted the retry entirely: the start-up sync ate the failure, and the
   // test's own second call then registered cleanly and looked like recovery.
-  const w = await startWorker({ granted: true, registerFails: 1 });
+  const w = await startWorker({ registerFails: 1 });
   eq('a duplicate-id failure at start-up is recovered from, not swallowed',
      w.registeredIds(), ['card-picker-auto']);
   eq('...by clearing the stale registration and registering again',
@@ -75,24 +84,18 @@ const eq = (name, got, want) => {
 }
 {
   // When it genuinely cannot register, say so rather than reporting success.
-  const w = await startWorker({ granted: true, registerFails: 99 });
+  const w = await startWorker({ registerFails: 99 });
   const st = await w.mod.syncAutoMode();
-  eq('an unrecoverable failure reports granted-but-not-running',
-     [st.granted, st.registered], [true, false]);
+  eq('an unrecoverable failure reports wanted-and-permitted but not running',
+     [st.wanted, st.permitted, st.registered], [true, true, false]);
   eq('...and carries the reason with it', typeof st.error, 'string');
 }
 {
   // What Options asks. Asking is also the repair, because it re-asserts.
-  const w = await startWorker({ granted: true });
-  const st = await w.send({ type: 'AUTO_STATE' });
-  eq('AUTO_STATE reports both the grant and what is registered',
-     [st.granted, st.registered], [true, true]);
-}
-{
-  const w = await startWorker({ granted: false });
-  const st = await w.send({ type: 'AUTO_STATE' });
-  eq('...and reports both as off when nothing is granted',
-     [st.granted, st.registered], [false, false]);
+  const w = await startWorker();
+  eq('AUTO_STATE reports all three facts Options renders',
+     await w.send({ type: 'AUTO_STATE' }),
+     { wanted: true, permitted: true, registered: true });
 }
 
 // ---------- first run ----------

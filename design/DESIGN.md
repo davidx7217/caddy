@@ -599,6 +599,13 @@ per-card config and the point values for currencies the wallet actually earns.
 A cash-back-only wallet skips the step entirely rather than being shown a form
 whose every field is `1.0 cpp` by definition.
 
+**Step four confirms a default, it does not ask for a permission.** `<all_urls>`
+is declared in the manifest, so automatic mode is already on when setup reaches
+this step; the tiles let a reader turn it off rather than switch it on, and the
+default tile is listed first. It used to request the permission here, which meant
+anyone who closed setup early ended up with an extension that never appeared on
+any page and a Settings screen that told them it was working.
+
 **It honours the 860px breakpoint.** Same as Options: the gutter falls to
 `22px` and the page title to `26px`. The four step labels wrap two-up rather
 than squashing.

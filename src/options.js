@@ -11,7 +11,7 @@ const SECTIONS = [
   { id: 'ranking', num: '02', label: 'Ranking',       title: 'Ranking',
     blurb: 'The two things you can change that decide which card wins a close call.' },
   { id: 'runs',    num: '03', label: 'Where it runs', title: 'Where it runs',
-    blurb: 'Off by default, which is why installing asks for nothing.' },
+    blurb: 'On by default. Turn it off and Caddy waits to be asked.' },
   { id: 'data',    num: '04', label: 'Data',          title: 'Data',
     blurb: 'What Caddy keeps, where it keeps it, and how to take it with you.' }
 ];
@@ -26,10 +26,12 @@ const productIds = Object.keys(products).filter(k => !k.startsWith('_'))
 const VERSION = chrome.runtime.getManifest().version;
 
 let instances = [], valuations = {}, prefs = {}, blocked = [], activity = [], dropped = 0;
-// `auto` is the PERMISSION. `running` is whether a content script is actually
-// registered, which is the only thing that puts a dock on a page. They can
-// disagree, and saying so is the whole point of reading both.
-let auto = false, running = false, bytes = 0;
+// `auto` is what the reader ASKED for, a stored pref that defaults to on.
+// `running` is whether a content script is actually registered, which is the
+// only thing that puts a dock on a page. They can disagree -- Chrome's own
+// site-access control can withhold the host permission -- and saying so is the
+// whole point of reading both.
+let auto = true, permitted = true, running = false, bytes = 0;
 let section = 'cards';
 let detail = null;   // productId whose dialog is open, or null when it is shut
 // Catalogue filters. Everything here narrows the ADD A CARD list and nothing
@@ -60,7 +62,8 @@ async function load() {
 /** The worker owns the registration, so it is the only honest source for this. */
 async function readAuto() {
   const st = await chrome.runtime.sendMessage({ type: 'AUTO_STATE' }).catch(() => null);
-  auto = st ? !!st.granted : await chrome.permissions.contains({ origins: ['<all_urls>'] });
+  auto = st ? !!st.wanted : prefs.autoMode !== false;
+  permitted = st ? !!st.permitted : true;
   running = !!(st && st.registered);
   return st;
 }
@@ -402,17 +405,18 @@ function blockTies() {
 
 function blockModes() {
   const modes = [
-    { key: 'ask', label: 'Only when you ask', on: !auto,
-      desc: 'Nothing runs until you click the toolbar icon on a page.' },
     { key: 'auto', label: 'On every shop', on: auto,
-      desc: 'The dock appears by itself on any store you visit. It still never sends anything anywhere.' }
+      desc: 'The default. The dock appears by itself on any store you visit, and still never sends anything anywhere.' },
+    { key: 'ask', label: 'Only when you ask', on: !auto,
+      desc: 'Nothing appears on a page unless you click the toolbar icon.' }
   ];
-  // Granted but not registered: the switch says on and nothing happens. Say so,
-  // and offer the control that re-asserts it, rather than leaving the reader to
-  // guess between a broken extension and a page that simply does not qualify.
-  const broken = auto && !running ? `<div class="banner">
-      Automatic mode is allowed, but no content script is registered, so the dock
-      cannot appear on its own.
+  // Wanted but not running: the switch says on and nothing happens. Say which
+  // of the two reasons it is, rather than leaving the reader to guess between a
+  // broken extension and a page that simply does not qualify.
+  const broken = auto && !running ? `<div class="banner">${permitted
+    ? 'Automatic mode is on, but no content script is registered, so the dock cannot appear by itself.'
+    : 'Chrome is withholding site access for Caddy, so the dock cannot appear by itself. ' +
+      'Right-click the toolbar icon, and under "This can read and change site data" choose "On all sites".'}
       <button class="btn" data-retryauto="1">TRY AGAIN</button>
     </div>` : '';
   return broken + `<div class="grid modes">${modes.map(m => `
@@ -565,16 +569,17 @@ function render() {
 }
 
 // ---------- events ----------
-// chrome.permissions.request must run inside a user gesture, so this lives in the
-// click handler and is never called from render() or load().
+// A stored preference, not a permission request: <all_urls> is declared in the
+// manifest, so the browser has already granted it and there is nothing to
+// prompt for. Turning this off unregisters the content scripts, which is what
+// actually stops the dock appearing.
 async function setAuto(on) {
-  if (on) await chrome.permissions.request({ origins: ['<all_urls>'] });
-  else await chrome.permissions.remove({ origins: ['<all_urls>'] });
-  // Trust what is RUNNING, never the button, and never the permission on its
-  // own. A user can decline the prompt; and a granted permission whose content
-  // script never registered leaves the tile reading "selected" while nothing
-  // actually runs, which is exactly the failure this pair of flags exists to
-  // make visible.
+  prefs.autoMode = on;
+  await chrome.storage.local.set({ prefs });
+  // Trust what is RUNNING, never the button. A preference that is on while no
+  // content script is registered leaves the tile reading "selected" while
+  // nothing actually happens, which is exactly the failure these flags exist
+  // to make visible.
   await readAuto();
   render();
 }

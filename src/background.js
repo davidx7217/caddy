@@ -230,9 +230,23 @@ chrome.tabs.onRemoved.addListener(tabId => chrome.storage.session.remove(`tab:${
 const SCRIPT_ID = 'card-picker-auto';
 const CONTENT_FILES = ['src/hostmatch.js', 'src/content.js'];
 
-async function isAuto() {
-  return chrome.permissions.contains({ origins: ['<all_urls>'] });
+/**
+ * Automatic mode is a PREFERENCE now, not a permission.
+ *
+ * <all_urls> moved into the manifest so the dock works the moment the extension
+ * is installed. It used to be optional and off, which meant a new user saw
+ * nothing at all until they found a switch -- and the switch reported the
+ * permission rather than the registration, so it could not even tell them.
+ *
+ * Chrome's own site-access control can still withhold the permission, so both
+ * are checked: the user's preference, and whether the browser is honouring it.
+ * When they disagree, Options says NOT RUNNING rather than claiming success.
+ */
+async function autoWanted() {
+  const { prefs = {} } = await chrome.storage.local.get('prefs');
+  return prefs.autoMode !== false;              // absent means ON
 }
+const autoPermitted = () => chrome.permissions.contains({ origins: ['<all_urls>'] });
 
 const SCRIPT = {
   id: SCRIPT_ID,
@@ -259,12 +273,18 @@ async function isRegistered() {
  * appeared, and no way to tell which of the two was lying.
  */
 export async function syncAutoMode() {
-  const granted = await isAuto();
+  // Three separate facts, because any two of them can disagree and the reader
+  // needs to know WHICH one is wrong: what they asked for, whether the browser
+  // is honouring it, and whether anything is actually registered.
+  const wanted = await autoWanted();
+  const permitted = await autoPermitted();
+  const want = wanted && permitted;
   let registered = await isRegistered();
-  if (granted === registered) return { granted, registered };
+  const state = () => ({ wanted, permitted, registered });
+  if (want === registered) return state();
 
   try {
-    if (granted) await chrome.scripting.registerContentScripts([SCRIPT]);
+    if (want) await chrome.scripting.registerContentScripts([SCRIPT]);
     else await chrome.scripting.unregisterContentScripts({ ids: [SCRIPT_ID] });
   } catch (e) {
     // The known way this fails: a registration that outlived the worker but
@@ -273,12 +293,14 @@ export async function syncAutoMode() {
     // with a switch that is on and does nothing.
     try {
       await chrome.scripting.unregisterContentScripts({ ids: [SCRIPT_ID] });
-      if (granted) await chrome.scripting.registerContentScripts([SCRIPT]);
+      if (want) await chrome.scripting.registerContentScripts([SCRIPT]);
     } catch (e2) {
-      return { granted, registered: await isRegistered(), error: String(e2.message || e2) };
+      registered = await isRegistered();
+      return { ...state(), error: String(e2.message || e2) };
     }
   }
-  return { granted, registered: await isRegistered() };
+  registered = await isRegistered();
+  return state();
 }
 
 // A registration does not survive the extension being reloaded or updated, so
@@ -286,6 +308,10 @@ export async function syncAutoMode() {
 syncAutoMode().catch(() => {});
 chrome.permissions.onAdded.addListener(() => syncAutoMode().catch(() => {}));
 chrome.permissions.onRemoved.addListener(() => syncAutoMode().catch(() => {}));
+// The switch is a stored pref now, so a write to it has to re-assert too.
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === 'local' && changes.prefs) syncAutoMode().catch(() => {});
+});
 
 // First run goes to the setup flow, not to Options. Options is a settings page
 // -- it opens on a catalogue of fourteen cards with no explanation of what the
