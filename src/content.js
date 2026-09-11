@@ -410,10 +410,18 @@
         .alt { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 10px; }
         .alt h4 { font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
                   color: var(--muted); font-weight: 400; margin-bottom: 8px; }
-        .row { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 5px 0; }
-        .pin { cursor: pointer; border: 0; border-radius: 4px; background: var(--fill);
-               font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
-               padding: 6px 10px; color: var(--ink); white-space: nowrap; }
+        /* One line per card, always. The name is the only part allowed to
+           give way, because the RATE is the number being compared and the
+           button is the thing being clicked -- a layout that wraps "3.00%"
+           onto its own line has dropped the comparison to save the label. */
+        .row { display: flex; align-items: center; gap: 8px; padding: 5px 0; }
+        .alt-name { flex: 1; min-width: 0; overflow: hidden;
+                    text-overflow: ellipsis; white-space: nowrap; }
+        .alt-val { flex: none; font-variant-numeric: tabular-nums; }
+        .pin { flex: none; cursor: pointer; border: 0; border-radius: 4px;
+               background: var(--fill); font-size: 10px; letter-spacing: .1em;
+               text-transform: uppercase; padding: 6px 10px; color: var(--ink);
+               white-space: nowrap; }
         .pin:hover { background: var(--line); }
       </style>
       <div class="wrap">
@@ -430,11 +438,16 @@
           ${res.notes.slice(0, 1).map(n => `<div class="note">${esc(n.text)}</div>`).join('')}
           ${(unresolved && others.length) ? `
             <div class="alt">
-              <h4>Tied &mdash; pick one to use here from now on</h4>
+              <!-- The heading carries "always", so the buttons do not have to.
+                   Saying it twice cost about 45px of every row, which came out
+                   of the card names -- and the names are what you are choosing
+                   between. -->
+              <h4>Pick one to always use here</h4>
               ${[res.winner, ...others].map(c => `
                 <div class="row">
-                  <span>${esc(c.name)} &middot; ${money(c.value)}</span>
-                  <button class="pin" data-id="${esc(c.productId)}">Always use</button>
+                  <span class="alt-name">${esc(c.name)}</span>
+                  <span class="alt-val">${money(c.value)}</span>
+                  <button class="pin" data-id="${esc(c.productId)}">Use</button>
                 </div>`).join('')}
             </div>` : ''}
         </div>
