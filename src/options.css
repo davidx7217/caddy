@@ -126,7 +126,13 @@ h1 { font-size: 34px; font-weight: 400; letter-spacing: -.03em; line-height: 1.1
                    height: 1px; background: var(--line); }
 .card-row:last-child::after { display: none; }
 .card-row:hover { background: var(--surface); }
-.card-row:hover::after, .card-row:hover + .card-row::after { background: transparent; }
+/* Only the hovered row's OWN divider, which is the bottom edge of the hover
+   block. Not `:hover + .card-row::after` -- each row's ::after is its own
+   bottom line, so that hid the divider under the row BELOW the hovered one: a
+   line nowhere near the hover block, one row too far down. The line above the
+   block is the previous row's, and CSS has no previous-sibling selector short
+   of :has(), which needs Chrome 105 against a manifest that says 102. */
+.card-row:hover::after { background: transparent; }
 
 /* The row's clickable region. Everything but Remove opens the detail dialog. */
 .card-open { flex: 1; min-width: 0; display: flex; align-items: center; gap: 14px;

@@ -57,10 +57,12 @@
                height: 1px; background: var(--line); }
 .pick:last-child::after { display: none; }
 .pick:hover { background: var(--surface); }
-.pick:hover::after, .pick:hover + .pick::after { background: transparent; }
+/* The hovered row's own divider only. See the note in options.css: the `+`
+   form hid the line under the row BELOW this one, which is not an edge of
+   anything being highlighted. */
+.pick:hover::after { background: transparent; }
 .pick[aria-pressed="true"] { background: var(--fill); }
-.pick[aria-pressed="true"]::after,
-.pick[aria-pressed="true"] + .pick::after { background: transparent; }
+.pick[aria-pressed="true"]::after { background: transparent; }
 .pick .grow { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .pick .state { flex: none; font-size: 10px; letter-spacing: .12em; color: var(--muted); }
 .pick .caution { font-size: 11.5px; line-height: 1.45; color: var(--warn); max-width: 60ch; }
