@@ -145,20 +145,26 @@ anywhere -- the extension makes no network requests at all.
 `activeTab`
 
 ```
-When the user clicks the toolbar icon, Caddy needs the hostname of the tab they
-are on in order to identify the merchant, and needs to inject its overlay into
-that one page to display the recommendation. activeTab grants both for that
-single visit only, which is what allows the extension to be useful with no host
-permission granted at install.
+When the user clicks the toolbar icon, the popup needs the hostname of the tab
+they are on in order to name the merchant it is ranking for, and injects the
+content script into that one page so the answer comes from real page signals
+rather than a domain lookup. activeTab scopes both to that single visit.
+
+It still matters with <all_urls> declared, because a user can switch Caddy to
+"Only when you ask" in Settings, which unregisters the content scripts entirely.
+In that mode activeTab is the only access the toolbar click has.
 ```
 
 `scripting`
 
 ```
 Used to inject the content script that draws the recommendation overlay. Two
-cases: on a toolbar click, injected into the active tab for that visit only; and,
-if the user has turned on automatic mode, registered as a content script so the
-dock can appear on stores by itself. The script only reads page structure to
+cases: registered as a content script so the dock can appear on stores by
+itself, which is the default; and injected into one tab for one visit when the
+user clicks the toolbar icon, which is how it still works after they switch to
+"Only when you ask". That setting unregisters the scripts, and chrome.scripting
+is what both registers and unregisters them. The script only reads page structure
+to
 determine whether the page sells anything and whether it is a checkout. It reads
 no text the user has entered: the one place it touches an input's `value` is on
 submit and button inputs, where that attribute is the button's own label, and the
