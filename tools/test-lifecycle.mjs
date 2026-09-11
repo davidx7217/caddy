@@ -25,7 +25,13 @@ function harness(initialRespond, blocked = [], startHref = 'https://shop.example
   let throwOnSend = false;
 
   const fakeEl = () => new Proxy({}, { get(t, k) {
-    if (k === 'classList') return { add(){}, remove(){}, toggle(){}, contains(){return false} };
+    // The dock opens its panel by adding exactly one class, so watching for it
+    // is how a test can tell a dock that MOUNTED from one that also OPENED.
+    // Those are different products: a pill sitting in the corner, and a pill
+    // that threw a panel over the page you were reading.
+    if (k === 'classList') return {
+      add(c){ if (c === 'open') log.push('OPEN'); },
+      remove(){}, toggle(){}, contains(){return false} };
     // setProperty has to be a real function: content.js writes the overlay's
     // theme tokens through it, and a proxy that answers '' for every key
     // makes that call throw and the dock never mount.
@@ -188,6 +194,44 @@ const check = (name, got, want) => {
   h.summon();
   h.tick(500);
   check('the toolbar icon does nothing on a blocked host', h.log.includes('MOUNT'), false);
+}
+
+// 2d. What the dock does on an ordinary shop, which is the whole default
+// experience: it appears, and it stays shut. The panel is a thing the reader
+// asks for. Nothing here is new behaviour -- it had simply never been asserted,
+// and "the dock opens by itself on every shop" is the complaint that says so.
+{
+  const h = harness(() => ({ show: true, checkout: false }));
+  h.tick(1200);
+  check('a merchant page mounts the dock', h.log.filter(x=>x==='MOUNT').length, 1);
+  check('...and leaves the panel SHUT', h.log.includes('OPEN'), false);
+}
+// 2e. Checkout is the one place it opens itself, because that is the moment the
+// answer stops being a suggestion.
+{
+  const h = harness(() => ({ show: true, checkout: true }));
+  h.tick(1200);
+  check('a checkout page mounts', h.log.filter(x=>x==='MOUNT').length, 1);
+  check('...and opens the panel without being asked', h.log.includes('OPEN'), true);
+}
+// 2f. The toolbar icon opens it too, because a click IS the asking.
+{
+  const h = harness(() => ({ show: true, checkout: false }));
+  h.tick(1200);
+  check('the dock is shut before the icon is clicked', h.log.includes('OPEN'), false);
+  h.summon();
+  h.tick(200);
+  check('...and open after it', h.log.includes('OPEN'), true);
+}
+// 2g. Never fight the reader: one auto-open per route, so a panel they closed
+// stays closed while they keep shopping.
+{
+  const h = harness(() => ({ show: true, checkout: true }));
+  h.tick(1200);
+  const first = h.log.filter(x=>x==='OPEN').length;
+  h.tick(6000);
+  check('checkout opens the panel exactly once, not on every re-check',
+        [first, h.log.filter(x=>x==='OPEN').length], [1, 1]);
 }
 
 // 3. Slow client-rendered store: first miss then a hit on settle.
