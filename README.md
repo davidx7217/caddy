@@ -360,12 +360,19 @@ Client-rendered storefronts often expose nothing that early, so a miss is never
 conclusive and the content script keeps looking. Two ladders, because the two
 cases are different problems:
 
-- **On load**, re-checks at 400ms, 1.0s, 2.0s and 3.5s. hotels.com serves 25KB
-  with no JSON-LD, no `og:type`, no cart link and no price -- all of it arrives
-  with the framework -- so on sites like it the dock's speed IS the re-check's
-  speed. One fixed 2.5s wait made every such site take 2.5 seconds. The ladder
-  takes the first rung that hits.
-- **On a route change**, 400ms then 1.5s. The framework is already running, so
+- **On load**, re-checks at 300ms, 600ms, 1.0s, 1.5s, 2.2s and 3.5s -- close
+  together where pages tend to finish rendering, spread out after. hotels.com
+  serves 25KB with no JSON-LD, no `og:type`, no cart link and no price; all of
+  it arrives with the framework, so on sites like it the dock's speed IS the
+  re-check's speed. One fixed 2.5s wait made every such site take 2.5 seconds.
+  The ladder takes the first rung that hits.
+
+  Measured there 2026-09-11: DOMContentLoaded at 752ms, load at 2142ms, and the
+  only signal it ever produces is price text, appearing somewhere inside that
+  window. Nothing can put the dock up before a page says it is a shop. What is
+  ours is the gap between it saying so and the next time anything looks, and
+  that is what the rung spacing is for.
+- **On a route change**, 300ms, 700ms then 1.5s. The framework is already running, so
   signals appear quickly or not at all, and a long ladder there only delays
   unmounting a dock that has gone wrong. This is faster than the 2.5s it replaced.
 
