@@ -41,7 +41,7 @@ const WALLET = [
 const STUB = seed => `
 const store = ${JSON.stringify(seed)};
 globalThis.chrome = {
-  runtime: { getURL: p => '/' + p, getManifest: () => ({ version: '0.1.0' }), id: 'shot' },
+  runtime: { getURL: p => '/' + p, getManifest: () => ({ version: '1.0.0' }), id: 'shot' },
   storage: { local: {
     get: keys => Promise.resolve(Object.fromEntries(
       (Array.isArray(keys) ? keys : keys === null ? Object.keys(store) : [keys])

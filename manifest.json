@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Caddy",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Shows the best credit card to use on the site you're on. No account, no bank linking, no network calls.",
   "minimum_chrome_version": "102",
   "icons": {
