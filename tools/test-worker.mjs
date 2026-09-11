@@ -53,6 +53,46 @@ const eq = (name, got, want) => {
   await w.mod.syncAutoMode();
   eq('syncAutoMode is a no-op when the registry already matches the grant',
      w.log.registered.length, before);
+  eq('...and still reports the real state every time',
+     await w.mod.syncAutoMode(), { granted: true, registered: true });
+}
+
+{
+  // The failure that made this whole thing invisible. A registration outlived
+  // the worker, the getter did not report it, and registering hit a duplicate
+  // id -- which every call site swallowed. Options kept saying ALWAYS ON,
+  // because it was reading the PERMISSION, and no dock ever appeared.
+  //
+  // Asserted on the state left by the worker's OWN start-up sync, not by a
+  // later call. Written the other way first, it passed under a mutation that
+  // deleted the retry entirely: the start-up sync ate the failure, and the
+  // test's own second call then registered cleanly and looked like recovery.
+  const w = await startWorker({ granted: true, registerFails: 1 });
+  eq('a duplicate-id failure at start-up is recovered from, not swallowed',
+     w.registeredIds(), ['card-picker-auto']);
+  eq('...by clearing the stale registration and registering again',
+     w.log.registered.map(r => r[0]), ['register-failed', 'unregister', 'register']);
+}
+{
+  // When it genuinely cannot register, say so rather than reporting success.
+  const w = await startWorker({ granted: true, registerFails: 99 });
+  const st = await w.mod.syncAutoMode();
+  eq('an unrecoverable failure reports granted-but-not-running',
+     [st.granted, st.registered], [true, false]);
+  eq('...and carries the reason with it', typeof st.error, 'string');
+}
+{
+  // What Options asks. Asking is also the repair, because it re-asserts.
+  const w = await startWorker({ granted: true });
+  const st = await w.send({ type: 'AUTO_STATE' });
+  eq('AUTO_STATE reports both the grant and what is registered',
+     [st.granted, st.registered], [true, true]);
+}
+{
+  const w = await startWorker({ granted: false });
+  const st = await w.send({ type: 'AUTO_STATE' });
+  eq('...and reports both as off when nothing is granted',
+     [st.granted, st.registered], [false, false]);
 }
 
 // ---------- first run ----------

@@ -176,6 +176,14 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     return true;
   }
 
+  // What Options renders instead of guessing from the permission alone. The
+  // two can disagree, and when they do it is the registration that decides
+  // whether anything happens on a page.
+  if (msg.type === 'AUTO_STATE') {
+    syncAutoMode().then(sendResponse);
+    return true;
+  }
+
   if (msg.type === 'SET_POS') {
     chrome.storage.local.set({ overlayPos: msg.pos }).then(() => sendResponse({ ok: true }));
     return true;
@@ -226,24 +234,51 @@ async function isAuto() {
   return chrome.permissions.contains({ origins: ['<all_urls>'] });
 }
 
-/** Register or unregister to match the permission. Safe to call repeatedly. */
-export async function syncAutoMode() {
-  const want = await isAuto();
+const SCRIPT = {
+  id: SCRIPT_ID,
+  matches: ['<all_urls>'],
+  js: CONTENT_FILES,
+  runAt: 'document_idle'
+};
+
+/** What is ACTUALLY registered, which is the only thing that makes a dock appear. */
+async function isRegistered() {
   const existing = await chrome.scripting.getRegisteredContentScripts({ ids: [SCRIPT_ID] })
     .catch(() => []);
-  const have = existing.length > 0;
-  if (want === have) return want;
-  if (want) {
-    await chrome.scripting.registerContentScripts([{
-      id: SCRIPT_ID,
-      matches: ['<all_urls>'],
-      js: CONTENT_FILES,
-      runAt: 'document_idle'
-    }]);
-  } else {
-    await chrome.scripting.unregisterContentScripts({ ids: [SCRIPT_ID] });
+  return existing.length > 0;
+}
+
+/**
+ * Register or unregister to match the permission. Safe to call repeatedly.
+ *
+ * Returns the real state rather than the intended one, because those came apart
+ * and nobody could see it: Options read the PERMISSION and called that
+ * automatic mode, so the moment the grant existed it said ALWAYS ON whether or
+ * not a single content script was registered. Every call site swallowed the
+ * failure. The result was a setting that said it was on, a dock that never
+ * appeared, and no way to tell which of the two was lying.
+ */
+export async function syncAutoMode() {
+  const granted = await isAuto();
+  let registered = await isRegistered();
+  if (granted === registered) return { granted, registered };
+
+  try {
+    if (granted) await chrome.scripting.registerContentScripts([SCRIPT]);
+    else await chrome.scripting.unregisterContentScripts({ ids: [SCRIPT_ID] });
+  } catch (e) {
+    // The known way this fails: a registration that outlived the worker but
+    // that getRegisteredContentScripts did not report, so registering hits a
+    // duplicate id. Clear it and try once more rather than leaving the user
+    // with a switch that is on and does nothing.
+    try {
+      await chrome.scripting.unregisterContentScripts({ ids: [SCRIPT_ID] });
+      if (granted) await chrome.scripting.registerContentScripts([SCRIPT]);
+    } catch (e2) {
+      return { granted, registered: await isRegistered(), error: String(e2.message || e2) };
+    }
   }
-  return want;
+  return { granted, registered: await isRegistered() };
 }
 
 // A registration does not survive the extension being reloaded or updated, so

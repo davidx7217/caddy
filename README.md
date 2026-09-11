@@ -426,6 +426,20 @@ The tests now assert the opposite: reversing the wallet changes nothing, and bei
 first does not win a four-way tie. A tie the user has not deliberately settled is
 always shown.
 
+**Automatic mode reports what is RUNNING, not what was permitted.** Those are two
+different facts and they came apart. Options read `chrome.permissions.contains`
+and called that automatic mode, so the moment the grant existed it said ALWAYS
+ON -- whether or not `registerContentScripts` had ever succeeded. Every call site
+was `syncAutoMode().catch(() => {})`, so a failure went nowhere. The result was a
+switch that said it was on, a dock that never appeared, and nothing anywhere that
+could tell you which of the two was lying.
+
+`syncAutoMode()` returns `{ granted, registered, error }` now, Options renders
+both, and the header reads **NOT RUNNING** in warn when they disagree, with a
+TRY AGAIN that re-asserts the registration. The known failure -- a registration
+that outlived the worker, so registering hits a duplicate id -- is recovered from
+by clearing and re-registering rather than swallowed.
+
 **The UI must not claim what the data does not say.** The options page hard-coded
 "all seed rates are unverified" long after every card was verified, telling the
 user to go edit `cards.json`. The freshness chip is now derived from the owned

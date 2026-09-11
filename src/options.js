@@ -26,7 +26,10 @@ const productIds = Object.keys(products).filter(k => !k.startsWith('_'))
 const VERSION = chrome.runtime.getManifest().version;
 
 let instances = [], valuations = {}, prefs = {}, blocked = [], activity = [], dropped = 0;
-let auto = false, bytes = 0;
+// `auto` is the PERMISSION. `running` is whether a content script is actually
+// registered, which is the only thing that puts a dock on a page. They can
+// disagree, and saying so is the whole point of reading both.
+let auto = false, running = false, bytes = 0;
 let section = 'cards';
 let detail = null;   // productId whose dialog is open, or null when it is shut
 // Catalogue filters. Everything here narrows the ADD A CARD list and nothing
@@ -49,9 +52,17 @@ async function load() {
   prefs = s.prefs || {};
   prefs.categoryDefaults = prefs.categoryDefaults || {};
   if (s.theme === 'light' || s.theme === 'dark') theme = s.theme;
-  auto = await chrome.permissions.contains({ origins: ['<all_urls>'] });
+  await readAuto();
   bytes = await chrome.storage.local.getBytesInUse(null);
   applyFont();
+}
+
+/** The worker owns the registration, so it is the only honest source for this. */
+async function readAuto() {
+  const st = await chrome.runtime.sendMessage({ type: 'AUTO_STATE' }).catch(() => null);
+  auto = st ? !!st.granted : await chrome.permissions.contains({ origins: ['<all_urls>'] });
+  running = !!(st && st.registered);
+  return st;
 }
 
 function applyFont() {
@@ -396,7 +407,15 @@ function blockModes() {
     { key: 'auto', label: 'On every shop', on: auto,
       desc: 'The dock appears by itself on any store you visit. It still never sends anything anywhere.' }
   ];
-  return `<div class="grid modes">${modes.map(m => `
+  // Granted but not registered: the switch says on and nothing happens. Say so,
+  // and offer the control that re-asserts it, rather than leaving the reader to
+  // guess between a broken extension and a page that simply does not qualify.
+  const broken = auto && !running ? `<div class="banner">
+      Automatic mode is allowed, but no content script is registered, so the dock
+      cannot appear on its own.
+      <button class="btn" data-retryauto="1">TRY AGAIN</button>
+    </div>` : '';
+  return broken + `<div class="grid modes">${modes.map(m => `
     <button class="mode${m.on ? ' on' : ''}" data-auto="${m.key}" aria-pressed="${m.on}">
       <div class="mode-state">${m.on ? '&#9632; SELECTED' : '&#9633; SELECT'}</div>
       <div class="mode-label">${esc(m.label)}</div>
@@ -530,7 +549,8 @@ function render() {
   const unverified = ownedProducts().filter(p => !p.verified).length;
   const date = ratesDate();
   $('#headmeta').innerHTML =
-    `<div>MODE: ${auto ? 'ALWAYS ON' : 'ON REQUEST'}</div>` +
+    `<div${auto && !running ? ' class="warn"' : ''}>MODE: ${
+      auto ? (running ? 'ALWAYS ON' : 'NOT RUNNING') : 'ON REQUEST'}</div>` +
     (date ? `<div>RATES ${esc(date)}</div>` : '') +
     (unverified ? `<div class="warn">${unverified} CARD${unverified > 1 ? 'S' : ''} UNVERIFIED</div>` : '');
 
@@ -550,10 +570,12 @@ function render() {
 async function setAuto(on) {
   if (on) await chrome.permissions.request({ origins: ['<all_urls>'] });
   else await chrome.permissions.remove({ origins: ['<all_urls>'] });
-  // Trust the permission, never the button. A user can decline the prompt, and
-  // rendering from what we asked for rather than from what we got would leave the
-  // tile reading "selected" while nothing actually runs.
-  auto = await chrome.permissions.contains({ origins: ['<all_urls>'] });
+  // Trust what is RUNNING, never the button, and never the permission on its
+  // own. A user can decline the prompt; and a granted permission whose content
+  // script never registered leaves the tile reading "selected" while nothing
+  // actually runs, which is exactly the failure this pair of flags exists to
+  // make visible.
+  await readAuto();
   render();
 }
 
@@ -630,6 +652,16 @@ document.addEventListener('click', e => {
   if (d.clearactivity) { activity = []; commit('activity'); }
   if (d.activitylog) { prefs.activityLog = d.activitylog === 'on'; commit('prefs'); }
   if (d.auto) { setAuto(d.auto === 'auto'); }
+  if (d.retryauto) {
+    readAuto().then(st => {
+      if (!running) {
+        flash('Still not registered' + (st && st.error ? `: ${st.error}` : '.') +
+              ' Reload Caddy at chrome://extensions and open this page again.', true);
+      }
+      render();
+    });
+    return;
+  }
   if (d.export) { exportSettings(); }
   if (d.import) { $('#importfile').click(); }
 });

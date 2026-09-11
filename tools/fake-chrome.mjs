@@ -42,8 +42,8 @@ const area = (initial = {}) => {
  * @param tabSendFails make chrome.tabs.sendMessage reject, which is what an
  *                     unanswered OPEN looks like from the worker's side
  */
-export function makeChrome({ granted = false, local = {},
-                             injectFails = false, tabSendFails = false } = {}) {
+export function makeChrome({ granted = false, local = {}, injectFails = false,
+                             tabSendFails = false, registerFails = 0 } = {}) {
   const localArea = area(local);
   const sessionArea = area();
   const onMessage = [], onInstalled = [], onRemoved = [];
@@ -88,6 +88,14 @@ export function makeChrome({ granted = false, local = {},
       getRegisteredContentScripts: ({ ids } = {}) =>
         Promise.resolve(scripts.filter(s => !ids || ids.includes(s.id))),
       registerContentScripts(list) {
+        // registerFails counts DOWN, so 1 models the real case: a stale
+        // registration the getter did not report, which fails once on a
+        // duplicate id and succeeds after it is cleared.
+        if (registerFails > 0) {
+          registerFails--;
+          log.registered.push(['register-failed', list.map(s => s.id)]);
+          return Promise.reject(new Error('Duplicate script ID \'card-picker-auto\''));
+        }
         scripts = scripts.concat(list);
         log.registered.push(['register', list.map(s => s.id)]);
         return Promise.resolve();
