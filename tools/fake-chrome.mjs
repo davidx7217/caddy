@@ -154,7 +154,9 @@ export function makeChrome({ granted = true, local = {}, injectFails = false,
     /** Flip the grant the way Options does, and fire what Chrome fires. */
     grant() { granted = true; permAdded.forEach(fn => fn({ origins: ['<all_urls>'] })); },
     revoke() { granted = false; permRemoved.forEach(fn => fn({ origins: ['<all_urls>'] })); },
-    registeredIds: () => scripts.map(s => s.id)
+    registeredIds: () => scripts.map(s => s.id),
+    /** The full registrations, for asserting runAt and file order. */
+    registeredScripts: () => scripts.slice()
   };
 }
 

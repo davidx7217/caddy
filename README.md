@@ -349,8 +349,15 @@ carries both dollar figures and the words "buy now". Signals captured from live 
 (ihg.com, allbirds.com, en.wikipedia.org) are pinned as tests -- when you change the
 rule, those are what tell you if you broke it.
 
-Client-rendered storefronts often expose nothing at `document_idle`, so the content
-script re-checks once after 2.5s and then stops.
+**The dock injects at `document_end`, not `document_idle`.** `idle` waits for the
+LOAD event -- every image, script and ad tag -- and on a retail homepage that is
+seconds after the DOM is usable. Measured 2026-09-11 on bestbuy.com:
+DOMContentLoaded ended at 3.77s, load at 7.15s. `idle` was costing 3.4 seconds of
+a dock that already had everything it needed.
+
+Client-rendered storefronts often expose nothing that early, so the content
+script re-checks once after 2.5s and then stops. That re-check is what makes the
+earlier injection safe: a first miss is never conclusive.
 
 **The panel opens itself at checkout.** `isCheckoutPage()` takes any one of:
 

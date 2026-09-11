@@ -121,8 +121,10 @@
   });
 
   function start() {
-    // Client-rendered storefronts often have nothing to detect at document_idle,
-    // so a single miss is never conclusive -- always re-check once it settles.
+    // Runs at document_end, so the dock appears as soon as the DOM is usable
+    // rather than after every image and ad tag has loaded. Client-rendered
+    // storefronts often have nothing to detect that early, so a single miss is
+    // never conclusive -- always re-check once it settles.
     evaluate(() => setTimeout(() => evaluate(null), SETTLE_MS));
 
     // Checkout is nearly always a client-side route change, which fires no page

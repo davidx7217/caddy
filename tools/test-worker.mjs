@@ -31,6 +31,13 @@ const eq = (name, got, want) => {
      w.registeredIds(), ['card-picker-auto']);
   eq('...for both content files, under one id',
      w.log.registered[0], ['register', ['card-picker-auto']]);
+  // Pinned because it is a measured decision that would regress silently.
+  // document_idle waits for the LOAD event; on bestbuy.com that was 3.4s after
+  // the DOM was usable, which is the whole of "why is the pill slow".
+  eq('...at document_end, so the dock does not wait for every image on the page',
+     w.registeredScripts()[0].runAt, 'document_end');
+  eq('...injecting the blocklist rule before the script that reads the DOM',
+     w.registeredScripts()[0].js, ['src/hostmatch.js', 'src/content.js']);
   eq('...and reports itself wanted, permitted and running',
      await w.mod.syncAutoMode(), { wanted: true, permitted: true, registered: true });
 }

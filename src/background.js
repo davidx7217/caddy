@@ -252,7 +252,17 @@ const SCRIPT = {
   id: SCRIPT_ID,
   matches: ['<all_urls>'],
   js: CONTENT_FILES,
-  runAt: 'document_idle'
+  // document_end, not document_idle. `idle` waits for the LOAD event -- every
+  // image, script and ad tag on the page -- and on a retail homepage that is
+  // seconds after the DOM is usable. Measured 2026-09-11 on bestbuy.com:
+  // DOMContentLoaded ended at 3.77s and load at 7.15s, so `idle` was costing
+  // 3.4 seconds of a dock that had everything it needed to render.
+  //
+  // `end` runs once the DOM is complete, which is all collectSignals needs.
+  // The cost is that a client-rendered store may have less markup this early,
+  // and that is already covered: a first miss is never conclusive, and the
+  // SETTLE re-check 2.5s later catches anything that hydrated late.
+  runAt: 'document_end'
 };
 
 /** What is ACTUALLY registered, which is the only thing that makes a dock appear. */
