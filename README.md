@@ -126,7 +126,7 @@ src/
   hostmatch.js      classic script; the ONLY copy of the blocklist rule
   background.js     service worker: loads data, runs the engine, caches per tab
   content.js        shadow-DOM overlay. Dumb renderer, no logic
-  popup.js/.html    hands off to the overlay; renders only where it cannot
+  popup.js/.html    what the toolbar icon opens: the ranking, and Settings
   options.js/.html  four-section settings page: cards, ranking, where it runs, data
   setup.js          what the setup flow DECIDES. No DOM, no chrome.*, testable
   welcome.js/.html  first-run setup: what it is, your cards, tuning, the permission
@@ -269,6 +269,18 @@ an ES module, and this has to run before any DOM is read. It is the ONLY copy.
 browser never loaded, so the tested version was not the executing version. That is
 the same class of drift as a rule the tests exercise and the browser never runs.
 The assertions moved with the code, into `test-lifecycle.mjs`.
+
+**The toolbar icon opens the popup. That is all it does.** It does not mount the
+dock and it does not open the dock's panel. For one release it did: the popup
+injected the overlay and closed itself, on the reasoning that the overlay is a
+surface this project fully controls and a browser popup is not. That reasoning
+was true and still wrong, because the popup held the only Settings button in the
+product -- so with automatic mode on there was no way to reach Settings at all.
+
+The dock is what **automatic mode** puts on a page. If it is not appearing, the
+answer is Settings -> Where it runs, not a click on the toolbar. Those are two
+surfaces answering two different questions: the icon means "tell me about this
+page, now", and the dock means "you are shopping, here is the card".
 
 **The extension does not announce itself to the page.** Its own privacy claim cuts
 both ways: a merchant that can tell you are running a card optimiser can price

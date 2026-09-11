@@ -151,37 +151,28 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     return true;
   }
 
-  // The popup asks for this the moment it opens. It cannot call
-  // chrome.scripting itself without duplicating CONTENT_FILES, and one copy of
-  // that list is the point.
+  // The popup asks for this so it can answer from real page signals rather than
+  // a table lookup. It cannot call chrome.scripting itself without duplicating
+  // CONTENT_FILES, and one copy of that list is the point.
   //
   // The click that opened the popup granted activeTab for this tab, which is
   // enough to inject for this visit only: no host permission, no prompt,
   // nothing that persists past the page.
+  //
+  // It does NOT tell the dock to open. The toolbar icon's surface is the popup;
+  // the dock is what automatic mode puts on the page, and conflating the two is
+  // what left the popup closing itself on every site it could inject into.
   if (msg.type === 'INJECT') {
     (async () => {
       try {
         await chrome.scripting.executeScript({ target: { tabId: msg.tabId }, files: CONTENT_FILES });
+        sendResponse({ ok: true });
       } catch (e) {
         // Chrome refuses its own pages, the Web Store and the PDF viewer. The
-        // popup stays open and renders the ranking itself.
+        // popup answers from the merchant table instead.
         sendResponse({ ok: false });
-        return;
       }
-      // Injected. Tell it to open rather than waiting for the checkout
-      // heuristic -- the user asked for this by clicking.
-      try { await chrome.tabs.sendMessage(msg.tabId, { type: 'OPEN' }); } catch (e) {}
-      sendResponse({ ok: true });
     })();
-    return true;
-  }
-
-  // The overlay's Settings control. A content script cannot open the options
-  // page itself, and with automatic mode on the reader may never open the popup
-  // that used to be the only way in.
-  if (msg.type === 'OPEN_OPTIONS') {
-    chrome.runtime.openOptionsPage();
-    sendResponse({ ok: true });
     return true;
   }
 

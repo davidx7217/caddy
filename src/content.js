@@ -75,7 +75,6 @@
   let mounted = null;      // { open, destroy } once the dock exists
   let everMounted = false; // once true, never stop watching this page
   let autoOpened = false;  // at most one auto-open per page or SPA route
-  let summoned = false;    // the toolbar icon was clicked; show, do not judge
   let misses = 0;
   let lastUrl = location.href;
   let poll = null;
@@ -113,26 +112,6 @@
   // made the only control they have over the extension look broken. Unblocking
   // is handled by the same path, so removing an entry brings the dock back
   // without a reload too.
-  // The toolbar icon. background.js injects this file and then sends OPEN; on a
-  // page where it was already running the injection is a no-op and this is the
-  // only thing that happens.
-  chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-    if (!msg || msg.type !== 'OPEN') return;
-    // Always answer. An unanswered message makes the promise form of
-    // tabs.sendMessage REJECT on the worker's side, which looked exactly like a
-    // refused injection and put a "cannot run on this page" badge on pages that
-    // were working perfectly.
-    sendResponse({ ok: true });
-
-    if (mounted) { mounted.open(); return; }
-    // The blocklist read that sets `started` is asynchronous in the browser,
-    // and the worker sends OPEN as soon as the script has evaluated -- so this
-    // can arrive first. Record the intent either way: start() evaluates
-    // immediately, and on a blocked host it never runs, which is the point.
-    summoned = true;
-    if (started) evaluate();
-  });
-
   chrome.storage.onChanged.addListener((changes, area) => {
     if (area !== 'local') return;
     if (changes.blocked) applyBlocklist(changes.blocked.newValue || []);
@@ -198,9 +177,7 @@
       res => {
         if (!res || !res.winner) return;
 
-        // res.show is a guess about whether this page sells anything. The
-        // toolbar click is not a guess, so it overrides it.
-        if (!res.show && !summoned) {
+        if (!res.show) {
           misses++;
           // Sites that never sell anything -- mail, docs, dashboards -- change
           // their URL constantly. Stop re-evaluating them.
@@ -211,15 +188,9 @@
 
         misses = 0;
         if (!mounted) { mounted = render(res); everMounted = true; }
-        if (summoned) {
-          summoned = false;
-          mounted.open();
-        } else if (res.checkout && !autoOpened) {
-          // Open itself at the moment of payment, but never fight the user: if
-          // they close it, it stays closed until the next route.
-          autoOpened = true;
-          mounted.open();
-        }
+        // Open itself at the moment of payment, but never fight the user: if
+        // they close it, it stays closed until the next route.
+        if (res.checkout && !autoOpened) { autoOpened = true; mounted.open(); }
       });
   }
 
@@ -422,14 +393,6 @@
         .eyebrow { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
         .guess { opacity: .6; }
         .x { cursor: pointer; border: 0; background: none; color: var(--muted); font-size: 16px; line-height: 1; padding: 0 2px; }
-        /* The way into Settings. It has to be HERE, on the overlay, because
-           the toolbar click hands off to this panel and closes the popup that
-           used to carry it -- with automatic mode on, a reader may never open
-           that popup at all. */
-        .top-acts { display: flex; align-items: baseline; gap: 10px; flex: none; }
-        .cog { cursor: pointer; border: 0; background: none; padding: 0; color: var(--muted);
-               font-size: 10px; letter-spacing: .1em; text-transform: uppercase; }
-        .cog:hover, .x:hover { color: var(--ink); }
         .x:hover { color: var(--ink); }
         .name { font-size: 15px; font-weight: 600; letter-spacing: -.01em; line-height: 1.3; margin-top: 8px; }
         .rate { font-size: 12.5px; font-weight: 600; margin-top: 2px; }
@@ -455,10 +418,7 @@
         <div class="panel" role="dialog" aria-label="Card recommendation">
           <div class="top">
             <span class="eyebrow">${esc((res.category || 'other').replace(/_/g, ' '))}${res.categorySource === 'inferred' ? ' <span class="guess">&middot; guess</span>' : ''}</span>
-            <span class="top-acts">
-              <button class="cog" title="Open Caddy settings">Settings</button>
-              <button class="x" title="Close" aria-label="Close">&times;</button>
-            </span>
+            <button class="x" title="Close" aria-label="Close">&times;</button>
           </div>
           <div class="name">${esc(res.winner.name)}</div>
           <div class="rate">${esc(res.winner.reason)} &middot; ${money(res.winner.value)} back</div>
@@ -488,9 +448,6 @@
     const icon = root.querySelector('.icon');
     const grip = root.querySelector('.grip');
 
-    // A content script cannot call chrome.runtime.openOptionsPage, so the
-    // worker does it. Same reason INJECT lives there.
-    root.querySelector('.cog').addEventListener('click', () => send({ type: 'OPEN_OPTIONS' }));
 
     icon.addEventListener('click', () => {
       const open = wrap.classList.toggle('open');

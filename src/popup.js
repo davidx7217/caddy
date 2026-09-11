@@ -27,37 +27,16 @@ $('#opts').addEventListener('click', () => chrome.runtime.openOptionsPage());
 
 (async () => {
   // tabs.query works without the "tabs" permission; only url/title are gated,
-  // and opening this popup IS an action invocation, so activeTab covers them.
+  // and we never need them -- the content script already told the worker.
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
-  // ---------- hand off to the in-page overlay, and get out of the way ----------
-  //
-  // This popup is a FALLBACK, not the main surface. A browser popup is a native
-  // window Chrome draws: its square corners, border and shadow are outside any
-  // stylesheet this extension owns, and there is no API to change them. The
-  // overlay is ours end to end, so wherever it can run, it wins.
-  //
-  // Chrome refuses injection on its own pages, the Web Store, the PDF viewer,
-  // view-source:, other extensions' pages, and file:// without the file-access
-  // grant. On those -- and only those -- this popup stays open and renders the
-  // ranking itself, which is why it still exists at all.
-  //
-  // Doing this from the popup rather than from chrome.action.onClicked is what
-  // avoids the "tabs" permission: knowing in advance which tabs are injectable
-  // means reading every tab's URL, and that prompt says "read your browsing
-  // history" at install. This costs a brief flash of an empty popup instead.
-  if (tab && tab.id != null) {
-    const { instances = [] } = await chrome.storage.local.get('instances');
-    // Nothing to recommend without a wallet, so send them where they build one.
-    if (!instances.length) { chrome.runtime.openOptionsPage(); window.close(); return; }
-
-    const done = await chrome.runtime.sendMessage({ type: 'INJECT', tabId: tab.id });
-    if (done && done.ok) { window.close(); return; }
-  }
-
+  // Opening this popup IS an action invocation, which grants activeTab for this
+  // tab -- so tab.url is readable here with no host permission at all. Before
+  // that grant existed this was always blank, and every site with no content
+  // script read as "no merchant detected".
   // Only http(s) has a hostname worth showing. On chrome:// and on the
   // extension's own pages, new URL().hostname is the extension ID, which is how
-  // this popup once ended up titled with a block of random letters.
+  // the popup ended up titled with a block of random letters.
   let host = '';
   try {
     const u = tab && tab.url ? new URL(tab.url) : null;
@@ -67,11 +46,24 @@ $('#opts').addEventListener('click', () => chrome.runtime.openOptionsPage());
   const cached = async () =>
     tab ? (await chrome.storage.session.get(`tab:${tab.id}`))[`tab:${tab.id}`] : null;
 
-  // Reaching here means injection was refused, so no content script will ever
-  // run on this page and nothing is cached for it. The merchant table alone
-  // still answers, which on a chrome:// page is the everything-else ranking.
   let res = await cached();
-  if (!res) res = await chrome.runtime.sendMessage({ type: 'RECOMMEND', hostname: host });
+
+  // Nothing cached means no content script ran here: automatic mode is off, or
+  // this page loaded before it was granted. activeTab lets us inject for this
+  // visit only, which both mounts the dock and produces a real signal-based
+  // answer instead of a table lookup.
+  if (!res && tab) {
+    const done = await chrome.runtime.sendMessage({ type: 'INJECT', tabId: tab.id });
+    if (done && done.ok) {
+      for (let i = 0; i < 8 && !res; i++) {
+        await new Promise(r => setTimeout(r, 100));
+        res = await cached();
+      }
+    }
+    // Injection is refused on chrome:// pages and the Web Store, and a page can
+    // simply be slow. The merchant table alone still answers for a known domain.
+    if (!res) res = await chrome.runtime.sendMessage({ type: 'RECOMMEND', hostname: host });
+  }
 
   if (!res || !res.all.length) {
     $('#sub').textContent = 'No cards added yet.';

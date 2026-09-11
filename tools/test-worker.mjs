@@ -75,8 +75,12 @@ const eq = (name, got, want) => {
   eq('...injects both content files, in order',
      w.log.injected[0].files, ['src/hostmatch.js', 'src/content.js']);
   eq('...into the tab it was asked about', w.log.injected[0].target, { tabId: 7 });
-  eq('...and then tells the script to open, rather than waiting for checkout',
-     w.log.sentToTab, [{ tabId: 7, msg: { type: 'OPEN' } }]);
+  // The popup injects to get a real answer, NOT to summon the dock. The toolbar
+  // icon's surface is the popup; the dock belongs to automatic mode. Conflating
+  // them is what left the popup closing itself on every injectable site, taking
+  // the only route to Settings with it.
+  eq('...and tells the page nothing, because the dock is not the icon\'s job',
+     w.log.sentToTab, []);
 }
 {
   // Chrome refuses its own pages, the Web Store and the PDF viewer. The popup
@@ -84,15 +88,6 @@ const eq = (name, got, want) => {
   const w = await startWorker({ injectFails: true });
   const res = await w.send({ type: 'INJECT', tabId: 7 });
   eq('a refused injection answers false rather than throwing', res, { ok: false });
-  eq('...and sends OPEN to nothing', w.log.sentToTab, []);
-}
-{
-  // The bug this pins: content.js used to ignore OPEN, so tabs.sendMessage
-  // rejected, and the worker read a working page as a refused injection.
-  const w = await startWorker({ tabSendFails: true });
-  const res = await w.send({ type: 'INJECT', tabId: 7 });
-  eq('an unanswered OPEN does NOT turn a successful injection into a failure',
-     res, { ok: true });
 }
 
 // ---------- recommendations and the per-tab cache ----------
@@ -104,6 +99,10 @@ const WALLET = [{ productId: 'chase-freedom-unlimited', config: {} },
   eq('RECOMMEND ranks against the real cards.json', res.category, 'dining');
   eq('...and picks the 3x dining card over the 2% flat',
      res.winner.productId, 'chase-freedom-unlimited');
+  // The popup titles itself with res.hostname. Without it the header reads
+  // "No merchant detected" over a body that has correctly named the merchant.
+  eq('...and carries the hostname the popup titles itself with',
+     res.hostname, 'doordash.com');
 }
 {
   const w = await startWorker({ local: { instances: WALLET } });
@@ -136,23 +135,19 @@ const WALLET = [{ productId: 'chase-freedom-unlimited', config: {} },
 
 // ---------- reaching Settings ----------
 {
-  // The overlay's Settings control goes through the worker, because a content
-  // script cannot open the options page itself.
-  const w = await startWorker({ local: { instances: WALLET } });
-  const res = await w.send({ type: 'OPEN_OPTIONS' });
-  eq('OPEN_OPTIONS opens the options page', [res, w.log.options], [{ ok: true }, 1]);
-}
-{
-  // A source-level guard, and deliberately so. The toolbar click hands off to
-  // the overlay and closes the popup, so for one release the ONLY route to
-  // Settings was a popup that never stayed open -- with automatic mode on, a
-  // reader could not reach their own settings at all. Nothing caught it,
-  // because every surface still worked in isolation. What was missing was the
-  // claim that a route EXISTS.
+  // A source-level guard, and deliberately so. For one release the toolbar click
+  // handed off to the overlay and closed the popup -- and the popup held the only
+  // Settings button in the product, so with automatic mode on a reader could not
+  // reach their own settings at all. Nothing caught it, because every surface
+  // still worked in isolation. What went untested was the claim that a route
+  // EXISTS. A grep is a poor test of behaviour and the right test of reachability.
   const src = f => readFileSync(new URL(`../src/${f}`, import.meta.url), 'utf8');
-  eq('the overlay carries a way into Settings', src('content.js').includes('OPEN_OPTIONS'), true);
-  eq('...and so does the popup, which is what runs where the overlay cannot',
-     src('popup.js').includes('openOptionsPage'), true);
+  eq('the popup opens Settings', src('popup.js').includes('openOptionsPage'), true);
+  eq('...and the popup is what the toolbar icon shows',
+     JSON.parse(readFileSync(new URL('../manifest.json', import.meta.url), 'utf8'))
+       .action.default_popup, 'src/popup.html');
+  eq('...and it never closes itself, which is what took Settings away',
+     src('popup.js').includes('window.close()'), false);
 }
 
 // ---------- the activity log ----------

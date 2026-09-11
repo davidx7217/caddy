@@ -605,36 +605,32 @@ than squashing.
 
 ### Toolbar icon
 
-**The click's job is to open the in-page overlay, not a popup.** A browser popup
-is a native window Chrome draws: its square corners, border and shadow sit
-outside any stylesheet this extension owns, and there is no API to change them
--- see the Chromium issue "Cannot change extensions' popup's shape". The overlay
-is ours end to end, so wherever it can run, it wins.
+**One click, one surface: the popup.** The icon opens `src/popup.html` and that
+is all it does. It does not mount the dock, and it does not open the dock's
+panel.
 
-`manifest.json` still declares a `default_popup`, and `src/popup.html` opens for
-a few milliseconds before closing itself. That is deliberate. The alternative --
-`chrome.action.onClicked` plus per-tab `setPopup` -- has to know in advance which
-tabs are injectable, which means reading every tab's URL, which means the `tabs`
-permission, which Chrome describes at install as **"read your browsing
-history"**. This extension's whole pitch is that installing asks for nothing. A
-brief flash is the cheaper price.
+This was tried the other way round and it was a mistake worth recording. For one
+release the popup injected the overlay and closed itself, on the reasoning that
+a browser popup is native chrome no stylesheet can reach while the overlay is
+ours end to end. That reasoning is still true and still did not justify it:
 
-So the popup, on open:
+- The popup held the only Settings button in the product, so closing it removed
+  every route into Settings that this extension ships. With automatic mode on, a
+  reader never saw the popup at all.
+- It conflated two surfaces that answer two different questions. The icon means
+  "tell me about this page, now". The dock means "you are shopping, here is the
+  card". One is asked for; the other arrives.
+- It made the icon the way to summon the dock, which taught the wrong thing: the
+  dock is what **automatic mode** puts on a page, and if it is not appearing the
+  answer is that setting, not a click.
 
-1. **No cards** -> opens Options and closes. Flashing an empty ranking at someone
-   who has not built a wallet answers nothing.
-2. **Injection succeeds** -> the overlay mounts, is told to `OPEN`, and the popup
-   closes. This is the normal path on every http(s) page.
-3. **Injection refused** -> the popup stays and renders the ranking itself. This
-   is the only reason it still exists.
+**When a surface takes over another surface's job, it inherits that surface's
+responsibilities and not just its content.** The cost of getting that wrong is
+not a worse layout, it is a setting nobody can reach.
 
-Chrome refuses `chrome://` pages, the Web Store, the PDF viewer, `view-source:`,
-other extensions' pages, and `file://` without the file-access grant. That list
-is the browser's and no permission changes it.
-
-**The click is an explicit request, so it overrides `res.show`** -- that flag is
-a guess about whether a page sells anything, and the icon is not a guess. It does
-**not** override the blocklist.
+The popup still injects the content script, but only to answer from real page
+signals rather than a table lookup. Mounting the dock is a side effect of the
+script running, on a page that qualifies, not the point of the click.
 
 ### Popup
 
@@ -655,18 +651,6 @@ The winning row is marked only when `resolvedBy === 'clear_winner'`, with a
 `--fill` ground at `--r-md` and nothing else.
 
 ### Injected overlay
-
-**The panel carries the way into Settings.** A micro-cap `Settings` beside the
-close button, which messages the worker, because a content script cannot open
-the options page itself.
-
-It has to live here, and that is the lesson rather than the detail. When the
-toolbar click was handed to the overlay, the popup that used to carry the only
-Settings button started closing itself on every injectable page -- so with
-automatic mode ON, a reader could not reach their own settings at all. Every
-surface still worked in isolation, which is why nothing caught it. **When a
-surface takes over another surface's job, it inherits that surface's
-responsibilities, not just its content.**
 
 The hard one. Markup and CSS are template strings inside `src/content.js`, in a
 **closed shadow root**, on a page the extension does not control.

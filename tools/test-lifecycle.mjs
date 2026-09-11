@@ -21,7 +21,6 @@ function harness(initialRespond, blocked = [], startHref = 'https://shop.example
   let href = startHref;
   let respond = initialRespond || (() => ({ show: false }));
   const onChangedFns = [];
-  const onMessageFns = [];
   let throwOnSend = false;
 
   const fakeEl = () => new Proxy({}, { get(t, k) {
@@ -78,8 +77,6 @@ function harness(initialRespond, blocked = [], startHref = 'https://shop.example
         onChanged: { addListener: fn => onChangedFns.push(fn) }
       },
       runtime: {
-      // The toolbar icon injects this file and then sends OPEN.
-      onMessage: { addListener: fn => onMessageFns.push(fn) },
       id: 'test-extension-id',   // absent once the extension is reloaded
       lastError: null,
       sendMessage(msg, cb) {
@@ -129,14 +126,7 @@ function harness(initialRespond, blocked = [], startHref = 'https://shop.example
            isBlocked: (h, list) => sandbox.__cpIsBlockedHost(h, list),
            setBlocked: list => onChangedFns.forEach(fn =>
              fn({ blocked: { newValue: list } }, 'local')),
-           // What clicking the toolbar icon does. Returns whether the script
-           // answered: an unanswered message makes the worker's sendMessage
-           // reject, which it then reads as "cannot run on this page".
-           summon: () => {
-             let answered = false;
-             onMessageFns.forEach(fn => fn({ type: 'OPEN' }, {}, () => { answered = true; }));
-             return answered;
-           } };
+ };
 }
 
 let pass=0, fail=0;
@@ -177,23 +167,13 @@ const check = (name, got, want) => {
   check('polling never stops once the site has shown the dock', h.pollingLive(), true);
 }
 
-// 2b. The toolbar icon on a page the heuristic rejected: an explicit request
-// beats the guess, so the dock mounts and opens anyway.
+// 2b. A page that sells nothing gets no dock, and no amount of waiting changes
+// that. The toolbar icon does not override it either: that icon opens the POPUP,
+// which is its own surface, and the dock is what automatic mode puts on a page.
 {
   const h = harness(() => ({ show: false }));
-  h.tick(1200);
-  check('a non-merchant page does not mount on its own', h.log.includes('MOUNT'), false);
-  check('the toolbar icon always answers the worker', h.summon(), true);
-  h.tick(200);
-  check('...and mounts a page the heuristic rejected', h.log.filter(x=>x==='MOUNT').length, 1);
-}
-
-// 2c. The blocklist outranks the toolbar icon.
-{
-  const h = harness(() => ({ show: true }), ['shop.example']);
-  h.summon();
-  h.tick(500);
-  check('the toolbar icon does nothing on a blocked host', h.log.includes('MOUNT'), false);
+  h.tick(6000);
+  check('a page that sells nothing never mounts the dock', h.log.includes('MOUNT'), false);
 }
 
 // 2d. What the dock does on an ordinary shop, which is the whole default
@@ -213,15 +193,6 @@ const check = (name, got, want) => {
   h.tick(1200);
   check('a checkout page mounts', h.log.filter(x=>x==='MOUNT').length, 1);
   check('...and opens the panel without being asked', h.log.includes('OPEN'), true);
-}
-// 2f. The toolbar icon opens it too, because a click IS the asking.
-{
-  const h = harness(() => ({ show: true, checkout: false }));
-  h.tick(1200);
-  check('the dock is shut before the icon is clicked', h.log.includes('OPEN'), false);
-  h.summon();
-  h.tick(200);
-  check('...and open after it', h.log.includes('OPEN'), true);
 }
 // 2g. Never fight the reader: one auto-open per route, so a panel they closed
 // stays closed while they keep shopping.
