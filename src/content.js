@@ -76,8 +76,17 @@
   // ON A ROUTE CHANGE the framework is already running, so signals appear
   // quickly or not at all. A long ladder there only delays UNMOUNTING a dock
   // that is now wrong, so it is short: 1.5s, where the old single wait took 2.5.
-  const LOAD_RETRY_MS = [400, 600, 1000, 1500];
-  const ROUTE_RETRY_MS = [400, 1100];
+  // Cumulative from the first look: 300ms, 600, 1.0s, 1.5s, 2.2s, 3.5s.
+  //
+  // Measured on hotels.com 2026-09-11: DOMContentLoaded at 752ms, load at
+  // 2142ms, and the ONLY signal it ever produces is price text -- no cart link,
+  // no JSON-LD, og:type "website". The served HTML contains no "$" at all, so
+  // that price arrives somewhere inside that 1.4s window. Whatever the dock
+  // costs beyond hydration is the gap to the next rung, so the rungs are close
+  // together exactly where pages tend to finish and spread out afterwards.
+  const LOAD_RETRY_MS = [300, 300, 400, 500, 700, 1300];
+  // Shorter, because the framework is already running: 300ms, 700, 1.5s.
+  const ROUTE_RETRY_MS = [300, 400, 800];
 
   // Our @font-face <style> in the page's head, held by reference rather than
   // found by id. A fixed id like "__card-picker-fonts" was a second thing any

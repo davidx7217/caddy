@@ -143,13 +143,17 @@ const check = (name, got, want) => {
   for (let i=0;i<12;i++){ h.nav('https://mail.example/#inbox/'+i); h.tick(4000); }
   check('non-merchant site stops polling', h.log.includes('stopPolling'), true);
   check('...and never mounts', h.log.includes('MOUNT'), false);
-  // 17: five on the load ladder, then three on each of four route ladders
+  // 23: seven on the load ladder, then four on each of four route ladders
   // before the fifth give-up stops the poll. It was 8 when a miss meant one
-  // re-check 2.5s later. The budget is spent in GIVE-UPS now, not attempts --
+  // re-check 2.5s later. The budget is spent in GIVE-UPS, not attempts --
   // counting attempts would have burned all five inside a single slow page
   // load and killed the route poll on an SPA that was only hydrating.
+  //
+  // The number rises whenever the rungs get denser, which is the price of the
+  // dock arriving sooner. It is pinned rather than left as an inequality so
+  // that price is visible in the diff when someone changes the ladder.
   check('...and stops evaluating well short of 12 routes',
-        h.log.filter(x=>x==='evaluate').length, 17);
+        h.log.filter(x=>x==='evaluate').length, 23);
 }
 
 // 2. Commerce SPA: mount, then a non-merchant route unmounts only after settle.
@@ -233,12 +237,15 @@ const check = (name, got, want) => {
 }
 {
   // And a page that is genuinely slow is still waited for, rather than the
-  // ladder giving up early in the name of speed.
+  // ladder giving up early in the name of speed. Seven evaluations on the load
+  // ladder -- the first look plus six rungs -- so a page that only qualifies on
+  // the seventh is one that qualifies at the very last moment, 3.5s in.
   let calls=0;
-  const h = harness(() => ({ show: ++calls > 4 }));
-  h.tick(3000);
-  check('nothing yet on a page that hydrates slowly', h.log.includes('MOUNT'), false);
-  h.tick(1000);
+  const h = harness(() => ({ show: ++calls > 6 }));
+  h.tick(3400);
+  check('nothing yet on a page that hydrates right at the limit',
+        h.log.includes('MOUNT'), false);
+  h.tick(300);
   check('...but the last rung still catches it', h.log.includes('MOUNT'), true);
 }
 

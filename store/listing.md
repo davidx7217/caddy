@@ -232,9 +232,15 @@ Two of those deserve a note when you tick them, because a reviewer may push back
 
 **Privacy policy URL**
 
-`store/privacy-policy.md` in this repository is the text. Publish it at a stable
-URL before submitting -- GitHub Pages on this repo is enough, and the raw file
-URL is acceptable to the store.
+```
+https://github.com/davidx7217/card-picker/blob/main/store/privacy-policy.md
+```
+
+The file in this repository IS the published policy. That URL is stable, public
+and versioned, which is all the store asks for, and it needs no Pages build to
+fall out of date. Editing `store/privacy-policy.md` and pushing publishes the
+change; the history shows what it said before, which is what the policy's own
+"Changes" section promises.
 
 ---
 
