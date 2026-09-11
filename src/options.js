@@ -6,13 +6,13 @@ const esc = s => String(s).replace(/[&<>"']/g, c =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 const SECTIONS = [
-  { id: 'cards',   num: '01', label: 'Cards',         title: 'Cards',
+  { id: 'cards',   label: 'Cards',         title: 'Cards',
     blurb: 'Every card Caddy ranks, with the fees, categories and caps it reasons over.' },
-  { id: 'ranking', num: '02', label: 'Ranking',       title: 'Ranking',
+  { id: 'ranking', label: 'Ranking',       title: 'Ranking',
     blurb: 'The two things you can change that decide which card wins a close call.' },
-  { id: 'runs',    num: '03', label: 'Where it runs', title: 'Where it runs',
+  { id: 'runs',    label: 'Where it runs', title: 'Where it runs',
     blurb: 'On by default. Turn it off and Caddy waits to be asked.' },
-  { id: 'data',    num: '04', label: 'Data',          title: 'Data',
+  { id: 'data',    label: 'Data',          title: 'Data',
     blurb: 'What Caddy keeps, where it keeps it, and how to take it with you.' }
 ];
 
@@ -537,7 +537,6 @@ function render() {
   const n = counts();
   $('#nav').innerHTML = SECTIONS.map(x => `
     <button data-section="${x.id}" ${x.id === section ? 'aria-current="page"' : ''}>
-      <span class="num">${x.num}</span>
       <span class="label">${esc(x.label)}</span>
       <span class="count">${n[x.id]}</span>
     </button>`).join('');
@@ -546,7 +545,7 @@ function render() {
     b.classList.toggle('on', b.dataset.theme === theme));
 
   const s = sec();
-  $('#crumb').textContent = `SETTINGS / ${s.num}`;
+  $('#crumb').textContent = 'SETTINGS';
   $('#title').textContent = s.title;
   $('#blurb').textContent = s.blurb;
 

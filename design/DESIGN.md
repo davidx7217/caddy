@@ -279,8 +279,10 @@ drop the border and take `background: var(--fill)`, hovering to `--line`.
 ### Nav item
 
 `display: flex`, `gap: 12px`, `padding: 12px 22px`, `border-bottom` hairline.
-Three children: a `11px` ordinal at `opacity: .55`, a flexed label at `13px`, a
-`11px` count at `opacity: .55`. Active state takes `--surface`, `--ink`,
+Two children: a flexed label at `13px`, and a `11px` count at `opacity: .55`.
+There was an ordinal too -- 01, 02, 03, 04 -- and it is gone: four sections do
+not need numbering, and a number that carries no meaning is one more thing to
+read past. Active state takes `--surface`, `--ink`,
 `font-weight: 600`, and the inset accent rule. Set `aria-current="page"`, do not
 use a class.
 
