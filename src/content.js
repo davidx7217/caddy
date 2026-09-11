@@ -400,7 +400,11 @@
            of the two. It moves to the right at display size, where the panel
            had empty space, so the thing being compared is the thing you see
            first. The name is the only part that gives way if it must. */
-        .win { display: flex; align-items: baseline; gap: 12px; margin-top: 8px; }
+        /* 14px, not the 8px this had when the rate was 12.5px body text. A
+           22px numeral baselined against a 15px name has about 5px more
+           ascender above it, so the old gap left it crowding the close button.
+           The measurement that matters here is optical, not the box. */
+        .win { display: flex; align-items: baseline; gap: 12px; margin-top: 14px; }
         .win-text { flex: 1; min-width: 0; }
         .name { font-size: 15px; font-weight: 600; letter-spacing: -.01em; line-height: 1.3; }
         .rate { font-size: 12.5px; color: var(--muted); margin-top: 2px; }

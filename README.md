@@ -139,6 +139,7 @@ tools/
   check-redirects-browser.mjs  the browser pass, over CDP. Catches client-side moves
   redirect-sweep.mjs   what both passes must agree on: rows, verdicts, the report
   cdp.mjs           launches Chrome and drives it over DevTools. No Puppeteer
+  preview-overlay.mjs  serves a fake storefront running the real content script
   make-icons.mjs    draws the icon set; zero-dependency PNG encoder
   make-screenshots.mjs  the two store screenshots a script can make
   fake-chrome.mjs   promise-style chrome.* for the worker; NOT the lifecycle stub
@@ -487,6 +488,19 @@ is, rather than what the issuer's homepage calls the product.
 Only `caution` is rendered -- one short line, the thing that changes a decision
 (the Robinhood subscription, the CSR travel credit). Maintainer reasoning stays in
 `note` and never reaches the UI.
+
+**The overlay can only be checked by looking at it.** It lives in a CLOSED
+shadow root, so `host.shadowRoot` is null by design: the lifecycle harness cannot
+reach inside it and neither can a console. `node tools/preview-overlay.mjs`
+serves a stand-in storefront that loads the real `hostmatch.js` and `content.js`
+against a canned recommendation, with flags for the cases that break layouts --
+`--long` for the longest card name against the widest rate, `--clear` for no tie
+list, `--dark`, `--closed` for the dock alone. It opens no browser; point one at
+the port.
+
+Three layout bugs were found this way and by nothing else: a rate that wrapped
+onto its own line, a card name truncated to make room for a button label that
+repeated the heading, and a numeral crowding the close button.
 
 **Chrome ignores @font-face inside a shadow root.** Measured, not assumed: the
 identical rule applies at document scope and does nothing in a shadow tree. So
