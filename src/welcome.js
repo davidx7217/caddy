@@ -37,8 +37,10 @@ let picked = new Set();   // productId, in the order they were chosen
 let configs = {};         // productId -> the same `config` object Options writes
 let valuations = {};      // currency -> cents per point, only where overridden
 let auto = false;         // <all_urls> as actually granted, never as asked for
+let theme = 'light';      // the same storage key Options writes
 let stepId = 'intro';
 let query = '';
+let page = 0;             // which slice of the catalogue is on screen
 
 async function load() {
   const s = await chrome.storage.local.get(['instances', 'valuations', 'theme']);
@@ -51,9 +53,9 @@ async function load() {
     configs[inst.productId] = inst.config || {};
   }
   valuations = s.valuations || {};
-  document.documentElement.dataset.theme =
-    s.theme === 'light' || s.theme === 'dark' ? s.theme
-      : matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  theme = s.theme === 'light' || s.theme === 'dark' ? s.theme
+    : matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  document.documentElement.dataset.theme = theme;
   const { prefs = {} } = await chrome.storage.local.get('prefs');
   auto = prefs.autoMode !== false;   // absent means ON
 }
@@ -82,20 +84,42 @@ function pickRow(id) {
     ${mark(p.issuer)}
     <span class="grow">
       <span class="row-name">${esc(p.name)}</span>
-      <span class="row-meta">${esc(ISSUER[p.issuer] || p.issuer)} &middot; ${money(p.annual_fee)} &middot; ${esc(CURRENCY[p.currency] || p.currency)}</span>
-      ${p.caution ? `<span class="caution">${esc(p.caution)}</span>` : ''}
+      <span class="row-meta">${money(p.annual_fee)} &middot; ${esc(CURRENCY[p.currency] || p.currency)}</span>
     </span>
     <span class="state">${on ? '&#9632; ADDED' : '&#9633; ADD'}</span>
   </button>`;
 }
+
+// Six, not the ten Options pages by, because this step carries a title, a blurb
+// and a search box above the list. Six rows is what still fits under all three
+// without the step needing a scroll.
+const PER_PAGE = 6;
 
 function paneCards() {
   const q = query.trim().toLowerCase();
   const hits = productIds.filter(id => !q ||
     `${products[id].name} ${ISSUER[products[id].issuer] || products[id].issuer}`
       .toLowerCase().includes(q));
+
+  // A search that shrinks the catalogue under the cursor can leave `page` past
+  // the end. Clamp on read rather than resetting on every keystroke, so the
+  // page you were on survives a search you then clear.
+  const pages = Math.max(1, Math.ceil(hits.length / PER_PAGE));
+  page = Math.max(0, Math.min(page, pages - 1));
+  const slice = hits.slice(page * PER_PAGE, (page + 1) * PER_PAGE);
+
+  // Same pager Options uses, down to the markup: one construction for paging a
+  // card catalogue, and the reader meets it twice in the first five minutes.
   const body = hits.length
-    ? `<div class="w-list">${hits.map(pickRow).join('')}</div>`
+    ? `<div class="w-list">${slice.map(pickRow).join('')}</div>
+       <div class="pager">
+         <span class="pager-count">${slice.length} of ${hits.length}</span>
+         <span class="pager-nav">${pages < 2 ? '' : `
+           <button class="btn" data-page="prev" ${page === 0 ? 'disabled' : ''}>&lsaquo; PREV</button>
+           <span class="pager-at">Page ${page + 1} of ${pages}</span>
+           <button class="btn" data-page="next" ${page === pages - 1 ? 'disabled' : ''}>NEXT &rsaquo;</button>`}
+         </span>
+       </div>`
     : `<div class="empty">Nothing in the catalogue matches "${esc(query.trim())}".
          Clear the search to see all ${productIds.length}.</div>`;
 
@@ -139,11 +163,25 @@ function paneTune() {
   }).join('');
 
   const curr = liveCurrencies();
+  // On the sourcing in this copy, checked 2026-09-13. There is no community
+  // standard and no issuer figure: the going rates are published estimates from
+  // rewards outlets, and they disagree because each prices a different
+  // redemption. TPG's September 2026 table has Chase points at 2.05 cpp
+  // (thepointsguy.com/loyalty-programs/monthly-valuations/); Bankrate counts the
+  // same point at 1.0 because it prices a cash-out
+  // (bankrate.com/credit-cards/rewards/chase-ultimate-rewards/); NerdWallet
+  // publishes two numbers per currency, portal and best transfer partner
+  // (nerdwallet.com/travel/learn/airline-miles-and-hotel-points-valuations).
+  // Caddy's defaults sit between them, which is what the copy says.
   const points = curr.length ? `
     <div class="sub-head">Point values</div>
-    <p class="hint">Cents per point. These are opinions, not facts, and they decide which card
-      wins a close call: at 1.5 cpp a 3x dining card beats a 2% cash card, and at 1.0 it does
-      not. The defaults are reasonable. Change them if you disagree.</p>
+    <p class="hint">Cents per point. No issuer publishes one, so the going rates come from
+      rewards sites like The Points Guy, NerdWallet and Bankrate, and those disagree, because
+      each prices a different redemption. TPG had Chase points at 2.05 cents in September
+      2026; Bankrate counts the same point at 1.0, since it assumes you cash out. Caddy's
+      defaults sit between the two and assume you book through the issuer's own travel portal.
+      Change them if you would like: at 1.5 cpp a 3x dining card beats a 2% cash card, and at
+      1.0 it does not.</p>
     <div class="grid points">${curr.map(k => `
       <div class="pt">
         <div class="pt-label">${esc(CURRENCY[k] || k)}</div>
@@ -153,9 +191,11 @@ function paneTune() {
         </div>
       </div>`).join('')}</div>` : '';
 
-  return `<div class="w-title">Fine-tune</div>
-    <p class="w-blurb">Only the questions your picks actually raise. Everything here has a
-      working default, so skipping it costs you accuracy on close calls, not the product.</p>
+  return `<div class="w-title">Point multiplier</div>
+    <p class="w-blurb">A point is not a cent, so before Caddy can weigh a 3x points card
+      against a 2% cash card it needs to know what your points are worth. Every field below
+      already holds a figure, so skipping this step costs you accuracy on close calls, not
+      the product.</p>
     ${cards ? `<div class="sub-head">Card settings</div>${cards}` : ''}
     ${points}`;
 }
@@ -179,7 +219,13 @@ function paneMode() {
       </button>`).join('')}</div>
     <p class="hint">Either way, nothing leaves your browser: no account, no bank linking, and
       no network calls of any kind. You can switch modes, block individual sites, and change
-      any of this later in Settings.</p>`;
+      any of this later in Settings.</p>
+    <div class="sub-head">Appearance</div>
+    <p class="hint">Caddy started on whichever your system is set to. Pick the other if you
+      would rather it stayed put.</p>
+    <div class="w-theme">${[['light', 'Light'], ['dark', 'Dark']].map(([k, label]) => `
+      <button class="${theme === k ? 'on' : ''}" data-theme="${k}"
+              aria-pressed="${theme === k}">${label}</button>`).join('')}</div>`;
 }
 
 const PANES = {
@@ -225,12 +271,22 @@ async function go(delta) {
   if (!next) { location.replace(chrome.runtime.getURL('src/options.html')); return; }
   stepId = next.id;
   query = '';
+  page = 0;
   render();
   scrollTo(0, 0);
 }
 
 // A stored preference, not a permission request. <all_urls> is declared in the
 // manifest now, so there is nothing to prompt for and nothing to decline.
+// Written straight through, like setAuto: the page repaints under the choice,
+// so a theme that only landed on Continue would look like it had not taken.
+async function setTheme(next) {
+  theme = next;
+  document.documentElement.dataset.theme = theme;
+  await chrome.storage.local.set({ theme });
+  render();
+}
+
 async function setAuto(on) {
   const { prefs = {} } = await chrome.storage.local.get('prefs');
   prefs.autoMode = on;
@@ -250,6 +306,8 @@ document.addEventListener('click', e => {
     return;
   }
   if (d.auto) { setAuto(d.auto === 'auto'); return; }
+  if (d.theme) { setTheme(d.theme); return; }
+  if (d.page) { page += d.page === 'next' ? 1 : -1; render(); scrollTo(0, 0); return; }
   if (d.nav) go(+d.nav);
 });
 

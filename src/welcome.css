@@ -17,16 +17,36 @@
 .w-steps { display: flex; gap: 20px; list-style: none; padding: 0; margin: 24px 0 0; }
 .w-steps li { flex: 1; border-top: 1px solid var(--line); padding-top: 10px;
               font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
-              color: var(--muted); }
+              color: var(--muted); text-align: center; }
 .w-steps li[data-on] { color: var(--ink); font-weight: 600; }
 
-.w-main { flex: 1; padding: 34px 40px 40px; }
+/* Setup is centred and Options is not, and that is the point: this page is a
+   sequence of single questions with a sticky footer under them, not a settings
+   surface you scan. Everything below either inherits the centring or opts out,
+   and the only things that opt out are rows -- a mark, a name and a control on
+   one line reads as a row or it reads as nothing. */
+.w-main { flex: 1; padding: 34px 40px 40px; text-align: center; }
 .w-title { font-size: 34px; font-weight: 400; letter-spacing: -.03em; line-height: 1.12;
            text-transform: uppercase; }
-.w-blurb { margin-top: 12px; font-size: 13px; line-height: 1.55; color: var(--muted);
+.w-blurb { margin: 12px auto 0; font-size: 13px; line-height: 1.55; color: var(--muted);
            max-width: 62ch; }
 .lede + .w-blurb, .w-spec + .w-blurb { margin-top: 24px; }
-.w-spec { margin-top: 30px; max-width: 620px; }
+.w-spec { margin: 30px auto 0; max-width: 620px; text-align: left; }
+
+/* The shared blocks out of options.css are built left-aligned and capped, so
+   centring them here is a margin, not a rewrite. */
+.w-main .hint, .w-main .lede { margin-left: auto; margin-right: auto; }
+.w-main .sub-head { text-align: center; }
+.w-main .grid.modes, .w-main .w-list, .w-main .pager,
+.w-main .empty { margin-left: auto; margin-right: auto; }
+/* Options lays the cpp fields on a grid so a column of them lines up down a
+   settings pane. Here there are rarely more than two and they sit under centred
+   copy, so they wrap from the middle out instead of filling a track each. */
+.w-main .grid.points { display: flex; flex-wrap: wrap; justify-content: center; }
+.w-main .grid.modes { max-width: 620px; }
+.w-main .mode { text-align: center; }
+.w-main .cfg { justify-content: center; }
+.w-main .cfg label { text-align: left; }
 
 /* The footer follows the reader down a long catalogue. It sits on --bg rather
    than --surface: it is the page's own ground continuing, not a raised bar. */
@@ -39,11 +59,15 @@
 .w-foot .btn[hidden] { display: none; }
 
 /* ---------- card picker ---------- */
-.w-search { display: block; width: 100%; max-width: 420px; margin-top: 26px;
+.w-search { display: block; width: 100%; max-width: 420px; margin: 26px auto 0;
             background: var(--surface); border: 1px solid var(--line);
-            border-radius: var(--r-sm); padding: 10px 12px; font-size: 13px; }
+            border-radius: var(--r-sm); padding: 10px 12px; font-size: 13px;
+            text-align: center; }
 .w-search:hover { border-color: var(--muted); }
 
+/* One column for the list and the pager under it, so the counts line up with
+   the rows they count rather than floating off at the page edge. */
+.w-list, .w-main .pager { max-width: 620px; }
 .w-list { margin-top: 26px; }
 
 /* The whole row is the control, so the hairline is an ::after inside the
@@ -65,13 +89,24 @@
 .pick[aria-pressed="true"]::after { background: transparent; }
 .pick .grow { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
 .pick .state { flex: none; font-size: 10px; letter-spacing: .12em; color: var(--muted); }
-.pick .caution { font-size: 11.5px; line-height: 1.45; color: var(--warn); max-width: 60ch; }
 .pick[aria-pressed="true"] .state { color: var(--ink); font-weight: 600; }
 
-/* ---------- fine-tune ---------- */
+/* ---------- point multiplier ---------- */
 .w-tune { margin-top: 22px; }
-.w-tune-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.w-tune-head { display: flex; align-items: center; justify-content: center;
+               gap: 12px; margin-bottom: 12px; }
 .w-tune .cfg { margin-top: 12px; }
+
+/* ---------- theme ---------- */
+/* Two buttons in one bordered pill, which is the Options sidebar's .theme pair
+   with a border round it -- there it sits in a rail that already has edges. */
+.w-theme { display: inline-flex; margin-top: 14px; border: 1px solid var(--line);
+           border-radius: var(--r-sm); overflow: hidden; }
+.w-theme button { cursor: pointer; border: 0; background: transparent; color: var(--muted);
+                  padding: 10px 26px; font-size: 10px; letter-spacing: .12em;
+                  text-transform: uppercase; }
+.w-theme button:hover { color: var(--ink); }
+.w-theme button.on { background: var(--accent); color: var(--accentInk); }
 
 /* Same breakpoint Options uses, and for the same reasons: the gutter drops to
    22px and the page title falls to 26px. Four step labels in a row stop fitting
@@ -79,6 +114,7 @@
 @media (max-width: 860px) {
   .w-head, .w-main, .w-foot { padding-left: 22px; padding-right: 22px; }
   .w-title { font-size: 26px; }
+  .w-main .grid.modes { max-width: none; }
   .w-steps { flex-wrap: wrap; gap: 10px 20px; }
   .w-steps li { flex: 1 1 40%; }
 }
