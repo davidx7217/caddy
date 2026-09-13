@@ -31,7 +31,14 @@
 .w-blurb { margin: 12px auto 0; font-size: 13px; line-height: 1.55; color: var(--muted);
            max-width: 62ch; }
 .lede + .w-blurb, .w-spec + .w-blurb { margin-top: 24px; }
-.w-spec { margin: 30px auto 0; max-width: 620px; text-align: left; }
+/* The three Nones are the strongest thing Caddy has to say, and at Settings' 12px
+   they read as a footnote to the lede rather than the point of it. Scoped to
+   .w-spec so the same block in Settings, where it genuinely is a reference table,
+   is left alone. */
+.w-spec { margin: 34px auto 0; max-width: 680px; text-align: left; font-size: 16px; }
+.w-spec div { padding: 18px 4px; gap: 20px; }
+.w-spec span:first-child { flex: none; }
+.w-spec span:last-child { font-weight: 500; text-align: right; }
 
 /* The shared blocks out of options.css are built left-aligned and capped, so
    centring them here is a margin, not a rewrite. */
@@ -114,6 +121,8 @@
 @media (max-width: 860px) {
   .w-head, .w-main, .w-foot { padding-left: 22px; padding-right: 22px; }
   .w-title { font-size: 26px; }
+  .w-spec { font-size: 14px; }
+  .w-spec div { padding: 14px 4px; }
   .w-main .grid.modes { max-width: none; }
   .w-steps { flex-wrap: wrap; gap: 10px 20px; }
   .w-steps li { flex: 1 1 40%; }
