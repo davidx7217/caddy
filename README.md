@@ -2,7 +2,14 @@
 
 Chrome extension that tells you the best credit card to use on the site you are on.
 
-No account. No bank linking. No network calls. No build step. No dependencies.
+No bank linking. No affiliate links. No build step. No dependencies.
+
+As of **1.0.0** it also has no account and makes no network request of any kind.
+Those two sit here as facts about this build rather than as promises about every
+future one: a paid tier would need some way to tell a licence from no licence,
+and the obvious thing to sell is fresher rate data, which is a fetch. Neither is
+built or decided. The reasoning, and the line between what can change and what
+cannot, is in [store/privacy-policy.md](store/privacy-policy.md#changes).
 
 ---
 
