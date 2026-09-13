@@ -91,7 +91,7 @@
 .pick .state { flex: none; font-size: 10px; letter-spacing: .12em; color: var(--muted); }
 .pick[aria-pressed="true"] .state { color: var(--ink); font-weight: 600; }
 
-/* ---------- point multiplier ---------- */
+/* ---------- what you earn ---------- */
 .w-tune { margin-top: 22px; }
 .w-tune-head { display: flex; align-items: center; justify-content: center;
                gap: 12px; margin-bottom: 12px; }

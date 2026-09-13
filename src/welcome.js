@@ -191,10 +191,13 @@ function paneTune() {
         </div>
       </div>`).join('')}</div>` : '';
 
-  return `<div class="w-title">Point multiplier</div>
-    <p class="w-blurb">A point is not a cent, so before Caddy can weigh a 3x points card
-      against a 2% cash card it needs to know what your points are worth. Every field below
-      already holds a figure, so skipping this step costs you accuracy on close calls, not
+  // The blurb has to hold whether this step is showing card settings, point
+  // values or both -- `steps()` includes it when either is earned -- so it names
+  // the two as examples of one thing rather than promising both are below.
+  return `<div class="w-title">What you earn</div>
+    <p class="w-blurb">Everything here is something the issuer's published terms cannot
+      settle: which bonus categories you chose, what a point is worth to you. Caddy fills in
+      a working answer for each, so skipping this step costs you accuracy on close calls, not
       the product.</p>
     ${cards ? `<div class="sub-head">Card settings</div>${cards}` : ''}
     ${points}`;

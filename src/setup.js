@@ -40,7 +40,7 @@ export function liveCurrencies(picked, products, baseVals) {
 /**
  * The flow, which is three steps or four.
  *
- * Point multiplier exists only when the picks earn it. A wallet of nothing but
+ * What you earn exists only when the picks earn it. A wallet of nothing but
  * cash-back cards raises no per-card question and no valuation question, so
  * showing it a form whose every field is already correct would be asking for
  * confirmation rather than input.
@@ -51,7 +51,7 @@ export function steps(picked, products, baseVals) {
   return [
     { id: 'intro', label: 'Welcome' },
     { id: 'cards', label: 'Your cards' },
-    ...(earned ? [{ id: 'tune', label: 'Point multiplier' }] : []),
+    ...(earned ? [{ id: 'tune', label: 'What you earn' }] : []),
     { id: 'mode', label: 'How it runs' }
   ];
 }
