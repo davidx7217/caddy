@@ -263,7 +263,7 @@ without the first one.
 
 | Asset | Spec | Status |
 | --- | --- | --- |
-| Screenshots | 1280x800, 1-5, at least 1 required | **3 made, 1 stale** -- see below |
+| Screenshots | 1280x800, 1-5, at least 1 required | **All 3 current** -- regenerated 2026-09-13 |
 | Small promo tile | 440x280 | Optional, not made |
 | Marquee promo tile | 1400x560 | Optional, not made |
 | Store icon | 128x128 | `icons/icon128.png` ships already |
@@ -271,7 +271,7 @@ without the first one.
 **On screenshots.** Three are worth having, in this order. All three need the
 extension loaded in a real Chrome and a browser window sized so the page viewport
 is exactly **1280x800** -- the store rejects other sizes, and it does not scale.
-All three exist; number 2 needs regenerating before submission.
+All three are current as of 2026-09-13.
 
 1. **The dock and panel on a real store at checkout.** DONE and committed:
    hotels.com, panel open, Citi Double Cash winning at 2.80% with the Sapphire
@@ -284,13 +284,15 @@ All three exist; number 2 needs regenerating before submission.
    Do not mock this up. A screenshot of an overlay that does not behave like that
    in practice is the one kind of dishonesty this project has avoided everywhere
    else.
-2. **Setup, step two.** STALE as committed: it captures the step as it looked
-   before the September 2026 rework, so it still shows a FINE-TUNE label in the
-   rail, left-aligned content, an issuer line under each card name, the yellow
-   caution paragraphs and no pager. `node tools/make-screenshots.mjs` regenerates
-   it. The step now frames as: the step rail, a centred title and blurb, the
-   search box, six catalogue rows, the pager reading "6 OF 20 / PAGE 1 OF 4", and
-   the sticky footer with the selected count.
+2. **Setup, step two.** `node tools/make-screenshots.mjs` makes this one. It
+   opens the picker with an empty wallet and adds the same three cards the
+   Settings shot owns, paging forward to reach the two that are not on the first
+   page and returning to page one for the capture. At 1280x800 that frames as:
+   the four-step rail, a centred title and blurb, the search box, six catalogue
+   rows with Chase Freedom Unlimited showing as ADDED at the top, and the sticky
+   footer reading "3 CARDS SELECTED". The pager sits just below the fold and the
+   sixth row is clipped by the footer, which is expected -- the store captures a
+   viewport, not a full page. Verified 2026-09-13.
 3. **Settings, the Cards pane.** Current; Settings did not change in the rework.
    Open Options with three cards owned. At 1280x800
    this frames as: the sidebar, YOUR CARDS with three rows, and the top of the

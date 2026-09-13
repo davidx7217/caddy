@@ -137,23 +137,35 @@ try {
     await frame(cdp, sessionId);
     await goto(cdp, sessionId, `${base}/welcome.html?seed=empty`);
     await sleep(1400);
+    // The catalogue pages six at a time, so two of the three wallet cards are not
+    // on the first page. Page forward to find each one, then come back to page 1
+    // for the shot: that is the frame the listing describes, and the card that
+    // shows as ADDED there is the top row.
     await evaluate(cdp, sessionId, `(async () => {
       const wait = () => new Promise(r => setTimeout(r, 220));
+      const nav = dir => document.querySelector('[data-page="' + dir + '"]:not([disabled])');
       document.querySelector('#next').click(); await wait();
       for (const id of ${JSON.stringify(WALLET.map(w => w.productId))}) {
+        while (!document.querySelector('[data-pick="' + id + '"]') && nav('next')) {
+          nav('next').click(); await wait();
+        }
         const b = document.querySelector('[data-pick="' + id + '"]');
         if (b) { b.click(); await wait(); }
+        while (nav('prev')) { nav('prev').click(); await wait(); }
       }
       scrollTo(0, 0);
     })()`);
     await sleep(800);
-    const picked = await evaluate(cdp, sessionId,
-      'document.querySelectorAll(\'.pick[aria-pressed="true"]\').length');
-    if (picked !== WALLET.length) {
-      throw new Error(`setup shot: expected ${WALLET.length} cards picked, saw ${picked}`);
+    // Count the wallet, not the visible rows. Two of the three are on later pages
+    // and the shot is framed on page one, so counting aria-pressed here would
+    // report 1 and fail a run that did exactly the right thing. The footer note
+    // is rendered straight off the picked set.
+    const note = await evaluate(cdp, sessionId, 'document.querySelector("#note").textContent');
+    if (!String(note).startsWith(`${WALLET.length} card`)) {
+      throw new Error(`setup shot: expected ${WALLET.length} cards picked, footer said "${note}"`);
     }
     await capture(cdp, sessionId, '2-setup-your-cards',
-      'Setup step two: the picker with three cards chosen');
+      'Setup step two: page one of the picker, with three cards chosen');
   }
 } finally {
   await close();

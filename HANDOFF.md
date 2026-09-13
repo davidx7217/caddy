@@ -13,41 +13,18 @@ works and why; this file is only the state of play.
 - **Every card verified** against its issuer's own page, each carrying a
   `source_url` and the date it was read.
 - **Tests green**: 285 engine + 24 setup + 49 lifecycle + 40 worker. `npm test`.
-- **Nothing unpushed, nothing untracked.** The dock screenshot that was blocking
-  submission is done, correct and committed.
+- **Nothing unpushed, nothing untracked.** All three store screenshots are
+  current, so nothing is blocking submission any more.
 - **`caddy-1.0.0.zip` sits in the repo root**, rebuilt on every commit. See the
   packaging note below.
 
 ---
 
-## 1. Screenshot 2 is out of date — and it is the only thing stopping submission
+## 1. Submit to the Chrome Web Store
 
-`store/screenshots/2-setup-your-cards.png` shows a setup step that no longer
-exists. It has the old FINE-TUNE label in the stepper, left-aligned content,
-an issuer line under each card name, the yellow caution paragraphs, and no
-pager. All five are gone.
+Everything is written, checked and current. This is the next thing to do.
 
-**Fix it by running the tool**, which is for you rather than Claude because it
-drives a real browser process:
-
-```
-node tools/make-screenshots.mjs
-```
-
-It regenerates `1-settings-cards.png` and `2-setup-your-cards.png` at exactly
-1280x800 and deliberately leaves `3-dock-on-a-store.png` alone. Check the new
-file before committing it.
-
-`1-settings-cards.png` is Settings, which did not change, so it will come back
-the same. `3-dock-on-a-store.png` is correct as committed: hotels.com, panel
-open, Citi Double Cash winning at 2.80% with the Sapphire Reserve portal note
-under it, no tab bar and nothing personal in frame.
-
----
-
-## 2. Submit to the Chrome Web Store
-
-Everything except that screenshot is written and checked.
+### What is ready
 
 - `store/listing.md` — name, both descriptions, category, single-purpose
   statement, a justification for each of `storage`, `activeTab`, `scripting` and
@@ -60,6 +37,13 @@ Everything except that screenshot is written and checked.
   the change.
 - Icons ship already, drawn by `tools/make-icons.mjs`.
 - The upload is `caddy-1.0.0.zip` in the repo root. It is already built.
+- **All three screenshots are current at 1280x800.** `1-settings-cards.png` and
+  `2-setup-your-cards.png` were regenerated on 2026-09-13 by
+  `node tools/make-screenshots.mjs`, after the setup rework made the old setup
+  shot wrong. `3-dock-on-a-store.png` is the hand-captured one: hotels.com, panel
+  open, Citi Double Cash winning at 2.80% with the Sapphire Reserve portal note
+  under it, no browser chrome and nothing personal in frame. That script
+  deliberately leaves it alone, because it is the shot the script cannot make.
 
 **Expect the install prompt to be the thing reviewers and users react to.** As of
 v1.0.0 `<all_urls>` is declared in the manifest rather than optional, so Chrome
@@ -71,7 +55,7 @@ than hiding it.
 
 ---
 
-## 3. Dated: re-verify Chase Freedom Flex on 1 October 2026
+## 2. Dated: re-verify Chase Freedom Flex on 1 October 2026
 
 Its rotating 5% categories are verified for **Q3 2026 and expire 2026-09-30**.
 
@@ -86,7 +70,7 @@ advance and both live quarters are already in the file. That distinction is
 
 ---
 
-## 4. Dated: the point-values copy names two figures that move
+## 3. Dated: the point-values copy names two figures that move
 
 The "What you earn" step tells the reader where cents-per-point numbers come
 from, and to make that concrete it quotes two: The Points Guy at 2.05 cents for
@@ -106,7 +90,7 @@ different methodology, which is why they differ by a factor of two.
 
 ---
 
-## 5. Packaging
+## 4. Packaging
 
 `caddy-<version>.zip` in the repo root is the loadable extension: `manifest.json`,
 `src/`, `icons/` and `data/` minus `data/wallet.json`. Nothing else. The root
@@ -126,7 +110,7 @@ the README and a real person's card list.
 
 ---
 
-## 6. Not scheduled, worth knowing
+## 5. Not scheduled, worth knowing
 
 - **`welcome.js` still has no automated coverage.** Its decisions were extracted
   to `src/setup.js` and are tested; the rendering half is not, because it assigns
