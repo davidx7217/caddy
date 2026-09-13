@@ -8,6 +8,20 @@ Fill the dashboard from this file rather than writing fresh copy in the form:
 the permission justifications in particular are read by a human reviewer, and
 the reason each permission exists is already written down here and in the README.
 
+**Two kinds of statement live in here, and they follow different rules.** The
+marketing copy -- the short description and WHAT MAKES IT DIFFERENT -- makes
+promises a user reads as permanent, so it only carries claims that hold for the
+life of the product. "No account" and "no network calls" used to be there and are
+not any more: a paid tier would need a licence of some kind, and the obvious thing
+to sell is fresher rate data, which is a fetch. Neither is decided, and taking a
+privacy claim back costs more trust than never making it.
+
+The permission justifications and the data-use answers are the other kind. They
+describe what THIS version does, a reviewer checks them against the source, and
+they say plainly that the extension makes no network requests, because today it
+makes none. Keep them accurate rather than future-proof: when a version changes
+what it does, that version's disclosures change with it.
+
 ---
 
 ## Item details
@@ -18,10 +32,10 @@ the reason each permission exists is already written down here and in the README
 Caddy
 ```
 
-**Short description** (132 characters max; this is 121)
+**Short description** (132 characters max; this is 128)
 
 ```
-Tells you which of your credit cards earns the most on the site you're on. No account, no bank linking, no network calls.
+Tells you which of your credit cards earns the most on the site you're on. No bank linking, no affiliate links, no card numbers.
 ```
 
 **Category**
@@ -49,18 +63,16 @@ opens itself. That is the whole product.
 
 WHAT MAKES IT DIFFERENT
 
-No account. There is nothing to sign up for and nothing to sign in to.
-
 No bank linking. Caddy never sees a transaction, a balance, or a card number. It
 does not ask for one, and there is no field to type one into.
-
-No network calls. Every rate ships inside the extension. Caddy does not phone
-home, because there is no home to phone: no server, no analytics, no telemetry.
-Your card list and your settings live in your browser and are never uploaded.
 
 No affiliate links. Most "best card for this purchase" sites are paid by the
 issuers they recommend. Caddy earns nothing from what it tells you, which is why
 it will happily tell you your no-fee card beats your premium one.
+
+Rates read off the issuer. Every card in the catalogue was checked against the
+issuer's own published terms, and carries the link and the date it was read, so
+you can check the number rather than trust it.
 
 HOW IT DECIDES
 
@@ -251,7 +263,7 @@ without the first one.
 
 | Asset | Spec | Status |
 | --- | --- | --- |
-| Screenshots | 1280x800, 1-5, at least 1 required | **2 of 3 made** -- `node tools/make-screenshots.mjs` |
+| Screenshots | 1280x800, 1-5, at least 1 required | **3 made, 1 stale** -- see below |
 | Small promo tile | 440x280 | Optional, not made |
 | Marquee promo tile | 1400x560 | Optional, not made |
 | Store icon | 128x128 | `icons/icon128.png` ships already |
@@ -259,8 +271,12 @@ without the first one.
 **On screenshots.** Three are worth having, in this order. All three need the
 extension loaded in a real Chrome and a browser window sized so the page viewport
 is exactly **1280x800** -- the store rejects other sizes, and it does not scale.
+All three exist; number 2 needs regenerating before submission.
 
-1. **The dock and panel on a real store at checkout.** This is the product, and
+1. **The dock and panel on a real store at checkout.** DONE and committed:
+   hotels.com, panel open, Citi Double Cash winning at 2.80% with the Sapphire
+   Reserve portal note under it, no browser chrome and nothing personal in frame.
+   This is the product, and
    it is the one that cannot be produced any other way: the overlay only exists
    inside a page the content script has run on. Turn on automatic mode, put a real
    item in a cart on a merchant in `data/merchants.json`, reach the payment step,
@@ -268,12 +284,15 @@ is exactly **1280x800** -- the store rejects other sizes, and it does not scale.
    Do not mock this up. A screenshot of an overlay that does not behave like that
    in practice is the one kind of dishonesty this project has avoided everywhere
    else.
-2. **Setup, step two.** Open `src/welcome.html`, click Continue once, and pick
-   three cards including one that is already ADDED at the top of the list. At
-   1280x800 this frames as: the four-step rail, the title and blurb, the search
-   box, five catalogue rows, and the sticky footer reading "3 CARDS SELECTED".
-   Verified 2026-09-10.
-3. **Settings, the Cards pane.** Open Options with three cards owned. At 1280x800
+2. **Setup, step two.** STALE as committed: it captures the step as it looked
+   before the September 2026 rework, so it still shows a FINE-TUNE label in the
+   rail, left-aligned content, an issuer line under each card name, the yellow
+   caution paragraphs and no pager. `node tools/make-screenshots.mjs` regenerates
+   it. The step now frames as: the step rail, a centred title and blurb, the
+   search box, six catalogue rows, the pager reading "6 OF 20 / PAGE 1 OF 4", and
+   the sticky footer with the selected count.
+3. **Settings, the Cards pane.** Current; Settings did not change in the rework.
+   Open Options with three cards owned. At 1280x800
    this frames as: the sidebar, YOUR CARDS with three rows, and the top of the
    ADD A CARD well showing the filter bar and the first two catalogue rows.
    Verified 2026-09-10.

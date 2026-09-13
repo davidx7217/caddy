@@ -1,10 +1,15 @@
 # Caddy - Privacy Policy
 
-Last updated: 10 September 2026
+Last updated: 13 September 2026
+Describes: Caddy **1.0.0**
 
 ## The short version
 
 Caddy collects nothing, transmits nothing, and has no server to transmit to.
+
+This policy describes the version named above rather than every version there
+will ever be. If a later release changes what Caddy does, this file changes with
+it and the difference is visible in the repository's history. See Changes.
 
 ## What Caddy stores
 
@@ -42,7 +47,9 @@ anyone but you.
   put `role="button"` on a text input, so the code tests the tag and the type
   before reading, rather than trusting the role. See `collectSignals` in
   `src/content.js`.
-- Your name, email, or any account identity. There is no account.
+- Your name, email, or any account identity. This version has no account: there
+  is nothing to sign up for, nothing to sign in to, and no identifier of you
+  anywhere in what Caddy stores.
 
 ## What Caddy reads from the pages you visit
 
@@ -122,7 +129,20 @@ Caddy is not directed at children and collects nothing from anyone.
 ## Changes
 
 If this policy ever changes, the new version will be published in the repository
-with the change visible in its history.
+with the change visible in its history, and the version line at the top of this
+file says which release it describes.
+
+Two things are worth naming as things that could change, because this policy
+would rather be honest than reassuring. Caddy today has no account and makes no
+network requests. Neither is a promise about every future release: a paid tier
+would need some way to tell a licence from no licence, and the obvious thing to
+sell is fresher rate data, which requires fetching it. Nothing of the sort is
+built or decided. If either arrives, it will be described here, in a release that
+says so, before it ships.
+
+What will not change: Caddy will never connect to a bank account, never ask for
+or store a card number, and never take money from an issuer to recommend its
+card.
 
 ## Contact
 

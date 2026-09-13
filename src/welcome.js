@@ -244,7 +244,7 @@ const PANES = {
     <div class="spec w-spec">
       <div><span>Bank linking</span><span>None. Nothing to connect, and no card number to type.</span></div>
       <div><span>Affiliate links</span><span>None. No issuer pays Caddy for what it recommends.</span></div>
-      <div><span>Rate sources</span><span>The issuer's own page, dated on every card.</span></div>
+      <div><span>Where rates come from</span><span>The issuer's own page, with the date on every card.</span></div>
     </div>
     <p class="w-blurb">It reads the page you are on: which merchant, and whether you have
       reached checkout. Then it ranks the cards you own against their published issuer terms.
