@@ -232,16 +232,23 @@ function paneMode() {
 }
 
 const PANES = {
+  // Three claims that hold for the life of the product. "No account" and "no
+  // network calls" used to be here and are not any more: a paid tier would need
+  // a licence of some kind, and the natural thing to sell is fresher rate data,
+  // which is a fetch. Neither is decided, and a welcome screen is the wrong
+  // place to promise something a later version might have to take back. What is
+  // left is what cannot change -- Caddy has no route to a bank account, earns
+  // nothing from its own advice, and reads its numbers off the issuer.
   intro: () => `<div class="w-title">Welcome</div>
     <p class="lede">Caddy tells you which card to use, on the page where you are about to pay.</p>
     <div class="spec w-spec">
-      <div><span>Account</span><span>None. There is nothing to sign in to.</span></div>
-      <div><span>Bank linking</span><span>None. Caddy never sees a transaction.</span></div>
-      <div><span>Network calls</span><span>None. Every rate ships inside the extension.</span></div>
+      <div><span>Bank linking</span><span>None. Nothing to connect, and no card number to type.</span></div>
+      <div><span>Affiliate links</span><span>None. No issuer pays Caddy for what it recommends.</span></div>
+      <div><span>Rate sources</span><span>The issuer's own page, dated on every card.</span></div>
     </div>
     <p class="w-blurb">It reads the page you are on: which merchant, and whether you have
       reached checkout. Then it ranks the cards you own against their published issuer terms.
-      Setup is three short steps, and everything you choose is changeable afterwards.</p>`,
+      Setup takes about a minute, and everything you choose is changeable afterwards.</p>`,
   cards: paneCards,
   tune: paneTune,
   mode: paneMode
