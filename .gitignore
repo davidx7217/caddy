@@ -8,7 +8,6 @@ data/wallet.json
 
 # Packaged builds for sharing. Rebuild rather than commit.
 card-picker-*.zip
-caddy.zip
 caddy-*.zip
 caddy-*.zip.bin
 
