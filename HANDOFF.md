@@ -1,6 +1,6 @@
 # Handoff
 
-Where Caddy stands as of **11 September 2026**, and what is left.
+Where Caddy stands as of **13 September 2026**, and what is left.
 
 Written to be picked up cold. The README is the reference for how the extension
 works and why; this file is only the state of play.
@@ -13,48 +13,41 @@ works and why; this file is only the state of play.
 - **Every card verified** against its issuer's own page, each carrying a
   `source_url` and the date it was read.
 - **Tests green**: 285 engine + 24 setup + 49 lifecycle + 40 worker. `npm test`.
-- **Two commits are unpushed.** `git push` before anything else.
-- **One untracked file is in the tree and must NOT be committed as it stands.**
-  See the first task below.
+- **Nothing unpushed, nothing untracked.** The dock screenshot that was blocking
+  submission is done, correct and committed.
+- **`caddy-1.0.0.zip` sits in the repo root**, rebuilt on every commit. See the
+  packaging note below.
 
 ---
 
-## 1. The dock screenshot — BLOCKED, and it is the only thing stopping submission
+## 1. Screenshot 2 is out of date — and it is the only thing stopping submission
 
-`store/screenshots/3-dock-on-a-store.png` exists in the working tree and is
-**wrong on two counts**. It is untracked. Do not `git add` it.
+`store/screenshots/2-setup-your-cards.png` shows a setup step that no longer
+exists. It has the old FINE-TUNE label in the stepper, left-aligned content,
+an issuer line under each card name, the yellow caution paragraphs, and no
+pager. All five are gone.
 
-1. **The panel is closed.** Only the pill is visible in the corner. The shot has
-   to show the panel open with a recommendation in it, which is the whole point.
-2. **It contains personal information.** It is a full-screen grab, so the Chrome
-   tab bar is in frame: two inboxes showing an email address, a Robinhood
-   retirement tab, and a tab titled "David - Finances". That would be published
-   on a public store listing.
+**Fix it by running the tool**, which is for you rather than Claude because it
+drives a real browser process:
 
-### How to redo it
+```
+node tools/make-screenshots.mjs
+```
 
-1. Open a merchant from `data/merchants.json` — hotels.com works and gives a
-   clear winner with a portal note, which shows off a rule most people do not
-   know.
-2. **Click the pill so the panel opens.**
-3. `Cmd+Shift+4`, then **Space**, then click the Chrome window. Capturing the
-   window rather than the screen leaves out the menu bar and the clock.
-4. Save over `store/screenshots/3-dock-on-a-store.png`.
+It regenerates `1-settings-cards.png` and `2-setup-your-cards.png` at exactly
+1280x800 and deliberately leaves `3-dock-on-a-store.png` alone. Check the new
+file before committing it.
 
-Then ask Claude to crop out the tab bar and address bar and scale it to exactly
-**1280x800** — the store does not rescale, and `sips` can do it with no
-dependency. Check the result for anything personal before committing it.
-
-The other two screenshots are correct and committed. `node
-tools/make-screenshots.mjs` regenerates them and deliberately leaves this third
-file alone, because it is the one shot that script cannot produce: the overlay
-only exists inside a page the content script has run on.
+`1-settings-cards.png` is Settings, which did not change, so it will come back
+the same. `3-dock-on-a-store.png` is correct as committed: hotels.com, panel
+open, Citi Double Cash winning at 2.80% with the Sapphire Reserve portal note
+under it, no tab bar and nothing personal in frame.
 
 ---
 
 ## 2. Submit to the Chrome Web Store
 
-Everything except the screenshot is written and checked.
+Everything except that screenshot is written and checked.
 
 - `store/listing.md` — name, both descriptions, category, single-purpose
   statement, a justification for each of `storage`, `activeTab`, `scripting` and
@@ -66,6 +59,7 @@ Everything except the screenshot is written and checked.
   which is stable, public and versioned. Editing the file and pushing publishes
   the change.
 - Icons ship already, drawn by `tools/make-icons.mjs`.
+- The upload is `caddy-1.0.0.zip` in the repo root. It is already built.
 
 **Expect the install prompt to be the thing reviewers and users react to.** As of
 v1.0.0 `<all_urls>` is declared in the manifest rather than optional, so Chrome
@@ -92,12 +86,61 @@ advance and both live quarters are already in the file. That distinction is
 
 ---
 
-## 4. Not scheduled, worth knowing
+## 4. Dated: the point-values copy names two figures that move
 
-- **`welcome.js` has no automated coverage.** Its decisions were extracted to
-  `src/setup.js` and are tested; the rendering half is not, because it assigns
+The "What you earn" step tells the reader where cents-per-point numbers come
+from, and to make that concrete it quotes two: The Points Guy at 2.05 cents for
+Chase points in September 2026, and Bankrate at 1.0 for the same point. Both
+were read on **2026-09-13** and the sources are in a comment above the string in
+`src/welcome.js`.
+
+TPG republishes monthly. **Re-read both before any release after about March
+2027** and either update the numbers or drop to naming the outlets without
+figures. The point Caddy is making -- that the rates are published estimates, that
+they disagree, and that its own defaults sit between a portal booking and a
+cash-out -- survives either way.
+
+There is no community-agreed valuation and the copy no longer implies one. That
+was checked: TPG, NerdWallet and Bankrate each publish their own and each uses a
+different methodology, which is why they differ by a factor of two.
+
+---
+
+## 5. Packaging
+
+`caddy-<version>.zip` in the repo root is the loadable extension: `manifest.json`,
+`src/`, `icons/` and `data/` minus `data/wallet.json`. Nothing else. The root
+itself is not loadable as a zip, because it carries `tools/`, `store/`, `design/`,
+the README and a real person's card list.
+
+- `npm run pack` builds it. `tools/pack.mjs` reads the version out of the
+  manifest, so bumping the manifest renames the file, and the script clears every
+  older `caddy-*.zip` first so exactly one build is ever sitting there.
+- **A `pre-commit` hook reruns it**, which is what keeps it from drifting behind
+  the tree. The hook lives in `.git/hooks/pre-commit` and therefore does **not**
+  survive a fresh clone -- recreate it, or just run `npm run pack` by hand.
+- The zip stays gitignored, in keeping with the rule already in `.gitignore`
+  that builds get rebuilt rather than committed. That also means it is not
+  downloadable from GitHub. If it should be, attach it to a Release rather than
+  committing a binary.
+
+---
+
+## 6. Not scheduled, worth knowing
+
+- **`welcome.js` still has no automated coverage.** Its decisions were extracted
+  to `src/setup.js` and are tested; the rendering half is not, because it assigns
   `innerHTML` and queries the result, which needs an HTML parser this project has
-  no dependency for. Verified by driving all four steps in a browser.
+  no dependency for. The September 2026 setup rework was verified by driving all
+  four steps in a browser instead -- both themes, an empty wallet, a wallet with
+  card settings, the pager and the search.
+- **Setup is centred and Settings is not**, and that is on purpose: setup is a
+  sequence of single questions with a sticky footer under them, not a surface you
+  scan. Rows opt back out of the centring in `welcome.css`, because a mark, a name
+  and a control on one line reads as a row or it reads as nothing.
+- **The card list pages six at a time** and reuses the `.pager` markup from
+  Settings rather than growing a second one. Six is what fits under this step's
+  title, blurb and search box; Settings pages ten because it has none of those.
 - **The overlay can only be checked by looking at it.** Closed shadow root, so
   `host.shadowRoot` is null and no test can reach inside.
   `node tools/preview-overlay.mjs` serves a stand-in storefront running the real
