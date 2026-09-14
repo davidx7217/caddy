@@ -37,7 +37,7 @@ let picked = new Set();   // productId, in the order they were chosen
 let configs = {};         // productId -> the same `config` object Options writes
 let valuations = {};      // currency -> cents per point, only where overridden
 let auto = false;         // <all_urls> as actually granted, never as asked for
-let theme = 'light';      // the same storage key Options writes
+let theme = 'system';     // 'system' | 'light' | 'dark'; the key Options writes
 let stepId = 'intro';
 let query = '';
 let page = 0;             // which slice of the catalogue is on screen
@@ -53,9 +53,8 @@ async function load() {
     configs[inst.productId] = inst.config || {};
   }
   valuations = s.valuations || {};
-  theme = s.theme === 'light' || s.theme === 'dark' ? s.theme
-    : matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  document.documentElement.dataset.theme = theme;
+  theme = s.theme === 'light' || s.theme === 'dark' ? s.theme : 'system';
+  applyTheme();
   const { prefs = {} } = await chrome.storage.local.get('prefs');
   auto = prefs.autoMode !== false;   // absent means ON
 }
@@ -224,9 +223,10 @@ function paneMode() {
       no network calls of any kind. You can switch modes, block individual sites, and change
       any of this later in Settings.</p>
     <div class="sub-head">Appearance</div>
-    <p class="hint">Caddy started on whichever your system is set to. Pick the other if you
-      would rather it stayed put.</p>
-    <div class="w-theme">${[['light', 'Light'], ['dark', 'Dark']].map(([k, label]) => `
+    <p class="hint">Auto follows your browser's light or dark setting and changes when it
+      does. Pick one of the other two if you would rather Caddy stayed put.</p>
+    <div class="w-theme">${[['system', 'Auto'], ['light', 'Light'], ['dark', 'Dark']]
+      .map(([k, label]) => `
       <button class="${theme === k ? 'on' : ''}" data-theme="${k}"
               aria-pressed="${theme === k}">${label}</button>`).join('')}</div>`;
 }
@@ -288,12 +288,23 @@ async function go(delta) {
 
 // A stored preference, not a permission request. <all_urls> is declared in the
 // manifest now, so there is nothing to prompt for and nothing to decline.
+// System mode is the ABSENCE of the attribute, not a resolved colour stamped on
+// it. Leaving it off is what lets ui.css's media query answer, and keep
+// answering if the browser flips while this page is open.
+function applyTheme() {
+  if (theme === 'system') delete document.documentElement.dataset.theme;
+  else document.documentElement.dataset.theme = theme;
+}
+
 // Written straight through, like setAuto: the page repaints under the choice,
 // so a theme that only landed on Continue would look like it had not taken.
+// 'system' clears the key rather than storing the word -- see the note in
+// options.js, which owns the same contract.
 async function setTheme(next) {
   theme = next;
-  document.documentElement.dataset.theme = theme;
-  await chrome.storage.local.set({ theme });
+  applyTheme();
+  if (next === 'system') await chrome.storage.local.remove('theme');
+  else await chrome.storage.local.set({ theme: next });
   render();
 }
 

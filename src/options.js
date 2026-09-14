@@ -40,7 +40,11 @@ let detail = null;   // productId whose dialog is open, or null when it is shut
 let f = { q: '', kind: '', scope: '', fee: '', cat: '' };
 let page = 1;
 const PER_PAGE = 10;
-let theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+// 'system', 'light' or 'dark' -- a MODE, not a resolved colour. 'system' is the
+// absence of a stored value: every surface decides by testing for exactly
+// 'light' or 'dark', so the way to follow the browser is to store nothing and
+// let ui.css's media query answer.
+let theme = 'system';
 
 async function load() {
   const s = await chrome.storage.local.get(
@@ -53,7 +57,10 @@ async function load() {
   activity = s.activity || [];
   prefs = s.prefs || {};
   prefs.categoryDefaults = prefs.categoryDefaults || {};
-  if (s.theme === 'light' || s.theme === 'dark') theme = s.theme;
+  // Assigned rather than conditionally overwritten: clearing the key has to take
+  // `theme` back to 'system', and the old form would have left the last pin in
+  // place on the reload that follows the write.
+  theme = s.theme === 'light' || s.theme === 'dark' ? s.theme : 'system';
   await readAuto();
   bytes = await chrome.storage.local.getBytesInUse(null);
   applyFont();
@@ -126,7 +133,11 @@ async function commit(key, { redraw = true } = {}) {
   if (!contextAlive()) { die(); return; }
   saving = true;
   try {
-    await chrome.storage.local.set(
+    // Following the browser is a key that is not there. Writing the string
+    // 'system' would be a fourth value for the popup, the overlay and setup to
+    // learn, all of which already read absence correctly.
+    if (key === 'theme' && theme === 'system') await chrome.storage.local.remove('theme');
+    else await chrome.storage.local.set(
       { [key]: { instances, valuations, prefs, blocked, activity, theme }[key] });
   } catch (e) {
     die();
@@ -531,7 +542,11 @@ const PANES = {
 
 // ---------- render ----------
 function render() {
-  document.documentElement.dataset.theme = theme;
+  // No attribute at all in system mode, which is what lets the stylesheet follow
+  // the browser -- and keep following it if the browser changes while this page
+  // is open. Stamping a resolved colour here would freeze it at load.
+  if (theme === 'system') delete document.documentElement.dataset.theme;
+  else document.documentElement.dataset.theme = theme;
   $('#brandsub').textContent = `WHICH-CARD / v${VERSION}`;
 
   const n = counts();

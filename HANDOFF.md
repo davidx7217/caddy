@@ -122,6 +122,18 @@ the README and a real person's card list.
   sequence of single questions with a sticky footer under them, not a surface you
   scan. Rows opt back out of the centring in `welcome.css`, because a mark, a name
   and a control on one line reads as a row or it reads as nothing.
+- **Theme is three states and the third one is an absent key.** Auto, light,
+  dark, where Auto means `theme` is not in storage and `ui.css` / `options.css`
+  answer with a `prefers-color-scheme` query. Nothing stores the string 'system':
+  the popup, the overlay and setup all decide by testing for exactly 'light' or
+  'dark', and absence already meant follow-the-browser everywhere. Adding a
+  fourth value would have been four places to teach.
+  `options.css` was missing its media query entirely -- Options resolved the
+  browser preference in JS and stamped `data-theme`, which looks identical on
+  load and then freezes, so a page left open across a system theme switch stayed
+  on the colour it started in. The overlay is the one surface that still resolves
+  in JS, because its tokens are set inline on a closed shadow host, so it carries
+  a `matchMedia` listener instead.
 - **The card list pages six at a time** and reuses the `.pager` markup from
   Settings rather than growing a second one. Six is what fits under this step's
   title, blurb and search box; Settings pages ten because it has none of those.

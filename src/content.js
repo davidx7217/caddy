@@ -362,7 +362,18 @@
     // page to find us by.
     host.style.cssText = 'all:initial;position:fixed;z-index:2147483647;';
 
-    applyTheme(host, res.theme);
+    // Every other surface follows the browser through ui.css's media query. The
+    // overlay cannot: its tokens are set inline on the host, because the shadow
+    // root is closed and a stylesheet inside it cannot reach out. So while no
+    // theme is pinned, an OS flip has to be wired by hand or the dock stays on
+    // the colour it mounted with.
+    let storedTheme = res.theme;
+    const scheme = typeof matchMedia === 'function'
+      && matchMedia('(prefers-color-scheme: dark)');
+    const onScheme = () => applyTheme(host, storedTheme);
+    if (scheme) scheme.addEventListener('change', onScheme);
+
+    applyTheme(host, storedTheme);
 
     const pos = res.overlayPos || {};
     host.style.right = RAIL_RIGHT + 'px';
@@ -613,11 +624,12 @@
         icon.setAttribute('aria-expanded', 'true');
         reflow();
       },
-      setTheme(stored) { applyTheme(host, stored); },
+      setTheme(stored) { storedTheme = stored; applyTheme(host, stored); },
       destroy() {
         // Drop the listener too -- mount/unmount cycles on a SPA would
         // otherwise leak one per route.
         window.removeEventListener('resize', onResize);
+        if (scheme) scheme.removeEventListener('change', onScheme);
         if (fontEl) { fontEl.remove(); fontEl = null; fontFamilyStack = null; }
         host.remove();
       }

@@ -26,6 +26,22 @@
      this so the page below them does not move. */
   --ctl-h: 33px;
 }
+/* Three states, not two, matching ui.css: pinned light, pinned dark, and no
+   attribute at all, which follows the browser and keeps following it if the
+   browser changes while the page is open. This block used to be missing
+   entirely -- Options resolved prefers-color-scheme in JS and stamped
+   data-theme, which looked identical on load and then froze, so a page left open
+   across a system theme switch stayed on the colour it started in. The :not() is
+   what stops a pinned light from being overridden by a dark browser. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg: #171614; --surface: #1f1e1b; --ink: #efece5; --muted: #9c968c;
+    --line: #35332e; --accent: #efece5; --accentInk: #1a1917; --warn: #dcbb74;
+    --fill: rgba(239,236,229,.06); --warnLine: #6b5a33;
+    --well: #121110;
+  }
+}
 :root[data-theme="dark"] {
   color-scheme: dark;
   --bg: #171614; --surface: #1f1e1b; --ink: #efece5; --muted: #9c968c;
@@ -59,8 +75,10 @@ nav .count { font-size: 11px; opacity: .55; }
 nav .label { flex: 1; }
 
 .theme { margin-top: auto; border-top: 1px solid var(--line); display: flex; }
+/* Three now, not two, so the tracking comes in a little: AUTO / LIGHT / DARK has
+   to sit in the rail's width without any of them wrapping. */
 .theme button { flex: 1; padding: 12px 0; cursor: pointer; border: 0; background: transparent;
-                color: var(--muted); font-size: 10px; letter-spacing: .12em; }
+                color: var(--muted); font-size: 10px; letter-spacing: .08em; }
 .theme button.on { background: var(--accent); color: var(--accentInk); }
 
 /* ---------- header ---------- */
@@ -114,6 +132,9 @@ h1 { font-size: 34px; font-weight: 400; letter-spacing: -.03em; line-height: 1.1
 .chip::before { content: ''; position: absolute; inset: 0; background: var(--mark); opacity: .16; }
 .chip i { position: relative; font-style: normal; color: var(--ink);
           font-size: 11px; font-weight: 600; letter-spacing: .04em; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .chip::before { opacity: .34; }
+}
 :root[data-theme="dark"] .chip::before { opacity: .34; }
 
 /* ---------- owned card rows ---------- */

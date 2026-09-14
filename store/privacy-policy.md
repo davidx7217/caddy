@@ -26,7 +26,9 @@ anyone but you.
 - **Your blocklist.** Domains you have told Caddy never to run on.
 - **Your tie-breaks.** When two cards were within 10% and you chose one and asked
   Caddy to remember it.
-- **Dock position and theme.** Where you dragged the dock to, and light or dark.
+- **Dock position and theme.** Where you dragged the dock to, and light or dark
+  if you pinned one. Leaving it on Auto stores nothing: following the browser IS
+  the absence of a stored value.
 - **The activity log, if you turn it on.** Off by default. See below.
 
 ## What Caddy never sees
