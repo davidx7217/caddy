@@ -293,11 +293,14 @@ All three are current as of 2026-09-13.
    footer reading "3 CARDS SELECTED". The pager sits just below the fold and the
    sixth row is clipped by the footer, which is expected -- the store captures a
    viewport, not a full page. Verified 2026-09-13.
-3. **Settings, the Cards pane.** Current; Settings did not change in the rework.
-   Open Options with three cards owned. At 1280x800
-   this frames as: the sidebar, YOUR CARDS with three rows, and the top of the
-   ADD A CARD well showing the filter bar and the first two catalogue rows.
-   Verified 2026-09-10.
+3. **Settings, the Cards pane.** `node tools/make-screenshots.mjs` makes this one
+   too, with three cards owned. At 1280x800 it frames as: the sidebar with the
+   AUTO / LIGHT / DARK theme rail along its foot, YOUR CARDS with three rows, and
+   the top of the ADD A CARD well showing the filter bar and the first two
+   catalogue rows. The seed pins no theme, so the rail shows AUTO selected, which
+   is the state a new install is in; the light colour comes from the capture
+   emulating prefers-color-scheme rather than from a pinned setting, so the shot
+   is the same on any machine. Verified 2026-09-13.
 
 Framings 2 and 3 were checked at exactly 1280x800; both fill the frame with no
 awkward cut and no scrollbar. Neither page fits entirely in 800px, which is fine:

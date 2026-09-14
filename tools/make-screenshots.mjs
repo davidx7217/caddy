@@ -73,10 +73,16 @@ function serve(port) {
       try {
         let body = await readFile(join(ROOT, rel));
         if (rel.endsWith('.html')) {
+          // No `theme` key on purpose. Absence is what the extension reads as
+          // "follow the browser", so leaving it out is the state a new install
+          // is actually in, and it is what puts AUTO under the cursor in the
+          // Settings rail rather than LIGHT. The colour is pinned at the browser
+          // instead, by emulating prefers-color-scheme, so the shot is still the
+          // same on any machine.
           const seed = url.searchParams.get('seed') === 'empty'
-            ? { instances: [], theme: 'light' }
+            ? { instances: [] }
             : { instances: WALLET, valuations: {}, prefs: { categoryDefaults: {}, tieBand: 0.10 },
-                blocked: [], activity: [], theme: 'light' };
+                blocked: [], activity: [] };
           body = String(body).replace('<script type="module"',
             `<script>${STUB(seed)}</script>\n<script type="module"`);
         }
@@ -99,9 +105,18 @@ async function capture(cdp, sessionId, name, detail) {
   console.log(`  wrote ${name}.png  --  ${detail}`);
 }
 
-/** 1280x800 has to be the PAGE viewport, not the window, or the shot comes up short. */
-const frame = (cdp, sessionId) => cdp.send('Emulation.setDeviceMetricsOverride',
-  { width: W, height: H, deviceScaleFactor: 1, mobile: false }, sessionId);
+/**
+ * 1280x800 has to be the PAGE viewport, not the window, or the shot comes up
+ * short. The media override goes with it: nothing pins a theme in the seed any
+ * more, so without this the shots would take the colour of whatever machine ran
+ * the script.
+ */
+async function frame(cdp, sessionId) {
+  await cdp.send('Emulation.setDeviceMetricsOverride',
+    { width: W, height: H, deviceScaleFactor: 1, mobile: false }, sessionId);
+  await cdp.send('Emulation.setEmulatedMedia',
+    { features: [{ name: 'prefers-color-scheme', value: 'light' }] }, sessionId);
+}
 
 // Clear only the two files this script writes. It used to rm the whole
 // directory, which would have deleted 3-dock-on-a-store.png -- the one shot
