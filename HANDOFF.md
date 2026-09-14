@@ -44,6 +44,12 @@ Everything is written, checked and current. This is the next thing to do.
   open, Citi Double Cash winning at 2.80% with the Sapphire Reserve portal note
   under it, no browser chrome and nothing personal in frame. That script
   deliberately leaves it alone, because it is the shot the script cannot make.
+- **Do not put `theme` back in the screenshot seed.** It used to seed
+  `theme: 'light'`, and a pinned light is exactly what makes the Settings rail
+  highlight LIGHT instead of AUTO. The seed pins nothing now, so the shot shows
+  the state a new install is in, and the colour is held steady by the capture
+  emulating `prefers-color-scheme: light` rather than by a stored setting. Put
+  the key back and the shot silently stops showing the default.
 
 **Expect the install prompt to be the thing reviewers and users react to.** As of
 v1.0.0 `<all_urls>` is declared in the manifest rather than optional, so Chrome
@@ -116,24 +122,39 @@ the README and a real person's card list.
   to `src/setup.js` and are tested; the rendering half is not, because it assigns
   `innerHTML` and queries the result, which needs an HTML parser this project has
   no dependency for. The September 2026 setup rework was verified by driving all
-  four steps in a browser instead -- both themes, an empty wallet, a wallet with
-  card settings, the pager and the search.
+  four steps in a browser instead: an empty wallet, a wallet with card settings,
+  the pager, the search, and all three theme states against both an emulated
+  light and an emulated dark browser.
 - **Setup is centred and Settings is not**, and that is on purpose: setup is a
   sequence of single questions with a sticky footer under them, not a surface you
   scan. Rows opt back out of the centring in `welcome.css`, because a mark, a name
   and a control on one line reads as a row or it reads as nothing.
-- **Theme is three states and the third one is an absent key.** Auto, light,
-  dark, where Auto means `theme` is not in storage and `ui.css` / `options.css`
-  answer with a `prefers-color-scheme` query. Nothing stores the string 'system':
-  the popup, the overlay and setup all decide by testing for exactly 'light' or
-  'dark', and absence already meant follow-the-browser everywhere. Adding a
-  fourth value would have been four places to teach.
-  `options.css` was missing its media query entirely -- Options resolved the
-  browser preference in JS and stamped `data-theme`, which looks identical on
-  load and then freezes, so a page left open across a system theme switch stayed
-  on the colour it started in. The overlay is the one surface that still resolves
-  in JS, because its tokens are set inline on a closed shadow host, so it carries
-  a `matchMedia` listener instead.
+- **Theme is three states and the third one is an absent key.** Auto, Light,
+  Dark, offered in the Settings sidebar rail and on setup's last step. Auto means
+  `theme` is not in storage, and `ui.css` / `options.css` answer with a
+  `prefers-color-scheme` query.
+
+  Nothing stores the string 'system'. The popup, the overlay, Settings and setup
+  all decide by testing for exactly 'light' or 'dark', and absence already meant
+  follow-the-browser in every one of them, so choosing Auto REMOVES the key
+  rather than writing a word. A fourth value would have been four readers to
+  teach and four chances to miss one. `commit()` in `options.js` carries the only
+  branch for it; `setTheme()` in `welcome.js` is the same contract written out
+  again, because setup does not share that plumbing.
+
+  **The rule to hold: never stamp `data-theme` while on Auto.** Stamping a
+  resolved colour looks identical on load and then freezes, so the page stops
+  following the browser. That was a real bug, not a hypothetical:
+  `options.css` had no `prefers-color-scheme` block at all, and Options resolved
+  the preference in JS and stamped the attribute, so a page left open across a
+  system theme switch stayed on the colour it started in. The stylesheet now has
+  the three-state pattern `ui.css` always had.
+
+  The overlay is the one surface that legitimately still resolves in JS: its
+  tokens are set inline on the host because the shadow root is closed and a
+  stylesheet inside it cannot reach out. It carries a `matchMedia` listener for
+  that reason, dropped in `destroy()` alongside the resize one, and keeps the
+  last stored value in `storedTheme` so the listener knows whether it may act.
 - **The card list pages six at a time** and reuses the `.pager` markup from
   Settings rather than growing a second one. Six is what fits under this step's
   title, blurb and search box; Settings pages ten because it has none of those.
