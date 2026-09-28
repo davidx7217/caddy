@@ -9,11 +9,12 @@ works and why; this file is only the state of play.
 
 ## State
 
-- **v1.0.0**, 40 cards across 10 issuers, 139 merchant rows, 27 categories.
-  The second twenty cards landed 2026-09-27; see section 6.
+- **v1.0.0**, 63 cards across 12 issuers, 144 merchant rows, 27 categories.
+  The second twenty cards landed 2026-09-27 and store cards plus the remaining
+  airline and hotel tiers on 2026-09-28; see sections 6 and 7.
 - **Every card verified** against its issuer's own page, each carrying a
   `source_url` and the date it was read.
-- **Tests green**: 378 engine + 31 setup + 49 lifecycle + 45 worker. `npm test`.
+- **Tests green**: 416 engine + 31 setup + 49 lifecycle + 45 worker. `npm test`.
 - **Nothing unpushed, nothing untracked.** All three store screenshots are
   current, so nothing is blocking submission any more.
 - **`caddy-1.0.0.zip` sits in the repo root**, rebuilt on every commit. See the
@@ -225,6 +226,31 @@ Left open, for you:
   homepages may carry a price or a cart link and mount it on marketing pages.
 - Wholesale clubs are left out of Blue Cash Everyday's online retail until card
   acceptance at each club is checked; see the card's `note`.
+
+---
+
+## 7. Store cards and the remaining airline and hotel tiers, 28 September 2026
+
+Sixteen cards that complete programs Caddy already half-covered -- Delta Blue,
+Platinum and Reserve; Hilton Surpass and Aspire; Marriott Bold, Bevy and Brilliant;
+United Gateway, Quest and Club; Southwest Premier and Priority; World of Hyatt; IHG
+Premier and Traveler -- and seven store cards: Amazon Store Card, Target Circle
+Credit Card, Kohl's Card, Macy's Credit Card, MyLowe's Rewards, My Best Buy Credit
+Card and TJX Rewards. Every one read off its issuer's or retailer's page that day.
+
+- **`only_at` is new, and the engine reads it.** A store card only ranks on its own
+  store's domains; everywhere else it is not a candidate. `rank()` reports
+  `none_usable` when a wallet holds cards but none works on the page, and the popup
+  says so instead of "no cards added".
+- **Two issuers are new**, TD Bank (Target) and Synchrony (Amazon, Lowe's, TJX), with
+  marks in `issuers.js`. Two currencies are new, `hyatt` and `ihg`, valued from the
+  same NerdWallet table as the other airline and hotel currencies.
+- **IHG cards are Mastercard**, unlike Chase's other co-brands -- the page terms say
+  World and World Elite Mastercard, and the data says so.
+- **Store cards pay in store money that expires.** Kohl's Cash and Macy's Star Money
+  last 30 days; each card's caution says so, and both are valued as cash anyway.
+- **Not added:** store cards with no rewards (Home Depot is the big one), and smaller
+  programs -- Nordstrom, Gap, Ulta, JCPenney. The same `only_at` shape takes them.
 
 ---
 
