@@ -9,12 +9,14 @@ works and why; this file is only the state of play.
 
 ## State
 
-- **v1.0.0**, 63 cards across 12 issuers, 144 merchant rows, 27 categories.
-  The second twenty cards landed 2026-09-27 and store cards plus the remaining
-  airline and hotel tiers on 2026-09-28; see sections 6 and 7.
+- **v1.0.0**, 82 cards across 16 issuers, 144 merchant rows, 27 categories.
+  The second twenty cards landed 2026-09-27; store cards plus the remaining
+  airline and hotel tiers, then nineteen cards from five issuers Caddy lacked, on
+  2026-09-28. See sections 6, 7 and 9.
 - **Every card verified** against its issuer's own page, each carrying a
-  `source_url` and the date it was read.
-- **Tests green**: 416 engine + 31 setup + 49 lifecycle + 45 worker. `npm test`.
+  `source_url` and the date it was read. The one soft spot: the three Bilt cards'
+  category definitions were not readable (section 9).
+- **Tests green**: 447 engine + 31 setup + 49 lifecycle + 45 worker. `npm test`.
 - **Nothing unpushed.** `main` on GitHub is the whole tree. All three store
   screenshots are still current -- the new cards rank after the ones they show.
 - **`caddy-1.0.0.zip` sits in the repo root**, rebuilt on every commit. See the
@@ -44,18 +46,21 @@ In order. The first is dated; the second needs a real install, so it is David's.
    - `node tools/check-redirects-browser.mjs` to confirm `bhphotovideo.com` and
      `microcenter.com`, which met a Cloudflare challenge.
 3. **Keep widening coverage, with the recipe in section 8.** By a rough
-   bank-by-bank judgment -- no public data exists per card -- Caddy covers about
-   55-60% of US rewards-card spending. The next gaps, largest first:
-   - **Issuers not in Caddy yet**: Synchrony's general-purpose cards (PayPal
-     Cashback Mastercard, Sam's Club Mastercard, Venmo, Walmart OnePay), Barclays
-     (AAdvantage Aviator Red, JetBlue), USAA, Navy Federal, Bilt.
+   bank-by-bank judgment made before section 9's cards -- no public data exists
+   per card -- Caddy covered about 55-60% of US rewards-card spending. The
+   issuers it lacked are in now (section 9). The next gaps, largest first:
    - **Business and corporate cards**: Amex Business Platinum and Business Gold,
      Blue Business Cash, Capital One Spark, Ink Business Premier, Sapphire Reserve
-     for Business.
+     for Business. Two more seen on 2026-09-28: the JetBlue Business Card and the
+     Sam's Club Business Mastercard.
    - **Smaller store cards**: Nordstrom, Gap, Ulta, JCPenney -- same `only_at`
-     shape as the seven already in.
+     shape as the seven already in. Gap's cards are Barclays' now: its card list
+     carries Gap, Old Navy, Banana Republic and Athleta Encore Mastercards.
    - **Tiers still missing from covered programs**: Citi AAdvantage Executive and
      Globe, Autograph Journey, BofA Premium Rewards, U.S. Bank Altitude.
+   - **Barclays' other co-brands**, listed on its card page but not read:
+     Wyndham Rewards Earner (three personal tiers), AARP, Upromise, Frontier,
+     Emirates, Miles & More.
 4. **Submit to the Chrome Web Store** -- section 1, unchanged. The listing's
    counts were kept current through this week.
 
@@ -293,7 +298,7 @@ Card and TJX Rewards. Every one read off its issuer's or retailer's page that da
 
 ---
 
-## 8. Adding a card: the recipe this week's 43 followed
+## 8. Adding a card: the recipe this week's 62 followed
 
 1. **Read the issuer's own page** in the in-app browser -- `get_page_text`, or a
    short `javascript_tool` regex over `document.body.innerText`. Never a blog or
@@ -301,18 +306,24 @@ Card and TJX Rewards. Every one read off its issuer's or retailer's page that da
    cap, the network (page terms or card art) and the issuing bank. Chase and Amex
    put exact definitions in collapsed "Offer Details"; read `#offerpop`'s
    `textContent` on Chase pages. A number the page does not state goes in the
-   `note` as unconfirmed, never in the data as fact.
+   `note` as unconfirmed, never in the data as fact. A terms link that downloads
+   a file instead of opening (Bilt's does) is not to be retried; say in the
+   `note` that the definitions went unread.
 2. **Map each category onto the 27 in `categories.json`**, reading the issuer's
    definition rather than its headline. Online retail at Amex and Online Shopping
    at BofA are channels, repeated across every store category -- see the README.
    A rate that needs Apple Pay, PayPal checkout or a chosen top category cannot be
-   seen from a web page; put it in the `caution`, not in `rules`.
+   seen from a web page; put it in the `caution`, not in `rules`. A rate that needs
+   a membership (Prime, Walmart+, Sam's Club Plus) goes in at the member rate, with
+   the other rate in the `caution` -- Prime Visa's convention.
 3. **Every allowlisted domain and every category needs merchant rows.** Add them,
    then sweep the new rows: `tools/check-redirects.mjs` over HTTP, and the browser
    for whatever it reports as blocked. Never try to get past a bot challenge.
 4. **New currency**: `valuations.json` plus a `_sources` line, and
    `CURRENCY`/`KIND` in `issuers.js`. **New issuer**: `CHIP`, `MONOGRAM` and
-   `ISSUER` there too. The audit test fails on either if forgotten.
+   `ISSUER` there too. The audit test fails on either if forgotten. Pick a mid-tone
+   `CHIP` colour: the wash is 16% on paper and 34% on dark, and a near-black or a
+   deep navy vanishes on the dark theme.
 5. **`common` takes the next free rank**; bump the card count in the audit test and
    in `cards.json`'s `_comment`.
 6. **Pin every verified rate in `test-engine.mjs`**, run `npm test`, and
@@ -321,6 +332,57 @@ Card and TJX Rewards. Every one read off its issuer's or retailer's page that da
    `store/listing.md`, and in this file.
 8. **Commit only when David says so.** Branch, commit the change, commit the
    handoff separately, fast-forward `main`, push, delete the branch.
+
+---
+
+## 9. The issuers Caddy lacked, 28 September 2026
+
+Nineteen cards, ranks 64 to 82 of `common`, each read off its issuer's page that
+day: Synchrony's PayPal Cashback Mastercard, Venmo Credit Card, Sam's Club
+Mastercard and OnePay CashRewards Card; Barclays' JetBlue, JetBlue Plus and JetBlue
+Premier; USAA Preferred Cash Rewards, Cashback Rewards Plus Amex, Eagle Adapt and
+Eagle Navigator; Navy Federal cashRewards, cashRewards Plus, More Rewards Amex, GO
+REWARDS and Flagship Premier; and the Bilt Blue, Obsidian and Palladium cards.
+
+- **Four issuers are new** -- `barclays`, `usaa`, `navyfederal` and `column` -- and
+  three currencies: `jetblue` at 1.4 (NerdWallet), `usaa` at 1.0 (USAA's own travel
+  figure) and `bilt` at 1.25 (NerdWallet's baseline, not its 1.8 transfer
+  estimate). No engine change, no new category, no new merchant row.
+- **Bilt is filed under Column N.A.**, the bank that issues it, as Apple Card is
+  under Goldman Sachs. **Its terms were not read**: the Offer Terms link on
+  bilt.com downloads a file instead of opening, so only the headline rates on
+  bilt.com/card are in. What Obsidian's "other travel" covers is unconfirmed, and
+  transit is left out of it.
+- **Rates that depend on how you pay are cautions, not rules**: PayPal Cashback's 3%
+  with PayPal checkout, and Venmo's 3% for paying with Venmo and +1% for splitting
+  a purchase -- the same call as Apple Pay.
+- **Membership rates go in at the member rate**, Prime Visa's convention: OnePay's
+  5% at Walmart needs Walmart+ (3% without), and the Sam's Club Mastercard's 3% at
+  samsclub.com needs Plus (1% for Club members).
+- **JetBlue's bonus needs a direct purchase.** Barclays withholds bonus points from
+  purchases made through third parties, so the delivery apps are denylisted on
+  dining and `instacart.com` gained a `barclays` override. TrueBlue Travel is a
+  portal note, as United's Renowned Hotels is.
+- **USAA Eagle Adapt is not a top-category card**, whatever its tagline says: all
+  fourteen mapped categories earn 3% at once, under one $3,000 quarterly cap.
+- **Navy Federal points are cash.** Its program description prices every point at
+  $0.01 as cash, so all five cards earn `cash`. cashRewards and cashRewards Plus
+  are one application -- the approved credit limit decides which card arrives --
+  and either can be a Visa or a Mastercard, which `network` says.
+- **Not added:** the AAdvantage Aviator Red (its Barclays page 404s and the card is
+  gone from Barclays' list), Navy Federal's Flagship Rewards (closed to new
+  applicants), the Sam's Club Credit Card and the OnePay Walmart Spend Card (no
+  rewards), and USAA's and Navy Federal's low-rate, secured and credit-building
+  cards, which were not read.
+- **Chip colours needed a second pass.** USAA's deep navy and Column's near-black
+  vanished on the dark theme; both were lightened and checked on both themes in
+  the in-app browser, with Settings served over a local server and a stubbed
+  `chrome.*`.
+
+Left open, for you:
+
+- Re-read the Bilt Card Offer Terms in a browser that opens them, then confirm or
+  correct Obsidian's "other travel" and anything else they define.
 
 ---
 
