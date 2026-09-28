@@ -988,7 +988,7 @@ eq('...and its 5x hotels rate stays a portal note, never a ranking',
      cards.filter(p => !ISSUER[p.issuer] || !CURRENCY[p.currency]).map(p => p.id), []);
   eq('every card is ranked, 1 to the catalogue size, with no gaps and no repeats',
      cards.map(p => p.common).sort((a, b) => a - b), Array.from({ length: cards.length }, (_, i) => i + 1));
-  eq('...and there are 82 of them', cards.length, 82);
+  eq('...and there are 95 of them', cards.length, 95);
   // A store card that names a domain nothing resolves to could never rank at all.
   eq('every store a store card works at is in merchants.json',
      cards.flatMap(p => (p.only_at || []).filter(d => !merchants[d]).map(d => `${p.id}:${d}`)), []);
@@ -1366,6 +1366,69 @@ eq('...and 2x on other travel, booked anywhere',
    ['delta.com', 'hotels.com', 'hertz.com'].map(h => tier('column-bilt-obsidian', h).rate), [2, 2, 2]);
 eq('Bilt Palladium: 2x everywhere, 4x on linked Lyft',
    [tier('column-bilt-palladium', 'amazon.com').rate, tier('column-bilt-palladium', 'lyft.com').rate], [2, 4]);
+
+// --- business cards, 2026-09-28 ------------------------------------------------
+// Amex, Capital One, Chase and Barclays, each read off its issuer's page that day.
+const noteAt = (id, h) => store(h, id).notes.map(n => n.text)[0];
+
+eq('Amex Business Platinum: 2x at hardware suppliers, electronics stores and shippers',
+   ['lowes.com', 'homedepot.com', 'bestbuy.com', 'ups.com'].map(h => tier('amex-business-platinum', h).rate),
+   [2, 2, 2, 2]);
+eq('...under one $2 million yearly cap', tier('amex-business-platinum', 'lowes.com').caveats[0],
+   'Capped at $2,000,000 per year, then 1x');
+eq('...but 1x at a home furnishings store, which Amex excludes',
+   tier('amex-business-platinum', 'homegoods.com').rate, 1);
+eq('...and, unlike the consumer Platinum, 1x on a flight bought from the airline',
+   [tier('amex-business-platinum', 'delta.com').rate, tier('amex-platinum', 'delta.com').rate], [1, 5]);
+eq('...with its 5x as an Amex Travel note', noteAt('amex-business-platinum', 'delta.com'),
+   'Amex Business Platinum Card: 5x (8.00%) if you book through Amex Travel instead');
+eq('Amex Business Gold: its top-two 4x is not ranked, so 1x at a restaurant',
+   tier('amex-business-gold', 'doordash.com').rate, 1);
+eq('...and 3x through Amex Travel is a note', noteAt('amex-business-gold', 'delta.com'),
+   'Amex Business Gold Card: 3x (4.80%) if you book through Amex Travel instead');
+eq('Amex Blue Business Cash: 2% everywhere', tier('amex-blue-business-cash', 'amazon.com').rate, 2);
+eq('Amex Graphite Business Cash: 2% everywhere, 5% through Amex Travel',
+   [tier('amex-graphite-business-cash', 'amazon.com').rate, noteAt('amex-graphite-business-cash', 'delta.com')],
+   [2, 'Amex Graphite Business Cash Unlimited: 5x (5.00%) if you book through Amex Travel instead']);
+
+eq('Capital One Venture X Business: 2x everywhere, worth 2.8%',
+   [tier('capitalone-venture-x-business', 'amazon.com').rate, tier('capitalone-venture-x-business', 'amazon.com').value],
+   [2, 2.8]);
+eq('...10x on hotels and 5x on flights through Capital One Business Travel',
+   [noteAt('capitalone-venture-x-business', 'hilton.com'), noteAt('capitalone-venture-x-business', 'delta.com')],
+   ['Capital One Venture X Business: 10x (14.00%) if you book through Capital One Business Travel instead',
+    'Capital One Venture X Business: 5x (7.00%) if you book through Capital One Business Travel instead']);
+eq('Spark Cash Plus 2%, Venture Business 2x, Spark Cash 2%, VentureOne Business 1.5x, Spark Cash Select 1.5%',
+   ['capitalone-spark-cash-plus', 'capitalone-venture-business', 'capitalone-spark-cash',
+    'capitalone-ventureone-business', 'capitalone-spark-cash-select'].map(id => tier(id, 'amazon.com').rate),
+   [2, 2, 2, 1.5, 1.5]);
+eq('...each with 5x on rental cars through Capital One Business Travel, and no flight rate there',
+   [noteAt('capitalone-spark-cash-plus', 'hertz.com'), store('delta.com', 'capitalone-spark-cash').notes],
+   ['Capital One Spark Cash Plus: 5x (5.00%) if you book through Capital One Business Travel instead', []]);
+
+eq('Chase Ink Business Premier: 2% everywhere, valued as cash, and 5% on Lyft',
+   [tier('chase-ink-business-premier', 'amazon.com').value, tier('chase-ink-business-premier', 'lyft.com').rate],
+   [2, 5]);
+eq('...with 5% through Chase Travel as a note', noteAt('chase-ink-business-premier', 'hilton.com'),
+   'Chase Ink Business Premier: 5x (5.00%) if you book through Chase Travel instead');
+eq('Chase Sapphire Reserve for Business: 4x on flights booked direct, worth 6%',
+   [tier('chase-sapphire-reserve-business', 'delta.com').rate, tier('chase-sapphire-reserve-business', 'delta.com').value],
+   [4, 6]);
+eq('...1x through an OTA, where 8x through Chase Travel is the note',
+   [tier('chase-sapphire-reserve-business', 'hotels.com').rate, noteAt('chase-sapphire-reserve-business', 'hotels.com')],
+   [1, 'Chase Sapphire Reserve for Business: 8x (12.00%) if you book through Chase Travel instead']);
+eq('...3x on search and social ads, capped at $1 million a year',
+   [tier('chase-sapphire-reserve-business', 'ads.google.com').rate,
+    tier('chase-sapphire-reserve-business', 'ads.google.com').caveats[0]],
+   [3, 'Capped at $1,000,000 per year, then 1x']);
+eq('...5x on Lyft, 1x elsewhere',
+   [tier('chase-sapphire-reserve-business', 'lyft.com').rate, tier('chase-sapphire-reserve-business', 'amazon.com').rate],
+   [5, 1]);
+
+eq('JetBlue Business: 6x at jetblue.com, 2x at office supply stores and restaurants',
+   ['jetblue.com', 'staples.com', 'chipotle.com'].map(h => tier('barclays-jetblue-business', h).rate), [6, 2, 2]);
+eq('...but 1x through a delivery app, and no grocery bonus',
+   [tier('barclays-jetblue-business', 'doordash.com').rate, tier('barclays-jetblue-business', 'kroger.com').rate], [1, 1]);
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

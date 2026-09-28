@@ -1,9 +1,9 @@
 {
   "_note_field": "MAINTAINER-ONLY. `note` records why a card is modelled the way it is -- provenance, schema reasoning, what was deliberately not modelled. Never render it in the UI. `caution` is the user-facing field.",
   "_business_note": "`business` marks a card issued on business underwriting rather than personal. Absent means personal -- only the field's presence is meaningful, so there is nothing to keep in sync on seventy-eight records. It filters the catalogue and nothing else reads it: the ranker does not care whose name is on the account.",
-  "_common_note": "`common` is a POPULARITY RANK, 1 to 82, and it is EDITORIAL. There is no public card-level ranking of US cardholders -- Nilson publishes issuer volume, not how many people hold a Freedom Unlimited -- so this is judgement, not a sourced fact, and it is the only field here that is. It orders the setup picker so a new user meets mass-market cards first. 21 to 40 were added on 2026-09-27 as the next twenty after the first, 41 to 63 on 2026-09-28 -- store cards, then the remaining tiers of airline and hotel programs already present -- and 64 to 82 later that day, the cards of issuers Caddy did not yet cover, so each batch ranks below the one before by construction. Re-rank it freely; nothing computes from it.",
+  "_common_note": "`common` is a POPULARITY RANK, 1 to 95, and it is EDITORIAL. There is no public card-level ranking of US cardholders -- Nilson publishes issuer volume, not how many people hold a Freedom Unlimited -- so this is judgement, not a sourced fact, and it is the only field here that is. It orders the setup picker so a new user meets mass-market cards first. 21 to 40 were added on 2026-09-27 as the next twenty after the first, 41 to 63 on 2026-09-28 -- store cards, then the remaining tiers of airline and hotel programs already present -- 64 to 82 later that day, the cards of issuers Caddy did not yet cover, and 83 to 95 after those, business cards, so each batch ranks below the one before by construction. Re-rank it freely; nothing computes from it.",
   "_only_at_note": "`only_at` marks a STORE CARD: the merchant domains where it works, and nowhere else. The ranker drops the card from consideration on any other domain rather than ranking it on its base rate, because recommending a card the till refuses is worse than not mentioning it. base_rate is then the store rate. Store cards with no rewards at all -- Home Depot's, for one -- are deliberately left out: a card that earns nothing can never be the best card to use.",
-  "_comment": "All 82 records verified against issuer sources; 5 on 2026-08-29, 6 on 2026-09-09, 5 on 2026-09-10, 24 on 2026-09-27 -- the twenty added that day, plus Blue Cash Everyday, Amex Gold, BofA Customized Cash and U.S. Bank Cash+, re-read because their categories changed -- and 42 on 2026-09-28: the store cards and the remaining airline and hotel tiers, then nineteen cards from Synchrony's general-purpose line, Barclays, USAA, Navy Federal and Bilt. The Bilt cards' offer terms could not be read (the link downloads a file), so their category definitions are unconfirmed; see their notes. Each carries its source_url. Chase Freedom Flex rotating categories MUST be re-verified 2026-10-01. Amex Platinum was absent until 2026-09-27 because no reachable americanexpress.com page stated its annual fee or base rate on 2026-09-10; the product page states both now.",
+  "_comment": "All 95 records verified against issuer sources; 5 on 2026-08-29, 6 on 2026-09-09, 5 on 2026-09-10, 24 on 2026-09-27 -- the twenty added that day, plus Blue Cash Everyday, Amex Gold, BofA Customized Cash and U.S. Bank Cash+, re-read because their categories changed -- and 55 on 2026-09-28: the store cards and the remaining airline and hotel tiers, then nineteen cards from Synchrony's general-purpose line, Barclays, USAA, Navy Federal and Bilt, then thirteen business cards from Amex, Capital One, Chase and Barclays. The Bilt cards' offer terms could not be read (the link downloads a file), so their category definitions are unconfirmed; see their notes. Each carries its source_url. Chase Freedom Flex rotating categories MUST be re-verified 2026-10-01. Amex Platinum was absent until 2026-09-27 because no reachable americanexpress.com page stated its annual fee or base rate on 2026-09-10; the product page states both now.",
   "chase-sapphire-reserve": {
     "id": "chase-sapphire-reserve",
     "issuer": "chase",
@@ -3725,6 +3725,516 @@
         "portal_only": true,
         "portal": "Bilt Travel",
         "caveat": "Flights booked on the Bilt Travel Portal."
+      }
+    ]
+  },
+  "amex-business-platinum": {
+    "id": "amex-business-platinum",
+    "issuer": "amex",
+    "network": "amex",
+    "currency": "mr",
+    "name": "Amex Business Platinum Card",
+    "common": 85,
+    "business": true,
+    "annual_fee": 895,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.americanexpress.com/us/credit-cards/business/business-credit-cards/american-express-business-platinum-credit-card-amex/",
+    "caution": "Business card. Its 5X needs a booking through Amex Travel, and any single purchase of $5,000 or more earns 2X, which Caddy does not rank.",
+    "note": "Rates read off the product page and its Offer & Benefit Terms on 2026-09-28; category definitions off americanexpress.com/us/rewards-info/business.html the same day. Unlike the consumer Platinum, the 5X on flights is for flights booked online at AmexTravel.com only, not direct with the airline, so both 5X rules are portal rules. The 2X covers U.S. construction material and hardware suppliers (Lowe's is named; home furnishings are excluded, hence the homegoods and homesense denylist), electronic goods retailers and software and cloud providers, shipping providers, and any purchase of $5,000 or more -- the last is a size, not a merchant, and is left to the caution.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Amex Travel",
+        "caveat": "Flights booked online at AmexTravel.com."
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Amex Travel",
+        "caveat": "Prepaid hotels booked through Amex Travel."
+      },
+      {
+        "category": "home_improvement",
+        "rate": 2.0,
+        "merchant_denylist": [
+          "homegoods.com",
+          "homesense.com"
+        ],
+        "cap": {
+          "amount": 2000000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "U.S. construction material and hardware suppliers, Lowe's among them. Home furnishings stores are excluded. The $2 million cap is combined across every 2X category and runs per calendar year."
+      },
+      {
+        "category": "electronics",
+        "rate": 2.0,
+        "cap": {
+          "amount": 2000000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "U.S. electronic goods retailers, plus software and cloud providers. The $2 million cap is combined across every 2X category and runs per calendar year."
+      },
+      {
+        "category": "shipping",
+        "rate": 2.0,
+        "cap": {
+          "amount": 2000000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "U.S. courier, postal and freight shippers. The $2 million cap is combined across every 2X category and runs per calendar year."
+      }
+    ]
+  },
+  "amex-business-gold": {
+    "id": "amex-business-gold",
+    "issuer": "amex",
+    "network": "amex",
+    "currency": "mr",
+    "name": "Amex Business Gold Card",
+    "common": 84,
+    "business": true,
+    "annual_fee": 375,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.americanexpress.com/us/credit-cards/business/business-credit-cards/american-express-business-gold-card-amex/",
+    "caution": "Business card. 4X on whichever two of six categories -- ads, electronics and software, restaurants, gas, transit, wireless -- you spend most on each cycle, to $150,000 a year. Caddy cannot see which two, so it ranks 1X.",
+    "note": "Rates read off the product page on 2026-09-28. The 4X goes to the two categories where the business spent most in each billing cycle, from six: U.S. advertising in select media, U.S. electronic goods retailers and software and cloud providers, U.S. restaurants including takeout and delivery, U.S. gas stations, transit, and U.S. wireless phone service; $150,000 combined a calendar year, then 1X. Which two is decided by the whole cycle's spending, which no page shows, so per the recipe it is a caution and not rules -- the same call as a top-category card. The alternative, if wanted, is a Cash+-style picker for the two the cardholder usually hits.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 3.0,
+        "portal_only": true,
+        "portal": "Amex Travel",
+        "caveat": "Flights booked on AmexTravel.com."
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 3.0,
+        "portal_only": true,
+        "portal": "Amex Travel",
+        "caveat": "Prepaid hotels booked on AmexTravel.com."
+      }
+    ]
+  },
+  "amex-blue-business-cash": {
+    "id": "amex-blue-business-cash",
+    "issuer": "amex",
+    "network": "amex",
+    "currency": "cash",
+    "name": "Amex Blue Business Cash",
+    "common": 87,
+    "business": true,
+    "annual_fee": 0,
+    "base_rate": 2.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.americanexpress.com/en-us/business/credit-cards/blue-business-cash/",
+    "caution": "Business card. The 2% stops at $50,000 of purchases a calendar year; after that everything earns 1%.",
+    "note": "Read off the product page on 2026-09-28: 2% cash back on the first $50,000 of eligible purchases a calendar year, 1% after, credited to the statement. No rules by design, as for Blue Business Plus: the 2% is the base rate and the yearly limit, which a base rate cannot carry, is in the caution.",
+    "rules": []
+  },
+  "amex-graphite-business-cash": {
+    "id": "amex-graphite-business-cash",
+    "issuer": "amex",
+    "network": "amex",
+    "currency": "cash",
+    "name": "Amex Graphite Business Cash Unlimited",
+    "common": 95,
+    "business": true,
+    "annual_fee": 295,
+    "base_rate": 2.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.americanexpress.com/us/credit-cards/business/business-credit-cards/graphite-business-cash-unlimited-card/",
+    "note": "Read off the product page on 2026-09-28: unlimited 2% cash back, and 5% on flights and prepaid hotels booked through American Express Travel online. Cash back comes as Reward Dollars, redeemable as a statement credit or at Amazon checkout, so currency is 'cash'. Not on the 2026-09-28 gap list; it turned up in Amex's business lineup while Blue Business Cash was being read.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Amex Travel",
+        "caveat": "Flights booked through American Express Travel online."
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Amex Travel",
+        "caveat": "Prepaid hotels booked through American Express Travel online."
+      }
+    ]
+  },
+  "capitalone-venture-x-business": {
+    "id": "capitalone-venture-x-business",
+    "issuer": "capitalone",
+    "network": "visa or mastercard",
+    "currency": "c1",
+    "name": "Capital One Venture X Business",
+    "common": 86,
+    "business": true,
+    "annual_fee": 395,
+    "base_rate": 2.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.capitalone.com/small-business/credit-cards/venture-x-business/",
+    "note": "Rates read off capitalone.com on 2026-09-28: 2X miles on everything; through Capital One Business Travel, 10X on hotels and rental cars and 5X on flights and vacation rentals. A charge card. network is not confirmed: neither the page nor the card art names one, and its benefits footnote covers \"your covered Visa card or Mastercard\", so network says visa or mastercard.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 10.0,
+        "portal_only": true,
+        "portal": "Capital One Business Travel",
+        "caveat": "Hotels booked through Capital One Business Travel. Vacation rentals booked there earn 5X."
+      },
+      {
+        "category": "car_rental",
+        "rate": 10.0,
+        "portal_only": true,
+        "portal": "Capital One Business Travel",
+        "caveat": "Rental cars booked through Capital One Business Travel."
+      },
+      {
+        "category": "travel_air",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Capital One Business Travel",
+        "caveat": "Flights booked through Capital One Business Travel."
+      }
+    ]
+  },
+  "capitalone-spark-cash-plus": {
+    "id": "capitalone-spark-cash-plus",
+    "issuer": "capitalone",
+    "network": "visa or mastercard",
+    "currency": "cash",
+    "name": "Capital One Spark Cash Plus",
+    "common": 83,
+    "business": true,
+    "annual_fee": 150,
+    "base_rate": 2.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.capitalone.com/small-business/credit-cards/spark-cash-plus/",
+    "caution": "Business card. The $150 fee is refunded any year you spend $150,000.",
+    "note": "Rates read off capitalone.com on 2026-09-28: 2% cash back on everything, and 5 on hotels, vacation rentals and rental cars booked through Capital One Business Travel, which Capital One says may differ from Capital One Travel. A charge card. network is not confirmed: neither the page nor the card art names one, and its benefits footnote covers \"your covered Visa card or Mastercard\", so network says visa or mastercard.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Capital One Business Travel",
+        "caveat": "Hotels and vacation rentals booked through Capital One Business Travel."
+      },
+      {
+        "category": "car_rental",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Capital One Business Travel",
+        "caveat": "Rental cars booked through Capital One Business Travel."
+      }
+    ]
+  },
+  "capitalone-venture-business": {
+    "id": "capitalone-venture-business",
+    "issuer": "capitalone",
+    "network": "visa or mastercard",
+    "currency": "c1",
+    "name": "Capital One Venture Business",
+    "common": 90,
+    "business": true,
+    "annual_fee": 95,
+    "base_rate": 2.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.capitalone.com/small-business/credit-cards/venture-business/",
+    "note": "Rates read off capitalone.com on 2026-09-28: 2X miles on everything, and 5 on hotels, vacation rentals and rental cars booked through Capital One Business Travel, which Capital One says may differ from Capital One Travel. network is not confirmed: neither the page nor the card art names one, and its benefits footnote covers \"your covered Visa card or Mastercard\", so network says visa or mastercard.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Capital One Business Travel",
+        "caveat": "Hotels and vacation rentals booked through Capital One Business Travel."
+      },
+      {
+        "category": "car_rental",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Capital One Business Travel",
+        "caveat": "Rental cars booked through Capital One Business Travel."
+      }
+    ]
+  },
+  "capitalone-spark-cash": {
+    "id": "capitalone-spark-cash",
+    "issuer": "capitalone",
+    "network": "visa or mastercard",
+    "currency": "cash",
+    "name": "Capital One Spark Cash",
+    "common": 89,
+    "business": true,
+    "annual_fee": 95,
+    "base_rate": 2.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.capitalone.com/small-business/credit-cards/spark-cash/",
+    "caution": "Business card. $0 annual fee the first year, then $95.",
+    "note": "Rates read off capitalone.com on 2026-09-28: 2% cash back on everything, and 5 on hotels and rental cars booked through Capital One Business Travel, which Capital One says may differ from Capital One Travel. network is not confirmed: neither the page nor the card art names one, and its benefits footnote covers \"your covered Visa card or Mastercard\", so network says visa or mastercard.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Capital One Business Travel",
+        "caveat": "Hotels booked through Capital One Business Travel."
+      },
+      {
+        "category": "car_rental",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Capital One Business Travel",
+        "caveat": "Rental cars booked through Capital One Business Travel."
+      }
+    ]
+  },
+  "capitalone-ventureone-business": {
+    "id": "capitalone-ventureone-business",
+    "issuer": "capitalone",
+    "network": "visa or mastercard",
+    "currency": "c1",
+    "name": "Capital One VentureOne Business",
+    "common": 93,
+    "business": true,
+    "annual_fee": 0,
+    "base_rate": 1.5,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.capitalone.com/small-business/credit-cards/ventureone-business/",
+    "note": "Rates read off capitalone.com on 2026-09-28: 1.5X miles on everything, and 5 on hotels, vacation rentals and rental cars booked through Capital One Business Travel, which Capital One says may differ from Capital One Travel. network is not confirmed: neither the page nor the card art names one, and its benefits footnote covers \"your covered Visa card or Mastercard\", so network says visa or mastercard.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Capital One Business Travel",
+        "caveat": "Hotels and vacation rentals booked through Capital One Business Travel."
+      },
+      {
+        "category": "car_rental",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Capital One Business Travel",
+        "caveat": "Rental cars booked through Capital One Business Travel."
+      }
+    ]
+  },
+  "capitalone-spark-cash-select": {
+    "id": "capitalone-spark-cash-select",
+    "issuer": "capitalone",
+    "network": "visa or mastercard",
+    "currency": "cash",
+    "name": "Capital One Spark Cash Select",
+    "common": 92,
+    "business": true,
+    "annual_fee": 0,
+    "base_rate": 1.5,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.capitalone.com/small-business/credit-cards/spark-cash-select/",
+    "note": "Rates read off capitalone.com on 2026-09-28: 1.5% cash back on everything, and 5 on hotels and rental cars booked through Capital One Business Travel, which Capital One says may differ from Capital One Travel. network is not confirmed: neither the page nor the card art names one, and its benefits footnote covers \"your covered Visa card or Mastercard\", so network says visa or mastercard.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Capital One Business Travel",
+        "caveat": "Hotels booked through Capital One Business Travel."
+      },
+      {
+        "category": "car_rental",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Capital One Business Travel",
+        "caveat": "Rental cars booked through Capital One Business Travel."
+      }
+    ]
+  },
+  "chase-ink-business-premier": {
+    "id": "chase-ink-business-premier",
+    "issuer": "chase",
+    "network": "visa",
+    "currency": "cash",
+    "name": "Chase Ink Business Premier",
+    "common": 88,
+    "business": true,
+    "annual_fee": 195,
+    "base_rate": 2.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://creditcards.chase.com/business-credit-cards/ink/premier",
+    "caution": "Business card. Any single purchase of $5,000 or more earns 2.5%, which Caddy does not rank.",
+    "note": "Rates read off the offer details on 2026-09-28: 2% on everything, 2.5% total on each purchase of $5,000 or more, 5% total on Chase Travel, and 5% total on Lyft through 2027-09-30. The page calls these Cash Back rewards and prices them at 100 points per $1, and says nothing of moving them to other Ultimate Rewards cards; the rewards agreement it links to downloads as a file. So currency is 'cash', not 'ur' -- at the ur figure this would read 3% everywhere, which the page does not support. Network read off the card art: Visa Signature Business.",
+    "rules": [
+      {
+        "category": "travel_portal",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Chase Travel"
+      },
+      {
+        "category": "travel_ground",
+        "rate": 5.0,
+        "merchant_allowlist": [
+          "lyft.com"
+        ],
+        "window": {
+          "end": "2027-09-30"
+        },
+        "caveat": "Lyft rides only, and it is 5% TOTAL rather than a bonus on top. Offer ends 2027-09-30."
+      }
+    ]
+  },
+  "chase-sapphire-reserve-business": {
+    "id": "chase-sapphire-reserve-business",
+    "issuer": "chase",
+    "network": "visa or mastercard",
+    "currency": "ur",
+    "name": "Chase Sapphire Reserve for Business",
+    "common": 91,
+    "business": true,
+    "annual_fee": 795,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://creditcards.chase.com/business-credit-cards/sapphire/reserve",
+    "caution": "Business card. The first $300 a year of travel is absorbed by the travel credit and earns nothing.",
+    "note": "Rates read off the offer details on 2026-09-28: 8X through Chase Travel, 4X on flights and hotels booked direct, 3X on social media and search engine advertising (uncapped until 2026-11-14, then capped at $1,000,000 an account anniversary year), 5X total on Lyft in the Lyft app through 2027-09-30, 1X elsewhere. The cap starts in November, and a rule with a window for it would show a false \"rate ends\" warning in the fortnight before, so the cap sits on the one rule with its start date in the caveat. Booked direct excludes OTAs, hence the Sapphire Reserve's denylist. The $300 travel credit and The Edit credit purchases earn no points. network is not confirmed: the card art shows no network mark and the page names none.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 4.0,
+        "merchant_denylist": [
+          "expedia.com",
+          "booking.com",
+          "airbnb.com",
+          "hotels.com",
+          "priceline.com",
+          "vrbo.com",
+          "kayak.com",
+          "orbitz.com",
+          "travelocity.com"
+        ],
+        "caveat": "Flights booked direct. Purchases covered by the $300 travel credit earn no points."
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 4.0,
+        "merchant_denylist": [
+          "expedia.com",
+          "booking.com",
+          "airbnb.com",
+          "hotels.com",
+          "priceline.com",
+          "vrbo.com",
+          "kayak.com",
+          "orbitz.com",
+          "travelocity.com"
+        ],
+        "caveat": "Hotels booked direct. Purchases covered by the $300 travel credit earn no points."
+      },
+      {
+        "category": "advertising",
+        "rate": 3.0,
+        "cap": {
+          "amount": 1000000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "Social media and search engine ads. The $1,000,000 cap runs per account anniversary year, starting 2026-11-15."
+      },
+      {
+        "category": "travel_ground",
+        "rate": 5.0,
+        "merchant_allowlist": [
+          "lyft.com"
+        ],
+        "window": {
+          "end": "2027-09-30"
+        },
+        "caveat": "Lyft rides bought in the Lyft app. Offer ends 2027-09-30."
+      },
+      {
+        "category": "travel_portal",
+        "rate": 8.0,
+        "portal_only": true,
+        "portal": "Chase Travel",
+        "caveat": "Purchases covered by the $300 travel credit earn no points."
+      }
+    ]
+  },
+  "barclays-jetblue-business": {
+    "id": "barclays-jetblue-business",
+    "issuer": "barclays",
+    "network": "mastercard",
+    "currency": "jetblue",
+    "name": "JetBlue Business Card",
+    "common": 94,
+    "business": true,
+    "annual_fee": 99,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://cards.barclaycardus.com/banking/cards/jetblue-business-card/",
+    "caution": "Business card. Bonus points may not post when you pay through a digital wallet, PayPal or another third party.",
+    "note": "The JetBlue Business Mastercard, issued by Barclays Bank Delaware per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in its Terms and Conditions (TnCs.jsp?tc48031). The same shape as the personal JetBlue cards -- 6X on JetBlue, JetBlue Vacations and TrueBlue Travel, the third party exclusion on the 2X -- with office supply stores, defined as stand-alone stores that mainly sell stationery and office supplies, in place of grocery stores.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 6.0,
+        "merchant_allowlist": [
+          "jetblue.com"
+        ],
+        "caveat": "Tickets, goods and services bought directly from JetBlue."
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 6.0,
+        "portal_only": true,
+        "portal": "TrueBlue Travel",
+        "caveat": "Hotels and car rentals booked at truebluetravel.com."
+      },
+      {
+        "category": "car_rental",
+        "rate": 6.0,
+        "portal_only": true,
+        "portal": "TrueBlue Travel",
+        "caveat": "Hotels and car rentals booked at truebluetravel.com."
+      },
+      {
+        "category": "dining",
+        "rate": 2.0,
+        "merchant_denylist": [
+          "doordash.com",
+          "ubereats.com",
+          "grubhub.com",
+          "seamless.com"
+        ],
+        "caveat": "Restaurants, bars and fast food, bought from directly. Delivery apps are third parties and earn 1X."
+      },
+      {
+        "category": "office_supply",
+        "rate": 2.0,
+        "caveat": "Stand-alone office supply stores."
       }
     ]
   }
