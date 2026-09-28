@@ -988,7 +988,7 @@ eq('...and its 5x hotels rate stays a portal note, never a ranking',
      cards.filter(p => !ISSUER[p.issuer] || !CURRENCY[p.currency]).map(p => p.id), []);
   eq('every card is ranked, 1 to the catalogue size, with no gaps and no repeats',
      cards.map(p => p.common).sort((a, b) => a - b), Array.from({ length: cards.length }, (_, i) => i + 1));
-  eq('...and there are 103 of them', cards.length, 103);
+  eq('...and there are 110 of them', cards.length, 110);
   // A store card that names a domain nothing resolves to could never rank at all.
   eq('every store a store card works at is in merchants.json',
      cards.flatMap(p => (p.only_at || []).filter(d => !merchants[d]).map(d => `${p.id}:${d}`)), []);
@@ -1463,6 +1463,46 @@ eq('Ulta Beauty Rewards Credit Card: adds a point at ulta.com, worth 3% at the 3
    [tier('comenity-ulta-card', 'ulta.com')?.rate, tier('comenity-ulta-card', 'ulta.com')?.value], [1, 3]);
 eq('Ulta Beauty Rewards Mastercard: the same at ulta.com, and a point per $3 elsewhere',
    [tier('comenity-ulta-mastercard', 'ulta.com')?.rate, tier('comenity-ulta-mastercard', 'amazon.com')?.value], [1, 0.999]);
+
+// --- the missing tiers of covered programs, 2026-09-28 --------------------------
+const tiered = (id, h, t) =>
+  run(h, [{ productId: id, config: { tier_multiplier: t } }], { now: new Date('2026-09-28T12:00:00') }).all[0];
+
+eq('BofA Premium Rewards: 2 on travel and dining, OTAs and transit included, 1.5 elsewhere',
+   ['delta.com', 'hotels.com', 'hertz.com', 'uber.com', 'doordash.com', 'amazon.com']
+     .map(h => tier('bofa-premium-rewards', h)?.rate), [2, 2, 2, 2, 2, 1.5]);
+eq('...times the BofA Rewards tier, 3.5% at Premier', tiered('bofa-premium-rewards', 'doordash.com', 1.75)?.rate, 3.5);
+eq('BofA Premium Rewards Elite earns the same', tier('bofa-premium-rewards-elite', 'doordash.com')?.rate, 2);
+eq('Wells Fargo Autograph Journey: 5x at a hotel booked direct, 3x through an OTA',
+   [tier('wellsfargo-autograph-journey', 'marriott.com')?.rate, tier('wellsfargo-autograph-journey', 'hotels.com')?.rate],
+   [5, 3]);
+eq('...4x on airlines, 3x on dining and car rental, 1x on transit',
+   ['delta.com', 'doordash.com', 'hertz.com', 'uber.com'].map(h => tier('wellsfargo-autograph-journey', h)?.rate),
+   [4, 3, 3, 1]);
+eq('Citi AAdvantage Executive: 4x at aa.com, worth 6.8%, 1x on another airline',
+   [tier('citi-aadvantage-executive', 'aa.com')?.value, tier('citi-aadvantage-executive', 'delta.com')?.rate], [6.8, 1]);
+eq('...with AAdvantage Hotels and Cars as portal notes',
+   [noteAt('citi-aadvantage-executive', 'hilton.com'), noteAt('citi-aadvantage-executive', 'hertz.com')],
+   ['Citi AAdvantage Executive: 12x (20.40%) if you book through AAdvantage Hotels instead',
+    'Citi AAdvantage Executive: 12x (20.40%) if you book through AAdvantage Cars instead']);
+eq('Citi AAdvantage Globe: 3x at aa.com, 2x on dining and on taxis, rideshare and transit, 1x elsewhere',
+   ['aa.com', 'doordash.com', 'uber.com', 'amazon.com'].map(h => tier('citi-aadvantage-globe', h)?.rate), [3, 2, 2, 1]);
+eq('...with 6x through AAdvantage Hotels as a note', noteAt('citi-aadvantage-globe', 'hilton.com'),
+   'Citi AAdvantage Globe: 6x (10.20%) if you book through AAdvantage Hotels instead');
+eq('U.S. Bank Altitude Go: 4x on dining to $2,000 a quarter, 2x on groceries, gas, EV and streaming',
+   [tier('usbank-altitude-go', 'doordash.com')?.rate, tier('usbank-altitude-go', 'doordash.com')?.caveats[0],
+    ...['kroger.com', 'shell.us', 'evgo.com', 'netflix.com', 'amazon.com'].map(h => tier('usbank-altitude-go', h)?.rate)],
+   [4, 'Capped at $2,000 per quarter, then 1x', 2, 2, 2, 2, 1]);
+eq('U.S. Bank Altitude Connect: 4x on travel booked direct and transit, 1x through an OTA',
+   ['delta.com', 'marriott.com', 'hertz.com', 'uber.com', 'hotels.com'].map(h => tier('usbank-altitude-connect', h)?.rate),
+   [4, 4, 4, 4, 1]);
+eq('...where 5x through the Travel Center is the note',
+   noteAt('usbank-altitude-connect', 'hotels.com'),
+   'U.S. Bank Altitude Connect: 5x (5.00%) if you book through U.S. Bank Travel Center instead');
+eq('...4x on gas to $1,000 a quarter, 2x on dining, groceries and streaming',
+   [tier('usbank-altitude-connect', 'shell.us')?.caveats[0],
+    ...['doordash.com', 'kroger.com', 'netflix.com'].map(h => tier('usbank-altitude-connect', h)?.rate)],
+   ['Capped at $1,000 per quarter, then 1x', 2, 2, 2]);
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

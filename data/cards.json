@@ -1,9 +1,9 @@
 {
   "_note_field": "MAINTAINER-ONLY. `note` records why a card is modelled the way it is -- provenance, schema reasoning, what was deliberately not modelled. Never render it in the UI. `caution` is the user-facing field.",
   "_business_note": "`business` marks a card issued on business underwriting rather than personal. Absent means personal -- only the field's presence is meaningful, so there is nothing to keep in sync on seventy-eight records. It filters the catalogue and nothing else reads it: the ranker does not care whose name is on the account.",
-  "_common_note": "`common` is a POPULARITY RANK, 1 to 103, and it is EDITORIAL. There is no public card-level ranking of US cardholders -- Nilson publishes issuer volume, not how many people hold a Freedom Unlimited -- so this is judgement, not a sourced fact, and it is the only field here that is. It orders the setup picker so a new user meets mass-market cards first. 21 to 40 were added on 2026-09-27 as the next twenty after the first, 41 to 63 on 2026-09-28 -- store cards, then the remaining tiers of airline and hotel programs already present -- 64 to 82 later that day, the cards of issuers Caddy did not yet cover, 83 to 95 after those, business cards, and 96 to 103, smaller store cards, so each batch ranks below the one before by construction. Re-rank it freely; nothing computes from it.",
+  "_common_note": "`common` is a POPULARITY RANK, 1 to 110, and it is EDITORIAL. There is no public card-level ranking of US cardholders -- Nilson publishes issuer volume, not how many people hold a Freedom Unlimited -- so this is judgement, not a sourced fact, and it is the only field here that is. It orders the setup picker so a new user meets mass-market cards first. 21 to 40 were added on 2026-09-27 as the next twenty after the first, 41 to 63 on 2026-09-28 -- store cards, then the remaining tiers of airline and hotel programs already present -- 64 to 82 later that day, the cards of issuers Caddy did not yet cover, 83 to 95 after those, business cards, 96 to 103, smaller store cards, and 104 to 110, the missing tiers of covered programs, so each batch ranks below the one before by construction. Re-rank it freely; nothing computes from it.",
   "_only_at_note": "`only_at` marks a STORE CARD: the merchant domains where it works, and nowhere else. The ranker drops the card from consideration on any other domain rather than ranking it on its base rate, because recommending a card the till refuses is worse than not mentioning it. base_rate is then what the card adds at that store: where a store pays its free program's members something whatever card they use, that share is left out, because it cannot change which card to use. Store cards with no rewards at all -- Home Depot's, for one -- are deliberately left out: a card that earns nothing can never be the best card to use.",
-  "_comment": "All 103 records verified against issuer sources; 5 on 2026-08-29, 6 on 2026-09-09, 5 on 2026-09-10, 24 on 2026-09-27 -- the twenty added that day, plus Blue Cash Everyday, Amex Gold, BofA Customized Cash and U.S. Bank Cash+, re-read because their categories changed -- and 63 on 2026-09-28: the store cards and the remaining airline and hotel tiers, then nineteen cards from Synchrony's general-purpose line, Barclays, USAA, Navy Federal and Bilt, then thirteen business cards from Amex, Capital One, Chase and Barclays, then eight smaller store cards from Gap Inc., Nordstrom, Ulta and JCPenney. The Bilt cards' offer terms could not be read (the link downloads a file), so their category definitions are unconfirmed; see their notes. Each carries its source_url. Chase Freedom Flex rotating categories MUST be re-verified 2026-10-01. Amex Platinum was absent until 2026-09-27 because no reachable americanexpress.com page stated its annual fee or base rate on 2026-09-10; the product page states both now.",
+  "_comment": "All 110 records verified against issuer sources; 5 on 2026-08-29, 6 on 2026-09-09, 5 on 2026-09-10, 24 on 2026-09-27 -- the twenty added that day, plus Blue Cash Everyday, Amex Gold, BofA Customized Cash and U.S. Bank Cash+, re-read because their categories changed -- and 70 on 2026-09-28: the store cards and the remaining airline and hotel tiers, then nineteen cards from Synchrony's general-purpose line, Barclays, USAA, Navy Federal and Bilt, then thirteen business cards from Amex, Capital One, Chase and Barclays, then eight smaller store cards from Gap Inc., Nordstrom, Ulta and JCPenney, then seven missing tiers: Citi AAdvantage Executive and Globe, Wells Fargo Autograph Journey, BofA Premium Rewards and Premium Rewards Elite, and U.S. Bank Altitude Go and Connect. The Bilt cards' offer terms could not be read (the link downloads a file), so their category definitions are unconfirmed; see their notes. Each carries its source_url. Chase Freedom Flex rotating categories MUST be re-verified 2026-10-01. Amex Platinum was absent until 2026-09-27 because no reachable americanexpress.com page stated its annual fee or base rate on 2026-09-10; the product page states both now.",
   "chase-sapphire-reserve": {
     "id": "chase-sapphire-reserve",
     "issuer": "chase",
@@ -4484,6 +4484,350 @@
         "merchant_allowlist": [
           "ulta.com"
         ]
+      }
+    ]
+  },
+  "bofa-premium-rewards": {
+    "id": "bofa-premium-rewards",
+    "issuer": "bofa",
+    "network": "visa",
+    "currency": "cash",
+    "name": "BofA Premium Rewards",
+    "common": 104,
+    "annual_fee": 95,
+    "base_rate": 1.5,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.bankofamerica.com/credit-cards/products/premium-rewards-credit-card/",
+    "note": "Read off the product page and its Terms and Conditions on 2026-09-28: 2 points per $1 on travel and dining, 1.5 on everything else, no cap. Travel is airlines, hotels, timeshares, campgrounds, car and RV rental, cruise lines, travel agencies and tour operators, passenger trains, buses, taxis, limousines, ferries, parking, tolls, and tourist attractions such as amusement parks and zoos -- so every travel category, OTAs included; the attractions have no category here. The terms price every point at $0.01 redeemed as cash, so currency is 'cash'. The BofA Rewards bonus applies, as on the other BofA cards, through the same tier picker. Network read off the page: Visa Signature.",
+    "user_config": {
+      "tier_multiplier": {
+        "label": "BofA Rewards tier",
+        "options": {
+          "None": 1.0,
+          "Member": 1.1,
+          "Preferred Plus": 1.25,
+          "Preferred Honors": 1.5,
+          "Premier": 1.75
+        }
+      }
+    },
+    "rules": [
+      {
+        "category": "dining",
+        "rate": 2.0
+      },
+      {
+        "category": "travel_air",
+        "rate": 2.0
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 2.0
+      },
+      {
+        "category": "car_rental",
+        "rate": 2.0
+      },
+      {
+        "category": "travel_ground",
+        "rate": 2.0
+      }
+    ]
+  },
+  "usbank-altitude-go": {
+    "id": "usbank-altitude-go",
+    "issuer": "usbank",
+    "network": "visa",
+    "currency": "usbank",
+    "name": "U.S. Bank Altitude Go",
+    "common": 105,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.usbank.com/credit-cards/altitude-go-visa-signature-credit-card.html",
+    "caution": "U.S. Bank publishes no point value; Caddy assumes a cent.",
+    "note": "Read off footnote 2 of the product page on 2026-09-28: 4 points on the first $2,000 a quarter at restaurants, fast food and bars, takeout and delivery included; 2 at grocery stores and supermarkets, gas stations and EV charging, and qualifying streaming; 1 elsewhere. Discount stores, supercenters and wholesale clubs earn 1 in the grocery and gas categories, which merchants.json already files elsewhere. Visa Signature. U.S. Bank's pages give no cents-per-point figure -- only that a deposit to a U.S. Bank account gets the maximum value -- so 'usbank' is valued at 1.0 as an assumption, not a published number, and the caution says so.",
+    "rules": [
+      {
+        "category": "dining",
+        "rate": 4.0,
+        "cap": {
+          "amount": 2000,
+          "period": "quarter",
+          "then_rate": 1.0
+        }
+      },
+      {
+        "category": "groceries",
+        "rate": 2.0
+      },
+      {
+        "category": "gas",
+        "rate": 2.0
+      },
+      {
+        "category": "ev_charging",
+        "rate": 2.0
+      },
+      {
+        "category": "streaming",
+        "rate": 2.0
+      }
+    ]
+  },
+  "wellsfargo-autograph-journey": {
+    "id": "wellsfargo-autograph-journey",
+    "issuer": "wellsfargo",
+    "network": "visa",
+    "currency": "wf",
+    "name": "Wells Fargo Autograph Journey",
+    "common": 106,
+    "annual_fee": 95,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://creditcards.wellsfargo.com/autograph-journey-visa-credit-card/",
+    "note": "Categories read off the product page's footnotes on 2026-09-28, each by merchant code: 5 points at hotels and motels, 4 at airlines, 3 at restaurants and on other travel -- timeshares, car rental, cruise lines, travel agencies, discount travel sites and campgrounds -- and 1 elsewhere. So a hotel booked with the hotel earns 5 and one booked through an OTA earns 3, which the denylisted 5X rule and the plain 3X hotel rule say between them. Transit is not named, so travel_ground has no rule. Currency 'wf', as the Autograph's. Visa Signature.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 5.0,
+        "merchant_denylist": [
+          "expedia.com",
+          "booking.com",
+          "airbnb.com",
+          "hotels.com",
+          "priceline.com",
+          "vrbo.com",
+          "kayak.com",
+          "orbitz.com",
+          "travelocity.com"
+        ]
+      },
+      {
+        "category": "travel_air",
+        "rate": 4.0
+      },
+      {
+        "category": "dining",
+        "rate": 3.0
+      },
+      {
+        "category": "car_rental",
+        "rate": 3.0
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 3.0
+      }
+    ]
+  },
+  "citi-aadvantage-executive": {
+    "id": "citi-aadvantage-executive",
+    "issuer": "citi",
+    "network": "mastercard",
+    "currency": "aa",
+    "name": "Citi AAdvantage Executive",
+    "common": 107,
+    "annual_fee": 695,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.citi.com/credit-cards/citi-aadvantage-executive-world-legend-mastercard",
+    "caution": "5X on American Airlines after $150,000 a year.",
+    "note": "The Citi / AAdvantage Executive World Legend Mastercard, read off citi.com on 2026-09-28; the fee is from the pricing details, which rendered only after a wait. 4 miles on eligible American Airlines purchases (5 after $150,000 in a calendar year), 12 on eligible AAdvantage Hotels and AAdvantage Cars bookings -- AA's own booking sites, modelled as portals -- and 1 elsewhere.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 4.0,
+        "merchant_allowlist": [
+          "aa.com"
+        ]
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 12.0,
+        "portal_only": true,
+        "portal": "AAdvantage Hotels"
+      },
+      {
+        "category": "car_rental",
+        "rate": 12.0,
+        "portal_only": true,
+        "portal": "AAdvantage Cars"
+      }
+    ]
+  },
+  "usbank-altitude-connect": {
+    "id": "usbank-altitude-connect",
+    "issuer": "usbank",
+    "network": "visa",
+    "currency": "usbank",
+    "name": "U.S. Bank Altitude Connect",
+    "common": 108,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.usbank.com/credit-cards/altitude-connect-visa-signature-credit-card.html",
+    "caution": "U.S. Bank publishes no point value; Caddy assumes a cent.",
+    "note": "Read off footnote 2 of the product page on 2026-09-28: 5 points on prepaid hotels and car rentals in the Travel Center; 4 on travel \"such as purchases made directly with airlines, hotels, car rentals, taxicabs, limousines, passenger trains and cruise line companies\" -- \"directly\", so OTAs are denylisted on hotels; 4 on the first $1,000 a quarter at gas stations and EV charging; 2 at restaurants, grocery stores and on qualifying streaming; 1 elsewhere. No annual fee, per the page. Visa Signature. U.S. Bank's pages give no cents-per-point figure -- only that a deposit to a U.S. Bank account gets the maximum value -- so 'usbank' is valued at 1.0 as an assumption, not a published number, and the caution says so.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "U.S. Bank Travel Center"
+      },
+      {
+        "category": "car_rental",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "U.S. Bank Travel Center"
+      },
+      {
+        "category": "travel_air",
+        "rate": 4.0
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 4.0,
+        "merchant_denylist": [
+          "expedia.com",
+          "booking.com",
+          "airbnb.com",
+          "hotels.com",
+          "priceline.com",
+          "vrbo.com",
+          "kayak.com",
+          "orbitz.com",
+          "travelocity.com"
+        ]
+      },
+      {
+        "category": "car_rental",
+        "rate": 4.0
+      },
+      {
+        "category": "travel_ground",
+        "rate": 4.0
+      },
+      {
+        "category": "gas",
+        "rate": 4.0,
+        "cap": {
+          "amount": 1000,
+          "period": "quarter",
+          "then_rate": 1.0
+        }
+      },
+      {
+        "category": "ev_charging",
+        "rate": 4.0,
+        "cap": {
+          "amount": 1000,
+          "period": "quarter",
+          "then_rate": 1.0
+        }
+      },
+      {
+        "category": "dining",
+        "rate": 2.0
+      },
+      {
+        "category": "groceries",
+        "rate": 2.0
+      },
+      {
+        "category": "streaming",
+        "rate": 2.0
+      }
+    ]
+  },
+  "bofa-premium-rewards-elite": {
+    "id": "bofa-premium-rewards-elite",
+    "issuer": "bofa",
+    "network": "visa",
+    "currency": "cash",
+    "name": "BofA Premium Rewards Elite",
+    "common": 109,
+    "annual_fee": 550,
+    "base_rate": 1.5,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.bankofamerica.com/credit-cards/products/premium-rewards-elite-credit-card/",
+    "note": "Read off the product page and its Terms and Conditions on 2026-09-28: 2 points per $1 on travel and dining, 1.5 on everything else, no cap. Travel is airlines, hotels, timeshares, campgrounds, car and RV rental, cruise lines, travel agencies and tour operators, passenger trains, buses, taxis, limousines, ferries, parking, tolls, and tourist attractions such as amusement parks and zoos -- so every travel category, OTAs included; the attractions have no category here. The terms price every point at $0.01 redeemed as cash, so currency is 'cash'. The BofA Rewards bonus applies, as on the other BofA cards, through the same tier picker. Network read off the page: Visa Infinite. Earning is the Premium Rewards card's; the $550 fee buys credits and benefits that do not change what a purchase earns.",
+    "user_config": {
+      "tier_multiplier": {
+        "label": "BofA Rewards tier",
+        "options": {
+          "None": 1.0,
+          "Member": 1.1,
+          "Preferred Plus": 1.25,
+          "Preferred Honors": 1.5,
+          "Premier": 1.75
+        }
+      }
+    },
+    "rules": [
+      {
+        "category": "dining",
+        "rate": 2.0
+      },
+      {
+        "category": "travel_air",
+        "rate": 2.0
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 2.0
+      },
+      {
+        "category": "car_rental",
+        "rate": 2.0
+      },
+      {
+        "category": "travel_ground",
+        "rate": 2.0
+      }
+    ]
+  },
+  "citi-aadvantage-globe": {
+    "id": "citi-aadvantage-globe",
+    "issuer": "citi",
+    "network": "mastercard",
+    "currency": "aa",
+    "name": "Citi AAdvantage Globe",
+    "common": 110,
+    "annual_fee": 350,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.citi.com/credit-cards/citi-aadvantage-globe-mastercard",
+    "note": "The Citi / AAdvantage Globe Mastercard, read off citi.com on 2026-09-28; the fee is from the pricing details, which render only while the page is on screen. 3 miles on eligible American Airlines purchases, 6 on eligible AAdvantage Hotels bookings (AA's own booking site, modelled as a portal), 2 at restaurants including takeout and delivery, 2 on \"Rides and Rails\" -- taxis, rideshares and public transit -- and 1 elsewhere.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 3.0,
+        "merchant_allowlist": [
+          "aa.com"
+        ]
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 6.0,
+        "portal_only": true,
+        "portal": "AAdvantage Hotels"
+      },
+      {
+        "category": "dining",
+        "rate": 2.0
+      },
+      {
+        "category": "travel_ground",
+        "rate": 2.0
       }
     ]
   }
