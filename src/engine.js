@@ -463,6 +463,11 @@ export function rank(input) {
       now
     };
 
+    // A store card works at its own store and nowhere else. Off it the card is
+    // not a candidate at all: ranking it on its base rate would recommend a card
+    // the till refuses.
+    if (p.only_at && !p.only_at.includes(ctx.domain)) return;
+
     // Portal rates never apply on the merchant's own site. Hold the best one
     // aside and decide after scoring whether it is worth mentioning.
     let best = null;
@@ -538,8 +543,11 @@ export function rank(input) {
   notes.sort((a, b) => b.value - a.value);
 
   if (entries.length === 0) {
+    // A wallet of store cards for other stores is not an empty wallet, and a
+    // surface that said "no cards added" to someone holding three would be lying.
+    const held = instances.some(i => products[i.productId]);
     return { hostname, merchant, category: baseCategory, categorySource,
-             all: [], winner: null, tied: [], resolvedBy: 'no_cards', notes };
+             all: [], winner: null, tied: [], resolvedBy: held ? 'none_usable' : 'no_cards', notes };
   }
 
   const top = entries[0].value;

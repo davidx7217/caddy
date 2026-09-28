@@ -1,8 +1,9 @@
 {
   "_note_field": "MAINTAINER-ONLY. `note` records why a card is modelled the way it is -- provenance, schema reasoning, what was deliberately not modelled. Never render it in the UI. `caution` is the user-facing field.",
-  "_business_note": "`business` marks a card issued on business underwriting rather than personal. Absent means personal -- only the field's presence is meaningful, so there is nothing to keep in sync on thirty-six records. It filters the catalogue and nothing else reads it: the ranker does not care whose name is on the account.",
-  "_common_note": "`common` is a POPULARITY RANK, 1 to 40, and it is EDITORIAL. There is no public card-level ranking of US cardholders -- Nilson publishes issuer volume, not how many people hold a Freedom Unlimited -- so this is judgement, not a sourced fact, and it is the only field here that is. It orders the setup picker so a new user meets mass-market cards first. 21 to 40 were added on 2026-09-27 as the next twenty after the first, so they rank below all of it by construction. Re-rank it freely; nothing computes from it.",
-  "_comment": "All 40 records verified against issuer sources; 5 on 2026-08-29, 6 on 2026-09-09, 5 on 2026-09-10 and 24 on 2026-09-27 -- the twenty added that day, plus Blue Cash Everyday, Amex Gold, BofA Customized Cash and U.S. Bank Cash+, re-read because their categories changed. Each carries its source_url. Chase Freedom Flex rotating categories MUST be re-verified 2026-10-01. Amex Platinum was absent until 2026-09-27 because no reachable americanexpress.com page stated its annual fee or base rate on 2026-09-10; the product page states both now.",
+  "_business_note": "`business` marks a card issued on business underwriting rather than personal. Absent means personal -- only the field's presence is meaningful, so there is nothing to keep in sync on fifty-nine records. It filters the catalogue and nothing else reads it: the ranker does not care whose name is on the account.",
+  "_common_note": "`common` is a POPULARITY RANK, 1 to 63, and it is EDITORIAL. There is no public card-level ranking of US cardholders -- Nilson publishes issuer volume, not how many people hold a Freedom Unlimited -- so this is judgement, not a sourced fact, and it is the only field here that is. It orders the setup picker so a new user meets mass-market cards first. 21 to 40 were added on 2026-09-27 as the next twenty after the first, and 41 to 63 on 2026-09-28 -- store cards, then the remaining tiers of airline and hotel programs already present -- so each batch ranks below the one before by construction. Re-rank it freely; nothing computes from it.",
+  "_only_at_note": "`only_at` marks a STORE CARD: the merchant domains where it works, and nowhere else. The ranker drops the card from consideration on any other domain rather than ranking it on its base rate, because recommending a card the till refuses is worse than not mentioning it. base_rate is then the store rate. Store cards with no rewards at all -- Home Depot's, for one -- are deliberately left out: a card that earns nothing can never be the best card to use.",
+  "_comment": "All 63 records verified against issuer sources; 5 on 2026-08-29, 6 on 2026-09-09, 5 on 2026-09-10, 24 on 2026-09-27 -- the twenty added that day, plus Blue Cash Everyday, Amex Gold, BofA Customized Cash and U.S. Bank Cash+, re-read because their categories changed -- and 23 on 2026-09-28, the store cards and the remaining airline and hotel tiers. Each carries its source_url. Chase Freedom Flex rotating categories MUST be re-verified 2026-10-01. Amex Platinum was absent until 2026-09-27 because no reachable americanexpress.com page stated its annual fee or base rate on 2026-09-10; the product page states both now.",
   "chase-sapphire-reserve": {
     "id": "chase-sapphire-reserve",
     "issuer": "chase",
@@ -2014,5 +2015,882 @@
     "caution": "Business card. The 2X stops at $50,000 of purchases a calendar year; after that everything earns 1X.",
     "note": "No rules by design: 2X is the card's rate on everything, so it is the base rate. The $50,000 calendar-year limit cannot sit on a base rate, which has no cap field, so it lives in the caution -- and Caddy tracks no spend, so it could not apply the cap anyway.",
     "rules": []
+  },
+  "synchrony-amazon-store": {
+    "id": "synchrony-amazon-store",
+    "issuer": "synchrony",
+    "network": "store card",
+    "currency": "cash",
+    "name": "Amazon Store Card",
+    "common": 41,
+    "annual_fee": 0,
+    "base_rate": 5.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.amazon.com/Synchrony-Bank-Amazon-com-Store-Card/dp/B008A0GNA8",
+    "only_at": [
+      "amazon.com"
+    ],
+    "caution": "The 5% needs an eligible Prime membership, and a purchase put on special financing earns none.",
+    "note": "Issued by Synchrony Bank, per the product page. The 5% is the Prime Store Card rate at Amazon.com; without Prime the card offers financing and no rewards. Whole Foods also pays 5%, but only in store with an In-Store Code, which no website Caddy runs on can see, so only_at is amazon.com alone.",
+    "rules": []
+  },
+  "td-target-circle": {
+    "id": "td-target-circle",
+    "issuer": "td",
+    "network": "store card",
+    "currency": "cash",
+    "name": "Target Circle Credit Card",
+    "common": 42,
+    "annual_fee": 0,
+    "base_rate": 5.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.target.com/circlecard",
+    "only_at": [
+      "target.com"
+    ],
+    "caution": "An instant 5% off at checkout. Prescriptions, gift cards and Target Optical services are excluded.",
+    "note": "The credit version of the Target Circle Card, issued by TD Bank USA, N.A. per target.com. The debit card and the Target Mastercard are different products and are not modelled here -- the debit card is not credit, and the Mastercard is a general-purpose card.",
+    "rules": []
+  },
+  "capitalone-kohls": {
+    "id": "capitalone-kohls",
+    "issuer": "capitalone",
+    "network": "store card",
+    "currency": "cash",
+    "name": "Kohl's Card",
+    "common": 43,
+    "annual_fee": 0,
+    "base_rate": 7.5,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.capitalone.com/credit-cards/kohls/",
+    "only_at": [
+      "kohls.com"
+    ],
+    "caution": "Paid as Kohl's Cash in $5 steps on the first of the month, and it expires 30 days later.",
+    "note": "The store card, not the Kohl's Rewards Visa; Capital One decides which one an applicant gets. Valued as cash, which overstates it for anyone who does not shop Kohl's again within 30 days -- the rewards expire.",
+    "rules": []
+  },
+  "citi-macys": {
+    "id": "citi-macys",
+    "issuer": "citi",
+    "network": "store card",
+    "currency": "cash",
+    "name": "Macy's Credit Card",
+    "common": 44,
+    "annual_fee": 0,
+    "base_rate": 2.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.macys.com/p/credit-service/benefits/",
+    "only_at": [
+      "macys.com"
+    ],
+    "caution": "Paid as Star Money, $10 per 1,000 points, and it expires 30 days after it is issued.",
+    "note": "Star Rewards status sets the rate: new cards open at Silver (2 points per $1), Gold is 3 and Platinum 5, reached by spend at Macy's on the card. base_rate is Silver and the status picker multiplies it. citi.com lists Macy's Credit Cards among Citi's retail store cards; the benefits page names Citibank only for the Macy's American Express, which is a different product.",
+    "user_config": {
+      "tier_multiplier": {
+        "label": "Star Rewards status",
+        "options": {
+          "Silver": 1.0,
+          "Gold": 1.5,
+          "Platinum": 2.5
+        }
+      }
+    },
+    "rules": []
+  },
+  "synchrony-lowes": {
+    "id": "synchrony-lowes",
+    "issuer": "synchrony",
+    "network": "store card",
+    "currency": "cash",
+    "name": "MyLowe's Rewards Credit Card",
+    "common": 45,
+    "annual_fee": 0,
+    "base_rate": 5.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.lowes.com/l/Credit/consumer-credit-center",
+    "only_at": [
+      "lowes.com"
+    ],
+    "caution": "An instant 5% off, but not combined with other Lowe's discounts or special financing, and not on services.",
+    "note": "Issued by Synchrony Bank, per synchrony.com/partner/lowes. annual_fee is 0 because the Synchrony rates and fees table (REV 4/2026) lists no annual fee -- only penalty fees and a $1.99 paper statement fee.",
+    "rules": []
+  },
+  "citi-best-buy": {
+    "id": "citi-best-buy",
+    "issuer": "citi",
+    "network": "store card",
+    "currency": "cash",
+    "name": "My Best Buy Credit Card",
+    "common": 46,
+    "annual_fee": 0,
+    "base_rate": 5.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.citi.com/credit-cards/citi-best-buy-credit-cards",
+    "only_at": [
+      "bestbuy.com"
+    ],
+    "caution": "Paid as Best Buy reward certificates, $5 for every $100. A purchase put on financing earns none.",
+    "note": "The store card, which citi.com says works only at Best Buy; the My Best Buy Visa is a different product. Issued by Citibank, N.A. The annual fee is read off the card disclosures in the application terms: None for this card, where the Visa Gold carries $59.",
+    "rules": []
+  },
+  "synchrony-tjx": {
+    "id": "synchrony-tjx",
+    "issuer": "synchrony",
+    "network": "store card",
+    "currency": "cash",
+    "name": "TJX Rewards Credit Card",
+    "common": 47,
+    "annual_fee": 0,
+    "base_rate": 5.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://tjmaxx.tjx.com/store/jump/topic/TJX-Rewards-Card/2400012",
+    "only_at": [
+      "tjmaxx.tjx.com",
+      "marshalls.com",
+      "homegoods.com",
+      "sierra.com",
+      "homesense.com"
+    ],
+    "caution": "Paid as Rewards Certificates, $10 for every 1,000 points.",
+    "note": "5 points per $1 across T.J.Maxx, Marshalls, HomeGoods, Sierra and Homesense, online and in store; 1,000 points is a $10 certificate, so 5%. Issued by Synchrony Bank. T.J.Maxx's own site lives at tjmaxx.tjx.com -- tjmaxx.com redirects there -- which is why that is the row and the allowlist entry.",
+    "rules": []
+  },
+  "amex-delta-platinum": {
+    "id": "amex-delta-platinum",
+    "issuer": "amex",
+    "network": "amex",
+    "currency": "delta",
+    "name": "Delta SkyMiles Platinum Amex",
+    "common": 48,
+    "annual_fee": 350,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.americanexpress.com/us/credit-cards/card/delta-skymiles-platinum-american-express-card/",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 3.0,
+        "merchant_allowlist": [
+          "delta.com"
+        ],
+        "caveat": "Purchases made directly with Delta."
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 3.0,
+        "merchant_denylist": [
+          "expedia.com",
+          "booking.com",
+          "airbnb.com",
+          "hotels.com",
+          "priceline.com",
+          "vrbo.com",
+          "kayak.com",
+          "orbitz.com",
+          "travelocity.com"
+        ],
+        "caveat": "Purchases made directly with hotels."
+      },
+      {
+        "category": "dining",
+        "rate": 2.0,
+        "caveat": "Restaurants, including takeout and delivery in the U.S."
+      },
+      {
+        "category": "groceries",
+        "rate": 2.0,
+        "caveat": "U.S. supermarkets only."
+      }
+    ]
+  },
+  "amex-delta-blue": {
+    "id": "amex-delta-blue",
+    "issuer": "amex",
+    "network": "amex",
+    "currency": "delta",
+    "name": "Delta SkyMiles Blue Amex",
+    "common": 49,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.americanexpress.com/us/credit-cards/card/delta-skymiles-blue-american-express-card/",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 2.0,
+        "merchant_allowlist": [
+          "delta.com"
+        ],
+        "caveat": "Purchases made directly with Delta."
+      },
+      {
+        "category": "dining",
+        "rate": 2.0,
+        "caveat": "Restaurants, including takeout and delivery in the U.S."
+      }
+    ]
+  },
+  "amex-delta-reserve": {
+    "id": "amex-delta-reserve",
+    "issuer": "amex",
+    "network": "amex",
+    "currency": "delta",
+    "name": "Delta SkyMiles Reserve Amex",
+    "common": 50,
+    "annual_fee": 650,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.americanexpress.com/us/credit-cards/card/delta-skymiles-reserve-american-express-card/",
+    "caution": "$650 annual fee. Outside Delta it earns 1X on everything.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 3.0,
+        "merchant_allowlist": [
+          "delta.com"
+        ],
+        "caveat": "Purchases made directly with Delta."
+      }
+    ]
+  },
+  "chase-southwest-priority": {
+    "id": "chase-southwest-priority",
+    "issuer": "chase",
+    "network": "visa",
+    "currency": "southwest",
+    "name": "Southwest Rapid Rewards Priority",
+    "common": 51,
+    "annual_fee": 229,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://creditcards.chase.com/travel-credit-cards/southwest/priority",
+    "note": "Network read off the card art.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 4.0,
+        "merchant_allowlist": [
+          "southwest.com"
+        ],
+        "caveat": "Southwest Airlines purchases."
+      },
+      {
+        "category": "gas",
+        "rate": 2.0
+      },
+      {
+        "category": "dining",
+        "rate": 2.0
+      }
+    ]
+  },
+  "chase-southwest-premier": {
+    "id": "chase-southwest-premier",
+    "issuer": "chase",
+    "network": "visa",
+    "currency": "southwest",
+    "name": "Southwest Rapid Rewards Premier",
+    "common": 52,
+    "annual_fee": 149,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://creditcards.chase.com/travel-credit-cards/southwest/premier",
+    "note": "Network read off the card art.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 3.0,
+        "merchant_allowlist": [
+          "southwest.com"
+        ],
+        "caveat": "Southwest Airlines purchases."
+      },
+      {
+        "category": "groceries",
+        "rate": 2.0,
+        "cap": {
+          "amount": 8000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "The $8,000 cap is combined with restaurants, and runs per account anniversary year."
+      },
+      {
+        "category": "dining",
+        "rate": 2.0,
+        "cap": {
+          "amount": 8000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "The $8,000 cap is combined with grocery stores, and runs per account anniversary year."
+      }
+    ]
+  },
+  "chase-united-quest": {
+    "id": "chase-united-quest",
+    "issuer": "chase",
+    "network": "visa",
+    "currency": "united",
+    "name": "United Quest",
+    "common": 53,
+    "annual_fee": 350,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://creditcards.chase.com/travel-credit-cards/united/united-quest",
+    "note": "The card's share of the advertised 10x on United flights is 4x; the other 6x is MileagePlus member earning, paid whatever card is used. Network per the page's Visa Signature terms.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 4.0,
+        "merchant_allowlist": [
+          "united.com"
+        ],
+        "caveat": "United purchases. The 6x MileagePlus member miles on the fare come on top, whatever card pays."
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Renowned Hotels and Resorts",
+        "caveat": "Hotel stays prepaid through Renowned Hotels and Resorts for United Cardmembers."
+      },
+      {
+        "category": "travel_air",
+        "rate": 2.0,
+        "caveat": "All other travel: airfare, trains, local transit, cruise lines, hotels, car rentals, taxis, rideshare and tolls."
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 2.0,
+        "caveat": "All other travel: airfare, trains, local transit, cruise lines, hotels, car rentals, taxis, rideshare and tolls."
+      },
+      {
+        "category": "car_rental",
+        "rate": 2.0,
+        "caveat": "All other travel: airfare, trains, local transit, cruise lines, hotels, car rentals, taxis, rideshare and tolls."
+      },
+      {
+        "category": "travel_ground",
+        "rate": 2.0,
+        "caveat": "All other travel: airfare, trains, local transit, cruise lines, hotels, car rentals, taxis, rideshare and tolls."
+      },
+      {
+        "category": "dining",
+        "rate": 2.0,
+        "caveat": "Includes eligible delivery services."
+      },
+      {
+        "category": "streaming",
+        "rate": 2.0,
+        "caveat": "Select streaming services only."
+      }
+    ]
+  },
+  "chase-united-gateway": {
+    "id": "chase-united-gateway",
+    "issuer": "chase",
+    "network": "visa",
+    "currency": "united",
+    "name": "United Gateway",
+    "common": 54,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://creditcards.chase.com/travel-credit-cards/united/united-gateway",
+    "note": "The card's share of the advertised 5x on United flights is 2x. Network per the page's Visa Signature terms.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 2.0,
+        "merchant_allowlist": [
+          "united.com"
+        ],
+        "caveat": "United purchases. The 3x MileagePlus member miles on the fare come on top, whatever card pays."
+      },
+      {
+        "category": "gas",
+        "rate": 2.0
+      },
+      {
+        "category": "travel_ground",
+        "rate": 2.0,
+        "caveat": "Local transit and commuting: rideshare, taxis, trains, tolls and mass transit."
+      }
+    ]
+  },
+  "chase-united-club": {
+    "id": "chase-united-club",
+    "issuer": "chase",
+    "network": "visa",
+    "currency": "united",
+    "name": "United Club",
+    "common": 55,
+    "annual_fee": 695,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://creditcards.chase.com/travel-credit-cards/united/club-infinite",
+    "note": "The card's share of the advertised 11x on United flights is 5x. Network per the page's Visa Infinite terms.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 5.0,
+        "merchant_allowlist": [
+          "united.com"
+        ],
+        "caveat": "United purchases. The 6x MileagePlus member miles on the fare come on top, whatever card pays."
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Renowned Hotels and Resorts",
+        "caveat": "Hotel stays prepaid through Renowned Hotels and Resorts for United Cardmembers."
+      },
+      {
+        "category": "travel_air",
+        "rate": 2.0,
+        "caveat": "All other travel: airfare, trains, local transit, cruise lines, hotels, car rentals, taxis, rideshare and tolls."
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 2.0,
+        "caveat": "All other travel: airfare, trains, local transit, cruise lines, hotels, car rentals, taxis, rideshare and tolls."
+      },
+      {
+        "category": "car_rental",
+        "rate": 2.0,
+        "caveat": "All other travel: airfare, trains, local transit, cruise lines, hotels, car rentals, taxis, rideshare and tolls."
+      },
+      {
+        "category": "travel_ground",
+        "rate": 2.0,
+        "caveat": "All other travel: airfare, trains, local transit, cruise lines, hotels, car rentals, taxis, rideshare and tolls."
+      },
+      {
+        "category": "dining",
+        "rate": 2.0,
+        "caveat": "Includes eligible delivery services."
+      }
+    ]
+  },
+  "amex-hilton-surpass": {
+    "id": "amex-hilton-surpass",
+    "issuer": "amex",
+    "network": "amex",
+    "currency": "hilton",
+    "name": "Hilton Honors Surpass Amex",
+    "common": 56,
+    "annual_fee": 150,
+    "base_rate": 3.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.americanexpress.com/us/credit-cards/card/hilton-honors-surpass/",
+    "note": "The 4X on U.S. online retail follows Amex's definition as Blue Cash Everyday's does -- physical goods bought on a retailer's own site -- so it is repeated on each store category for the same reason.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 12.0,
+        "merchant_allowlist": [
+          "hilton.com"
+        ],
+        "caveat": "Purchases made directly with hotels and resorts in the Hilton portfolio."
+      },
+      {
+        "category": "dining",
+        "rate": 6.0,
+        "caveat": "U.S. restaurants, including takeout and delivery."
+      },
+      {
+        "category": "groceries",
+        "rate": 6.0,
+        "caveat": "U.S. supermarkets only."
+      },
+      {
+        "category": "gas",
+        "rate": 6.0,
+        "caveat": "U.S. gas stations only."
+      },
+      {
+        "category": "online_retail",
+        "rate": 4.0,
+        "caveat": "Counts as U.S. online retail: physical goods bought on the retailer's own website or app."
+      },
+      {
+        "category": "department_store",
+        "rate": 4.0,
+        "caveat": "Counts as U.S. online retail: physical goods bought on the retailer's own website or app."
+      },
+      {
+        "category": "electronics",
+        "rate": 4.0,
+        "caveat": "Counts as U.S. online retail: physical goods bought on the retailer's own website or app."
+      },
+      {
+        "category": "clothing",
+        "rate": 4.0,
+        "caveat": "Counts as U.S. online retail: physical goods bought on the retailer's own website or app."
+      },
+      {
+        "category": "sporting_goods",
+        "rate": 4.0,
+        "caveat": "Counts as U.S. online retail: physical goods bought on the retailer's own website or app."
+      },
+      {
+        "category": "home_improvement",
+        "rate": 4.0,
+        "caveat": "Counts as U.S. online retail: physical goods bought on the retailer's own website or app."
+      },
+      {
+        "category": "office_supply",
+        "rate": 4.0,
+        "caveat": "Counts as U.S. online retail: physical goods bought on the retailer's own website or app."
+      },
+      {
+        "category": "drugstore",
+        "rate": 4.0,
+        "caveat": "Counts as U.S. online retail: physical goods bought on the retailer's own website or app."
+      }
+    ]
+  },
+  "amex-hilton-aspire": {
+    "id": "amex-hilton-aspire",
+    "issuer": "amex",
+    "network": "amex",
+    "currency": "hilton",
+    "name": "Hilton Honors Aspire Amex",
+    "common": 57,
+    "annual_fee": 550,
+    "base_rate": 3.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.americanexpress.com/us/credit-cards/card/hilton-honors-aspire/",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 14.0,
+        "merchant_allowlist": [
+          "hilton.com"
+        ],
+        "caveat": "Purchases made directly with hotels and resorts in the Hilton portfolio."
+      },
+      {
+        "category": "travel_air",
+        "rate": 7.0,
+        "caveat": "Flights booked directly with the airline or through AmexTravel.com."
+      },
+      {
+        "category": "car_rental",
+        "rate": 7.0,
+        "caveat": "Booked directly with SELECT car rental companies only -- Amex publishes which."
+      },
+      {
+        "category": "dining",
+        "rate": 7.0,
+        "caveat": "U.S. restaurants, including takeout and delivery."
+      }
+    ]
+  },
+  "chase-marriott-bold": {
+    "id": "chase-marriott-bold",
+    "issuer": "chase",
+    "network": "visa",
+    "currency": "marriott",
+    "name": "Marriott Bonvoy Bold",
+    "common": 58,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://creditcards.chase.com/travel-credit-cards/marriott-bonvoy/bold",
+    "note": "The food delivery allowlist is the seven services the offer details name; restaurants themselves earn 1X. Rideshare is Chase's taxicabs-and-limousines category, so it is allowlisted to the two rideshare rows rather than all of travel_ground. Network per the page's Visa Signature terms.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 3.0,
+        "merchant_allowlist": [
+          "marriott.com"
+        ],
+        "caveat": "Hotels participating in Marriott Bonvoy. Member points from Marriott come on top, whatever card pays."
+      },
+      {
+        "category": "groceries",
+        "rate": 2.0
+      },
+      {
+        "category": "phone",
+        "rate": 2.0
+      },
+      {
+        "category": "internet_cable",
+        "rate": 2.0
+      },
+      {
+        "category": "streaming",
+        "rate": 2.0,
+        "caveat": "Select streaming services only."
+      },
+      {
+        "category": "travel_ground",
+        "rate": 2.0,
+        "merchant_allowlist": [
+          "uber.com",
+          "lyft.com"
+        ],
+        "caveat": "Rideshare, taxis and limousines only -- not other transit."
+      },
+      {
+        "category": "dining",
+        "rate": 2.0,
+        "merchant_allowlist": [
+          "doordash.com",
+          "trycaviar.com",
+          "ubereats.com",
+          "postmates.com",
+          "grubhub.com",
+          "seamless.com",
+          "delivery.com"
+        ],
+        "caveat": "The seven food delivery services Chase names, not restaurants."
+      }
+    ]
+  },
+  "amex-marriott-bevy": {
+    "id": "amex-marriott-bevy",
+    "issuer": "amex",
+    "network": "amex",
+    "currency": "marriott",
+    "name": "Marriott Bonvoy Bevy Amex",
+    "common": 59,
+    "annual_fee": 250,
+    "base_rate": 2.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.americanexpress.com/us/credit-cards/card/marriott-bonvoy-bevy/",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 6.0,
+        "merchant_allowlist": [
+          "marriott.com"
+        ],
+        "caveat": "Hotels participating in Marriott Bonvoy."
+      },
+      {
+        "category": "dining",
+        "rate": 4.0,
+        "cap": {
+          "amount": 15000,
+          "period": "year",
+          "then_rate": 2.0
+        },
+        "caveat": "Restaurants worldwide. The $15,000 cap is combined with U.S. supermarkets, per calendar year."
+      },
+      {
+        "category": "groceries",
+        "rate": 4.0,
+        "cap": {
+          "amount": 15000,
+          "period": "year",
+          "then_rate": 2.0
+        },
+        "caveat": "U.S. supermarkets. The $15,000 cap is combined with restaurants, per calendar year."
+      }
+    ]
+  },
+  "amex-marriott-brilliant": {
+    "id": "amex-marriott-brilliant",
+    "issuer": "amex",
+    "network": "amex",
+    "currency": "marriott",
+    "name": "Marriott Bonvoy Brilliant Amex",
+    "common": 60,
+    "annual_fee": 650,
+    "base_rate": 2.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.americanexpress.com/us/credit-cards/card/marriott-bonvoy-brilliant/",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 6.0,
+        "merchant_allowlist": [
+          "marriott.com"
+        ],
+        "caveat": "Hotels participating in Marriott Bonvoy."
+      },
+      {
+        "category": "dining",
+        "rate": 3.0,
+        "caveat": "Restaurants worldwide."
+      },
+      {
+        "category": "travel_air",
+        "rate": 3.0,
+        "caveat": "Flights booked directly with the airline."
+      }
+    ]
+  },
+  "chase-world-of-hyatt": {
+    "id": "chase-world-of-hyatt",
+    "issuer": "chase",
+    "network": "visa",
+    "currency": "hyatt",
+    "name": "World of Hyatt",
+    "common": 61,
+    "annual_fee": 95,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://creditcards.chase.com/travel-credit-cards/world-of-hyatt-credit-card",
+    "note": "Rates read off the offer details. Network per the page's Visa Signature terms.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 4.0,
+        "merchant_allowlist": [
+          "hyatt.com"
+        ],
+        "caveat": "Hyatt hotels and resorts, and World of Hyatt Experiences."
+      },
+      {
+        "category": "dining",
+        "rate": 2.0
+      },
+      {
+        "category": "travel_air",
+        "rate": 2.0,
+        "caveat": "Airline tickets bought directly from the airline."
+      },
+      {
+        "category": "travel_ground",
+        "rate": 2.0,
+        "caveat": "Local transit and commuting."
+      },
+      {
+        "category": "fitness",
+        "rate": 2.0,
+        "caveat": "Fitness club and gym memberships."
+      }
+    ]
+  },
+  "chase-ihg-premier": {
+    "id": "chase-ihg-premier",
+    "issuer": "chase",
+    "network": "mastercard",
+    "currency": "ihg",
+    "name": "IHG One Rewards Premier",
+    "common": 62,
+    "annual_fee": 99,
+    "base_rate": 3.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://creditcards.chase.com/travel-credit-cards/ihg-rewards-club/premier",
+    "note": "A Mastercard, unlike Chase's other co-brands here: the page carries World and World Elite Mastercard terms. Rates read off the offer details.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 10.0,
+        "merchant_allowlist": [
+          "ihg.com"
+        ],
+        "caveat": "Hotels participating in IHG One Rewards. Member points from IHG come on top."
+      },
+      {
+        "category": "travel_air",
+        "rate": 5.0,
+        "caveat": "Chase's travel category: airlines, hotels, car rentals, cruises, travel agencies, rail, taxis, tolls and parking."
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 5.0,
+        "caveat": "Chase's travel category: airlines, hotels, car rentals, cruises, travel agencies, rail, taxis, tolls and parking."
+      },
+      {
+        "category": "car_rental",
+        "rate": 5.0,
+        "caveat": "Chase's travel category: airlines, hotels, car rentals, cruises, travel agencies, rail, taxis, tolls and parking."
+      },
+      {
+        "category": "travel_ground",
+        "rate": 5.0,
+        "caveat": "Chase's travel category: airlines, hotels, car rentals, cruises, travel agencies, rail, taxis, tolls and parking."
+      },
+      {
+        "category": "gas",
+        "rate": 5.0
+      },
+      {
+        "category": "dining",
+        "rate": 5.0,
+        "caveat": "Includes takeout and eligible delivery services."
+      }
+    ]
+  },
+  "chase-ihg-traveler": {
+    "id": "chase-ihg-traveler",
+    "issuer": "chase",
+    "network": "mastercard",
+    "currency": "ihg",
+    "name": "IHG One Rewards Traveler",
+    "common": 63,
+    "annual_fee": 0,
+    "base_rate": 2.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://creditcards.chase.com/travel-credit-cards/ihg-rewards-club/traveler",
+    "note": "A Mastercard, per the page's World Mastercard terms. Rates read off the offer details.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 5.0,
+        "merchant_allowlist": [
+          "ihg.com"
+        ],
+        "caveat": "Hotels participating in IHG One Rewards. Member points from IHG come on top."
+      },
+      {
+        "category": "utilities",
+        "rate": 3.0
+      },
+      {
+        "category": "phone",
+        "rate": 3.0
+      },
+      {
+        "category": "internet_cable",
+        "rate": 3.0
+      },
+      {
+        "category": "streaming",
+        "rate": 3.0,
+        "caveat": "Select streaming services only."
+      },
+      {
+        "category": "dining",
+        "rate": 3.0,
+        "caveat": "Includes takeout and eligible delivery services."
+      },
+      {
+        "category": "gas",
+        "rate": 3.0
+      }
+    ]
   }
 }

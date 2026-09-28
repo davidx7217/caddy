@@ -389,6 +389,7 @@ function renderDetail() {
         <div><span>ANNUAL FEE</span><span>${money(p.annual_fee)}</span></div>
         <div><span>EARNS</span><span>${esc(CURRENCY[p.currency] || p.currency)}</span></div>
         <div><span>BASE RATE</span><span>${p.base_rate}x</span></div>
+        ${p.only_at ? `<div><span>WORKS AT</span><span>${esc(p.only_at.join(', '))} only</span></div>` : ''}
         <div><span>RATES VERIFIED</span><span>${esc(day(p.last_verified) || 'unverified')}</span></div>
       </div>
       ${inst && controls ? `<div class="cfg">${controls}</div>` : ''}
@@ -397,7 +398,9 @@ function renderDetail() {
         <div class="sub-head" style="margin-top:0">Bonus categories</div>
         ${rules.length
           ? `<div class="rules">${rules.map(ruleLine).join('')}</div>`
-          : `<p class="rule-note" style="margin-top:12px">No bonus categories. Everything earns the base rate.</p>`}
+          : `<p class="rule-note" style="margin-top:12px">${p.only_at
+              ? 'A store card: it earns its base rate at the store above and works nowhere else.'
+              : 'No bonus categories. Everything earns the base rate.'}</p>`}
       </div>
     </div>
     <div class="dlg-foot">

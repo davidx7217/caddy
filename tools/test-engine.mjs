@@ -986,8 +986,12 @@ eq('...and its 5x hotels rate stays a portal note, never a ranking',
      cards.filter(p => valuations[p.currency] === undefined).map(p => p.id), []);
   eq('every card has a label for its issuer and currency',
      cards.filter(p => !ISSUER[p.issuer] || !CURRENCY[p.currency]).map(p => p.id), []);
-  eq('forty cards, ranked 1 to 40 with no gaps and no repeats',
-     cards.map(p => p.common).sort((a, b) => a - b), Array.from({ length: 40 }, (_, i) => i + 1));
+  eq('every card is ranked, 1 to the catalogue size, with no gaps and no repeats',
+     cards.map(p => p.common).sort((a, b) => a - b), Array.from({ length: cards.length }, (_, i) => i + 1));
+  eq('...and there are 63 of them', cards.length, 63);
+  // A store card that names a domain nothing resolves to could never rank at all.
+  eq('every store a store card works at is in merchants.json',
+     cards.flatMap(p => (p.only_at || []).filter(d => !merchants[d]).map(d => `${p.id}:${d}`)), []);
 }
 
 // --- portal rules pay on their own category, 2026-09-27 --------------------
@@ -1194,6 +1198,87 @@ eq('ShoeStore markup infers clothing', IC({ ldTypes: ['ShoeStore'] }), 'clothing
 eq('SportingGoodsStore markup infers sporting goods', IC({ ldTypes: ['SportingGoodsStore'] }), 'sporting_goods');
 eq('AutoRental markup infers car rentals', IC({ ldTypes: ['AutoRental'] }), 'car_rental');
 eq('ExerciseGym markup infers fitness', IC({ ldTypes: ['ExerciseGym'] }), 'fitness');
+
+// --- store cards, 2026-09-28 ------------------------------------------------
+// A store card works at its own store and nowhere else, so off it the card is
+// not a candidate at all. Ranking it on its base rate elsewhere would recommend
+// a card the till refuses.
+const store = (h, ...cards) =>
+  run(h, cards.map(id => ({ productId: id, config: {} })), { now: new Date('2026-09-28T12:00:00') });
+
+eq('Target Circle Credit Card: 5% at target.com', store('target.com', 'td-target-circle').all[0].rate, 5);
+eq('...found through www. as well', store('www.target.com', 'td-target-circle').all[0].rate, 5);
+eq('...and beating a 3% flat card there',
+   store('target.com', 'robinhood-gold', 'td-target-circle').winner.productId, 'td-target-circle');
+eq('...but not in the ranking at all on walmart.com',
+   store('walmart.com', 'robinhood-gold', 'td-target-circle').all.map(c => c.productId), ['robinhood-gold']);
+{
+  const r = store('walmart.com', 'td-target-circle', 'capitalone-kohls');
+  eq('a wallet of store cards for other stores has no candidate here', [r.all.length, r.winner], [0, null]);
+  eq('...and says so, rather than claiming no cards were added', r.resolvedBy, 'none_usable');
+  eq('...where a genuinely empty wallet still says no_cards', store('walmart.com').resolvedBy, 'no_cards');
+}
+eq('Kohl\'s Card: 7.5% at kohls.com', store('kohls.com', 'capitalone-kohls').all[0].rate, 7.5);
+eq('My Best Buy Credit Card: 5% at bestbuy.com', store('bestbuy.com', 'citi-best-buy').all[0].rate, 5);
+eq('MyLowe\'s Rewards Credit Card: 5% at lowes.com', store('lowes.com', 'synchrony-lowes').all[0].rate, 5);
+eq('Amazon Store Card: 5% at amazon.com, tying Prime Visa, so it asks',
+   [store('amazon.com', 'synchrony-amazon-store', 'chase-prime-visa').tied.length,
+    store('amazon.com', 'synchrony-amazon-store', 'chase-prime-visa').resolvedBy], [2, 'unresolved']);
+eq('TJX Rewards: 5% across the family, T.J.Maxx\'s tjx.com host included',
+   ['tjmaxx.tjx.com', 'marshalls.com', 'homegoods.com', 'sierra.com', 'us.homesense.com']
+     .map(h => store(h, 'synchrony-tjx').all.length && store(h, 'synchrony-tjx').all[0].rate), [5, 5, 5, 5, 5]);
+eq('...but not on the rest of tjx.com, which is the corporate site',
+   store('www.tjx.com', 'synchrony-tjx').all.length, 0);
+eq('Macy\'s: Silver 2%, Gold 3%, Platinum 5%',
+   [1, 1.5, 2.5].map(t => run('macys.com', [{ productId: 'citi-macys', config: { tier_multiplier: t } }],
+     { now: new Date('2026-09-28T12:00:00') }).all[0].rate), [2, 3, 5]);
+
+// --- the remaining airline and hotel tiers, 2026-09-28 ----------------------
+const tier = (id, h) => store(h, id).all[0];
+eq('Delta Platinum: 3x at delta.com and on a hotel booked direct',
+   [tier('amex-delta-platinum', 'delta.com').rate, tier('amex-delta-platinum', 'marriott.com').rate], [3, 3]);
+eq('...but not through an OTA', tier('amex-delta-platinum', 'hotels.com').rate, 1);
+eq('Delta Blue: 2x at delta.com and on dining',
+   [tier('amex-delta-blue', 'delta.com').rate, tier('amex-delta-blue', 'doordash.com').rate], [2, 2]);
+eq('Delta Reserve: 3x at delta.com, 1x on dining',
+   [tier('amex-delta-reserve', 'delta.com').rate, tier('amex-delta-reserve', 'doordash.com').rate], [3, 1]);
+eq('Southwest Priority: 4x at southwest.com, 2x on gas',
+   [tier('chase-southwest-priority', 'southwest.com').rate, tier('chase-southwest-priority', 'shell.us').rate], [4, 2]);
+eq('Southwest Premier: 3x at southwest.com, 2x at supermarkets up to $8,000',
+   [tier('chase-southwest-premier', 'southwest.com').rate, tier('chase-southwest-premier', 'kroger.com').caveats[0]],
+   [3, 'Capped at $8,000 per year, then 1x']);
+eq('United Gateway: 2x at united.com, on gas and on rideshare',
+   ['united.com', 'shell.us', 'uber.com'].map(h => tier('chase-united-gateway', h).rate), [2, 2, 2]);
+eq('United Quest: 4x at united.com, 2x on other airlines, dining and streaming',
+   ['united.com', 'delta.com', 'doordash.com', 'netflix.com'].map(h => tier('chase-united-quest', h).rate), [4, 2, 2, 2]);
+eq('...with Renowned Hotels as a portal note',
+   store('hilton.com', 'chase-united-quest').notes.map(n => n.text)[0],
+   'United Quest: 5x (6.00%) if you book through Renowned Hotels and Resorts instead');
+eq('United Club: 5x at united.com', tier('chase-united-club', 'united.com').rate, 5);
+eq('Hilton Surpass: 12x at hilton.com, worth 4.8%',
+   [tier('amex-hilton-surpass', 'hilton.com').rate, tier('amex-hilton-surpass', 'hilton.com').value], [12, 4.8]);
+eq('...and 4x on U.S. online retail, which Amex counts at a store\'s own site',
+   [tier('amex-hilton-surpass', 'amazon.com').rate, tier('amex-hilton-surpass', 'target.com').rate], [4, 4]);
+eq('Hilton Aspire: 14x at hilton.com, 7x on flights and car rentals',
+   ['hilton.com', 'delta.com', 'hertz.com'].map(h => tier('amex-hilton-aspire', h).rate), [14, 7, 7]);
+eq('Marriott Bold: 3x at marriott.com, 2x on food delivery and rideshare',
+   ['marriott.com', 'doordash.com', 'uber.com'].map(h => tier('chase-marriott-bold', h).rate), [3, 2, 2]);
+eq('...but 1x at a restaurant, which is not delivery', tier('chase-marriott-bold', 'chipotle.com').rate, 1);
+eq('...and 2x on phone and on internet, which it names together',
+   [tier('chase-marriott-bold', 't-mobile.com').rate, tier('chase-marriott-bold', 'xfinity.com').rate], [2, 2]);
+eq('Marriott Bevy: 6x at marriott.com, 4x at supermarkets until $15,000, then 2x',
+   [tier('amex-marriott-bevy', 'marriott.com').rate, tier('amex-marriott-bevy', 'kroger.com').caveats[0]],
+   [6, 'Capped at $15,000 per year, then 2x']);
+eq('Marriott Brilliant: 6x at marriott.com, 3x on flights and dining',
+   ['marriott.com', 'delta.com', 'doordash.com'].map(h => tier('amex-marriott-brilliant', h).rate), [6, 3, 3]);
+eq('World of Hyatt: 4x at hyatt.com, worth 7.2%',
+   [tier('chase-world-of-hyatt', 'hyatt.com').rate, tier('chase-world-of-hyatt', 'hyatt.com').value], [4, 7.2]);
+eq('...and 2x at a gym, the second card to bonus fitness',
+   tier('chase-world-of-hyatt', 'planetfitness.com').rate, 2);
+eq('IHG Premier: 10x at ihg.com, 5x on other travel, 3x on everything else',
+   ['ihg.com', 'marriott.com', 'amazon.com'].map(h => tier('chase-ihg-premier', h).rate), [10, 5, 3]);
+eq('IHG Traveler: 5x at ihg.com, 3x on utilities, 2x on everything else',
+   ['ihg.com', 'coned.com', 'amazon.com'].map(h => tier('chase-ihg-traveler', h).rate), [5, 3, 2]);
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

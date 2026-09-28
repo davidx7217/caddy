@@ -612,5 +612,30 @@
   "frontier.com": {
     "category": "internet_cable",
     "confidence": "high"
+  },
+  "tjmaxx.tjx.com": {
+    "category": "clothing",
+    "confidence": "medium",
+    "note": "T.J.Maxx's own site; tjmaxx.com redirects here. An exact host, so the rest of tjx.com -- the corporate site -- is not a merchant. Off-price apparel and home goods, filed as clothing, which is most of what it sells"
+  },
+  "marshalls.com": {
+    "category": "clothing",
+    "confidence": "medium",
+    "note": "Same off-price shape as T.J.Maxx, and the same TJX Rewards card"
+  },
+  "homegoods.com": {
+    "category": "home_improvement",
+    "confidence": "medium",
+    "note": "Home furnishings, which is the home_improvement bucket; a TJX Rewards store"
+  },
+  "homesense.com": {
+    "category": "home_improvement",
+    "confidence": "medium",
+    "note": "Home furnishings; redirects to us.homesense.com, which the suffix walk covers. A TJX Rewards store"
+  },
+  "sierra.com": {
+    "category": "sporting_goods",
+    "confidence": "medium",
+    "note": "Outdoor clothing and gear; a TJX Rewards store"
   }
 }

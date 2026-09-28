@@ -89,7 +89,9 @@ $('#opts').addEventListener('click', () => chrome.runtime.openOptionsPage());
   }
 
   if (!res || !res.all.length) {
-    $('#sub').textContent = 'No cards added yet.';
+    $('#sub').textContent = res && res.resolvedBy === 'none_usable'
+      ? 'None of your cards work here. Your store cards only work at their own store.'
+      : 'No cards added yet.';
     return;
   }
 
