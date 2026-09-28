@@ -109,12 +109,19 @@ const eq = (name, got, want) => {
 {
   const w = await startWorker();
   w.install('install');
+  await new Promise(r => setTimeout(r, 0));
   eq('install opens the setup flow', w.log.created, ['chrome-extension://test/src/welcome.html']);
+  // What sends the toolbar icon and Settings back to setup until FINISH.
+  eq('...and marks setup unfinished, at its first step', w.localStore.read().setupPending, 'intro');
 }
 {
   const w = await startWorker();
   w.install('update');
+  await new Promise(r => setTimeout(r, 0));
   eq('an update never interrupts someone already set up', w.log.created, []);
+  // An install from before the key existed has none, which reads as set up. If
+  // an update armed it, every existing user would be marched back through setup.
+  eq('...and never marks setup unfinished', 'setupPending' in w.localStore.read(), false);
 }
 
 // ---------- the toolbar icon: INJECT then OPEN ----------
@@ -198,6 +205,12 @@ const WALLET = [{ productId: 'chase-freedom-unlimited', config: {} },
        .action.default_popup, 'src/popup.html');
   eq('...and it never closes itself, which is what took Settings away',
      src('popup.js').includes('window.close()'), false);
+  // The other route that has to exist: back into an unfinished setup, from both
+  // places a reader goes looking for the extension, and out of it only by FINISH.
+  eq('while setup is unfinished, the toolbar icon goes back to it',
+     /if \(setupPending\) \{[^]*welcome\.html/.test(src('popup.js')), true);
+  eq('...and so does Settings', /setupPending[^]*location\.replace\([^)]*welcome\.html/.test(src('options.js')), true);
+  eq('...and only FINISH clears it', src('welcome.js').includes("remove('setupPending')"), true);
 }
 
 // ---------- the activity log ----------

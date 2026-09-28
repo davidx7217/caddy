@@ -2,10 +2,33 @@ import { fontFaceCss, fontStack } from './engine.js';
 
 const $ = s => document.querySelector(s);
 
+const { theme, setupPending } = await chrome.storage.local.get(['theme', 'setupPending']);
+
+// Setup is unfinished (see background.js), so the icon goes back to it rather
+// than to a ranking with no cards in it. An open setup tab is brought forward
+// instead of stacking another one on every click; getContexts needs Chrome 116,
+// and older builds the manifest still admits just get a new tab. Either way the
+// focus moves to that tab, and Chrome shuts the popup when it loses focus -- it
+// never closes itself, for the reason test-worker.mjs gives.
+if (setupPending) {
+  const url = chrome.runtime.getURL('src/welcome.html');
+  const [open] = chrome.runtime.getContexts
+    ? await chrome.runtime.getContexts({ contextTypes: ['TAB'], documentUrls: [url] })
+    : [];
+  if (open) {
+    await chrome.tabs.update(open.tabId, { active: true });
+    await chrome.windows.update(open.windowId, { focused: true });
+  } else {
+    await chrome.tabs.create({ url });
+  }
+  // Never settles, on purpose: nothing below may run, or it would inject the
+  // content script into whatever page sits behind the popup.
+  await new Promise(() => {});
+}
+
 // One font AND one theme across every surface, so the extension looks like one
 // thing. Options owns the theme choice; unset means follow the OS, which is
 // what the stylesheet does on its own.
-const { theme } = await chrome.storage.local.get('theme');
 if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme;
 applyFont();
 

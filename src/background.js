@@ -328,8 +328,15 @@ chrome.storage.onChanged.addListener((changes, area) => {
 // extension does, why nothing appears on any site yet, or that automatic mode
 // exists. Only on `install`: an update must never interrupt someone who is
 // already set up.
-chrome.runtime.onInstalled.addListener(details => {
+//
+// `setupPending` is what makes setup survive a closed tab. While it is set, the
+// toolbar icon and Settings both send the reader back to setup, and its value
+// is the step they had reached; FINISH removes it, and nothing sets it again.
+// Armed here and only here, so an install that predates it has no key and reads
+// as set up -- there is nothing to migrate.
+chrome.runtime.onInstalled.addListener(async details => {
   if (details.reason === 'install') {
+    await chrome.storage.local.set({ setupPending: 'intro' });
     chrome.tabs.create({ url: chrome.runtime.getURL('src/welcome.html') });
   }
 });

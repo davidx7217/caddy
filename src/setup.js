@@ -57,6 +57,16 @@ export function steps(picked, products, baseVals) {
 }
 
 /**
+ * Where an unfinished setup picks up again: the step the reader had reached,
+ * as background.js and the flow record it in `setupPending`. It has to be a step
+ * their picks still earn -- What you earn exists only for some wallets -- and
+ * anything else, including no pending setup at all, starts at the beginning.
+ */
+export function resumeAt(pending, picked, products, baseVals) {
+  return steps(picked, products, baseVals).some(s => s.id === pending) ? pending : 'intro';
+}
+
+/**
  * The wallet, in the shape Options reads and the ranker takes.
  *
  * Order is the order the cards were picked. It is a stable sort key and nothing

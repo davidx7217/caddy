@@ -16,6 +16,16 @@ const SECTIONS = [
     blurb: 'What Caddy keeps, where it keeps it, and how to take it with you.' }
 ];
 
+// Settings is where setup ENDS. Reached while it is unfinished -- from
+// chrome://extensions, or a tab left open -- the page hands over to setup rather
+// than opening on a catalogue with no explanation. See background.js. The await
+// never settles on purpose: the page is being replaced, and nothing below should
+// run in the meantime.
+if ((await chrome.storage.local.get('setupPending')).setupPending) {
+  location.replace(chrome.runtime.getURL('src/welcome.html'));
+  await new Promise(() => {});
+}
+
 const j = n => fetch(chrome.runtime.getURL(`data/${n}.json`)).then(r => r.json());
 const [products, baseVals, categories] = await Promise.all([j('cards'), j('valuations'), j('categories')]);
 // Sorted by `common`, the editorial popularity rank in cards.json. File order

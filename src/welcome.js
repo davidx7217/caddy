@@ -7,10 +7,11 @@
 // and asking about it here would trade a one-minute setup for a form nobody can
 // answer on the day they installed something.
 //
-// It writes the same storage keys Options writes and nothing else, so there is
-// no setup state to get out of step with the settings page: this flow is a
-// friendlier path into `instances`, `valuations` and the <all_urls> grant, not
-// a second source of truth for them.
+// It writes the same storage keys Options writes, so there is no setup state to
+// get out of step with the settings page: this flow is a friendlier path into
+// `instances`, `valuations` and the <all_urls> grant, not a second source of
+// truth for them. The one key of its own is `setupPending`, which says only that
+// first-run setup is unfinished and where it was left -- see background.js.
 
 import { fontFaceCss, fontStack } from './engine.js';
 import { CURRENCY, ISSUER, mark, money } from './issuers.js';
@@ -41,9 +42,10 @@ let theme = 'system';     // 'system' | 'light' | 'dark'; the key Options writes
 let stepId = 'intro';
 let query = '';
 let page = 0;             // which slice of the catalogue is on screen
+let pending = null;       // step id while first-run setup is unfinished, else null
 
 async function load() {
-  const s = await chrome.storage.local.get(['instances', 'valuations', 'theme']);
+  const s = await chrome.storage.local.get(['instances', 'valuations', 'theme', 'setupPending']);
   // Someone can reach this page with a wallet already built -- by URL, or by
   // removing and re-adding the extension over the same profile. Show what is
   // there, or Continue would quietly overwrite it with an empty picker.
@@ -53,6 +55,10 @@ async function load() {
     configs[inst.productId] = inst.config || {};
   }
   valuations = s.valuations || {};
+  // Back from a closed tab, the toolbar icon or Settings: pick up at the step
+  // that was reached, with the picks above already restored.
+  pending = s.setupPending || null;
+  stepId = setup.resumeAt(pending, picked, products, baseVals);
   theme = s.theme === 'light' || s.theme === 'dark' ? s.theme : 'system';
   applyTheme();
   const { prefs = {} } = await chrome.storage.local.get('prefs');
@@ -278,8 +284,17 @@ async function go(delta) {
   const list = steps();
   const next = list[list.findIndex(s => s.id === stepId) + delta];
   await save();
-  if (!next) { location.replace(chrome.runtime.getURL('src/options.html')); return; }
+  if (!next) {
+    // FINISH is the only thing that ends first-run setup. Cleared before the
+    // redirect, or Settings would read it and send the reader straight back.
+    await chrome.storage.local.remove('setupPending');
+    location.replace(chrome.runtime.getURL('src/options.html'));
+    return;
+  }
   stepId = next.id;
+  // Only while setup is pending. Reached by URL after it was finished, this page
+  // must not re-arm the key and pull a set-up reader back into it.
+  if (pending) await chrome.storage.local.set({ setupPending: stepId });
   query = '';
   page = 0;
   render();

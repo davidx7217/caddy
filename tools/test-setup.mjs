@@ -7,7 +7,7 @@
 // still browser-verified: it assigns innerHTML and queries the result, which
 // node cannot do without an HTML parser this project has no dependency for.
 import { readFileSync } from 'node:fs';
-import { tunableCards, liveCurrencies, steps, toInstances } from '../src/setup.js';
+import { tunableCards, liveCurrencies, steps, toInstances, resumeAt } from '../src/setup.js';
 
 const load = n => JSON.parse(readFileSync(new URL(`../data/${n}.json`, import.meta.url), 'utf8'));
 const products = load('cards'), baseVals = load('valuations');
@@ -65,6 +65,20 @@ eq('U.S. Bank Cash+ earns it the same way',
 eq('the step labels are what the stepper renders',
    steps([], products, baseVals).map(s => s.label),
    ['Welcome', 'Your cards', 'How it runs']);
+
+// ---------- picking up an unfinished setup ----------
+// The toolbar icon and Settings both reopen setup while `setupPending` is set;
+// this is where it lands. Picks come back from storage before this is asked.
+const resume = (pending, list) => resumeAt(pending, list, products, baseVals);
+eq('no pending setup starts at the beginning', resume(undefined, []), 'intro');
+eq('a reader who left on Your cards goes back to Your cards',
+   resume('cards', ['chase-freedom-unlimited']), 'cards');
+eq('...and one who left on the last step goes back to it', resume('mode', []), 'mode');
+eq('What you earn resumes when the picks still earn it',
+   resume('tune', ['chase-freedom-unlimited']), 'tune');
+eq('...but a wallet that no longer earns it starts over rather than on a missing step',
+   resume('tune', ['wellsfargo-active-cash']), 'intro');
+eq('an unrecognised step starts over', resume('nonsense', ['chase-freedom-unlimited']), 'intro');
 
 // ---------- the wallet that gets written ----------
 eq('picks become the shape Options reads',

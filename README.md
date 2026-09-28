@@ -76,6 +76,9 @@ This is the actual product. The extension is a few hundred lines; the data is th
    carry, the questions those picks raise, and how it should run. The extension
    ships with no wallet by design, so step two is the one it cannot do for you.
    It takes about a minute and lands you in Settings when it is done.
+   Close it early and nothing is lost: until you press Finish, the toolbar icon
+   and Settings both reopen it at the step you left, with your picks kept. After
+   Finish it never opens on its own again.
 5. The dock appears by itself on stores from the moment you add a card. That is
    the default and setup's last step only confirms it. Settings -> **Where it
    runs** switches to click-to-run, and the blocklist there turns Caddy off
