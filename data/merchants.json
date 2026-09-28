@@ -638,5 +638,25 @@
     "category": "sporting_goods",
     "confidence": "medium",
     "note": "Outdoor clothing and gear; a TJX Rewards store"
+  },
+  "nordstrom.com": {
+    "category": "department_store",
+    "confidence": "high",
+    "note": "Added 2026-09-28 for the Nordstrom cards."
+  },
+  "nordstromrack.com": {
+    "category": "department_store",
+    "confidence": "medium",
+    "note": "Nordstrom's off-price chain, filed with its parent as a department store. Added 2026-09-28: the Nordstrom credit cards take 5% off here and earn no points."
+  },
+  "jcpenney.com": {
+    "category": "department_store",
+    "confidence": "high",
+    "note": "Added 2026-09-28 for the JCPenney cards."
+  },
+  "ulta.com": {
+    "category": "other",
+    "confidence": "medium",
+    "note": "Added 2026-09-28 for the Ulta cards. Cosmetics stores have no Caddy category, so the row sits in everything else. USAA Eagle Adapt's health and wellness rate names cosmetic stores, so that one card is understated here."
   }
 }

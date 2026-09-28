@@ -1,9 +1,9 @@
 {
   "_note_field": "MAINTAINER-ONLY. `note` records why a card is modelled the way it is -- provenance, schema reasoning, what was deliberately not modelled. Never render it in the UI. `caution` is the user-facing field.",
   "_business_note": "`business` marks a card issued on business underwriting rather than personal. Absent means personal -- only the field's presence is meaningful, so there is nothing to keep in sync on seventy-eight records. It filters the catalogue and nothing else reads it: the ranker does not care whose name is on the account.",
-  "_common_note": "`common` is a POPULARITY RANK, 1 to 95, and it is EDITORIAL. There is no public card-level ranking of US cardholders -- Nilson publishes issuer volume, not how many people hold a Freedom Unlimited -- so this is judgement, not a sourced fact, and it is the only field here that is. It orders the setup picker so a new user meets mass-market cards first. 21 to 40 were added on 2026-09-27 as the next twenty after the first, 41 to 63 on 2026-09-28 -- store cards, then the remaining tiers of airline and hotel programs already present -- 64 to 82 later that day, the cards of issuers Caddy did not yet cover, and 83 to 95 after those, business cards, so each batch ranks below the one before by construction. Re-rank it freely; nothing computes from it.",
-  "_only_at_note": "`only_at` marks a STORE CARD: the merchant domains where it works, and nowhere else. The ranker drops the card from consideration on any other domain rather than ranking it on its base rate, because recommending a card the till refuses is worse than not mentioning it. base_rate is then the store rate. Store cards with no rewards at all -- Home Depot's, for one -- are deliberately left out: a card that earns nothing can never be the best card to use.",
-  "_comment": "All 95 records verified against issuer sources; 5 on 2026-08-29, 6 on 2026-09-09, 5 on 2026-09-10, 24 on 2026-09-27 -- the twenty added that day, plus Blue Cash Everyday, Amex Gold, BofA Customized Cash and U.S. Bank Cash+, re-read because their categories changed -- and 55 on 2026-09-28: the store cards and the remaining airline and hotel tiers, then nineteen cards from Synchrony's general-purpose line, Barclays, USAA, Navy Federal and Bilt, then thirteen business cards from Amex, Capital One, Chase and Barclays. The Bilt cards' offer terms could not be read (the link downloads a file), so their category definitions are unconfirmed; see their notes. Each carries its source_url. Chase Freedom Flex rotating categories MUST be re-verified 2026-10-01. Amex Platinum was absent until 2026-09-27 because no reachable americanexpress.com page stated its annual fee or base rate on 2026-09-10; the product page states both now.",
+  "_common_note": "`common` is a POPULARITY RANK, 1 to 103, and it is EDITORIAL. There is no public card-level ranking of US cardholders -- Nilson publishes issuer volume, not how many people hold a Freedom Unlimited -- so this is judgement, not a sourced fact, and it is the only field here that is. It orders the setup picker so a new user meets mass-market cards first. 21 to 40 were added on 2026-09-27 as the next twenty after the first, 41 to 63 on 2026-09-28 -- store cards, then the remaining tiers of airline and hotel programs already present -- 64 to 82 later that day, the cards of issuers Caddy did not yet cover, 83 to 95 after those, business cards, and 96 to 103, smaller store cards, so each batch ranks below the one before by construction. Re-rank it freely; nothing computes from it.",
+  "_only_at_note": "`only_at` marks a STORE CARD: the merchant domains where it works, and nowhere else. The ranker drops the card from consideration on any other domain rather than ranking it on its base rate, because recommending a card the till refuses is worse than not mentioning it. base_rate is then what the card adds at that store: where a store pays its free program's members something whatever card they use, that share is left out, because it cannot change which card to use. Store cards with no rewards at all -- Home Depot's, for one -- are deliberately left out: a card that earns nothing can never be the best card to use.",
+  "_comment": "All 103 records verified against issuer sources; 5 on 2026-08-29, 6 on 2026-09-09, 5 on 2026-09-10, 24 on 2026-09-27 -- the twenty added that day, plus Blue Cash Everyday, Amex Gold, BofA Customized Cash and U.S. Bank Cash+, re-read because their categories changed -- and 63 on 2026-09-28: the store cards and the remaining airline and hotel tiers, then nineteen cards from Synchrony's general-purpose line, Barclays, USAA, Navy Federal and Bilt, then thirteen business cards from Amex, Capital One, Chase and Barclays, then eight smaller store cards from Gap Inc., Nordstrom, Ulta and JCPenney. The Bilt cards' offer terms could not be read (the link downloads a file), so their category definitions are unconfirmed; see their notes. Each carries its source_url. Chase Freedom Flex rotating categories MUST be re-verified 2026-10-01. Amex Platinum was absent until 2026-09-27 because no reachable americanexpress.com page stated its annual fee or base rate on 2026-09-10; the product page states both now.",
   "chase-sapphire-reserve": {
     "id": "chase-sapphire-reserve",
     "issuer": "chase",
@@ -2062,15 +2062,15 @@
     "name": "Kohl's Card",
     "common": 43,
     "annual_fee": 0,
-    "base_rate": 7.5,
+    "base_rate": 2.5,
     "verified": true,
     "last_verified": "2026-09-28",
     "source_url": "https://www.capitalone.com/credit-cards/kohls/",
     "only_at": [
       "kohls.com"
     ],
-    "caution": "Paid as Kohl's Cash in $5 steps on the first of the month, and it expires 30 days later.",
-    "note": "The store card, not the Kohl's Rewards Visa; Capital One decides which one an applicant gets. Valued as cash, which overstates it for anyone who does not shop Kohl's again within 30 days -- the rewards expire.",
+    "caution": "Members also earn 5% with any card. Kohl's Cash expires in 30 days.",
+    "note": "The store card, not the Kohl's Rewards Visa; Capital One decides which one an applicant gets. Valued as cash, which overstates it for anyone who does not shop Kohl's again within 30 days -- the rewards expire. Kohl's Rewards pays 5% any way you pay and 7.5% with a Kohl's Card, per kohls.com/feature/rewards.jsp on 2026-09-28, so the card adds 2.5%. The rate is what the card adds on top of the member share, which a member earns whatever card pays, so it cannot tip the choice between cards (decided 2026-09-28).",
     "rules": []
   },
   "citi-macys": {
@@ -2081,22 +2081,22 @@
     "name": "Macy's Credit Card",
     "common": 44,
     "annual_fee": 0,
-    "base_rate": 2.0,
+    "base_rate": 1.0,
     "verified": true,
     "last_verified": "2026-09-28",
     "source_url": "https://www.macys.com/p/credit-service/benefits/",
     "only_at": [
       "macys.com"
     ],
-    "caution": "Paid as Star Money, $10 per 1,000 points, and it expires 30 days after it is issued.",
-    "note": "Star Rewards status sets the rate: new cards open at Silver (2 points per $1), Gold is 3 and Platinum 5, reached by spend at Macy's on the card. base_rate is Silver and the status picker multiplies it. citi.com lists Macy's Credit Cards among Citi's retail store cards; the benefits page names Citibank only for the Macy's American Express, which is a different product.",
+    "caution": "Members also earn 1% with any card. Star Money expires in 30 days.",
+    "note": "Star Rewards status sets the rate: new cards open at Silver (2 points per $1), Gold is 3 and Platinum 5, reached by spend at Macy's on the card. base_rate is Silver and the status picker multiplies it. citi.com lists Macy's Credit Cards among Citi's retail store cards; the benefits page names Citibank only for the Macy's American Express, which is a different product. Bronze Star Rewards members earn 1 point per $1 whatever they pay with, per the same page on 2026-09-28, so the card adds 1, 2 or 4 points at Silver, Gold and Platinum: base_rate 1 and multipliers 1, 2 and 4. Saved Gold (1.5) and Platinum (2.5) multipliers from before the change no longer match an option; no published install has any. The rate is what the card adds on top of the member share, which a member earns whatever card pays, so it cannot tip the choice between cards (decided 2026-09-28).",
     "user_config": {
       "tier_multiplier": {
         "label": "Star Rewards status",
         "options": {
           "Silver": 1.0,
-          "Gold": 1.5,
-          "Platinum": 2.5
+          "Gold": 2.0,
+          "Platinum": 4.0
         }
       }
     },
@@ -4235,6 +4235,255 @@
         "category": "office_supply",
         "rate": 2.0,
         "caveat": "Stand-alone office supply stores."
+      }
+    ]
+  },
+  "barclays-gap-encore-card": {
+    "id": "barclays-gap-encore-card",
+    "issuer": "barclays",
+    "network": "store card",
+    "currency": "cash",
+    "name": "Encore Credit Card: Gap, Old Navy, Banana Republic, Athleta",
+    "common": 96,
+    "annual_fee": 0,
+    "base_rate": 4.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.gap.com/customer-service/encore-program",
+    "only_at": [
+      "gap.com"
+    ],
+    "caution": "Members also earn 1% with any card.",
+    "note": "The Gap Inc. Encore program, per gap.com and barclaycardus.com on 2026-09-28. Cards are issued by Barclays Bank Delaware under each brand's name -- Gap, Old Navy, Banana Republic and Athleta Encore -- with identical rewards, so one record stands for all four designs. 500 points = $1 reward, so the 25, 15 and 5 points per $1 that Barclays calls 5X, 3X and 1X are 5%, 3% and 1%; rewards are spent at Gap Inc. brands or in the Encore Market and are valued as cash, as Kohl's Cash is. Gap, Old Navy, Banana Republic and Athleta all sell from gap.com hosts -- oldnavy.gap.com and the rest -- so the one gap.com row covers all four through the parent-domain walk. Gap Factory is not among the brands named for the 5X, so gapfactory.com is not listed. Any Encore member earns 1% at the brands without the card, so the card adds 4% there. The rate is what the card adds on top of the member share, which a member earns whatever card pays, so it cannot tip the choice between cards (decided 2026-09-28). The store card works across Gap Inc. stores and online only.",
+    "rules": []
+  },
+  "barclays-gap-encore-mastercard": {
+    "id": "barclays-gap-encore-mastercard",
+    "issuer": "barclays",
+    "network": "mastercard",
+    "currency": "cash",
+    "name": "Encore Mastercard: Gap, Old Navy, Banana Republic, Athleta",
+    "common": 97,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.gap.com/customer-service/encore-program",
+    "caution": "Members also earn 1% with any card.",
+    "note": "The Gap Inc. Encore program, per gap.com and barclaycardus.com on 2026-09-28. Cards are issued by Barclays Bank Delaware under each brand's name -- Gap, Old Navy, Banana Republic and Athleta Encore -- with identical rewards, so one record stands for all four designs. 500 points = $1 reward, so the 25, 15 and 5 points per $1 that Barclays calls 5X, 3X and 1X are 5%, 3% and 1%; rewards are spent at Gap Inc. brands or in the Encore Market and are valued as cash, as Kohl's Cash is. Gap, Old Navy, Banana Republic and Athleta all sell from gap.com hosts -- oldnavy.gap.com and the rest -- so the one gap.com row covers all four through the parent-domain walk. Gap Factory is not among the brands named for the 5X, so gapfactory.com is not listed. Any Encore member earns 1% at the brands without the card, so the card adds 4% there. The rate is what the card adds on top of the member share, which a member earns whatever card pays, so it cannot tip the choice between cards (decided 2026-09-28). Which apparel retailers count for the 3% is not listed on either page; every clothing row here gets it.",
+    "rules": [
+      {
+        "category": "clothing",
+        "rate": 4.0,
+        "merchant_allowlist": [
+          "gap.com"
+        ]
+      },
+      {
+        "category": "clothing",
+        "rate": 3.0
+      }
+    ]
+  },
+  "synchrony-jcpenney-card": {
+    "id": "synchrony-jcpenney-card",
+    "issuer": "synchrony",
+    "network": "store card",
+    "currency": "cash",
+    "name": "JCPenney Credit Card",
+    "common": 98,
+    "annual_fee": 0,
+    "base_rate": 2.5,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.jcpenney.com/m/plcc-benefits",
+    "only_at": [
+      "jcpenney.com"
+    ],
+    "caution": "Members also earn 5% with any card.",
+    "note": "Per jcpenney.com/m/plcc-benefits on 2026-09-28: JCPenney cards earn 1.5 CashPass points per $1 at JCPenney and jcp.com, and 200 points is a $10 CashPass reward, so a point is 5 cents and the card rate is 7.5%. Paying any other way earns 1 point per $1, 5%, so the card itself adds 2.5%. Rewards are spent at JCPenney and valued as cash. The application is Synchrony's (apply.syf.com), as the Mastercard's is. The rate is what the card adds on top of the member share, which a member earns whatever card pays, so it cannot tip the choice between cards (decided 2026-09-28).",
+    "rules": []
+  },
+  "synchrony-jcpenney-mastercard": {
+    "id": "synchrony-jcpenney-mastercard",
+    "issuer": "synchrony",
+    "network": "mastercard",
+    "currency": "cash",
+    "name": "JCPenney Mastercard",
+    "common": 102,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.jcpenney.com/m/plcc-benefits",
+    "caution": "Members also earn 5% with any card.",
+    "note": "Per jcpenney.com/m/plcc-benefits on 2026-09-28: JCPenney cards earn 1.5 CashPass points per $1 at JCPenney and jcp.com, and 200 points is a $10 CashPass reward, so a point is 5 cents and the card rate is 7.5%. Paying any other way earns 1 point per $1, 5%, so the card itself adds 2.5%. Rewards are spent at JCPenney and valued as cash. Outside JCPenney it earns 1 point per $5, which is 1%. Issued by Synchrony Bank, per the page. The rate is what the card adds on top of the member share, which a member earns whatever card pays, so it cannot tip the choice between cards (decided 2026-09-28).",
+    "rules": [
+      {
+        "category": "department_store",
+        "rate": 2.5,
+        "merchant_allowlist": [
+          "jcpenney.com"
+        ]
+      }
+    ]
+  },
+  "td-nordstrom-card": {
+    "id": "td-nordstrom-card",
+    "issuer": "td",
+    "network": "store card",
+    "currency": "cash",
+    "name": "Nordstrom Credit Card",
+    "common": 99,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.nordstrom.com/browse/nordy-club",
+    "only_at": [
+      "nordstrom.com",
+      "nordstromrack.com"
+    ],
+    "caution": "Members also earn 1% with any card.",
+    "note": "Issued by TD Bank USA, N.A., per nordstrom.com on 2026-09-28; rates from the Nordy Club terms (nordstrom.com/browse/nordy-club/terms-conditions), whose Table A is an image and was read off the page. Cardmembers start at Influencer, 2 points per $1 at Nordstrom; Ambassador and Icon, reached by yearly spend, earn 3 -- which the status picker says. 1,000 points = $10 Note, so a point is a cent and currency is 'cash'. Nordstrom Rack pays no points to anyone, but a Nordstrom credit card takes 5% off there at the till (not through Apple Pay, PayPal or Afterpay), modelled as a 5% rule the way Target's 5% off is. A member earns 1 point at Nordstrom whatever card pays, so the cards add 1 at Influencer and 2 at Ambassador and Icon; nobody earns points at the Rack, so its 5% off is all card. The rate is what the card adds on top of the member share, which a member earns whatever card pays, so it cannot tip the choice between cards (decided 2026-09-28). This is the Nordstrom Retail Credit Card, which works at Nordstrom and Nordstrom Rack.",
+    "user_config": {
+      "selections": [
+        {
+          "key": "status",
+          "label": "Nordy Club status",
+          "max": 1,
+          "options": {
+            "ambassador": "Ambassador or Icon"
+          }
+        }
+      ]
+    },
+    "rules": [
+      {
+        "category": "department_store",
+        "rate": 2.0,
+        "selection_group": "ambassador",
+        "merchant_allowlist": [
+          "nordstrom.com"
+        ]
+      },
+      {
+        "category": "department_store",
+        "rate": 5.0,
+        "merchant_allowlist": [
+          "nordstromrack.com"
+        ]
+      }
+    ]
+  },
+  "td-nordstrom-visa": {
+    "id": "td-nordstrom-visa",
+    "issuer": "td",
+    "network": "visa",
+    "currency": "cash",
+    "name": "Nordstrom Visa",
+    "common": 101,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.nordstrom.com/browse/nordy-club",
+    "caution": "Members also earn 1% with any card.",
+    "note": "Issued by TD Bank USA, N.A., per nordstrom.com on 2026-09-28; rates from the Nordy Club terms (nordstrom.com/browse/nordy-club/terms-conditions), whose Table A is an image and was read off the page. Cardmembers start at Influencer, 2 points per $1 at Nordstrom; Ambassador and Icon, reached by yearly spend, earn 3 -- which the status picker says. 1,000 points = $10 Note, so a point is a cent and currency is 'cash'. Nordstrom Rack pays no points to anyone, but a Nordstrom credit card takes 5% off there at the till (not through Apple Pay, PayPal or Afterpay), modelled as a 5% rule the way Target's 5% off is. A member earns 1 point at Nordstrom whatever card pays, so the cards add 1 at Influencer and 2 at Ambassador and Icon; nobody earns points at the Rack, so its 5% off is all card. The rate is what the card adds on top of the member share, which a member earns whatever card pays, so it cannot tip the choice between cards (decided 2026-09-28). The Visa earns 2 points on gas and EV charging, groceries, dining and streaming (defined as cable, satellite and other TV, radio and streaming services) and 1 elsewhere. At Influencer the Visa adds 1 point at Nordstrom, its base rate, so that needs no rule.",
+    "user_config": {
+      "selections": [
+        {
+          "key": "status",
+          "label": "Nordy Club status",
+          "max": 1,
+          "options": {
+            "ambassador": "Ambassador or Icon"
+          }
+        }
+      ]
+    },
+    "rules": [
+      {
+        "category": "department_store",
+        "rate": 2.0,
+        "selection_group": "ambassador",
+        "merchant_allowlist": [
+          "nordstrom.com"
+        ]
+      },
+      {
+        "category": "department_store",
+        "rate": 5.0,
+        "merchant_allowlist": [
+          "nordstromrack.com"
+        ]
+      },
+      {
+        "category": "gas",
+        "rate": 2.0
+      },
+      {
+        "category": "ev_charging",
+        "rate": 2.0
+      },
+      {
+        "category": "groceries",
+        "rate": 2.0
+      },
+      {
+        "category": "dining",
+        "rate": 2.0
+      },
+      {
+        "category": "streaming",
+        "rate": 2.0
+      },
+      {
+        "category": "internet_cable",
+        "rate": 2.0
+      }
+    ]
+  },
+  "comenity-ulta-card": {
+    "id": "comenity-ulta-card",
+    "issuer": "comenity",
+    "network": "store card",
+    "currency": "ulta",
+    "name": "Ulta Beauty Rewards Credit Card",
+    "common": 100,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.ulta.com/rewards/credit-card",
+    "only_at": [
+      "ulta.com"
+    ],
+    "caution": "Members also earn a point with any card.",
+    "note": "Issued by Comenity Capital Bank, per ulta.com on 2026-09-28; rates from the card page and the Ulta Beauty Rewards terms (ulta.com/rewards/terms-and-conditions). A member earns 1 point per $1 at Ulta however they pay (1.25 at Platinum, 1.5 at Diamond), and either card adds 1 more at every status, so the card rate is 1 point. The rate is what the card adds on top of the member share, which a member earns whatever card pays, so it cannot tip the choice between cards (decided 2026-09-28). Points redeem on a sliding scale, from 100 = $3 to 2,000 = $125; 'ulta' is valued at the 3-cent floor every redemption reaches. Purchases through DoorDash, Instacart or Uber Eats earn no card bonus.",
+    "rules": []
+  },
+  "comenity-ulta-mastercard": {
+    "id": "comenity-ulta-mastercard",
+    "issuer": "comenity",
+    "network": "mastercard",
+    "currency": "ulta",
+    "name": "Ulta Beauty Rewards Mastercard",
+    "common": 103,
+    "annual_fee": 0,
+    "base_rate": 0.333,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.ulta.com/rewards/credit-card",
+    "caution": "Members also earn a point with any card.",
+    "note": "Issued by Comenity Capital Bank, per ulta.com on 2026-09-28; rates from the card page and the Ulta Beauty Rewards terms (ulta.com/rewards/terms-and-conditions). A member earns 1 point per $1 at Ulta however they pay (1.25 at Platinum, 1.5 at Diamond), and either card adds 1 more at every status, so the card rate is 1 point. The rate is what the card adds on top of the member share, which a member earns whatever card pays, so it cannot tip the choice between cards (decided 2026-09-28). Points redeem on a sliding scale, from 100 = $3 to 2,000 = $125; 'ulta' is valued at the 3-cent floor every redemption reaches. Purchases through DoorDash, Instacart or Uber Eats earn no card bonus. Outside Ulta the Mastercard earns 1 point per $3, the 0.333 base rate. The Ulta rule sits on `other` because ulta.com does: Caddy has no cosmetics category.",
+    "rules": [
+      {
+        "category": "other",
+        "rate": 1.0,
+        "merchant_allowlist": [
+          "ulta.com"
+        ]
       }
     ]
   }

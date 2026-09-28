@@ -988,7 +988,7 @@ eq('...and its 5x hotels rate stays a portal note, never a ranking',
      cards.filter(p => !ISSUER[p.issuer] || !CURRENCY[p.currency]).map(p => p.id), []);
   eq('every card is ranked, 1 to the catalogue size, with no gaps and no repeats',
      cards.map(p => p.common).sort((a, b) => a - b), Array.from({ length: cards.length }, (_, i) => i + 1));
-  eq('...and there are 95 of them', cards.length, 95);
+  eq('...and there are 103 of them', cards.length, 103);
   // A store card that names a domain nothing resolves to could never rank at all.
   eq('every store a store card works at is in merchants.json',
      cards.flatMap(p => (p.only_at || []).filter(d => !merchants[d]).map(d => `${p.id}:${d}`)), []);
@@ -1218,7 +1218,8 @@ eq('...but not in the ranking at all on walmart.com',
   eq('...and says so, rather than claiming no cards were added', r.resolvedBy, 'none_usable');
   eq('...where a genuinely empty wallet still says no_cards', store('walmart.com').resolvedBy, 'no_cards');
 }
-eq('Kohl\'s Card: 7.5% at kohls.com', store('kohls.com', 'capitalone-kohls').all[0].rate, 7.5);
+eq('Kohl\'s Card: 2.5% at kohls.com, what it adds to the 5% members earn anyway',
+   store('kohls.com', 'capitalone-kohls').all[0].rate, 2.5);
 eq('My Best Buy Credit Card: 5% at bestbuy.com', store('bestbuy.com', 'citi-best-buy').all[0].rate, 5);
 eq('MyLowe\'s Rewards Credit Card: 5% at lowes.com', store('lowes.com', 'synchrony-lowes').all[0].rate, 5);
 eq('Amazon Store Card: 5% at amazon.com, tying Prime Visa, so it asks',
@@ -1229,9 +1230,9 @@ eq('TJX Rewards: 5% across the family, T.J.Maxx\'s tjx.com host included',
      .map(h => store(h, 'synchrony-tjx').all.length && store(h, 'synchrony-tjx').all[0].rate), [5, 5, 5, 5, 5]);
 eq('...but not on the rest of tjx.com, which is the corporate site',
    store('www.tjx.com', 'synchrony-tjx').all.length, 0);
-eq('Macy\'s: Silver 2%, Gold 3%, Platinum 5%',
-   [1, 1.5, 2.5].map(t => run('macys.com', [{ productId: 'citi-macys', config: { tier_multiplier: t } }],
-     { now: new Date('2026-09-28T12:00:00') }).all[0].rate), [2, 3, 5]);
+eq('Macy\'s: Silver adds 1%, Gold 2%, Platinum 4% to the 1% members earn anyway',
+   [1, 2, 4].map(t => run('macys.com', [{ productId: 'citi-macys', config: { tier_multiplier: t } }],
+     { now: new Date('2026-09-28T12:00:00') }).all[0].rate), [1, 2, 4]);
 
 // --- the remaining airline and hotel tiers, 2026-09-28 ----------------------
 const tier = (id, h) => store(h, id).all[0];
@@ -1429,6 +1430,39 @@ eq('JetBlue Business: 6x at jetblue.com, 2x at office supply stores and restaura
    ['jetblue.com', 'staples.com', 'chipotle.com'].map(h => tier('barclays-jetblue-business', h).rate), [6, 2, 2]);
 eq('...but 1x through a delivery app, and no grocery bonus',
    [tier('barclays-jetblue-business', 'doordash.com').rate, tier('barclays-jetblue-business', 'kroger.com').rate], [1, 1]);
+
+// --- smaller store cards, 2026-09-28 -------------------------------------------
+// Gap Inc.'s Encore cards, Nordstrom, Ulta and JCPenney, each read off the
+// retailer's or issuer's page that day.
+eq('Encore Credit Card: 4% at every Gap Inc. brand, each on its own gap.com host',
+   ['www.gap.com', 'oldnavy.gap.com', 'bananarepublic.gap.com', 'athleta.gap.com']
+     .map(h => tier('barclays-gap-encore-card', h)?.rate), [4, 4, 4, 4]);
+eq('...and not a candidate at another clothing store', store('hm.com', 'barclays-gap-encore-card').all.length, 0);
+eq('Encore Mastercard: 4% at Gap brands, 3% at other apparel stores, 1% elsewhere',
+   ['oldnavy.gap.com', 'hm.com', 'amazon.com'].map(h => tier('barclays-gap-encore-mastercard', h)?.rate), [4, 3, 1]);
+eq('JCPenney Credit Card: 2.5% at jcpenney.com, what it adds to the 5% members earn anyway',
+   [tier('synchrony-jcpenney-card', 'jcpenney.com')?.rate, store('macys.com', 'synchrony-jcpenney-card').all.length],
+   [2.5, 0]);
+eq('...so a 3% card beats it there, as it does at the till: 3% + 5% against 7.5%',
+   store('jcpenney.com', 'synchrony-jcpenney-card', 'robinhood-gold').winner.productId, 'robinhood-gold');
+eq('JCPenney Mastercard: 2.5% at jcpenney.com, 1% elsewhere',
+   [tier('synchrony-jcpenney-mastercard', 'jcpenney.com')?.rate, tier('synchrony-jcpenney-mastercard', 'amazon.com')?.rate],
+   [2.5, 1]);
+eq('Nordstrom Credit Card: adds 1% at nordstrom.com at Influencer, 2% at Ambassador or Icon',
+   [tier('td-nordstrom-card', 'nordstrom.com')?.rate, picked('td-nordstrom-card', 'nordstrom.com', ['ambassador'])?.rate],
+   [1, 2]);
+eq('...5% off at Nordstrom Rack, and no candidate at Kohl\'s',
+   [tier('td-nordstrom-card', 'nordstromrack.com')?.rate, store('kohls.com', 'td-nordstrom-card').all.length], [5, 0]);
+eq('Nordstrom Visa: the same at Nordstrom and the Rack',
+   [tier('td-nordstrom-visa', 'nordstrom.com')?.rate, picked('td-nordstrom-visa', 'nordstrom.com', ['ambassador'])?.rate,
+    tier('td-nordstrom-visa', 'nordstromrack.com')?.rate], [1, 2, 5]);
+eq('...2% on gas, EV charging, groceries, dining, streaming and cable, 1% elsewhere',
+   ['shell.us', 'evgo.com', 'kroger.com', 'doordash.com', 'netflix.com', 'xfinity.com', 'amazon.com']
+     .map(h => tier('td-nordstrom-visa', h)?.rate), [2, 2, 2, 2, 2, 2, 1]);
+eq('Ulta Beauty Rewards Credit Card: adds a point at ulta.com, worth 3% at the 3-cent floor',
+   [tier('comenity-ulta-card', 'ulta.com')?.rate, tier('comenity-ulta-card', 'ulta.com')?.value], [1, 3]);
+eq('Ulta Beauty Rewards Mastercard: the same at ulta.com, and a point per $3 elsewhere',
+   [tier('comenity-ulta-mastercard', 'ulta.com')?.rate, tier('comenity-ulta-mastercard', 'amazon.com')?.value], [1, 0.999]);
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

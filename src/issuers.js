@@ -19,14 +19,14 @@ const CHIP = {
   citi: '#0a4a86', capitalone: '#c0392b', discover: '#e8620c',
   wellsfargo: '#b3232c', usbank: '#1b4a7a', goldman: '#6f8fb5',
   td: '#2e8540', synchrony: '#c99a00', barclays: '#00aeef', usaa: '#3d6fa8',
-  navyfederal: '#004b8d', column: '#8a8580'
+  navyfederal: '#004b8d', column: '#8a8580', comenity: '#7b4fa0'
 };
 const MONOGRAM = {
   chase: 'CH', robinhood: 'RH', bofa: 'BA', amex: 'AX',
   citi: 'CT', capitalone: 'C1', discover: 'DS',
   wellsfargo: 'WF', usbank: 'US', goldman: 'GS',
   td: 'TD', synchrony: 'SY', barclays: 'BC', usaa: 'UA',
-  navyfederal: 'NF', column: 'CN'
+  navyfederal: 'NF', column: 'CN', comenity: 'CM'
 };
 
 /** Full issuer names, for anywhere the two-letter mark is not enough on its own. */
@@ -35,7 +35,8 @@ export const ISSUER = {
   amex: 'American Express', citi: 'Citi', capitalone: 'Capital One',
   discover: 'Discover', wellsfargo: 'Wells Fargo', usbank: 'U.S. Bank',
   goldman: 'Goldman Sachs', td: 'TD Bank', synchrony: 'Synchrony',
-  barclays: 'Barclays', usaa: 'USAA', navyfederal: 'Navy Federal', column: 'Column N.A.'
+  barclays: 'Barclays', usaa: 'USAA', navyfederal: 'Navy Federal', column: 'Column N.A.',
+  comenity: 'Comenity Capital Bank'
 };
 
 export const CURRENCY = {
@@ -45,7 +46,7 @@ export const CURRENCY = {
   delta: 'Delta miles', united: 'United miles', southwest: 'Southwest points',
   aa: 'AAdvantage miles', marriott: 'Marriott points', hilton: 'Hilton points',
   hyatt: 'Hyatt points', ihg: 'IHG points', jetblue: 'TrueBlue points',
-  usaa: 'USAA points', bilt: 'Bilt points'
+  usaa: 'USAA points', bilt: 'Bilt points', ulta: 'Ulta points'
 };
 
 export const money = c => c ? `$${c}/yr` : 'no annual fee';
@@ -64,7 +65,8 @@ const KIND = {
   ur: 'points', mr: 'points', c1: 'points', citi: 'points', aeroplan: 'points',
   wf: 'points', bofa: 'points', delta: 'points', united: 'points',
   southwest: 'points', aa: 'points', marriott: 'points', hilton: 'points',
-  hyatt: 'points', ihg: 'points', jetblue: 'points', usaa: 'points', bilt: 'points'
+  hyatt: 'points', ihg: 'points', jetblue: 'points', usaa: 'points', bilt: 'points',
+  ulta: 'points'
 };
 
 export const kindOf = currency => KIND[currency] || 'points';
