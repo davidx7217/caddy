@@ -9,14 +9,15 @@ works and why; this file is only the state of play.
 
 ## State
 
-- **v1.0.0**, 95 cards across 16 issuers, 144 merchant rows, 27 categories.
+- **v1.0.0**, 103 cards across 17 issuers, 148 merchant rows, 27 categories.
   The second twenty cards landed 2026-09-27; store cards plus the remaining
-  airline and hotel tiers, nineteen cards from five issuers Caddy lacked, and
-  thirteen business cards, on 2026-09-28. See sections 6, 7, 9 and 10.
+  airline and hotel tiers, nineteen cards from five issuers Caddy lacked,
+  thirteen business cards and eight smaller store cards, on 2026-09-28. See
+  sections 6, 7, 9, 10 and 11.
 - **Every card verified** against its issuer's own page, each carrying a
   `source_url` and the date it was read. The one soft spot: the three Bilt cards'
   category definitions were not readable (section 9).
-- **Tests green**: 468 engine + 31 setup + 49 lifecycle + 45 worker. `npm test`.
+- **Tests green**: 479 engine + 31 setup + 49 lifecycle + 45 worker. `npm test`.
 - **Nothing unpushed.** `main` on GitHub is the whole tree. All three store
   screenshots are still current -- the new cards rank after the ones they show.
 - **`caddy-1.0.0.zip` sits in the repo root**, rebuilt on every commit. See the
@@ -48,11 +49,8 @@ In order. The first is dated; the second needs a real install, so it is David's.
 3. **Keep widening coverage, with the recipe in section 8.** By a rough
    bank-by-bank judgment made before section 9's cards -- no public data exists
    per card -- Caddy covered about 55-60% of US rewards-card spending. The
-   issuers it lacked and the general-purpose business cards are in now
-   (sections 9 and 10). The next gaps, largest first:
-   - **Smaller store cards**: Nordstrom, Gap, Ulta, JCPenney -- same `only_at`
-     shape as the seven already in. Gap's cards are Barclays' now: its card list
-     carries Gap, Old Navy, Banana Republic and Athleta Encore Mastercards.
+   issuers it lacked, the general-purpose business cards and the smaller store
+   cards are in now (sections 9 to 11). The next gaps, largest first:
    - **Tiers still missing from covered programs**: Citi AAdvantage Executive and
      Globe, Autograph Journey, BofA Premium Rewards, U.S. Bank Altitude.
    - **Barclays' other co-brands**, listed on its card page but not read:
@@ -300,7 +298,7 @@ Card and TJX Rewards. Every one read off its issuer's or retailer's page that da
 
 ---
 
-## 8. Adding a card: the recipe this week's 75 followed
+## 8. Adding a card: the recipe this week's 83 followed
 
 1. **Read the issuer's own page** in the in-app browser -- `get_page_text`, or a
    short `javascript_tool` regex over `document.body.innerText`. Never a blog or
@@ -317,7 +315,10 @@ Card and TJX Rewards. Every one read off its issuer's or retailer's page that da
    A rate that needs Apple Pay, PayPal checkout or a chosen top category cannot be
    seen from a web page; put it in the `caution`, not in `rules`. A rate that needs
    a membership (Prime, Walmart+, Sam's Club Plus) goes in at the member rate, with
-   the other rate in the `caution` -- Prime Visa's convention.
+   the other rate in the `caution` -- Prime Visa's convention. A store rate is what
+   the card adds: leave out whatever the store's free program pays members with any
+   card, and say it in a one-line caution. Keep rule caveats short or absent; they
+   print in the popup.
 3. **Every allowlisted domain and every category needs merchant rows.** Add them,
    then sweep the new rows: `tools/check-redirects.mjs` over HTTP, and the browser
    for whatever it reports as blocked. Never try to get past a bot challenge.
@@ -427,6 +428,47 @@ Card. No new issuer, currency, category or merchant row, and no engine change.
 - **Not added:** the Sam's Club Business Mastercard (no reachable page states its
   rates -- samsclub.com/credit/business 404s), and Capital One's Spark Classic, a
   fair-credit card, left out as the consumer fair-credit and secured cards are.
+
+---
+
+## 11. Smaller store cards, 28 September 2026
+
+Eight cards, ranks 96 to 103: Gap Inc.'s Encore Credit Card and Encore Mastercard
+(Barclays), the Nordstrom Credit Card and Nordstrom Visa (TD Bank), the Ulta Beauty
+Rewards Credit Card and Mastercard (Comenity Capital Bank, a new issuer), and the
+JCPenney Credit Card and Mastercard (Synchrony). One new currency, `ulta`. Four new
+merchant rows -- nordstrom.com, nordstromrack.com, jcpenney.com and ulta.com -- all
+confirmed by the HTTP sweep.
+
+- **Gap's cards are Barclays' and the program is Encore now.** Gap, Old Navy, Banana
+  Republic and Athleta each sell an Encore card with identical rewards, so one record
+  per product stands for all four designs, named so a search for any brand finds it.
+  500 points = $1, so Barclays' "5X, 3X, 1X" are 5%, 3% and 1%. All four brands sell
+  from gap.com hosts (oldnavy.gap.com and so on), so the existing gap.com row covers
+  them. Gap Factory is not named for the 5% and is not listed.
+- **Nordstrom has a status picker.** Cardmembers start at Influencer, 2 points per $1
+  at Nordstrom; Ambassador and Icon earn 3. It is a selection rather than Macy's tier
+  multiplier, because a multiplier would also scale the 5% off at Nordstrom Rack and
+  the Visa's everyday rates. Rack pays no points; its 5% off is modelled like
+  Target's.
+- **ulta.com is filed under `other`.** Caddy has no cosmetics category, and making it a
+  drugstore would hand drugstore bonuses to a beauty store. Ulta points redeem on a
+  sliding scale; `ulta` sits at the 3-cent floor, and the caution gives the range.
+- **Store rates are what the card adds (decided 2026-09-28).** Where a store's free
+  program pays members whatever card they use, that share is left out: it cannot
+  change which card to use. Kohl's 7.5% became 2.5%, JCPenney's 7.5% 2.5%, Macy's
+  2/3/5% 1/2/4% (tier multipliers now 1, 2 and 4), Gap Inc.'s 5% 4%, Nordstrom's 2/3
+  points 1/2, Ulta's 2 points 1. Unchanged, because members get nothing extra or the
+  card rate already stacks on top: Amazon, Target, Lowe's, Best Buy, TJX, Costco,
+  Sam's Club, OnePay and Apple. Target's member rate was not re-read -- target.com
+  showed a press-and-hold bot check -- and its 5% off is card-only either way. Each
+  changed card's caution is one line: "Members also earn 5% with any card."
+- **Text is kept minimal, on your instruction.** The new cards' rule caveats are
+  gone (they print in the popup); definitions live in each card's `note`, which the
+  extension never shows.
+- **Not added:** Ulta's Platinum and Diamond rates (2.25 and 2.5 points with the card,
+  noted in the records), the Nordstrom debit card, and Gap Factory for the Encore
+  cards.
 
 ---
 
