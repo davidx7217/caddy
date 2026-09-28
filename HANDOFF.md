@@ -1,6 +1,6 @@
 # Handoff
 
-Where Caddy stands as of **27 September 2026**, and what is left.
+Where Caddy stands as of **28 September 2026**, and what is left.
 
 Written to be picked up cold. The README is the reference for how the extension
 works and why; this file is only the state of play.
@@ -15,16 +15,55 @@ works and why; this file is only the state of play.
 - **Every card verified** against its issuer's own page, each carrying a
   `source_url` and the date it was read.
 - **Tests green**: 416 engine + 31 setup + 49 lifecycle + 45 worker. `npm test`.
-- **Nothing unpushed, nothing untracked.** All three store screenshots are
-  current, so nothing is blocking submission any more.
+- **Nothing unpushed.** `main` on GitHub is the whole tree. All three store
+  screenshots are still current -- the new cards rank after the ones they show.
 - **`caddy-1.0.0.zip` sits in the repo root**, rebuilt on every commit. See the
   packaging note below.
+- **`caddy-1.0.0/` in the root is untracked and STALE**: an unzip of the build
+  made 2026-09-27 21:24, before any of this week's work -- 20 cards, no setup
+  resume, no store cards. If Chrome has that folder loaded, it is running old
+  code. Load the repo root instead, or delete the folder and unzip a fresh one.
+
+---
+
+## Start here
+
+In order. The first is dated; the second needs a real install, so it is David's.
+
+1. **1 October 2026: re-verify Chase Freedom Flex** -- its Q3 5% categories expire
+   2026-09-30. Section 2.
+2. **Hand checks only a real install can do.** Load unpacked from the repo root,
+   then:
+   - Remove and re-add Caddy, close setup on Your cards, click the toolbar icon:
+     setup should reopen on Your cards (`runtime.getContexts` and the popup
+     closing on focus change were only verified against stubs).
+   - Add the Target Circle Credit Card: the dock should recommend it on
+     target.com and never show it on walmart.com.
+   - Browse a few of the 61 merchant rows added this week -- gym, carrier and
+     shipping homepages -- and note any that mount the dock on a marketing page.
+   - `node tools/check-redirects-browser.mjs` to confirm `bhphotovideo.com` and
+     `microcenter.com`, which met a Cloudflare challenge.
+3. **Keep widening coverage, with the recipe in section 8.** By a rough
+   bank-by-bank judgment -- no public data exists per card -- Caddy covers about
+   55-60% of US rewards-card spending. The next gaps, largest first:
+   - **Issuers not in Caddy yet**: Synchrony's general-purpose cards (PayPal
+     Cashback Mastercard, Sam's Club Mastercard, Venmo, Walmart OnePay), Barclays
+     (AAdvantage Aviator Red, JetBlue), USAA, Navy Federal, Bilt.
+   - **Business and corporate cards**: Amex Business Platinum and Business Gold,
+     Blue Business Cash, Capital One Spark, Ink Business Premier, Sapphire Reserve
+     for Business.
+   - **Smaller store cards**: Nordstrom, Gap, Ulta, JCPenney -- same `only_at`
+     shape as the seven already in.
+   - **Tiers still missing from covered programs**: Citi AAdvantage Executive and
+     Globe, Autograph Journey, BofA Premium Rewards, U.S. Bank Altitude.
+4. **Submit to the Chrome Web Store** -- section 1, unchanged. The listing's
+   counts were kept current through this week.
 
 ---
 
 ## 1. Submit to the Chrome Web Store
 
-Everything is written, checked and current. This is the next thing to do.
+Everything is written, checked and current. Nothing about it is blocked.
 
 ### What is ready
 
@@ -251,6 +290,37 @@ Card and TJX Rewards. Every one read off its issuer's or retailer's page that da
   last 30 days; each card's caution says so, and both are valued as cash anyway.
 - **Not added:** store cards with no rewards (Home Depot is the big one), and smaller
   programs -- Nordstrom, Gap, Ulta, JCPenney. The same `only_at` shape takes them.
+
+---
+
+## 8. Adding a card: the recipe this week's 43 followed
+
+1. **Read the issuer's own page** in the in-app browser -- `get_page_text`, or a
+   short `javascript_tool` regex over `document.body.innerText`. Never a blog or
+   a comparison site. Record the annual fee, the base rate, every category with its
+   cap, the network (page terms or card art) and the issuing bank. Chase and Amex
+   put exact definitions in collapsed "Offer Details"; read `#offerpop`'s
+   `textContent` on Chase pages. A number the page does not state goes in the
+   `note` as unconfirmed, never in the data as fact.
+2. **Map each category onto the 27 in `categories.json`**, reading the issuer's
+   definition rather than its headline. Online retail at Amex and Online Shopping
+   at BofA are channels, repeated across every store category -- see the README.
+   A rate that needs Apple Pay, PayPal checkout or a chosen top category cannot be
+   seen from a web page; put it in the `caution`, not in `rules`.
+3. **Every allowlisted domain and every category needs merchant rows.** Add them,
+   then sweep the new rows: `tools/check-redirects.mjs` over HTTP, and the browser
+   for whatever it reports as blocked. Never try to get past a bot challenge.
+4. **New currency**: `valuations.json` plus a `_sources` line, and
+   `CURRENCY`/`KIND` in `issuers.js`. **New issuer**: `CHIP`, `MONOGRAM` and
+   `ISSUER` there too. The audit test fails on either if forgotten.
+5. **`common` takes the next free rank**; bump the card count in the audit test and
+   in `cards.json`'s `_comment`.
+6. **Pin every verified rate in `test-engine.mjs`**, run `npm test`, and
+   mutation-check any engine change: break it on purpose and watch its test fail.
+7. **Update the counts** in the README's Data status and Layout, in
+   `store/listing.md`, and in this file.
+8. **Commit only when David says so.** Branch, commit the change, commit the
+   handoff separately, fast-forward `main`, push, delete the branch.
 
 ---
 
