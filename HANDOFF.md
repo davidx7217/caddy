@@ -13,7 +13,7 @@ works and why; this file is only the state of play.
   The second twenty cards landed 2026-09-27; see section 6.
 - **Every card verified** against its issuer's own page, each carrying a
   `source_url` and the date it was read.
-- **Tests green**: 378 engine + 25 setup + 49 lifecycle + 40 worker. `npm test`.
+- **Tests green**: 378 engine + 31 setup + 49 lifecycle + 45 worker. `npm test`.
 - **Nothing unpushed, nothing untracked.** All three store screenshots are
   current, so nothing is blocking submission any more.
 - **`caddy-1.0.0.zip` sits in the repo root**, rebuilt on every commit. See the
@@ -156,6 +156,16 @@ the README and a real person's card list.
   stylesheet inside it cannot reach out. It carries a `matchMedia` listener for
   that reason, dropped in `destroy()` alongside the resize one, and keeps the
   last stored value in `storedTheme` so the listener knows whether it may act.
+- **Setup cannot be walked away from half done.** `setupPending` is set on
+  install and only on install, and holds the step reached. While it exists the
+  toolbar icon opens setup (or brings an open setup tab forward) and Settings
+  redirects to it; `welcome.js` resumes at that step, and FINISH deletes the key.
+  An install from before the key existed has none, so it reads as set up and
+  needs no migration. Verified 2026-09-27 against stubbed `chrome.*` in the
+  in-app browser; the two things only a real install can show -- that
+  `runtime.getContexts` finds the open setup tab, and that the popup shuts when
+  focus leaves it -- want one check by hand: Load unpacked, close setup on Your
+  cards, click the icon.
 - **The card list pages six at a time** and reuses the `.pager` markup from
   Settings rather than growing a second one. Six is what fits under this step's
   title, blurb and search box; Settings pages ten because it has none of those.
