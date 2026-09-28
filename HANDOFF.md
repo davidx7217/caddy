@@ -9,14 +9,14 @@ works and why; this file is only the state of play.
 
 ## State
 
-- **v1.0.0**, 82 cards across 16 issuers, 144 merchant rows, 27 categories.
+- **v1.0.0**, 95 cards across 16 issuers, 144 merchant rows, 27 categories.
   The second twenty cards landed 2026-09-27; store cards plus the remaining
-  airline and hotel tiers, then nineteen cards from five issuers Caddy lacked, on
-  2026-09-28. See sections 6, 7 and 9.
+  airline and hotel tiers, nineteen cards from five issuers Caddy lacked, and
+  thirteen business cards, on 2026-09-28. See sections 6, 7, 9 and 10.
 - **Every card verified** against its issuer's own page, each carrying a
   `source_url` and the date it was read. The one soft spot: the three Bilt cards'
   category definitions were not readable (section 9).
-- **Tests green**: 447 engine + 31 setup + 49 lifecycle + 45 worker. `npm test`.
+- **Tests green**: 468 engine + 31 setup + 49 lifecycle + 45 worker. `npm test`.
 - **Nothing unpushed.** `main` on GitHub is the whole tree. All three store
   screenshots are still current -- the new cards rank after the ones they show.
 - **`caddy-1.0.0.zip` sits in the repo root**, rebuilt on every commit. See the
@@ -48,11 +48,8 @@ In order. The first is dated; the second needs a real install, so it is David's.
 3. **Keep widening coverage, with the recipe in section 8.** By a rough
    bank-by-bank judgment made before section 9's cards -- no public data exists
    per card -- Caddy covered about 55-60% of US rewards-card spending. The
-   issuers it lacked are in now (section 9). The next gaps, largest first:
-   - **Business and corporate cards**: Amex Business Platinum and Business Gold,
-     Blue Business Cash, Capital One Spark, Ink Business Premier, Sapphire Reserve
-     for Business. Two more seen on 2026-09-28: the JetBlue Business Card and the
-     Sam's Club Business Mastercard.
+   issuers it lacked and the general-purpose business cards are in now
+   (sections 9 and 10). The next gaps, largest first:
    - **Smaller store cards**: Nordstrom, Gap, Ulta, JCPenney -- same `only_at`
      shape as the seven already in. Gap's cards are Barclays' now: its card list
      carries Gap, Old Navy, Banana Republic and Athleta Encore Mastercards.
@@ -61,6 +58,11 @@ In order. The first is dated; the second needs a real install, so it is David's.
    - **Barclays' other co-brands**, listed on its card page but not read:
      Wyndham Rewards Earner (three personal tiers), AARP, Upromise, Frontier,
      Emirates, Miles & More.
+   - **Co-branded business cards**, none read yet: Amex's Delta SkyMiles Gold,
+     Platinum and Reserve Business, Marriott Bonvoy Business and Hilton Honors
+     Business; Chase's United, Southwest, IHG and World of Hyatt business cards;
+     Barclays' Wyndham Earner Business. Also Amex Business Green, listed and not
+     read.
 4. **Submit to the Chrome Web Store** -- section 1, unchanged. The listing's
    counts were kept current through this week.
 
@@ -298,7 +300,7 @@ Card and TJX Rewards. Every one read off its issuer's or retailer's page that da
 
 ---
 
-## 8. Adding a card: the recipe this week's 62 followed
+## 8. Adding a card: the recipe this week's 75 followed
 
 1. **Read the issuer's own page** in the in-app browser -- `get_page_text`, or a
    short `javascript_tool` regex over `document.body.innerText`. Never a blog or
@@ -383,6 +385,48 @@ Left open, for you:
 
 - Re-read the Bilt Card Offer Terms in a browser that opens them, then confirm or
   correct Obsidian's "other travel" and anything else they define.
+
+---
+
+## 10. Business cards, 28 September 2026
+
+Thirteen cards, ranks 83 to 95 of `common`, all `business: true`, each read off its
+issuer's page that day: Amex Business Platinum, Business Gold, Blue Business Cash and
+Graphite Business Cash Unlimited; Capital One Venture X Business, Spark Cash Plus,
+Venture Business, Spark Cash, VentureOne Business and Spark Cash Select; Chase Ink
+Business Premier and Sapphire Reserve for Business; and Barclays' JetBlue Business
+Card. No new issuer, currency, category or merchant row, and no engine change.
+
+- **Amex's business categories are defined on one page**,
+  americanexpress.com/us/rewards-info/business.html. Construction material and
+  hardware suppliers names Lowe's and excludes home furnishings, so Business
+  Platinum's 2X skips homegoods.com and homesense.com; electronics retailers and
+  shipping carriers are the other two 2X categories.
+- **Business Platinum's 5X is portal-only.** Unlike the consumer Platinum, a flight
+  bought from the airline earns 1X; the 5X is for flights and prepaid hotels booked
+  through Amex Travel.
+- **Business Gold's 4X is a caution, not rules**, per the recipe: it goes to
+  whichever two of six categories a business spent most on each cycle, which no page
+  shows. So it ranks 1X outside Amex Travel. If that undersells it for you, the
+  alternative is a Cash+-style picker for the two categories you usually hit -- a
+  data change, no engine work.
+- **Graphite Business Cash Unlimited is new** in Amex's lineup (2%, 5% through Amex
+  Travel, $295) and went in alongside Blue Business Cash, whose old URL now 404s; the
+  live page is americanexpress.com/en-us/business/credit-cards/blue-business-cash/.
+- **Capital One's business portal is Capital One Business Travel**, which Capital One
+  says may differ from Capital One Travel, so the notes name it separately. The Spark
+  Miles cards are gone; Venture Business and VentureOne Business replace them.
+- **Ink Business Premier earns `cash`, not `ur`.** The page calls its rewards Cash
+  Back and says nothing of moving them to other Ultimate Rewards cards, and its
+  rewards agreement downloads as a file. At the `ur` figure it would read 3%
+  everywhere, which nothing on the page supports.
+- **Two networks are unconfirmed** and say `visa or mastercard`: Capital One's
+  business pages and the Sapphire Reserve for Business card art name none. The older
+  Ink Business Cash and VentureOne records say `visa` for the same situation; that
+  inconsistency was left alone.
+- **Not added:** the Sam's Club Business Mastercard (no reachable page states its
+  rates -- samsclub.com/credit/business 404s), and Capital One's Spark Classic, a
+  fair-credit card, left out as the consumer fair-credit and secured cards are.
 
 ---
 
