@@ -154,10 +154,17 @@ const LD_CATEGORY = [
   [['Pharmacy', 'DrugStore'], 'drugstore'],
   [['GasStation'], 'gas'],
   [['Airline', 'Flight', 'TravelAgency'], 'travel_air'],
+  [['AutoRental', 'RentalCarReservation'], 'car_rental'],
   [['MovieTheater', 'EventVenue', 'PerformingArtsTheater', 'Event', 'Ticket'], 'entertainment'],
+  [['ExerciseGym', 'HealthClub'], 'fitness'],
   [['HardwareStore', 'HomeGoodsStore', 'FurnitureStore'], 'home_improvement'],
   [['DepartmentStore'], 'department_store'],
-  [['ClothingStore', 'ElectronicsStore', 'Store', 'Product', 'Offer', 'AggregateOffer',
+  // Store types that are also card categories, checked 2026-09-27: every one is
+  // a real schema.org type (200 there, where EVChargingStation 404s).
+  [['ElectronicsStore'], 'electronics'],
+  [['ClothingStore', 'ShoeStore'], 'clothing'],
+  [['SportingGoodsStore'], 'sporting_goods'],
+  [['Store', 'Product', 'Offer', 'AggregateOffer',
     'IndividualProduct', 'ProductGroup'], 'online_retail'],
 ];
 
@@ -304,7 +311,16 @@ function daysSince(dateStr, now) {
 // Categories you can actually route through an issuer travel portal. Transit
 // and rideshare are travel_* but are not bookable, so a "book through the
 // portal instead" note there would be nonsense.
-const PORTAL_BOOKABLE = new Set(['travel_air', 'travel_hotel']);
+const PORTAL_BOOKABLE = new Set(['travel_air', 'travel_hotel', 'car_rental']);
+
+// A portal rule filed under travel_portal pays on anything bookable there. One
+// filed under a bookable category pays on that category only: Venture X earns 10x
+// on hotels and 5x on flights through the same portal, and when the rule's own
+// category was ignored its 10x surfaced as a note on delta.com.
+function portalCovers(rule, category) {
+  return PORTAL_BOOKABLE.has(category) &&
+    (rule.category === 'travel_portal' || rule.category === category);
+}
 
 /** Drops instances whose product no longer exists in cards.json. */
 export function pruneInstances(instances, products) {
@@ -454,7 +470,7 @@ export function rank(input) {
     let expired = null;
     for (const rule of p.rules || []) {
       if (rule.portal_only) {
-        if (PORTAL_BOOKABLE.has(category) && (!portal || rule.rate > portal.rate)) portal = rule;
+        if (portalCovers(rule, category) && (!portal || rule.rate > portal.rate)) portal = rule;
         continue;
       }
       if (!ruleMatchesContext(rule, ctx)) continue;
@@ -476,13 +492,16 @@ export function rank(input) {
     const staleReason = stalenessFor(p, best, expired, now);
 
     if (portal) {
-      const portalValue = Math.round(portal.rate * cpp * 1000) / 1000;
+      // The relationship tier applies to portal bookings too -- BofA publishes
+      // its Travel Center rate with the same tier bonus as everything else.
+      const portalRate = Math.round(portal.rate * tier * 1000) / 1000;
+      const portalValue = Math.round(portalRate * cpp * 1000) / 1000;
       // Only worth saying if the detour actually pays more than staying put.
       if (portalValue > value) {
         notes.push({
           productId: p.id,
           value: portalValue,
-          text: `${p.name}: ${portal.rate}x (${portalValue.toFixed(2)}%) if you book through ${portal.portal} instead`
+          text: `${p.name}: ${portalRate}x (${portalValue.toFixed(2)}%) if you book through ${portal.portal} instead`
         });
       }
     }

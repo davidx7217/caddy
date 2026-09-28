@@ -1,10 +1,19 @@
 {
   "_comment": "Cents per point. cash = 1.0 by definition. These are DEFAULTS and are opinions, not facts. User-overridable in Options.",
+  "_sources": "Added 2026-09-27. wf and bofa are the issuers' own fixed values: Wells Fargo prices a point at one cent on the Autograph page, and BofA Travel Rewards points redeem at one cent against travel and dining. The six airline and hotel currencies are NerdWallet's September 2026 estimates (nerdwallet.com/travel/learn/airline-miles-and-hotel-points-valuations, updated 2026-09-14), which price a typical award redemption rather than the best one.",
   "cash":  1.0,
   "ur":    1.5,
   "mr":    1.6,
   "c1":    1.4,
   "citi":  1.4,
   "disco": 1.0,
-  "aeroplan": 1.5
+  "aeroplan": 1.5,
+  "wf":    1.0,
+  "bofa":  1.0,
+  "delta": 1.2,
+  "united": 1.2,
+  "southwest": 1.4,
+  "aa":    1.7,
+  "marriott": 0.7,
+  "hilton": 0.4
 }

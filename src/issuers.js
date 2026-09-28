@@ -17,25 +17,28 @@
 const CHIP = {
   chase: '#1c4d8f', robinhood: '#0f9d58', bofa: '#a3232b', amex: '#2e6fb8',
   citi: '#0a4a86', capitalone: '#c0392b', discover: '#e8620c',
-  wellsfargo: '#b3232c', usbank: '#1b4a7a'
+  wellsfargo: '#b3232c', usbank: '#1b4a7a', goldman: '#6f8fb5'
 };
 const MONOGRAM = {
   chase: 'CH', robinhood: 'RH', bofa: 'BA', amex: 'AX',
   citi: 'CT', capitalone: 'C1', discover: 'DS',
-  wellsfargo: 'WF', usbank: 'US'
+  wellsfargo: 'WF', usbank: 'US', goldman: 'GS'
 };
 
 /** Full issuer names, for anywhere the two-letter mark is not enough on its own. */
 export const ISSUER = {
   chase: 'Chase', robinhood: 'Robinhood', bofa: 'Bank of America',
   amex: 'American Express', citi: 'Citi', capitalone: 'Capital One',
-  discover: 'Discover', wellsfargo: 'Wells Fargo', usbank: 'U.S. Bank'
+  discover: 'Discover', wellsfargo: 'Wells Fargo', usbank: 'U.S. Bank',
+  goldman: 'Goldman Sachs'
 };
 
 export const CURRENCY = {
   cash: 'Cash back', ur: 'Chase points', mr: 'Amex points',
   aeroplan: 'Aeroplan points', c1: 'Capital One miles', citi: 'Citi points',
-  disco: 'Discover cash back'
+  disco: 'Discover cash back', wf: 'Wells Fargo points', bofa: 'BofA points',
+  delta: 'Delta miles', united: 'United miles', southwest: 'Southwest points',
+  aa: 'AAdvantage miles', marriott: 'Marriott points', hilton: 'Hilton points'
 };
 
 export const money = c => c ? `$${c}/yr` : 'no annual fee';
@@ -51,7 +54,9 @@ export const money = c => c ? `$${c}/yr` : 'no annual fee';
 // that called them cash back would contradict the ranking on the next screen.
 const KIND = {
   cash: 'cash', disco: 'cash',
-  ur: 'points', mr: 'points', c1: 'points', citi: 'points', aeroplan: 'points'
+  ur: 'points', mr: 'points', c1: 'points', citi: 'points', aeroplan: 'points',
+  wf: 'points', bofa: 'points', delta: 'points', united: 'points',
+  southwest: 'points', aa: 'points', marriott: 'points', hilton: 'points'
 };
 
 export const kindOf = currency => KIND[currency] || 'points';

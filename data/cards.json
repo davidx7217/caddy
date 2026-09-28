@@ -1,8 +1,8 @@
 {
   "_note_field": "MAINTAINER-ONLY. `note` records why a card is modelled the way it is -- provenance, schema reasoning, what was deliberately not modelled. Never render it in the UI. `caution` is the user-facing field.",
-  "_business_note": "`business` marks a card issued on business underwriting rather than personal. Absent means personal -- only the field's presence is meaningful, so there is nothing to keep in sync on nineteen records. It filters the catalogue and nothing else reads it: the ranker does not care whose name is on the account.",
-  "_common_note": "`common` is a POPULARITY RANK, 1 to 20, and it is EDITORIAL. There is no public card-level ranking of US cardholders -- Nilson publishes issuer volume, not how many people hold a Freedom Unlimited -- so this is judgement, not a sourced fact, and it is the only field here that is. It orders the setup picker so a new user meets mass-market cards first. Re-rank it freely; nothing computes from it.",
-  "_comment": "All 20 records verified against issuer sources; 7 on 2026-08-29, 7 on 2026-09-09 and 6 on 2026-09-10. Each carries its source_url. Chase Freedom Flex rotating categories MUST be re-verified 2026-10-01. Amex Platinum is deliberately absent: its 5X flight and prepaid-hotel rates are published, but no reachable americanexpress.com page stated the annual fee or the base rate on 2026-09-10, and a card modelled without those two numbers ranks wrong.",
+  "_business_note": "`business` marks a card issued on business underwriting rather than personal. Absent means personal -- only the field's presence is meaningful, so there is nothing to keep in sync on thirty-six records. It filters the catalogue and nothing else reads it: the ranker does not care whose name is on the account.",
+  "_common_note": "`common` is a POPULARITY RANK, 1 to 40, and it is EDITORIAL. There is no public card-level ranking of US cardholders -- Nilson publishes issuer volume, not how many people hold a Freedom Unlimited -- so this is judgement, not a sourced fact, and it is the only field here that is. It orders the setup picker so a new user meets mass-market cards first. 21 to 40 were added on 2026-09-27 as the next twenty after the first, so they rank below all of it by construction. Re-rank it freely; nothing computes from it.",
+  "_comment": "All 40 records verified against issuer sources; 5 on 2026-08-29, 6 on 2026-09-09, 5 on 2026-09-10 and 24 on 2026-09-27 -- the twenty added that day, plus Blue Cash Everyday, Amex Gold, BofA Customized Cash and U.S. Bank Cash+, re-read because their categories changed. Each carries its source_url. Chase Freedom Flex rotating categories MUST be re-verified 2026-10-01. Amex Platinum was absent until 2026-09-27 because no reachable americanexpress.com page stated its annual fee or base rate on 2026-09-10; the product page states both now.",
   "chase-sapphire-reserve": {
     "id": "chase-sapphire-reserve",
     "issuer": "chase",
@@ -223,8 +223,9 @@
     "annual_fee": 0,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-08-29",
-    "source_url": "https://www.americanexpress.com/en-us/credit-cards/credit-intel/amex-blue-cash-everyday-benefits/",
+    "last_verified": "2026-09-27",
+    "source_url": "https://www.americanexpress.com/us/credit-cards/card/blue-cash-everyday/",
+    "note": "Online retail is a CHANNEL, not a store type. The offer terms (americanexpress.com/us/credit-cards/card-application/apply/prospect/terms/blue-cash-everyday-credit-card/25330-10-0, read 2026-09-27) define it as physical goods bought on a website or app from a U.S. retailer, and exclude restaurants, supermarkets, gas stations, auto dealers, travel, entertainment and services. Every purchase Caddy sees is made online, so the 3% is repeated on each category that sells physical goods -- until 2026-09-27 it sat on online_retail alone, and target.com or homedepot.com ranked this card on its 1% base. Wholesale clubs are left out on purpose: whether each club takes Amex at all was not checked, and recommending a card a till refuses is worse than under-ranking it.",
     "rules": [
       {
         "category": "groceries",
@@ -254,6 +255,20 @@
         },
         "caveat": "US merchants only. The $6,000 cap is per category per year, then 1%."
       },
+      { "category": "department_store", "rate": 3.0, "cap": { "amount": 6000, "period": "year", "then_rate": 1.0 },
+        "caveat": "Counts as U.S. online retail: physical goods bought on the retailer's own website or app. Shares the one $6,000 online retail cap, then 1%." },
+      { "category": "electronics", "rate": 3.0, "cap": { "amount": 6000, "period": "year", "then_rate": 1.0 },
+        "caveat": "Counts as U.S. online retail: physical goods bought on the retailer's own website or app. Shares the one $6,000 online retail cap, then 1%." },
+      { "category": "clothing", "rate": 3.0, "cap": { "amount": 6000, "period": "year", "then_rate": 1.0 },
+        "caveat": "Counts as U.S. online retail: physical goods bought on the retailer's own website or app. Shares the one $6,000 online retail cap, then 1%." },
+      { "category": "sporting_goods", "rate": 3.0, "cap": { "amount": 6000, "period": "year", "then_rate": 1.0 },
+        "caveat": "Counts as U.S. online retail: physical goods bought on the retailer's own website or app. Shares the one $6,000 online retail cap, then 1%." },
+      { "category": "home_improvement", "rate": 3.0, "cap": { "amount": 6000, "period": "year", "then_rate": 1.0 },
+        "caveat": "Counts as U.S. online retail: physical goods bought on the retailer's own website or app. Shares the one $6,000 online retail cap, then 1%." },
+      { "category": "office_supply", "rate": 3.0, "cap": { "amount": 6000, "period": "year", "then_rate": 1.0 },
+        "caveat": "Counts as U.S. online retail: physical goods bought on the retailer's own website or app. Shares the one $6,000 online retail cap, then 1%." },
+      { "category": "drugstore", "rate": 3.0, "cap": { "amount": 6000, "period": "year", "then_rate": 1.0 },
+        "caveat": "Counts as U.S. online retail: physical goods bought on the retailer's own website or app. Shares the one $6,000 online retail cap, then 1%." },
       {
         "category": "gas",
         "rate": 3.0,
@@ -324,14 +339,24 @@
         "caveat": "The $25,000 cap is combined with internet, cable and phone, and runs per account anniversary year."
       },
       {
-        "category": "phone_internet",
+        "category": "phone",
         "rate": 5.0,
         "cap": {
           "amount": 25000,
           "period": "year",
           "then_rate": 1.0
         },
-        "caveat": "The $25,000 cap is combined with office supply stores, and runs per account anniversary year."
+        "caveat": "The $25,000 cap is combined with office supply stores and with internet and cable, and runs per account anniversary year."
+      },
+      {
+        "category": "internet_cable",
+        "rate": 5.0,
+        "cap": {
+          "amount": 25000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "The $25,000 cap is combined with office supply stores and with phone services, and runs per account anniversary year."
       },
       {
         "category": "gas",
@@ -376,7 +401,7 @@
     "annual_fee": 325,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-09-09",
+    "last_verified": "2026-09-27",
     "source_url": "https://www.americanexpress.com/us/credit-cards/card/gold-card/",
     "caution": "Both 4X caps run per CALENDAR year and are separate from each other, not shared.",
     "rules": [
@@ -403,6 +428,13 @@
         "portal_only": true,
         "portal": "Amex Travel",
         "caveat": "Prepaid hotels booked through Amex Travel only."
+      },
+      {
+        "category": "car_rental",
+        "rate": 2.0,
+        "portal_only": true,
+        "portal": "Amex Travel",
+        "caveat": "Prepaid car rentals booked through Amex Travel only."
       }
     ]
   },
@@ -456,10 +488,17 @@
     "last_verified": "2026-09-09",
     "source_url": "https://www.citi.com/credit-cards/citi-double-cash-credit-card",
     "caution": "The 2% is 1% when you buy and 1% again as you pay. Carry a balance and the second half is delayed, so the flat rate this ranks on assumes you pay in full.",
-    "note": "Added in place of Citi Custom Cash, which citi.com states it stopped accepting applications for on 2026-05-28 and which therefore cannot be verified from the issuer any more. Citi names this card as the replacement. Rewards are ThankYou Points; the default 1.4 cpp valuation assumes transfers, and points redeemed as statement credit are worth 1.0 -- override in Options.",
+    "note": "Added in place of Citi Custom Cash, which citi.com states it stopped accepting applications for on 2026-05-28 and which therefore cannot be verified from the issuer any more. Citi names this card as the replacement. Rewards are ThankYou Points; the default 1.4 cpp valuation assumes transfers, and points redeemed as statement credit are worth 1.0 -- override in Options. The 5x Citi Travel rate names hotels, car rentals and attractions and not flights, so since 2026-09-27 it is filed under travel_hotel and car_rental rather than travel_portal, which would have put a 5x note on airline sites.",
     "rules": [
       {
-        "category": "travel_portal",
+        "category": "travel_hotel",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Citi Travel",
+        "caveat": "Hotels, car rentals and attractions booked through the Citi Travel portal."
+      },
+      {
+        "category": "car_rental",
         "rate": 5.0,
         "portal_only": true,
         "portal": "Citi Travel",
@@ -501,6 +540,13 @@
       },
       {
         "category": "travel_hotel",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Capital One Travel",
+        "caveat": "Hotels, vacation rentals and rental cars booked through Capital One Travel."
+      },
+      {
+        "category": "car_rental",
         "rate": 5.0,
         "portal_only": true,
         "portal": "Capital One Travel",
@@ -593,6 +639,13 @@
         "portal_only": true,
         "portal": "Capital One Travel",
         "caveat": "Hotels, vacation rentals and rental cars booked through Capital One Travel."
+      },
+      {
+        "category": "car_rental",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Capital One Travel",
+        "caveat": "Hotels, vacation rentals and rental cars booked through Capital One Travel."
       }
     ]
   },
@@ -606,9 +659,9 @@
     "annual_fee": 0,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-08-29",
+    "last_verified": "2026-09-27",
     "source_url": "https://www.bankofamerica.com/credit-cards/products/cash-back-credit-card/cash-back-category-choices/",
-    "note": "Kept because people hold it, not because it exercises the schema. Its 3% is ONE category the cardholder picks from eleven, which is what selection_group is for: without it the only choices are giving all eleven 3% (overstates badly) or picking for the user (worse). tier_multiplier is the Preferred Rewards relationship bonus and is the difference between 3% and 5.25%, so dropping it would understate the card by up to 75%.",
+    "note": "Kept because people hold it, not because it exercises the schema. Its 3% is ONE category the cardholder picks from six, which is what selection_group is for: without it the only choices are giving all six 3% (overstates badly) or picking for the user (worse). tier_multiplier is the BofA Rewards bonus, which replaced Preferred Rewards on 2026-05-26 with new names and thresholds and a new 10% Member tier (bankofamerica.com/bofa-rewards/increasing-bofa-rewards-with-credit-cards/, read 2026-09-27); it is the difference between 3% and 5.25%, so dropping it would understate the card by up to 75%. Online Shopping is a CHANNEL, not a store type: the category page defines it as purchases made on a website or app, minus utilities, insurance, schools, membership clubs, medical, government and non-retail services, and gives Amazon, Comcast, Etsy, Netflix, Nordstrom, Ticketmaster and Walmart as examples. Every purchase Caddy sees is online, so the online group carries a rule on every category that sells goods, plus the three services BofA names: cable and internet, streaming, and tickets. Travel, dining and phone bought online may well qualify too, but BofA names none of them, so they are not ranked under this choice. Wholesale clubs are left to the automatic 2%.",
     "user_config": {
       "selections": [
         {
@@ -626,12 +679,13 @@
         }
       ],
       "tier_multiplier": {
-        "label": "Preferred Rewards tier",
+        "label": "BofA Rewards tier",
         "options": {
           "None": 1.0,
-          "Gold": 1.25,
-          "Platinum": 1.5,
-          "Platinum Honors": 1.75
+          "Member": 1.1,
+          "Preferred Plus": 1.25,
+          "Preferred Honors": 1.5,
+          "Premier": 1.75
         }
       }
     },
@@ -669,6 +723,36 @@
         },
         "caveat": "The $2,500 quarterly cap is COMBINED across the 3% choice category and the 2% grocery/wholesale spend."
       },
+      { "category": "department_store", "rate": 3.0, "selection_group": "online",
+        "cap": { "amount": 2500, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "Online Shopping counts anything bought on a website or app. The $2,500 quarterly cap is COMBINED across the 3% choice category and the 2% grocery/wholesale spend." },
+      { "category": "electronics", "rate": 3.0, "selection_group": "online",
+        "cap": { "amount": 2500, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "Online Shopping counts anything bought on a website or app. The $2,500 quarterly cap is COMBINED across the 3% choice category and the 2% grocery/wholesale spend." },
+      { "category": "clothing", "rate": 3.0, "selection_group": "online",
+        "cap": { "amount": 2500, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "Online Shopping counts anything bought on a website or app. The $2,500 quarterly cap is COMBINED across the 3% choice category and the 2% grocery/wholesale spend." },
+      { "category": "sporting_goods", "rate": 3.0, "selection_group": "online",
+        "cap": { "amount": 2500, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "Online Shopping counts anything bought on a website or app. The $2,500 quarterly cap is COMBINED across the 3% choice category and the 2% grocery/wholesale spend." },
+      { "category": "home_improvement", "rate": 3.0, "selection_group": "online",
+        "cap": { "amount": 2500, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "Online Shopping counts anything bought on a website or app. The $2,500 quarterly cap is COMBINED across the 3% choice category and the 2% grocery/wholesale spend." },
+      { "category": "office_supply", "rate": 3.0, "selection_group": "online",
+        "cap": { "amount": 2500, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "Online Shopping counts anything bought on a website or app. The $2,500 quarterly cap is COMBINED across the 3% choice category and the 2% grocery/wholesale spend." },
+      { "category": "drugstore", "rate": 3.0, "selection_group": "online",
+        "cap": { "amount": 2500, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "Online Shopping counts anything bought on a website or app. The $2,500 quarterly cap is COMBINED across the 3% choice category and the 2% grocery/wholesale spend." },
+      { "category": "streaming", "rate": 3.0, "selection_group": "online",
+        "cap": { "amount": 2500, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "BofA names streaming as Online Shopping. The $2,500 quarterly cap is COMBINED across the 3% choice category and the 2% grocery/wholesale spend." },
+      { "category": "internet_cable", "rate": 3.0, "selection_group": "online",
+        "cap": { "amount": 2500, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "BofA names cable and internet as Online Shopping. The $2,500 quarterly cap is COMBINED across the 3% choice category and the 2% grocery/wholesale spend." },
+      { "category": "entertainment", "rate": 3.0, "selection_group": "online",
+        "cap": { "amount": 2500, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "BofA gives Ticketmaster as an Online Shopping example. The $2,500 quarterly cap is COMBINED across the 3% choice category and the 2% grocery/wholesale spend." },
       {
         "category": "dining",
         "rate": 3.0,
@@ -713,6 +797,9 @@
         },
         "caveat": "The $2,500 quarterly cap is COMBINED across the 3% choice category and the 2% grocery/wholesale spend."
       },
+      { "category": "car_rental", "rate": 3.0, "selection_group": "travel",
+        "cap": { "amount": 2500, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "The $2,500 quarterly cap is COMBINED across the 3% choice category and the 2% grocery/wholesale spend." },
       {
         "category": "drugstore",
         "rate": 3.0,
@@ -769,7 +856,7 @@
     "verified": true,
     "last_verified": "2026-09-10",
     "source_url": "https://creditcards.chase.com/rewards-credit-cards/sapphire/preferred",
-    "note": "The 3x 'vacation homes at top brands' rate is deliberately NOT modelled: Chase does not publish the brand list, and travel_hotel already earns 2x here, so the only honest options were an unsourced allowlist or this. The 5x Peloton rate through 2027-12-31 is one first-party storefront rather than a category, left out for the same reason as Savor's Capital One Entertainment rate.",
+    "note": "The 3x 'vacation homes at top brands' rate is deliberately NOT modelled: Chase does not publish the brand list, and travel_hotel already earns 2x here, so the only honest options were an unsourced allowlist or this. The 5x Peloton rate through 2027-12-31 is one first-party storefront rather than a category, left out for the same reason as Savor's Capital One Entertainment rate. car_rental earns the 2x other-travel rate because Chase's own travel definition names car rental agencies (chase.com/RewardsCategoryFAQs, read 2026-09-27); it had no category to sit in before then.",
     "rules": [
       {
         "category": "travel_portal",
@@ -825,6 +912,10 @@
       },
       {
         "category": "travel_ground",
+        "rate": 2.0
+      },
+      {
+        "category": "car_rental",
         "rate": 2.0
       }
     ]
@@ -934,10 +1025,10 @@
     "annual_fee": 0,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-09-10",
+    "last_verified": "2026-09-27",
     "source_url": "https://www.usbank.com/credit-cards/cash-plus-visa-signature-credit-card.html",
     "caution": "You pick the categories each quarter, and they reset. Two 5% picks share one $2,000 quarterly cap.",
-    "note": "Four of the issuer's 5% choices are not modelled because Caddy has no category for them and no merchants behind one: electronics stores, gym and fitness centres, select clothing stores, and sporting goods stores. Adding a category with no merchant rows is the dead-category failure the README warns about in both directions. The eight that are modelled all map onto categories that already resolve.",
+    "note": "All twelve of the issuer's 5% choices are modelled as of 2026-09-27. Four -- electronics stores, gyms and fitness centres, select clothing stores and sporting goods stores -- were left out until then because Caddy had no category for them and no merchants behind one; those categories exist now, each with merchant rows, so none of them is dead. 'TV, internet and streaming' maps to streaming and internet_cable, and 'Cell phone providers' to phone: before phone_internet was split, each of those two picks also paid 5% on the other's bills.",
     "user_config": {
       "selections": [
         {
@@ -952,7 +1043,11 @@
             "five_fastfood": "Fast food",
             "five_ground": "Ground transportation",
             "five_movies": "Movie theaters",
-            "five_furniture": "Furniture stores"
+            "five_furniture": "Furniture stores",
+            "five_electronics": "Electronics stores",
+            "five_gym": "Gym/fitness centers",
+            "five_clothing": "Select clothing stores",
+            "five_sporting": "Sporting goods stores"
           }
         },
         {
@@ -997,14 +1092,14 @@
         "caveat": "The $2,000 quarterly cap is COMBINED across both 5% choices."
       },
       {
-        "category": "phone_internet",
+        "category": "internet_cable",
         "rate": 5.0,
         "selection_group": "five_tv",
         "cap": { "amount": 2000, "period": "quarter", "then_rate": 1.0 },
         "caveat": "The $2,000 quarterly cap is COMBINED across both 5% choices."
       },
       {
-        "category": "phone_internet",
+        "category": "phone",
         "rate": 5.0,
         "selection_group": "five_phone",
         "cap": { "amount": 2000, "period": "quarter", "then_rate": 1.0 },
@@ -1039,6 +1134,34 @@
         "caveat": "Furniture stores only, not home improvement generally. The $2,000 quarterly cap is COMBINED across both 5% choices."
       },
       {
+        "category": "electronics",
+        "rate": 5.0,
+        "selection_group": "five_electronics",
+        "cap": { "amount": 2000, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "The $2,000 quarterly cap is COMBINED across both 5% choices."
+      },
+      {
+        "category": "fitness",
+        "rate": 5.0,
+        "selection_group": "five_gym",
+        "cap": { "amount": 2000, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "The $2,000 quarterly cap is COMBINED across both 5% choices."
+      },
+      {
+        "category": "clothing",
+        "rate": 5.0,
+        "selection_group": "five_clothing",
+        "cap": { "amount": 2000, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "SELECT clothing stores only -- U.S. Bank does not count every shop that sells clothes. The $2,000 quarterly cap is COMBINED across both 5% choices."
+      },
+      {
+        "category": "sporting_goods",
+        "rate": 5.0,
+        "selection_group": "five_sporting",
+        "cap": { "amount": 2000, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "The $2,000 quarterly cap is COMBINED across both 5% choices."
+      },
+      {
         "category": "gas",
         "rate": 2.0,
         "selection_group": "two_gas"
@@ -1059,5 +1182,837 @@
         "selection_group": "two_dining"
       }
     ]
+  },
+  "goldman-apple-card": {
+    "id": "goldman-apple-card",
+    "issuer": "goldman",
+    "network": "mastercard",
+    "currency": "cash",
+    "name": "Apple Card",
+    "common": 21,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-27",
+    "source_url": "https://www.apple.com/apple-card/",
+    "caution": "1% when paid by card number. The 2% and the 3% partner rates need Apple Pay.",
+    "note": "Issued by Goldman Sachs Bank USA, Salt Lake City Branch, per apple.com on 2026-09-27, so issuer is keyed on the bank, as Prime Visa's is on Chase. base_rate is the 1% that the titanium card and the card number earn; Apple's own page says to enter the number wherever Apple Pay is not offered. The 2% Apple Pay rate and the 3% Apple Pay partners (Uber and Uber Eats, Walgreens, Nike, Exxon Mobil, Hertz, ChargePoint, Ace Hardware, Booking.com through Apple's link) are deliberately NOT ranked: Caddy cannot see whether a checkout was paid with Apple Pay, and ranking a rate that depends on it would overstate every checkout paid by card number. The 3% at Apple itself needs no Apple Pay, so that one is modelled.",
+    "rules": [
+      {
+        "category": "electronics",
+        "rate": 3.0,
+        "merchant_allowlist": [
+          "apple.com"
+        ],
+        "caveat": "Purchases made directly with Apple: apple.com, the App Store and Apple services."
+      }
+    ]
+  },
+  "citi-costco-anywhere": {
+    "id": "citi-costco-anywhere",
+    "issuer": "citi",
+    "network": "visa",
+    "currency": "cash",
+    "name": "Costco Anywhere Visa",
+    "common": 22,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-27",
+    "source_url": "https://www.citi.com/credit-cards/costco-anywhere-visa-card",
+    "caution": "Needs a paid Costco membership. Cash back arrives once a year as a certificate you redeem at Costco.",
+    "note": "annual_fee is 0 because citi.com states no annual fee with a paid Costco membership; the membership itself is the price of entry and is not modelled. currency is 'cash': the reward is an annual certificate redeemable for cash or merchandise at a U.S. warehouse. The 5% on gas AT Costco is not modelled: Costco gas is paid at the pump, never on a website. Train and commuter travel earn 1%, not the 3% travel rate, per citi.com, so travel_ground carries no rule. Eligible travel names travel agencies, so the hotel rule has no OTA denylist.",
+    "rules": [
+      {
+        "category": "gas",
+        "rate": 4.0,
+        "cap": {
+          "amount": 7000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "The $7,000 cap is combined across all gas and EV charging, Costco gas included."
+      },
+      {
+        "category": "ev_charging",
+        "rate": 4.0,
+        "cap": {
+          "amount": 7000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "The $7,000 cap is combined across all gas and EV charging, Costco gas included."
+      },
+      {
+        "category": "dining",
+        "rate": 3.0,
+        "caveat": "Includes cafes, bars and fast food. Restaurants inside department stores, grocery stores and warehouse clubs earn 1%."
+      },
+      {
+        "category": "travel_air",
+        "rate": 3.0
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 3.0,
+        "caveat": "Hotels and travel agencies, Costco Travel included. Timeshares, campgrounds and B&Bs earn 1%."
+      },
+      {
+        "category": "car_rental",
+        "rate": 3.0
+      },
+      {
+        "category": "wholesale_club",
+        "rate": 2.0,
+        "merchant_allowlist": [
+          "costco.com"
+        ],
+        "caveat": "Costco and Costco.com only."
+      }
+    ]
+  },
+  "capitalone-venture-x": {
+    "id": "capitalone-venture-x",
+    "issuer": "capitalone",
+    "network": "visa",
+    "currency": "c1",
+    "name": "Capital One Venture X",
+    "common": 23,
+    "annual_fee": 395,
+    "base_rate": 2.0,
+    "verified": true,
+    "last_verified": "2026-09-27",
+    "source_url": "https://www.capitalone.com/credit-cards/venture-x/",
+    "caution": "The $300 annual travel credit only works in Capital One Travel, and purchases it covers earn no miles.",
+    "note": "Network read off the page footnotes, which carry Visa Infinite terms. 5X on Capital One Entertainment is not modelled, for the same reason as Venture's and Savor's: one first-party storefront, not a category. Capital One Travel pays 10X on hotels and rental cars but 5X on flights, so the portal rules are filed per category rather than under travel_portal -- filed together, the 10X would surface on airline sites.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 10.0,
+        "portal_only": true,
+        "portal": "Capital One Travel",
+        "caveat": "Hotels booked through Capital One Travel. Vacation rentals booked there earn 5X."
+      },
+      {
+        "category": "car_rental",
+        "rate": 10.0,
+        "portal_only": true,
+        "portal": "Capital One Travel",
+        "caveat": "Rental cars booked through Capital One Travel."
+      },
+      {
+        "category": "travel_air",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Capital One Travel",
+        "caveat": "Flights booked through Capital One Travel."
+      }
+    ]
+  },
+  "amex-platinum": {
+    "id": "amex-platinum",
+    "issuer": "amex",
+    "network": "amex",
+    "currency": "mr",
+    "name": "Amex Platinum Card",
+    "common": 24,
+    "annual_fee": 895,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-27",
+    "source_url": "https://www.americanexpress.com/us/credit-cards/card/platinum/",
+    "caution": "Outside flights and Amex Travel hotels it earns 1X, so it rarely wins anywhere else.",
+    "note": "Absent until 2026-09-27 because no reachable americanexpress.com page stated the fee or the base rate on 2026-09-10. The product page states both now: $895, and 1X on other purchases. The statement credits are not netted against the fee, for the reason the Sapphire Reserve's are not: the ranker compares what a purchase earns, and credits do not change that.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 5.0,
+        "cap": {
+          "amount": 500000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "Booked directly with the airline or through Amex Travel. A third-party agency earns the base rate."
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Amex Travel",
+        "caveat": "Prepaid hotels booked through Amex Travel only."
+      }
+    ]
+  },
+  "amex-delta-gold": {
+    "id": "amex-delta-gold",
+    "issuer": "amex",
+    "network": "amex",
+    "currency": "delta",
+    "name": "Delta SkyMiles Gold Amex",
+    "common": 25,
+    "annual_fee": 150,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-27",
+    "source_url": "https://www.americanexpress.com/us/credit-cards/card/delta-skymiles-gold-american-express-card/",
+    "caution": "$0 annual fee the first year, then $150.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 2.0,
+        "merchant_allowlist": [
+          "delta.com"
+        ],
+        "caveat": "Purchases made directly with Delta."
+      },
+      {
+        "category": "dining",
+        "rate": 2.0,
+        "caveat": "Restaurants, including takeout and delivery in the U.S."
+      },
+      {
+        "category": "groceries",
+        "rate": 2.0,
+        "caveat": "U.S. supermarkets only."
+      }
+    ]
+  },
+  "chase-southwest-plus": {
+    "id": "chase-southwest-plus",
+    "issuer": "chase",
+    "network": "visa",
+    "currency": "southwest",
+    "name": "Southwest Rapid Rewards Plus",
+    "common": 26,
+    "annual_fee": 99,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-27",
+    "source_url": "https://creditcards.chase.com/travel-credit-cards/southwest/plus",
+    "note": "Network read off the card art.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 2.0,
+        "merchant_allowlist": [
+          "southwest.com"
+        ],
+        "caveat": "Southwest Airlines purchases."
+      },
+      {
+        "category": "gas",
+        "rate": 2.0,
+        "cap": {
+          "amount": 5000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "The $5,000 cap is combined with grocery stores, and runs per account anniversary year."
+      },
+      {
+        "category": "groceries",
+        "rate": 2.0,
+        "cap": {
+          "amount": 5000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "The $5,000 cap is combined with gas stations, and runs per account anniversary year."
+      }
+    ]
+  },
+  "chase-united-explorer": {
+    "id": "chase-united-explorer",
+    "issuer": "chase",
+    "network": "visa",
+    "currency": "united",
+    "name": "United Explorer",
+    "common": 27,
+    "annual_fee": 150,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-27",
+    "source_url": "https://creditcards.chase.com/travel-credit-cards/united/united-explorer",
+    "caution": "$0 annual fee the first year, then $150.",
+    "note": "Chase advertises 9x on United flights, but 6x of that is MileagePlus member earning on the fare, which accrues whatever card pays; only the 3x is the card's, and the card's share is all the ranking compares. Network read off the card art.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 3.0,
+        "merchant_allowlist": [
+          "united.com"
+        ],
+        "caveat": "United purchases. The 6x MileagePlus member miles on the fare come on top, whatever card pays."
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 2.0,
+        "merchant_denylist": [
+          "expedia.com",
+          "booking.com",
+          "airbnb.com",
+          "hotels.com",
+          "priceline.com",
+          "vrbo.com",
+          "kayak.com",
+          "orbitz.com",
+          "travelocity.com"
+        ],
+        "caveat": "Hotel stays booked with the hotel."
+      },
+      {
+        "category": "dining",
+        "rate": 2.0,
+        "caveat": "Includes eligible delivery services."
+      }
+    ]
+  },
+  "bofa-unlimited-cash": {
+    "id": "bofa-unlimited-cash",
+    "issuer": "bofa",
+    "network": "visa",
+    "currency": "cash",
+    "name": "BofA Unlimited Cash Rewards",
+    "common": 28,
+    "annual_fee": 0,
+    "base_rate": 1.5,
+    "verified": true,
+    "last_verified": "2026-09-27",
+    "source_url": "https://www.bankofamerica.com/credit-cards/products/unlimited-cash-back-credit-card/",
+    "note": "No rules by design: 1.5% on every purchase is the base rate. tier_multiplier is the BofA Rewards bonus, which replaced Preferred Rewards on 2026-05-26 -- 10% Member, 25% Preferred Plus, 50% Preferred Honors, 75% Premier, applied after all other cash back (bankofamerica.com/bofa-rewards/increasing-bofa-rewards-with-credit-cards/, read 2026-09-27). It takes the 1.5% as high as 2.62%. network is not confirmed: no Bank of America page read names one. It is metadata and no code reads it.",
+    "user_config": {
+      "tier_multiplier": {
+        "label": "BofA Rewards tier",
+        "options": {
+          "None": 1.0,
+          "Member": 1.1,
+          "Preferred Plus": 1.25,
+          "Preferred Honors": 1.5,
+          "Premier": 1.75
+        }
+      }
+    },
+    "rules": []
+  },
+  "bofa-travel-rewards": {
+    "id": "bofa-travel-rewards",
+    "issuer": "bofa",
+    "network": "visa",
+    "currency": "bofa",
+    "name": "BofA Travel Rewards",
+    "common": 29,
+    "annual_fee": 0,
+    "base_rate": 1.5,
+    "verified": true,
+    "last_verified": "2026-09-27",
+    "source_url": "https://www.bankofamerica.com/credit-cards/products/travel-rewards-credit-card/",
+    "caution": "Points are worth a cent each as a statement credit against travel or dining purchases.",
+    "note": "Currency 'bofa' at 1.0: the product page redeems points as a statement credit toward flights, hotels, vacation rentals, baggage fees and restaurants, 25,000 points to $250. The 3X on Travel Center purchases is read off the BofA Rewards bonus table, not the product page. Same BofA Rewards tiers as Unlimited Cash, and the tier applies to the Travel Center rate too, which is why the engine multiplies portal notes by it. network is likewise unconfirmed.",
+    "user_config": {
+      "tier_multiplier": {
+        "label": "BofA Rewards tier",
+        "options": {
+          "None": 1.0,
+          "Member": 1.1,
+          "Preferred Plus": 1.25,
+          "Preferred Honors": 1.5,
+          "Premier": 1.75
+        }
+      }
+    },
+    "rules": [
+      {
+        "category": "travel_portal",
+        "rate": 3.0,
+        "portal_only": true,
+        "portal": "Bank of America Travel Center"
+      }
+    ]
+  },
+  "capitalone-ventureone": {
+    "id": "capitalone-ventureone",
+    "issuer": "capitalone",
+    "network": "visa",
+    "currency": "c1",
+    "name": "Capital One VentureOne",
+    "common": 30,
+    "annual_fee": 0,
+    "base_rate": 1.25,
+    "verified": true,
+    "last_verified": "2026-09-27",
+    "source_url": "https://www.capitalone.com/credit-cards/ventureone/",
+    "note": "network is not confirmed: neither the product page, its rates overlay nor the card art names one. It is metadata and no code reads it. 5X on Capital One Entertainment is not modelled, as for Venture. The miles are the same currency as Venture's, so they share the 'c1' valuation.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Capital One Travel",
+        "caveat": "Hotels and vacation rentals booked through Capital One Travel."
+      },
+      {
+        "category": "car_rental",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Capital One Travel",
+        "caveat": "Rental cars booked through Capital One Travel."
+      }
+    ]
+  },
+  "wellsfargo-autograph": {
+    "id": "wellsfargo-autograph",
+    "issuer": "wellsfargo",
+    "network": "visa",
+    "currency": "wf",
+    "name": "Wells Fargo Autograph",
+    "common": 31,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-27",
+    "source_url": "https://creditcards.wellsfargo.com/autograph-visa-credit-card/",
+    "note": "Categories read off footnote 2 on the product page, which defines each by Visa merchant code. Travel includes car rental, cruise lines and travel agencies, so the hotel rule carries no OTA denylist. 'Phone plans' is landline and cell phone providers -- not internet or cable, which is why phone_internet was split into phone and internet_cable the day this card was added. Streaming is the list at wellsfargo.com/autographstreaming. Currency 'wf': the same page prices a point at one cent, and the points also transfer to airline and hotel partners.",
+    "rules": [
+      {
+        "category": "dining",
+        "rate": 3.0
+      },
+      {
+        "category": "travel_air",
+        "rate": 3.0
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 3.0
+      },
+      {
+        "category": "car_rental",
+        "rate": 3.0
+      },
+      {
+        "category": "travel_ground",
+        "rate": 3.0,
+        "caveat": "Transit: passenger rail, taxis and limousines, ferries, tolls and parking."
+      },
+      {
+        "category": "gas",
+        "rate": 3.0
+      },
+      {
+        "category": "ev_charging",
+        "rate": 3.0
+      },
+      {
+        "category": "streaming",
+        "rate": 3.0,
+        "caveat": "Popular streaming services on Wells Fargo's published list only."
+      },
+      {
+        "category": "phone",
+        "rate": 3.0,
+        "caveat": "Cell phone and landline plans. Internet and cable do not count."
+      }
+    ]
+  },
+  "chase-marriott-boundless": {
+    "id": "chase-marriott-boundless",
+    "issuer": "chase",
+    "network": "visa",
+    "currency": "marriott",
+    "name": "Marriott Bonvoy Boundless",
+    "common": 32,
+    "annual_fee": 95,
+    "base_rate": 2.0,
+    "verified": true,
+    "last_verified": "2026-09-27",
+    "source_url": "https://creditcards.chase.com/travel-credit-cards/marriott-bonvoy/boundless",
+    "note": "Chase advertises up to 17X at Marriott; 10X of that is Bonvoy member earning and 1X is the Silver Elite bonus, both paid by Marriott on the stay whatever card settles it. The card's own share is 6X, and that is what the ranking compares. Network read off the card art.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 6.0,
+        "merchant_allowlist": [
+          "marriott.com"
+        ],
+        "caveat": "Hotels participating in Marriott Bonvoy. Member points from Marriott come on top, whatever card pays."
+      },
+      {
+        "category": "groceries",
+        "rate": 3.0,
+        "cap": {
+          "amount": 6000,
+          "period": "year",
+          "then_rate": 2.0
+        },
+        "caveat": "The $6,000 cap is combined across grocery stores, gas stations and dining, then 2X."
+      },
+      {
+        "category": "gas",
+        "rate": 3.0,
+        "cap": {
+          "amount": 6000,
+          "period": "year",
+          "then_rate": 2.0
+        },
+        "caveat": "The $6,000 cap is combined across grocery stores, gas stations and dining, then 2X."
+      },
+      {
+        "category": "dining",
+        "rate": 3.0,
+        "cap": {
+          "amount": 6000,
+          "period": "year",
+          "then_rate": 2.0
+        },
+        "caveat": "The $6,000 cap is combined across grocery stores, gas stations and dining, then 2X."
+      }
+    ]
+  },
+  "amex-hilton-honors": {
+    "id": "amex-hilton-honors",
+    "issuer": "amex",
+    "network": "amex",
+    "currency": "hilton",
+    "name": "Hilton Honors Amex",
+    "common": 33,
+    "annual_fee": 0,
+    "base_rate": 3.0,
+    "verified": true,
+    "last_verified": "2026-09-27",
+    "source_url": "https://www.americanexpress.com/us/credit-cards/card/hilton-honors/",
+    "caution": "Hilton points are worth well under a cent each, so 3X here is not 3% back.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 7.0,
+        "merchant_allowlist": [
+          "hilton.com"
+        ],
+        "caveat": "Purchases made directly with hotels and resorts in the Hilton portfolio."
+      },
+      {
+        "category": "dining",
+        "rate": 5.0,
+        "caveat": "U.S. restaurants, including takeout and delivery."
+      },
+      {
+        "category": "groceries",
+        "rate": 5.0,
+        "caveat": "U.S. supermarkets only."
+      },
+      {
+        "category": "gas",
+        "rate": 5.0,
+        "caveat": "U.S. gas stations only."
+      }
+    ]
+  },
+  "citi-strata-premier": {
+    "id": "citi-strata-premier",
+    "issuer": "citi",
+    "network": "mastercard",
+    "currency": "citi",
+    "name": "Citi Strata Premier",
+    "common": 34,
+    "annual_fee": 95,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-27",
+    "source_url": "https://www.citi.com/credit-cards/citi-strata-premier-credit-card",
+    "note": "Definitions read off the page's Additional Information on 2026-09-27; citi.com's FAQ states the card is a Mastercard. 'Air Travel and Other Hotel Purchases' includes travel agencies, so neither travel rule carries an OTA denylist. The 10X Citi Travel rate names hotels, car rentals and attractions but not flights, so it is filed under travel_hotel and car_rental rather than travel_portal. Grocery delivery counts only where the merchant codes as a supermarket, which is why instacart.com carries a citi override.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 10.0,
+        "portal_only": true,
+        "portal": "Citi Travel",
+        "caveat": "Hotels booked on cititravel.com."
+      },
+      {
+        "category": "car_rental",
+        "rate": 10.0,
+        "portal_only": true,
+        "portal": "Citi Travel",
+        "caveat": "Car rentals booked on cititravel.com."
+      },
+      {
+        "category": "travel_air",
+        "rate": 3.0
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 3.0,
+        "caveat": "Hotels and travel agencies, when not booked on cititravel.com."
+      },
+      {
+        "category": "dining",
+        "rate": 3.0,
+        "caveat": "Includes restaurant delivery. Restaurants inside hotels, stores and stadiums do not count."
+      },
+      {
+        "category": "groceries",
+        "rate": 3.0,
+        "caveat": "Supermarkets only: superstores, warehouse clubs and meal kits are excluded."
+      },
+      {
+        "category": "gas",
+        "rate": 3.0,
+        "caveat": "Gas at warehouse clubs, discount stores and convenience stores does not count."
+      },
+      {
+        "category": "ev_charging",
+        "rate": 3.0
+      }
+    ]
+  },
+  "citi-aadvantage-platinum": {
+    "id": "citi-aadvantage-platinum",
+    "issuer": "citi",
+    "network": "mastercard",
+    "currency": "aa",
+    "name": "Citi AAdvantage Platinum Select",
+    "common": 35,
+    "annual_fee": 99,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-27",
+    "source_url": "https://www.citi.com/credit-cards/citi-aadvantage-platinum-select-world-elite-mastercard",
+    "caution": "$99 annual fee, waived for the first 12 months.",
+    "note": "The fee is read off the pricing details, the only part of the page that renders a number for it.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 2.0,
+        "merchant_allowlist": [
+          "aa.com"
+        ],
+        "caveat": "Eligible American Airlines purchases."
+      },
+      {
+        "category": "dining",
+        "rate": 2.0,
+        "caveat": "Includes takeout."
+      },
+      {
+        "category": "gas",
+        "rate": 2.0
+      }
+    ]
+  },
+  "discover-it-chrome": {
+    "id": "discover-it-chrome",
+    "issuer": "discover",
+    "network": "discover",
+    "currency": "disco",
+    "name": "Discover it Chrome",
+    "common": 36,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-27",
+    "source_url": "https://www.discover.com/credit-cards/cash-back/chrome/",
+    "caution": "The 2% stops at $1,000 of combined gas and restaurant spend each calendar quarter.",
+    "note": "The page now names Capital One as the party that classifies purchases, after its acquisition of Discover; the card is still sold under the Discover name. Gas includes 'some public electric vehicle charging stations', hence the ev_charging rule and its caveat. U.S. merchants only.",
+    "rules": [
+      {
+        "category": "gas",
+        "rate": 2.0,
+        "cap": {
+          "amount": 1000,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "Stand-alone gas stations. The $1,000 quarterly cap is combined with restaurants."
+      },
+      {
+        "category": "ev_charging",
+        "rate": 2.0,
+        "cap": {
+          "amount": 1000,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "Some public EV charging stations only. The $1,000 quarterly cap is combined with gas and restaurants."
+      },
+      {
+        "category": "dining",
+        "rate": 2.0,
+        "cap": {
+          "amount": 1000,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "Includes restaurant delivery services. The $1,000 quarterly cap is combined with gas."
+      }
+    ]
+  },
+  "chase-freedom-rise": {
+    "id": "chase-freedom-rise",
+    "issuer": "chase",
+    "network": "visa",
+    "currency": "ur",
+    "name": "Chase Freedom Rise",
+    "common": 37,
+    "annual_fee": 0,
+    "base_rate": 1.5,
+    "verified": true,
+    "last_verified": "2026-09-27",
+    "source_url": "https://creditcards.chase.com/cash-back-credit-cards/freedom/rise",
+    "note": "Modelled as 'ur' for the reason Freedom Unlimited is: the offer details say cash back is tracked as points, 100 to the dollar, under chase.com/ultimaterewards. At the default 1.5 cpp that values the 1.5% at 2.25%, which only holds if you hold a Sapphire card to move the points to -- override the valuation in Options if you do not. Network read off the card art.",
+    "rules": []
+  },
+  "chase-ink-business-unlimited": {
+    "id": "chase-ink-business-unlimited",
+    "issuer": "chase",
+    "network": "visa",
+    "currency": "ur",
+    "name": "Chase Ink Business Unlimited",
+    "common": 38,
+    "business": true,
+    "annual_fee": 0,
+    "base_rate": 1.5,
+    "verified": true,
+    "last_verified": "2026-09-27",
+    "source_url": "https://creditcards.chase.com/business-credit-cards/ink/unlimited",
+    "note": "Currency 'ur' for the reason Ink Business Cash gives. The Lyft rate is modelled exactly as Ink Business Cash's is. Network read off the card art.",
+    "rules": [
+      {
+        "category": "travel_ground",
+        "rate": 5.0,
+        "merchant_allowlist": [
+          "lyft.com"
+        ],
+        "window": {
+          "end": "2027-09-30"
+        },
+        "caveat": "Lyft rides only, and it is 5% TOTAL rather than a bonus on top. Offer ends 2027-09-30."
+      }
+    ]
+  },
+  "chase-ink-business-preferred": {
+    "id": "chase-ink-business-preferred",
+    "issuer": "chase",
+    "network": "visa",
+    "currency": "ur",
+    "name": "Chase Ink Business Preferred",
+    "common": 39,
+    "business": true,
+    "annual_fee": 95,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-27",
+    "source_url": "https://creditcards.chase.com/business-credit-cards/ink/business-preferred",
+    "caution": "Business card. The 3X stops at $150,000 of combined spend in its categories per account anniversary year.",
+    "note": "Rates and the 3X list read off the offer details 2026-09-27; category definitions off chase.com/RewardsCategoryFAQs the same day. Chase's travel covers airlines, hotels, car rental agencies, cruise lines, travel agencies, rail, taxis, tolls and parking -- every travel category Caddy has, OTAs included, so no denylist. 'Internet, cable and phone services' spans both phone and internet_cable. Advertising counts only when bought directly from a social media site or search engine, and shipping means couriers, postal and freight services. Network read off the card art.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 3.0,
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "The $150,000 cap is combined across every 3X category, and runs per account anniversary year."
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 3.0,
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "The $150,000 cap is combined across every 3X category, and runs per account anniversary year."
+      },
+      {
+        "category": "car_rental",
+        "rate": 3.0,
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "The $150,000 cap is combined across every 3X category, and runs per account anniversary year."
+      },
+      {
+        "category": "travel_ground",
+        "rate": 3.0,
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "The $150,000 cap is combined across every 3X category, and runs per account anniversary year."
+      },
+      {
+        "category": "shipping",
+        "rate": 3.0,
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "The $150,000 cap is combined across every 3X category, and runs per account anniversary year."
+      },
+      {
+        "category": "advertising",
+        "rate": 3.0,
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "The $150,000 cap is combined across every 3X category, and runs per account anniversary year."
+      },
+      {
+        "category": "phone",
+        "rate": 3.0,
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "The $150,000 cap is combined across every 3X category, and runs per account anniversary year."
+      },
+      {
+        "category": "internet_cable",
+        "rate": 3.0,
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "The $150,000 cap is combined across every 3X category, and runs per account anniversary year."
+      },
+      {
+        "category": "travel_ground",
+        "rate": 5.0,
+        "merchant_allowlist": [
+          "lyft.com"
+        ],
+        "window": {
+          "end": "2027-09-30"
+        },
+        "caveat": "Lyft rides only, 5X total. Offer ends 2027-09-30."
+      }
+    ]
+  },
+  "amex-blue-business-plus": {
+    "id": "amex-blue-business-plus",
+    "issuer": "amex",
+    "network": "amex",
+    "currency": "mr",
+    "name": "Amex Blue Business Plus",
+    "common": 40,
+    "business": true,
+    "annual_fee": 0,
+    "base_rate": 2.0,
+    "verified": true,
+    "last_verified": "2026-09-27",
+    "source_url": "https://www.americanexpress.com/us/credit-cards/business/business-credit-cards/american-express-blue-business-plus-credit-card-amex/",
+    "caution": "Business card. The 2X stops at $50,000 of purchases a calendar year; after that everything earns 1X.",
+    "note": "No rules by design: 2X is the card's rate on everything, so it is the base rate. The $50,000 calendar-year limit cannot sit on a base rate, which has no cap field, so it lives in the caution -- and Caddy tracks no spend, so it could not apply the cap anyway.",
+    "rules": []
   }
 }

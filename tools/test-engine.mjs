@@ -1,6 +1,7 @@
 // Zero-dependency test runner:  node tools/test-engine.mjs
 import { readFileSync } from 'node:fs';
 import { rank, resolveMerchant, pruneInstances, isMerchantPage, isCheckoutPage, isCommitLabel, isBuyLabel, inferCategory } from '../src/engine.js';
+import { ISSUER, CURRENCY } from '../src/issuers.js';
 
 const load = n => JSON.parse(readFileSync(new URL(`../data/${n}.json`, import.meta.url), 'utf8'));
 const products = load('cards'), merchants = load('merchants'), valuations = load('valuations');
@@ -33,8 +34,13 @@ eq('unknown domain resolves to null', resolveMerchant('some-random-site.example'
 {
   const r = run('target.com');
   eq('Target is NOT groceries', r.category, 'department_store');
-  eq('BCE gets base rate at Target', card(r, 'amex-blue-cash-everyday').rate, 1);
-  eq('Robinhood 3% flat wins at Target', r.winner.productId, 'robinhood-gold');
+  // Amex's own terms, read 2026-09-27: online retail is physical goods bought on
+  // a U.S. retailer's website or app. Target's website is exactly that, so BCE
+  // earns its 3% here as ONLINE RETAIL -- never as groceries, which is the trap.
+  eq('BCE earns 3% at Target as online retail, not as groceries',
+     card(r, 'amex-blue-cash-everyday').rate, 3);
+  eq('...which ties the Robinhood 3% flat', ids(r), ['amex-blue-cash-everyday', 'robinhood-gold']);
+  eq('...so it asks instead of picking', r.resolvedBy, 'unresolved');
 }
 {
   const r = run('instacart.com');
@@ -140,7 +146,7 @@ eq('unknown domain resolves to null', resolveMerchant('some-random-site.example'
 {
   const r = run('shell.us', [{ productId: 'bofa-customized-cash',
     config: { selections: ['gas_ev'], tier_multiplier: 1.75 } }]);
-  eq('selected group + Platinum Honors = 3 x 1.75', r.winner.rate, 5.25);
+  eq('selected group + BofA Rewards Premier = 3 x 1.75', r.winner.rate, 5.25);
 }
 {
   // One BofA choice ("Gas & EV Charging Stations") spans two of our categories.
@@ -524,11 +530,14 @@ eq('LIVE electrifyamerica.com marketing home stays dark',
 eq('the cost: LIVE chargepoint.com home renders a price, so its row shows there',
    SITE('chargepoint.com')({ ...QUIET, price: true }), true);
 
-// phone_internet is a distinct card bucket from utilities: Ink Cash's 5% reads
+// Phone and internet are distinct card buckets from utilities: Ink Cash's 5% reads
 // "internet, cable and phone services", which no issuer folds into utilities.
-eq('t-mobile.com now ranks as phone_internet', run('t-mobile.com').category, 'phone_internet');
-eq('verizon.com too', run('verizon.com').category, 'phone_internet');
-eq('xfinity.com too', run('xfinity.com').category, 'phone_internet');
+// They were one category, phone_internet, until 2026-09-27, when Wells Fargo
+// Autograph's "phone plans" -- landline and cell, NOT internet or cable -- made
+// the difference rank something. U.S. Bank Cash+ splits them the same way.
+eq('t-mobile.com ranks as phone', run('t-mobile.com').category, 'phone');
+eq('verizon.com too', run('verizon.com').category, 'phone');
+eq('xfinity.com ranks as internet_cable', run('xfinity.com').category, 'internet_cable');
 
 // utilities resolves, but see the README: a hand table cannot cover ~3,000 US
 // utilities, and no card in cards.json bonuses the category yet. coned.com is
@@ -827,8 +836,10 @@ const inkAt = h => run(h, ink(), { now: new Date('2026-09-09T12:00:00') });
 eq('office_supply pays 5x, the headline category that did not exist before',
    inkAt('staples.com').all[0].rate, 5);
 eq('...and officedepot.com reaches it too', inkAt('officedepot.com').category, 'office_supply');
-eq('phone_internet pays 5x, so t-mobile.com finally ranks something',
+eq('phone pays 5x, so t-mobile.com finally ranks something',
    inkAt('t-mobile.com').all[0].rate, 5);
+eq('...and so does internet and cable, which the same 5% names',
+   inkAt('xfinity.com').all[0].rate, 5);
 
 // The misreading this card invites: its 5% is "office supply stores AND
 // internet, cable and phone services". Gas and restaurants are the SEPARATE 2%
@@ -836,7 +847,7 @@ eq('phone_internet pays 5x, so t-mobile.com finally ranks something',
 // same thing as electricity, and Chase does not say it is.
 eq('gas is 2x, not 5x', inkAt('exxonmobilfuels.com').all[0].rate, 2);
 eq('dining is 2x, not 5x', inkAt('doordash.com').all[0].rate, 2);
-eq('utilities get the base rate, because phone_internet is not utilities',
+eq('utilities get the base rate, because phone and internet are not utilities',
    inkAt('coned.com').all[0].rate, 1);
 
 // Lyft is 5% TOTAL and merchant-scoped, modelled the way the Sapphire Reserve's
@@ -945,6 +956,244 @@ eq('...and its 5x hotels rate stays a portal note, never a ranking',
    [only('capitalone-venture', 'hilton.com').all[0].rate,
     only('capitalone-venture', 'hilton.com').notes[0].text],
    [2, 'Capital One Venture Rewards: 5x (7.00%) if you book through Capital One Travel instead']);
+
+// --- the category audit, both directions -----------------------------------
+// Rules without merchants are dead; merchants without rules are inert. This was a
+// README instruction to run by hand. It is an assertion now, so adding a card or
+// a category cannot leave either kind behind without a red line saying which.
+{
+  const categories = load('categories');
+  const cats = Object.keys(categories).filter(k => !k.startsWith('_'));
+  const cards = Object.keys(products).filter(k => !k.startsWith('_')).map(k => products[k]);
+  const rows = Object.keys(merchants).filter(k => !k.startsWith('_')).map(k => merchants[k]);
+  const ruled = new Set(cards.flatMap(p => (p.rules || []).map(r => r.category)));
+  const listed = new Set(rows.flatMap(m => [m.category, ...Object.values(m.issuer_overrides || {})]));
+
+  eq('every rule names a category that exists', [...ruled].filter(c => !categories[c]), []);
+  eq('every merchant row names a category that exists', [...listed].filter(c => !categories[c]), []);
+  eq('every category but `other` has a card rule behind it',
+     cats.filter(c => c !== 'other' && !ruled.has(c)), []);
+  // travel_portal is where issuer-portal rules are filed; no website IS the portal.
+  eq('every category but `other` and `travel_portal` has merchants behind it',
+     cats.filter(c => c !== 'other' && c !== 'travel_portal' && !listed.has(c)), []);
+  eq('every selection_group a rule names is an option the card offers',
+     cards.flatMap(p => (p.rules || []).filter(r => r.selection_group && !(p.user_config?.selections || [])
+       .some(g => g.options[r.selection_group])).map(r => `${p.id}:${r.selection_group}`)), []);
+  eq('every option a card offers has a rule behind it',
+     cards.flatMap(p => (p.user_config?.selections || []).flatMap(g => Object.keys(g.options))
+       .filter(o => !(p.rules || []).some(r => r.selection_group === o)).map(o => `${p.id}:${o}`)), []);
+  eq('every currency a card earns has a valuation',
+     cards.filter(p => valuations[p.currency] === undefined).map(p => p.id), []);
+  eq('every card has a label for its issuer and currency',
+     cards.filter(p => !ISSUER[p.issuer] || !CURRENCY[p.currency]).map(p => p.id), []);
+  eq('forty cards, ranked 1 to 40 with no gaps and no repeats',
+     cards.map(p => p.common).sort((a, b) => a - b), Array.from({ length: 40 }, (_, i) => i + 1));
+}
+
+// --- portal rules pay on their own category, 2026-09-27 --------------------
+// A portal rule filed under travel_portal covers anything bookable; one filed
+// under a single category covers that category only. Before this, every portal
+// rule counted on every bookable page, so a hotels-only rate surfaced on
+// airline sites.
+eq('Venture X: 10x hotels through Capital One Travel is a note on hilton.com',
+   only('capitalone-venture-x', 'hilton.com', '2026-09-27').notes.map(n => n.text)[0],
+   'Capital One Venture X: 10x (14.00%) if you book through Capital One Travel instead');
+eq('...but on delta.com the note is the 5x flights rate, not the 10x',
+   only('capitalone-venture-x', 'delta.com', '2026-09-27').notes.map(n => n.text)[0],
+   'Capital One Venture X: 5x (7.00%) if you book through Capital One Travel instead');
+eq('...and rental cars are bookable now, at 10x',
+   only('capitalone-venture-x', 'hertz.com', '2026-09-27').notes.map(n => n.text)[0],
+   'Capital One Venture X: 10x (14.00%) if you book through Capital One Travel instead');
+eq('Double Cash names hotels and car rentals, not flights, so delta.com gets no note',
+   only('citi-double-cash', 'delta.com').notes, []);
+eq('...while hilton.com still does',
+   only('citi-double-cash', 'hilton.com').notes.map(n => n.text)[0],
+   'Citi Double Cash: 5x (7.00%) if you book through Citi Travel instead');
+eq('Amex Gold pays 5x on Amex Travel hotels, not flights, so delta.com gets no note',
+   only('amex-gold', 'delta.com').notes, []);
+eq('...and 2x on its prepaid car rentals, which beats its 1x base',
+   only('amex-gold', 'hertz.com').notes.map(n => n.text)[0],
+   'Amex Gold Card: 2x (3.20%) if you book through Amex Travel instead');
+eq('a Chase Travel rate is filed under travel_portal and still covers car rentals',
+   run('hertz.com').notes.map(n => n.text)[0],
+   'Chase Sapphire Reserve: 8x (12.00%) if you book through Chase Travel instead');
+
+// --- the twenty added 2026-09-27, each verified on its issuer's page that day --
+const on = (id, h, config = {}) =>
+  run(h, [{ productId: id, config }], { now: new Date('2026-09-27T12:00:00') }).all[0];
+const noteOn = (id, h, config = {}) =>
+  run(h, [{ productId: id, config }], { now: new Date('2026-09-27T12:00:00') }).notes;
+
+// Apple Card. 1% by card number, which is how a website is paid unless it offers
+// Apple Pay; the 3% at Apple itself needs no Apple Pay, so it is the one bonus.
+eq('Apple Card pays 3% at apple.com', on('goldman-apple-card', 'apple.com').rate, 3);
+eq('...and 1% at every other electronics store', on('goldman-apple-card', 'bestbuy.com').rate, 1);
+eq('...including its Apple Pay partners, which it cannot see being used',
+   [on('goldman-apple-card', 'uber.com').rate, on('goldman-apple-card', 'nike.com').rate], [1, 1]);
+
+// Costco Anywhere Visa.
+eq('Costco: 4% on gas', on('citi-costco-anywhere', 'shell.us').rate, 4);
+eq('...capped at $7,000 a year across gas and EV charging',
+   on('citi-costco-anywhere', 'evgo.com').caveats[0], 'Capped at $7,000 per year, then 1x');
+eq('...3% on dining, flights, hotels and car rentals',
+   ['doordash.com', 'delta.com', 'hotels.com', 'hertz.com'].map(h => on('citi-costco-anywhere', h).rate),
+   [3, 3, 3, 3]);
+eq('...2% at costco.com', on('citi-costco-anywhere', 'costco.com').rate, 2);
+eq('...but not at another warehouse club', on('citi-costco-anywhere', 'samsclub.com').rate, 1);
+eq('...and not on transit, which citi.com holds at 1%', on('citi-costco-anywhere', 'uber.com').rate, 1);
+
+// Venture X and VentureOne.
+eq('Venture X: 2x everywhere, valued as c1 miles',
+   [on('capitalone-venture-x', 'amazon.com').rate, on('capitalone-venture-x', 'amazon.com').value], [2, 2.8]);
+eq('VentureOne: 1.25x everywhere', on('capitalone-ventureone', 'amazon.com').rate, 1.25);
+eq('...with 5x hotels and rental cars as portal notes only',
+   [on('capitalone-ventureone', 'hertz.com').rate, noteOn('capitalone-ventureone', 'hertz.com').map(n => n.text)[0]],
+   [1.25, 'Capital One VentureOne: 5x (7.00%) if you book through Capital One Travel instead']);
+
+// Amex Platinum. Its fee and base rate were unreadable on 2026-09-10; both are
+// on the product page now.
+eq('Platinum: 5x on flights booked with the airline', on('amex-platinum', 'delta.com').rate, 5);
+eq('...up to $500,000 a year', on('amex-platinum', 'delta.com').caveats[0],
+   'Capped at $500,000 per year, then 1x');
+eq('...1x on a hotel\'s own site, where its 5x prepaid-hotel rate does not apply',
+   on('amex-platinum', 'hilton.com').rate, 1);
+eq('...which is surfaced as an Amex Travel note instead',
+   noteOn('amex-platinum', 'hilton.com').map(n => n.text)[0],
+   'Amex Platinum Card: 5x (8.00%) if you book through Amex Travel instead');
+eq('...and 1x on an OTA flight, which is a third-party booking',
+   on('amex-platinum', 'expedia.com').rate, 1);
+
+// The airline cards pay their bonus at their own airline only.
+eq('Delta Gold: 2x at delta.com', on('amex-delta-gold', 'delta.com').rate, 2);
+eq('...1x at united.com', on('amex-delta-gold', 'united.com').rate, 1);
+eq('...2x on dining and at supermarkets',
+   [on('amex-delta-gold', 'doordash.com').rate, on('amex-delta-gold', 'kroger.com').rate], [2, 2]);
+eq('United Explorer: 3x at united.com, the card\'s share of the advertised 9x',
+   on('chase-united-explorer', 'united.com').rate, 3);
+eq('...2x on a hotel booked direct', on('chase-united-explorer', 'marriott.com').rate, 2);
+eq('...but not through an OTA', on('chase-united-explorer', 'hotels.com').rate, 1);
+eq('Southwest Plus: 2x at southwest.com', on('chase-southwest-plus', 'southwest.com').rate, 2);
+eq('...2x on gas and groceries, sharing one $5,000 cap',
+   [on('chase-southwest-plus', 'shell.us').rate, on('chase-southwest-plus', 'kroger.com').caveats[0]],
+   [2, 'Capped at $5,000 per year, then 1x']);
+eq('AAdvantage Platinum Select: 2x at aa.com, valued at 1.7 cpp',
+   [on('citi-aadvantage-platinum', 'aa.com').rate, on('citi-aadvantage-platinum', 'aa.com').value], [2, 3.4]);
+eq('...2x on dining and gas',
+   [on('citi-aadvantage-platinum', 'doordash.com').rate, on('citi-aadvantage-platinum', 'shell.us').rate], [2, 2]);
+
+// The hotel cards. Hilton points are worth well under a cent, which is exactly
+// why a 3x base must not read as 3% back.
+eq('Marriott Boundless: 6x at marriott.com', on('chase-marriott-boundless', 'marriott.com').rate, 6);
+eq('...its 2x base at another chain', on('chase-marriott-boundless', 'hilton.com').rate, 2);
+eq('...3x on groceries, gas and dining until $6,000, then 2x not 1x',
+   on('chase-marriott-boundless', 'kroger.com').caveats[0], 'Capped at $6,000 per year, then 2x');
+eq('Hilton Honors: 7x at hilton.com, worth 2.8%',
+   [on('amex-hilton-honors', 'hilton.com').rate, on('amex-hilton-honors', 'hilton.com').value], [7, 2.8]);
+eq('...and its 3x base is worth 1.2%, not 3%', on('amex-hilton-honors', 'amazon.com').value, 1.2);
+eq('...5x on U.S. dining, supermarkets and gas',
+   ['doordash.com', 'kroger.com', 'shell.us'].map(h => on('amex-hilton-honors', h).rate), [5, 5, 5]);
+
+// Wells Fargo Autograph: the card that made phone and internet two categories.
+eq('Autograph: 3x across dining, travel, gas, transit and streaming',
+   ['doordash.com', 'delta.com', 'hotels.com', 'hertz.com', 'uber.com', 'shell.us', 'evgo.com', 'netflix.com']
+     .map(h => on('wellsfargo-autograph', h).rate), [3, 3, 3, 3, 3, 3, 3, 3]);
+eq('...3x on a phone plan', on('wellsfargo-autograph', 't-mobile.com').rate, 3);
+eq('...and 1x on internet and cable, which "phone plans" does not cover',
+   on('wellsfargo-autograph', 'xfinity.com').rate, 1);
+
+// Citi Strata Premier.
+eq('Strata Premier: 3x on air, hotels, dining, supermarkets, gas and EV charging',
+   ['delta.com', 'hotels.com', 'doordash.com', 'kroger.com', 'shell.us', 'evgo.com']
+     .map(h => on('citi-strata-premier', h).rate), [3, 3, 3, 3, 3, 3]);
+eq('...10x on Citi Travel hotels, as a note', noteOn('citi-strata-premier', 'hilton.com').map(n => n.text)[0],
+   'Citi Strata Premier: 10x (14.00%) if you book through Citi Travel instead');
+eq('...and no Citi Travel note on flights, which that rate does not name',
+   noteOn('citi-strata-premier', 'delta.com'), []);
+eq('...and no supermarket rate at Instacart, which Citi reads as delivery',
+   on('citi-strata-premier', 'instacart.com').rate, 1);
+
+// Discover it Chrome.
+eq('Discover it Chrome: 2% on gas and dining',
+   [on('discover-it-chrome', 'shell.us').rate, on('discover-it-chrome', 'doordash.com').rate], [2, 2]);
+eq('...capped at $1,000 a quarter', on('discover-it-chrome', 'doordash.com').caveats[0],
+   'Capped at $1,000 per quarter, then 1x');
+
+// The flat cards.
+eq('Freedom Rise: 1.5x into Ultimate Rewards, 2.25%', on('chase-freedom-rise', 'amazon.com').value, 2.25);
+eq('BofA Unlimited Cash: 1.5% with no tier', on('bofa-unlimited-cash', 'amazon.com').rate, 1.5);
+eq('...2.625% at the Premier tier, the 2.62% BofA quotes',
+   on('bofa-unlimited-cash', 'amazon.com', { tier_multiplier: 1.75 }).rate, 2.625);
+eq('...and 1.65% at the new 10% Member tier',
+   on('bofa-unlimited-cash', 'amazon.com', { tier_multiplier: 1.1 }).rate, 1.65);
+eq('BofA Travel Rewards: 1.5x at a cent a point', on('bofa-travel-rewards', 'amazon.com').value, 1.5);
+eq('...with its Travel Center rate as a note, tier included',
+   noteOn('bofa-travel-rewards', 'hilton.com', { tier_multiplier: 1.75 }).map(n => n.text)[0],
+   'BofA Travel Rewards: 5.25x (5.25%) if you book through Bank of America Travel Center instead');
+
+// The business cards.
+eq('Ink Business Unlimited: 1.5x, and 5x total on Lyft',
+   [on('chase-ink-business-unlimited', 'amazon.com').rate, on('chase-ink-business-unlimited', 'lyft.com').rate],
+   [1.5, 5]);
+eq('Ink Business Preferred: 3x on shipping and social and search ads',
+   [on('chase-ink-business-preferred', 'ups.com').rate, on('chase-ink-business-preferred', 'ads.google.com').rate],
+   [3, 3]);
+eq('...3x on phone AND internet, which its category names together',
+   [on('chase-ink-business-preferred', 't-mobile.com').rate, on('chase-ink-business-preferred', 'xfinity.com').rate],
+   [3, 3]);
+eq('...3x on every kind of travel, OTAs included',
+   ['delta.com', 'expedia.com', 'hertz.com', 'uber.com'].map(h => on('chase-ink-business-preferred', h).rate),
+   [3, 3, 3, 3]);
+eq('...5x on Lyft', on('chase-ink-business-preferred', 'lyft.com').rate, 5);
+eq('...and one $150,000 cap over all of it',
+   on('chase-ink-business-preferred', 'ups.com').caveats[0], 'Capped at $150,000 per year, then 1x');
+eq('Blue Business Plus: 2x on everything, as Amex points',
+   on('amex-blue-business-plus', 'amazon.com').value, 3.2);
+
+// --- categories reorganised 2026-09-27 -------------------------------------
+// U.S. Bank Cash+ offers twelve 5% choices. Four had no category until now.
+const plus = picks => ({ selections: picks });
+eq('Cash+ gyms: 5% at planetfitness.com', on('usbank-cash-plus', 'planetfitness.com', plus(['five_gym'])).rate, 5);
+eq('Cash+ electronics: 5% at bestbuy.com', on('usbank-cash-plus', 'bestbuy.com', plus(['five_electronics'])).rate, 5);
+eq('Cash+ clothing: 5% at gap.com', on('usbank-cash-plus', 'gap.com', plus(['five_clothing'])).rate, 5);
+eq('Cash+ sporting goods: 5% at rei.com', on('usbank-cash-plus', 'rei.com', plus(['five_sporting'])).rate, 5);
+// Before the split, each of these two picks also paid 5% on the other's bills.
+eq('Cash+ "TV, internet and streaming" pays on cable, not on a cell phone plan',
+   [on('usbank-cash-plus', 'xfinity.com', plus(['five_tv'])).rate,
+    on('usbank-cash-plus', 't-mobile.com', plus(['five_tv'])).rate], [5, 1]);
+eq('Cash+ "cell phone providers" pays on a cell phone plan, not on cable',
+   [on('usbank-cash-plus', 't-mobile.com', plus(['five_phone'])).rate,
+    on('usbank-cash-plus', 'xfinity.com', plus(['five_phone'])).rate], [5, 1]);
+
+// BofA's Online Shopping choice is a channel: anything bought on a website or
+// app. It names department stores, cable, streaming and tickets among its
+// examples, and it had only ever been ranked on online_retail.
+const online = { selections: ['online'] };
+eq('BofA online choice: 3% at walmart.com, netflix.com, xfinity.com and ticketmaster.com',
+   ['walmart.com', 'netflix.com', 'xfinity.com', 'ticketmaster.com']
+     .map(h => on('bofa-customized-cash', h, online).rate), [3, 3, 3, 3]);
+eq('...but not on travel, which BofA does not name as online shopping',
+   on('bofa-customized-cash', 'delta.com', online).rate, 1);
+eq('BofA travel choice: car rentals count, as the category page names them',
+   on('bofa-customized-cash', 'hertz.com', { selections: ['travel'] }).rate, 3);
+
+// Amex online retail is also a channel, for physical goods only.
+eq('BCE: 3% at homedepot.com, cvs.com, bestbuy.com and staples.com as online retail',
+   ['homedepot.com', 'cvs.com', 'bestbuy.com', 'staples.com']
+     .map(h => on('amex-blue-cash-everyday', h).rate), [3, 3, 3, 3]);
+eq('...but not on services like streaming, which Amex excludes',
+   on('amex-blue-cash-everyday', 'netflix.com').rate, 1);
+
+eq('Sapphire Preferred: car rentals earn its 2x travel rate, per Chase\'s definition',
+   on('chase-sapphire-preferred', 'hertz.com').rate, 2);
+eq('car rental sites resolve to their own category', run('hertz.com').category, 'car_rental');
+
+// Inference for the new store categories, most specific first.
+eq('ElectronicsStore markup infers electronics', IC({ ldTypes: ['Product', 'ElectronicsStore'] }), 'electronics');
+eq('ClothingStore markup infers clothing', IC({ ldTypes: ['ClothingStore'] }), 'clothing');
+eq('ShoeStore markup infers clothing', IC({ ldTypes: ['ShoeStore'] }), 'clothing');
+eq('SportingGoodsStore markup infers sporting goods', IC({ ldTypes: ['SportingGoodsStore'] }), 'sporting_goods');
+eq('AutoRental markup infers car rentals', IC({ ldTypes: ['AutoRental'] }), 'car_rental');
+eq('ExerciseGym markup infers fitness', IC({ ldTypes: ['ExerciseGym'] }), 'fitness');
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

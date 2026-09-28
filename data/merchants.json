@@ -34,7 +34,8 @@
     "confidence": "medium",
     "issuer_overrides": {
       "amex": "other",
-      "chase": "other"
+      "chase": "other",
+      "citi": "other"
     },
     "note": "third-party delivery; most issuers do NOT code this as a supermarket"
   },
@@ -112,15 +113,15 @@
     "confidence": "high"
   },
   "bestbuy.com": {
-    "category": "online_retail",
-    "confidence": "medium"
+    "category": "electronics",
+    "confidence": "high"
   },
   "wayfair.com": {
     "category": "online_retail",
     "confidence": "medium"
   },
   "newegg.com": {
-    "category": "online_retail",
+    "category": "electronics",
     "confidence": "medium"
   },
   "delta.com": {
@@ -252,27 +253,27 @@
     "note": "measured 2026-09-09: marketing home is signal-free. Web surface is plan signup"
   },
   "t-mobile.com": {
-    "category": "phone_internet",
+    "category": "phone",
     "confidence": "medium",
     "note": "measured 2026-09-09: already showed via cart link + price, but ranked as everything else. Handset purchases here may code as retail rather than telecom"
   },
   "verizon.com": {
-    "category": "phone_internet",
+    "category": "phone",
     "confidence": "medium",
-    "note": "measured 2026-09-09: og:type article, no JSON-LD, price only. Same handset-vs-bill ambiguity as t-mobile.com"
+    "note": "measured 2026-09-09: og:type article, no JSON-LD, price only. Same handset-vs-bill ambiguity as t-mobile.com. Split from phone_internet 2026-09-27 as phone: wireless is the bulk of what verizon.com bills, though Fios home internet is sold here too"
   },
   "xfinity.com": {
-    "category": "phone_internet",
+    "category": "internet_cable",
     "confidence": "medium",
-    "note": "measured 2026-09-09: no JSON-LD, no controls, price only"
+    "note": "measured 2026-09-09: no JSON-LD, no controls, price only. Split from phone_internet 2026-09-27 as internet_cable: Xfinity Mobile is sold here too, but home internet and TV are the bulk of it"
   },
   "att.com": {
-    "category": "phone_internet",
+    "category": "phone",
     "confidence": "low",
-    "note": "UNMEASURED: category assigned from the brand, signals not read off the live site"
+    "note": "UNMEASURED: category assigned from the brand, signals not read off the live site. Filed as phone, not internet_cable: wireless is the bulk of what att.com bills, though AT&T Fiber is sold here too"
   },
   "spectrum.com": {
-    "category": "phone_internet",
+    "category": "internet_cable",
     "confidence": "low",
     "note": "UNMEASURED: category assigned from the brand, signals not read off the live site"
   },
@@ -379,5 +380,237 @@
     "category": "travel_hotel",
     "confidence": "high",
     "note": "Online travel agency, not a direct booking. Issuers paying elevated rates only on 'booked direct' travel pay base rate here."
+  },
+  "apple.com": {
+    "category": "electronics",
+    "confidence": "high",
+    "note": "Apple Card's 3% at Apple is merchant-scoped to this row, and the suffix walk carries it to every apple.com subdomain"
+  },
+  "bhphotovideo.com": {
+    "category": "electronics",
+    "confidence": "high"
+  },
+  "microcenter.com": {
+    "category": "electronics",
+    "confidence": "high"
+  },
+  "gap.com": {
+    "category": "clothing",
+    "confidence": "high"
+  },
+  "hm.com": {
+    "category": "clothing",
+    "confidence": "high"
+  },
+  "uniqlo.com": {
+    "category": "clothing",
+    "confidence": "high"
+  },
+  "zara.com": {
+    "category": "clothing",
+    "confidence": "high"
+  },
+  "lululemon.com": {
+    "category": "clothing",
+    "confidence": "high"
+  },
+  "jcrew.com": {
+    "category": "clothing",
+    "confidence": "high"
+  },
+  "levi.com": {
+    "category": "clothing",
+    "confidence": "high"
+  },
+  "abercrombie.com": {
+    "category": "clothing",
+    "confidence": "high"
+  },
+  "ae.com": {
+    "category": "clothing",
+    "confidence": "high"
+  },
+  "nike.com": {
+    "category": "clothing",
+    "confidence": "medium",
+    "note": "Footwear as much as apparel, so a shoe-store merchant code is as likely as a clothing one"
+  },
+  "dickssportinggoods.com": {
+    "category": "sporting_goods",
+    "confidence": "high"
+  },
+  "academy.com": {
+    "category": "sporting_goods",
+    "confidence": "high"
+  },
+  "rei.com": {
+    "category": "sporting_goods",
+    "confidence": "high"
+  },
+  "basspro.com": {
+    "category": "sporting_goods",
+    "confidence": "high"
+  },
+  "scheels.com": {
+    "category": "sporting_goods",
+    "confidence": "high"
+  },
+  "planetfitness.com": {
+    "category": "fitness",
+    "confidence": "high"
+  },
+  "lafitness.com": {
+    "category": "fitness",
+    "confidence": "high"
+  },
+  "24hourfitness.com": {
+    "category": "fitness",
+    "confidence": "high"
+  },
+  "equinox.com": {
+    "category": "fitness",
+    "confidence": "high"
+  },
+  "crunch.com": {
+    "category": "fitness",
+    "confidence": "high"
+  },
+  "orangetheory.com": {
+    "category": "fitness",
+    "confidence": "high"
+  },
+  "lifetime.life": {
+    "category": "fitness",
+    "confidence": "high"
+  },
+  "anytimefitness.com": {
+    "category": "fitness",
+    "confidence": "high"
+  },
+  "hertz.com": {
+    "category": "car_rental",
+    "confidence": "high"
+  },
+  "enterprise.com": {
+    "category": "car_rental",
+    "confidence": "high"
+  },
+  "avis.com": {
+    "category": "car_rental",
+    "confidence": "high"
+  },
+  "budget.com": {
+    "category": "car_rental",
+    "confidence": "high"
+  },
+  "nationalcar.com": {
+    "category": "car_rental",
+    "confidence": "high"
+  },
+  "alamo.com": {
+    "category": "car_rental",
+    "confidence": "high"
+  },
+  "sixt.com": {
+    "category": "car_rental",
+    "confidence": "high"
+  },
+  "thrifty.com": {
+    "category": "car_rental",
+    "confidence": "high"
+  },
+  "dollar.com": {
+    "category": "car_rental",
+    "confidence": "high"
+  },
+  "usps.com": {
+    "category": "shipping",
+    "confidence": "high"
+  },
+  "ups.com": {
+    "category": "shipping",
+    "confidence": "high"
+  },
+  "fedex.com": {
+    "category": "shipping",
+    "confidence": "high"
+  },
+  "dhl.com": {
+    "category": "shipping",
+    "confidence": "medium",
+    "note": "The global DHL site; U.S. express shipping is booked here"
+  },
+  "ads.google.com": {
+    "category": "advertising",
+    "confidence": "high",
+    "note": "Measured 2026-09-27: signed out, this host redirects to business.google.com/us/google-ads/, which is marketing. Signed in it is the Google Ads app, where ads are bought and billed, so the row is live and redirects_to only keeps the sweep from reading the sign-in redirect as a move. An exact host, not google.com: nothing else on google.com is a merchant",
+    "redirects_to": "business.google.com"
+  },
+  "business.facebook.com": {
+    "category": "advertising",
+    "confidence": "medium",
+    "note": "Meta Business Suite, where ad billing lives. It also hosts page and inbox tools that are not purchases"
+  },
+  "adsmanager.facebook.com": {
+    "category": "advertising",
+    "confidence": "high",
+    "redirects_to": "business.facebook.com",
+    "note": "Measured 2026-09-27: signed out, this redirects to the business.facebook.com login. Signed in it is Ads Manager, so the row is live; redirects_to only keeps the sweep from reading the sign-in redirect as a move"
+  },
+  "ads.microsoft.com": {
+    "category": "advertising",
+    "confidence": "high"
+  },
+  "ads.tiktok.com": {
+    "category": "advertising",
+    "confidence": "high"
+  },
+  "ads.pinterest.com": {
+    "category": "advertising",
+    "confidence": "high"
+  },
+  "mintmobile.com": {
+    "category": "phone",
+    "confidence": "high"
+  },
+  "visible.com": {
+    "category": "phone",
+    "confidence": "high"
+  },
+  "cricketwireless.com": {
+    "category": "phone",
+    "confidence": "high"
+  },
+  "metrobyt-mobile.com": {
+    "category": "phone",
+    "confidence": "high"
+  },
+  "boostmobile.com": {
+    "category": "phone",
+    "confidence": "high"
+  },
+  "consumercellular.com": {
+    "category": "phone",
+    "confidence": "high"
+  },
+  "cox.com": {
+    "category": "internet_cable",
+    "confidence": "high"
+  },
+  "optimum.com": {
+    "category": "internet_cable",
+    "confidence": "high"
+  },
+  "directv.com": {
+    "category": "internet_cable",
+    "confidence": "high"
+  },
+  "dish.com": {
+    "category": "internet_cable",
+    "confidence": "high"
+  },
+  "frontier.com": {
+    "category": "internet_cable",
+    "confidence": "high"
   }
 }
