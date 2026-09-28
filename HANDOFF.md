@@ -9,15 +9,15 @@ works and why; this file is only the state of play.
 
 ## State
 
-- **v1.0.0**, 103 cards across 17 issuers, 148 merchant rows, 27 categories.
+- **v1.0.0**, 110 cards across 17 issuers, 148 merchant rows, 27 categories.
   The second twenty cards landed 2026-09-27; store cards plus the remaining
   airline and hotel tiers, nineteen cards from five issuers Caddy lacked,
-  thirteen business cards and eight smaller store cards, on 2026-09-28. See
-  sections 6, 7, 9, 10 and 11.
+  thirteen business cards, eight smaller store cards and seven missing tiers,
+  on 2026-09-28. See sections 6, 7 and 9 to 12.
 - **Every card verified** against its issuer's own page, each carrying a
   `source_url` and the date it was read. The one soft spot: the three Bilt cards'
   category definitions were not readable (section 9).
-- **Tests green**: 479 engine + 31 setup + 49 lifecycle + 45 worker. `npm test`.
+- **Tests green**: 493 engine + 31 setup + 49 lifecycle + 45 worker. `npm test`.
 - **Nothing unpushed.** `main` on GitHub is the whole tree. All three store
   screenshots are still current -- the new cards rank after the ones they show.
 - **`caddy-1.0.0.zip` sits in the repo root**, rebuilt on every commit. See the
@@ -26,6 +26,12 @@ works and why; this file is only the state of play.
   made 2026-09-27 21:24, before any of this week's work -- 20 cards, no setup
   resume, no store cards. If Chrome has that folder loaded, it is running old
   code. Load the repo root instead, or delete the folder and unzip a fresh one.
+- **Two rules decided 2026-09-28, both David's call.** A store rate is what the
+  card adds over whatever the store's free program pays members with any card
+  (section 11). And keep extension text minimal: one-line cautions, and rule
+  caveats short or absent, because they print in the popup.
+- **One stray branch**: `second-twenty-cards`, merged long ago, still exists
+  locally and on GitHub. Safe to delete.
 
 ---
 
@@ -42,17 +48,19 @@ In order. The first is dated; the second needs a real install, so it is David's.
      closing on focus change were only verified against stubs).
    - Add the Target Circle Credit Card: the dock should recommend it on
      target.com and never show it on walmart.com.
-   - Browse a few of the 61 merchant rows added this week -- gym, carrier and
-     shipping homepages -- and note any that mount the dock on a marketing page.
+   - Add the JCPenney Credit Card and Robinhood Gold: on jcpenney.com the 3%
+     card should win, per the store-rate rule.
+   - Browse a few of the 65 merchant rows added this week -- gym, carrier and
+     shipping homepages, and the new nordstrom, nordstromrack, jcpenney and ulta
+     rows -- and note any that mount the dock on a marketing page.
    - `node tools/check-redirects-browser.mjs` to confirm `bhphotovideo.com` and
      `microcenter.com`, which met a Cloudflare challenge.
 3. **Keep widening coverage, with the recipe in section 8.** By a rough
    bank-by-bank judgment made before section 9's cards -- no public data exists
    per card -- Caddy covered about 55-60% of US rewards-card spending. The
-   issuers it lacked, the general-purpose business cards and the smaller store
-   cards are in now (sections 9 to 11). The next gaps, largest first:
-   - **Tiers still missing from covered programs**: Citi AAdvantage Executive and
-     Globe, Autograph Journey, BofA Premium Rewards, U.S. Bank Altitude.
+   issuers it lacked, the general-purpose business cards, the smaller store
+   cards and the missing tiers are in now (sections 9 to 12). The next gaps,
+   largest first:
    - **Barclays' other co-brands**, listed on its card page but not read:
      Wyndham Rewards Earner (three personal tiers), AARP, Upromise, Frontier,
      Emirates, Miles & More.
@@ -61,6 +69,17 @@ In order. The first is dated; the second needs a real install, so it is David's.
      Business; Chase's United, Southwest, IHG and World of Hyatt business cards;
      Barclays' Wyndham Earner Business. Also Amex Business Green, listed and not
      read.
+
+   Loose ends, each small, each explained in its section:
+   - **U.S. Bank Altitude points** are assumed to be worth a cent; no U.S. Bank
+     page states a figure (section 12).
+   - **Bilt's offer terms** were never readable -- the link downloads a file --
+     so Obsidian's "other travel" is unconfirmed (section 9).
+   - **Target's member rate** was not re-read: target.com showed a press-and-hold
+     bot check. Its card's 5% off is card-only either way (section 11).
+   - **Amex Business Gold's 4X** is a caution, not rules, because it follows the
+     business's top two categories. A Cash+-style picker is the alternative if
+     David wants it (section 10).
 4. **Submit to the Chrome Web Store** -- section 1, unchanged. The listing's
    counts were kept current through this week.
 
@@ -298,11 +317,13 @@ Card and TJX Rewards. Every one read off its issuer's or retailer's page that da
 
 ---
 
-## 8. Adding a card: the recipe this week's 83 followed
+## 8. Adding a card: the recipe this week's 90 followed
 
 1. **Read the issuer's own page** in the in-app browser -- `get_page_text`, or a
    short `javascript_tool` regex over `document.body.innerText`. Never a blog or
-   a comparison site. Record the annual fee, the base rate, every category with its
+   a comparison site. Some pages fill in numbers only while the browser pane is on
+   screen -- Citi's fees stayed blank until it was -- so a blank number means
+   bring the pane up and read again, not that the page lacks it. Record the annual fee, the base rate, every category with its
    cap, the network (page terms or card art) and the issuing bank. Chase and Amex
    put exact definitions in collapsed "Offer Details"; read `#offerpop`'s
    `textContent` on Chase pages. A number the page does not state goes in the
@@ -472,6 +493,36 @@ confirmed by the HTTP sweep.
 
 ---
 
+## 12. The missing tiers, 28 September 2026
+
+Seven cards, ranks 104 to 110: Citi AAdvantage Executive and Globe, Wells Fargo
+Autograph Journey, BofA Premium Rewards and Premium Rewards Elite, and U.S. Bank
+Altitude Go and Connect. One new currency, `usbank`. No new issuer, category or
+merchant row.
+
+- **Citi's pricing renders only while the page is on screen.** The fees are in
+  a block the page fills after load, and Globe's stayed blank until the browser pane
+  was showing. Both were read that way: Executive $695 (not the $595 older sources
+  quote), Globe $350. AAdvantage Hotels and AAdvantage Cars, AA's own booking sites,
+  are portal notes, as United's Renowned Hotels is.
+- **Autograph Journey splits hotels by how they are booked**: 5X with the hotel, 3X
+  through a travel agency or booking site, which a denylisted 5X rule and a plain 3X
+  rule say between them.
+- **BofA Premium Rewards points are cash**: its terms price every point at $0.01.
+  Both cards take the same BofA Rewards tier picker as the other BofA cards.
+- **U.S. Bank Altitude points are assumed to be worth a cent.** The pages say only
+  that a deposit to a U.S. Bank account gets the maximum value, never what it is.
+  `usbank` is 1.0 until a page states one, and each Altitude card's caution says so.
+- **Not added:** Altitude Reserve -- its page redirects to U.S. Bank's card list and it
+  is gone from the site map -- and the Altitude Go Secured card.
+
+Left open, for you:
+
+- Confirm the U.S. Bank point value if you can find it stated; Settings takes an
+  override meanwhile.
+
+---
+
 ## Working agreements
 
 - **Do not spawn Chrome to test.** Serve the files over a small local server and
@@ -480,3 +531,10 @@ confirmed by the HTTP sweep.
   `check-redirects-browser.mjs` -- and those are for you to run.
 - **Push after each change**, one commit per change, message explaining why and
   not just what.
+- **To eyeball Settings without an install**: serve a scratch folder that
+  symlinks `data/`, `icons/`, `manifest.json` and every file in `src/`, except a
+  copy of `options.html` that loads a small `chrome.*` stub script before
+  `options.js`. The stub answers `storage.local.get/set`, `runtime.getURL`,
+  `getManifest` and `sendMessage` from a seeded wallet. Serve it with
+  `python3 -m http.server` and open it in the in-app browser; the 2026-09-28
+  chip-colour and dialog checks were done that way.
