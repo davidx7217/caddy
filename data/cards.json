@@ -1,9 +1,9 @@
 {
   "_note_field": "MAINTAINER-ONLY. `note` records why a card is modelled the way it is -- provenance, schema reasoning, what was deliberately not modelled. Never render it in the UI. `caution` is the user-facing field.",
-  "_business_note": "`business` marks a card issued on business underwriting rather than personal. Absent means personal -- only the field's presence is meaningful, so there is nothing to keep in sync on fifty-nine records. It filters the catalogue and nothing else reads it: the ranker does not care whose name is on the account.",
-  "_common_note": "`common` is a POPULARITY RANK, 1 to 63, and it is EDITORIAL. There is no public card-level ranking of US cardholders -- Nilson publishes issuer volume, not how many people hold a Freedom Unlimited -- so this is judgement, not a sourced fact, and it is the only field here that is. It orders the setup picker so a new user meets mass-market cards first. 21 to 40 were added on 2026-09-27 as the next twenty after the first, and 41 to 63 on 2026-09-28 -- store cards, then the remaining tiers of airline and hotel programs already present -- so each batch ranks below the one before by construction. Re-rank it freely; nothing computes from it.",
+  "_business_note": "`business` marks a card issued on business underwriting rather than personal. Absent means personal -- only the field's presence is meaningful, so there is nothing to keep in sync on seventy-eight records. It filters the catalogue and nothing else reads it: the ranker does not care whose name is on the account.",
+  "_common_note": "`common` is a POPULARITY RANK, 1 to 82, and it is EDITORIAL. There is no public card-level ranking of US cardholders -- Nilson publishes issuer volume, not how many people hold a Freedom Unlimited -- so this is judgement, not a sourced fact, and it is the only field here that is. It orders the setup picker so a new user meets mass-market cards first. 21 to 40 were added on 2026-09-27 as the next twenty after the first, 41 to 63 on 2026-09-28 -- store cards, then the remaining tiers of airline and hotel programs already present -- and 64 to 82 later that day, the cards of issuers Caddy did not yet cover, so each batch ranks below the one before by construction. Re-rank it freely; nothing computes from it.",
   "_only_at_note": "`only_at` marks a STORE CARD: the merchant domains where it works, and nowhere else. The ranker drops the card from consideration on any other domain rather than ranking it on its base rate, because recommending a card the till refuses is worse than not mentioning it. base_rate is then the store rate. Store cards with no rewards at all -- Home Depot's, for one -- are deliberately left out: a card that earns nothing can never be the best card to use.",
-  "_comment": "All 63 records verified against issuer sources; 5 on 2026-08-29, 6 on 2026-09-09, 5 on 2026-09-10, 24 on 2026-09-27 -- the twenty added that day, plus Blue Cash Everyday, Amex Gold, BofA Customized Cash and U.S. Bank Cash+, re-read because their categories changed -- and 23 on 2026-09-28, the store cards and the remaining airline and hotel tiers. Each carries its source_url. Chase Freedom Flex rotating categories MUST be re-verified 2026-10-01. Amex Platinum was absent until 2026-09-27 because no reachable americanexpress.com page stated its annual fee or base rate on 2026-09-10; the product page states both now.",
+  "_comment": "All 82 records verified against issuer sources; 5 on 2026-08-29, 6 on 2026-09-09, 5 on 2026-09-10, 24 on 2026-09-27 -- the twenty added that day, plus Blue Cash Everyday, Amex Gold, BofA Customized Cash and U.S. Bank Cash+, re-read because their categories changed -- and 42 on 2026-09-28: the store cards and the remaining airline and hotel tiers, then nineteen cards from Synchrony's general-purpose line, Barclays, USAA, Navy Federal and Bilt. The Bilt cards' offer terms could not be read (the link downloads a file), so their category definitions are unconfirmed; see their notes. Each carries its source_url. Chase Freedom Flex rotating categories MUST be re-verified 2026-10-01. Amex Platinum was absent until 2026-09-27 because no reachable americanexpress.com page stated its annual fee or base rate on 2026-09-10; the product page states both now.",
   "chase-sapphire-reserve": {
     "id": "chase-sapphire-reserve",
     "issuer": "chase",
@@ -2890,6 +2890,841 @@
       {
         "category": "gas",
         "rate": 3.0
+      }
+    ]
+  },
+  "synchrony-paypal-cashback": {
+    "id": "synchrony-paypal-cashback",
+    "issuer": "synchrony",
+    "network": "mastercard",
+    "currency": "cash",
+    "name": "PayPal Cashback Mastercard",
+    "common": 64,
+    "annual_fee": 0,
+    "base_rate": 1.5,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.paypal.com/us/digital-wallet/manage-money/paypal-cashback-mastercard",
+    "caution": "3% when you check out with PayPal and pick this card. Caddy cannot see how a checkout is paid, so it ranks the 1.5%.",
+    "note": "Issued by Synchrony Bank, per paypal.com on 2026-09-28. The 3% is a rate on a way of paying, not on a kind of merchant: it applies wherever PayPal checkout is offered and this card is chosen inside it. Caddy cannot see whether a checkout will be paid through PayPal, so ranking it would overstate every checkout paid by card number -- the same call as Apple Card's Apple Pay rates. No rules by design; the 1.5% everywhere else is the base rate.",
+    "rules": []
+  },
+  "synchrony-venmo": {
+    "id": "synchrony-venmo",
+    "issuer": "synchrony",
+    "network": "visa",
+    "currency": "cash",
+    "name": "Venmo Credit Card",
+    "common": 68,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://venmo.com/about/creditcard/",
+    "caution": "Also 3% when you check out with Venmo, and an extra 1% on a purchase you split in the app. Caddy cannot see either.",
+    "note": "Issued by Synchrony Bank, per venmo.com on 2026-09-28. 3% on dining and on entertainment, 1% on everything else, no cap stated. The page defines entertainment as movie theatres, concert promoters, amusement parks, digital goods, subscription streaming and membership recreation such as health clubs and golf courses, so it carries entertainment, streaming and fitness. Digital goods (movies, music, games, books) have no category of their own here and are not ranked. The 3% for paying with Venmo and the +1% for splitting a purchase depend on how a checkout is paid, which Caddy cannot see.",
+    "rules": [
+      {
+        "category": "dining",
+        "rate": 3.0,
+        "caveat": "Restaurants, takeout, drive-throughs and delivery, plus bars and liquor stores."
+      },
+      {
+        "category": "entertainment",
+        "rate": 3.0,
+        "caveat": "Movie theatres, concert promoters and amusement parks."
+      },
+      {
+        "category": "streaming",
+        "rate": 3.0,
+        "caveat": "Subscription streaming, which Venmo counts as entertainment."
+      },
+      {
+        "category": "fitness",
+        "rate": 3.0,
+        "caveat": "Health clubs and other membership recreation, which Venmo counts as entertainment."
+      }
+    ]
+  },
+  "synchrony-sams-club": {
+    "id": "synchrony-sams-club",
+    "issuer": "synchrony",
+    "network": "mastercard",
+    "currency": "cash",
+    "name": "Sam's Club Mastercard",
+    "common": 67,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.samsclub.com/credit",
+    "caution": "Needs a Sam's Club membership, and the 3% at Sam's Club needs Plus. Paid as Sam's Cash, spendable only at Sam's Club, up to $5,000 a year.",
+    "note": "Issued by Synchrony, per samsclub.com on 2026-09-28. annual_fee is 0 as for Costco Anywhere: the card has no fee, and the membership it needs is the price of entry and is not modelled. The 3% at Sam's Club is the Plus rate, modelled the way Prime Visa's 5% is -- at the member rate, with the other rate named. Rewards are Sam's Cash, redeemable only at Sam's Club or samsclub.com and forfeited if the membership lapses, valued as cash anyway, as Kohl's Cash and Star Money are. The $5,000 yearly maximum is on Sam's Cash earned across every category at once, which a rule's cap cannot express, so it is in the caution. The store-only Sam's Club Credit Card earns no Sam's Cash and is not modelled.",
+    "rules": [
+      {
+        "category": "gas",
+        "rate": 5.0,
+        "cap": {
+          "amount": 6000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "The $6,000 cap is combined across gas and EV charging."
+      },
+      {
+        "category": "ev_charging",
+        "rate": 5.0,
+        "cap": {
+          "amount": 6000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "The $6,000 cap is combined across gas and EV charging."
+      },
+      {
+        "category": "dining",
+        "rate": 3.0,
+        "caveat": "Dining and takeout."
+      },
+      {
+        "category": "wholesale_club",
+        "rate": 3.0,
+        "merchant_allowlist": [
+          "samsclub.com"
+        ],
+        "caveat": "Plus members. Club members earn 1% at Sam's Club."
+      }
+    ]
+  },
+  "synchrony-onepay": {
+    "id": "synchrony-onepay",
+    "issuer": "synchrony",
+    "network": "mastercard",
+    "currency": "cash",
+    "name": "OnePay CashRewards Card",
+    "common": 75,
+    "annual_fee": 0,
+    "base_rate": 1.5,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.onepay.com/credit-card",
+    "caution": "The 5% at Walmart needs Walmart+. Without it, Walmart earns 3%.",
+    "note": "The OnePay CashRewards Mastercard, issued by Synchrony Bank per onepay.com on 2026-09-28. Cash back is earned as OnePay points that redeem as a statement credit or a deposit, so currency is 'cash'. Walmart is modelled at the Walmart+ rate, as Prime Visa is at the Prime rate, with the other rate in the caution. The 3% on everything else for a new account's first 90 days is an introductory offer and is not modelled. Applicants who do not qualify are offered the OnePay Walmart Spend Card, which works only at Walmart and has no standard cash back; it is not modelled either.",
+    "rules": [
+      {
+        "category": "department_store",
+        "rate": 5.0,
+        "merchant_allowlist": [
+          "walmart.com"
+        ],
+        "caveat": "Walmart, in store and online."
+      }
+    ]
+  },
+  "barclays-jetblue": {
+    "id": "barclays-jetblue",
+    "issuer": "barclays",
+    "network": "mastercard",
+    "currency": "jetblue",
+    "name": "JetBlue Card",
+    "common": 74,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://cards.barclaycardus.com/banking/cards/jetblue-card/",
+    "caution": "Bonus points may not post when you pay through a digital wallet, PayPal or another third party.",
+    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48257). The 3X covers purchases billed by JetBlue through jetblue.com, JetBlue Vacations packages at jetbluevacations.com and bookings at truebluetravel.com. Only jetblue.com is in merchants.json: TrueBlue Travel, which sells hotels and car rentals, is modelled as a portal, as United's Renowned Hotels is, and JetBlue Vacations packages are not ranked. The 2X needs the purchase made directly at the restaurant or grocery store -- the rules withhold bonus points from purchases made through third parties -- so the delivery apps are denylisted on dining and instacart.com carries a barclays override.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 3.0,
+        "merchant_allowlist": [
+          "jetblue.com"
+        ],
+        "caveat": "Tickets, goods and services bought directly from JetBlue."
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 3.0,
+        "portal_only": true,
+        "portal": "TrueBlue Travel",
+        "caveat": "Hotels and car rentals booked at truebluetravel.com."
+      },
+      {
+        "category": "car_rental",
+        "rate": 3.0,
+        "portal_only": true,
+        "portal": "TrueBlue Travel",
+        "caveat": "Hotels and car rentals booked at truebluetravel.com."
+      },
+      {
+        "category": "dining",
+        "rate": 2.0,
+        "merchant_denylist": [
+          "doordash.com",
+          "ubereats.com",
+          "grubhub.com",
+          "seamless.com"
+        ],
+        "caveat": "Restaurants, bars and fast food, bought from directly. Delivery apps are third parties and earn 1X."
+      },
+      {
+        "category": "groceries",
+        "rate": 2.0,
+        "caveat": "Grocery stores and supermarkets. Barclays does not count Target or Walmart."
+      }
+    ]
+  },
+  "barclays-jetblue-plus": {
+    "id": "barclays-jetblue-plus",
+    "issuer": "barclays",
+    "network": "mastercard",
+    "currency": "jetblue",
+    "name": "JetBlue Plus Card",
+    "common": 73,
+    "annual_fee": 99,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://cards.barclaycardus.com/banking/cards/jetblue-plus-card/",
+    "caution": "Bonus points may not post when you pay through a digital wallet, PayPal or another third party.",
+    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48795). The 6X covers purchases billed by JetBlue through jetblue.com, JetBlue Vacations packages at jetbluevacations.com and bookings at truebluetravel.com. Only jetblue.com is in merchants.json: TrueBlue Travel, which sells hotels and car rentals, is modelled as a portal, as United's Renowned Hotels is, and JetBlue Vacations packages are not ranked. The 2X needs the purchase made directly at the restaurant or grocery store -- the rules withhold bonus points from purchases made through third parties -- so the delivery apps are denylisted on dining and instacart.com carries a barclays override.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 6.0,
+        "merchant_allowlist": [
+          "jetblue.com"
+        ],
+        "caveat": "Tickets, goods and services bought directly from JetBlue."
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 6.0,
+        "portal_only": true,
+        "portal": "TrueBlue Travel",
+        "caveat": "Hotels and car rentals booked at truebluetravel.com."
+      },
+      {
+        "category": "car_rental",
+        "rate": 6.0,
+        "portal_only": true,
+        "portal": "TrueBlue Travel",
+        "caveat": "Hotels and car rentals booked at truebluetravel.com."
+      },
+      {
+        "category": "dining",
+        "rate": 2.0,
+        "merchant_denylist": [
+          "doordash.com",
+          "ubereats.com",
+          "grubhub.com",
+          "seamless.com"
+        ],
+        "caveat": "Restaurants, bars and fast food, bought from directly. Delivery apps are third parties and earn 1X."
+      },
+      {
+        "category": "groceries",
+        "rate": 2.0,
+        "caveat": "Grocery stores and supermarkets. Barclays does not count Target or Walmart."
+      }
+    ]
+  },
+  "barclays-jetblue-premier": {
+    "id": "barclays-jetblue-premier",
+    "issuer": "barclays",
+    "network": "mastercard",
+    "currency": "jetblue",
+    "name": "JetBlue Premier Card",
+    "common": 82,
+    "annual_fee": 499,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://cards.barclaycardus.com/banking/cards/jetblue-premier-card/",
+    "caution": "Bonus points may not post when you pay through a digital wallet, PayPal or another third party.",
+    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48794). The 6X covers purchases billed by JetBlue through jetblue.com, JetBlue Vacations packages at jetbluevacations.com and bookings at truebluetravel.com. Only jetblue.com is in merchants.json: TrueBlue Travel, which sells hotels and car rentals, is modelled as a portal, as United's Renowned Hotels is, and JetBlue Vacations packages are not ranked. The 2X needs the purchase made directly at the restaurant or grocery store -- the rules withhold bonus points from purchases made through third parties -- so the delivery apps are denylisted on dining and instacart.com carries a barclays override.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 6.0,
+        "merchant_allowlist": [
+          "jetblue.com"
+        ],
+        "caveat": "Tickets, goods and services bought directly from JetBlue."
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 6.0,
+        "portal_only": true,
+        "portal": "TrueBlue Travel",
+        "caveat": "Hotels and car rentals booked at truebluetravel.com."
+      },
+      {
+        "category": "car_rental",
+        "rate": 6.0,
+        "portal_only": true,
+        "portal": "TrueBlue Travel",
+        "caveat": "Hotels and car rentals booked at truebluetravel.com."
+      },
+      {
+        "category": "dining",
+        "rate": 2.0,
+        "merchant_denylist": [
+          "doordash.com",
+          "ubereats.com",
+          "grubhub.com",
+          "seamless.com"
+        ],
+        "caveat": "Restaurants, bars and fast food, bought from directly. Delivery apps are third parties and earn 1X."
+      },
+      {
+        "category": "groceries",
+        "rate": 2.0,
+        "caveat": "Grocery stores and supermarkets. Barclays does not count Target or Walmart."
+      }
+    ]
+  },
+  "usaa-preferred-cash": {
+    "id": "usaa-preferred-cash",
+    "issuer": "usaa",
+    "network": "visa",
+    "currency": "cash",
+    "name": "USAA Preferred Cash Rewards",
+    "common": 69,
+    "annual_fee": 0,
+    "base_rate": 1.5,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.usaa.com/banking/credit-cards-public/cash-back/preferred-cash/",
+    "note": "The Preferred Cash Rewards Visa Signature: a flat 1.5% with no categories, per usaa.com on 2026-09-28, so an empty rules array is the correct model.",
+    "rules": []
+  },
+  "usaa-cashback-rewards-plus": {
+    "id": "usaa-cashback-rewards-plus",
+    "issuer": "usaa",
+    "network": "amex",
+    "currency": "cash",
+    "name": "USAA Cashback Rewards Plus Amex",
+    "common": 72,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.usaa.com/banking/credit-cards-public/cash-back/rewards-plus/",
+    "caution": "Also 5% on the first $5,000 a year at military bases -- commissaries and exchanges -- which is not ranked here.",
+    "note": "Rates and definitions read off the Reward Program Terms and Conditions (usaa.com/banking/terms/cashback-rewards-plus-amex-credit-card-reward-program/) on 2026-09-28. The two caps are separate and run per calendar year. Gas means gas stations; EV charging is not named, so ev_charging carries no rule. The military base category is merchants coded as selling on U.S. military bases, and no domain in merchants.json is one.",
+    "rules": [
+      {
+        "category": "gas",
+        "rate": 5.0,
+        "cap": {
+          "amount": 3000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "Gas stations."
+      },
+      {
+        "category": "groceries",
+        "rate": 3.0,
+        "cap": {
+          "amount": 3000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "Supermarkets. Wholesale clubs and discount stores such as Dollar General are excluded."
+      }
+    ]
+  },
+  "usaa-eagle-adapt": {
+    "id": "usaa-eagle-adapt",
+    "issuer": "usaa",
+    "network": "visa",
+    "currency": "cash",
+    "name": "USAA Eagle Adapt",
+    "common": 81,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.usaa.com/banking/credit-cards-public/cash-back/eagle-adapt/",
+    "caution": "The 3% stops at $3,000 of combined spend across all its categories each calendar quarter.",
+    "note": "Rates and category definitions read off its Reward Program Terms and Conditions (usaa.com/banking/terms/eagle-adapt-visa-credit-card-reward-program/) on 2026-09-28. Every eligible category earns 3% at once until the quarter's combined $3,000 is spent -- it is not a top-category card, despite the page's \"earn the most where you spend the most\" -- so each category carries the same shared cap. Points redeem at $0.01 for cash, so currency is 'cash'. Health and Wellness is drugstores, pharmacies, cosmetic stores and membership clubs: drugstore and fitness. Live Entertainment and Streaming names ticketing agencies, live events, amusement parks, concerts, cable, satellite and pay TV, radio and streaming: entertainment, streaming and internet_cable, though an internet-only bill may code elsewhere. Travel names third-party travel websites, so OTAs count. Network read off the card art.",
+    "rules": [
+      {
+        "category": "groceries",
+        "rate": 3.0,
+        "cap": {
+          "amount": 3000,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "Supermarkets; wholesale clubs are excluded. The $3,000 quarterly cap is combined across every 3% category."
+      },
+      {
+        "category": "dining",
+        "rate": 3.0,
+        "cap": {
+          "amount": 3000,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "The $3,000 quarterly cap is combined across every 3% category."
+      },
+      {
+        "category": "home_improvement",
+        "rate": 3.0,
+        "cap": {
+          "amount": 3000,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "Home improvement and home furnishings. The $3,000 quarterly cap is combined across every 3% category."
+      },
+      {
+        "category": "gas",
+        "rate": 3.0,
+        "cap": {
+          "amount": 3000,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "The $3,000 quarterly cap is combined across every 3% category."
+      },
+      {
+        "category": "ev_charging",
+        "rate": 3.0,
+        "cap": {
+          "amount": 3000,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "The $3,000 quarterly cap is combined across every 3% category."
+      },
+      {
+        "category": "travel_air",
+        "rate": 3.0,
+        "cap": {
+          "amount": 3000,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "The $3,000 quarterly cap is combined across every 3% category."
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 3.0,
+        "cap": {
+          "amount": 3000,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "Third-party travel websites count. The $3,000 quarterly cap is combined across every 3% category."
+      },
+      {
+        "category": "car_rental",
+        "rate": 3.0,
+        "cap": {
+          "amount": 3000,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "The $3,000 quarterly cap is combined across every 3% category."
+      },
+      {
+        "category": "travel_ground",
+        "rate": 3.0,
+        "cap": {
+          "amount": 3000,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "Transit: taxis, rideshare, buses, trains, parking and tolls. The $3,000 quarterly cap is combined across every 3% category."
+      },
+      {
+        "category": "drugstore",
+        "rate": 3.0,
+        "cap": {
+          "amount": 3000,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "Health and wellness. The $3,000 quarterly cap is combined across every 3% category."
+      },
+      {
+        "category": "fitness",
+        "rate": 3.0,
+        "cap": {
+          "amount": 3000,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "Membership clubs, under health and wellness. The $3,000 quarterly cap is combined across every 3% category."
+      },
+      {
+        "category": "entertainment",
+        "rate": 3.0,
+        "cap": {
+          "amount": 3000,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "Live events, ticketing agencies and amusement parks. The $3,000 quarterly cap is combined across every 3% category."
+      },
+      {
+        "category": "streaming",
+        "rate": 3.0,
+        "cap": {
+          "amount": 3000,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "The $3,000 quarterly cap is combined across every 3% category."
+      },
+      {
+        "category": "internet_cable",
+        "rate": 3.0,
+        "cap": {
+          "amount": 3000,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "Cable and satellite TV. The $3,000 quarterly cap is combined across every 3% category."
+      }
+    ]
+  },
+  "usaa-eagle-navigator": {
+    "id": "usaa-eagle-navigator",
+    "issuer": "usaa",
+    "network": "visa",
+    "currency": "usaa",
+    "name": "USAA Eagle Navigator",
+    "common": 78,
+    "annual_fee": 95,
+    "base_rate": 2.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.usaa.com/banking/credit-cards-public/rewards/travel-eagle-navigator/",
+    "caution": "Points are worth a cent each against travel booked through USAA, but 0.7 cents as cash.",
+    "note": "Rates and category definitions read off its Reward Program Terms and Conditions (usaa.com/banking/terms/usaa-eagle-navigator-visa-credit-card-reward-program/) on 2026-09-28. Travel names airlines, hotels, vacation rentals, cruise lines, travel agencies, third-party travel websites and car rental agencies; Transit names taxis, rideshares, buses, ferries, parking, tolls and passenger trains. No cap. The terms price 10,000 points at $100 in travel and $70 as cash for a holder of this card alone, so 'usaa' is valued at the travel figure -- the issuer-portal assumption Caddy's defaults make -- and the caution names the cash rate.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 3.0
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 3.0,
+        "caveat": "Third-party travel websites count."
+      },
+      {
+        "category": "car_rental",
+        "rate": 3.0
+      },
+      {
+        "category": "travel_ground",
+        "rate": 3.0,
+        "caveat": "Transit: taxis, rideshare, buses, trains, parking and tolls."
+      }
+    ]
+  },
+  "navyfederal-flagship-premier": {
+    "id": "navyfederal-flagship-premier",
+    "issuer": "navyfederal",
+    "network": "visa",
+    "currency": "cash",
+    "name": "Navy Federal Flagship Premier",
+    "common": 77,
+    "annual_fee": 95,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.navyfederal.org/loans-cards/credit-cards/flagship-premier-visa-signature.html",
+    "note": "The Flagship Premier Visa Signature, per navyfederal.org and its Rewards Program Description (NFCU 829B, 9-26) on 2026-09-28. Every point is worth $0.01 redeemed for cash, per that description, so currency is 'cash'. Travel is coded airline, hotel, car rental, bus lines, taxis, cruise lines, timeshares, parking, rideshare and transit, and no booking portal is required, so OTAs count. The original Flagship Rewards, 3X travel and 2X everything else, takes no new applications and is not modelled.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 4.0,
+        "caveat": "No booking portal needed."
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 4.0,
+        "caveat": "No booking portal needed; OTAs count."
+      },
+      {
+        "category": "car_rental",
+        "rate": 4.0
+      },
+      {
+        "category": "travel_ground",
+        "rate": 4.0,
+        "caveat": "Rideshare, taxis, transit, parking and tolls."
+      },
+      {
+        "category": "dining",
+        "rate": 3.0,
+        "caveat": "Restaurants. One inside a hotel, casino or store may earn 1X."
+      }
+    ]
+  },
+  "navyfederal-cashrewards": {
+    "id": "navyfederal-cashrewards",
+    "issuer": "navyfederal",
+    "network": "visa or mastercard",
+    "currency": "cash",
+    "name": "Navy Federal cashRewards",
+    "common": 65,
+    "annual_fee": 0,
+    "base_rate": 1.5,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.navyfederal.org/loans-cards/credit-cards/cash-rewards.html",
+    "note": "Navy Federal picks the product at approval: a credit limit under $5,000 gets cashRewards at 1.5%, $5,000 or more gets cashRewards Plus at 2%, per navyfederal.org on 2026-09-28. Both are issued as Visa or Mastercard -- the page links benefit guides for each -- so network says so. Flat rate, no categories.",
+    "rules": []
+  },
+  "navyfederal-cashrewards-plus": {
+    "id": "navyfederal-cashrewards-plus",
+    "issuer": "navyfederal",
+    "network": "visa or mastercard",
+    "currency": "cash",
+    "name": "Navy Federal cashRewards Plus",
+    "common": 71,
+    "annual_fee": 0,
+    "base_rate": 2.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.navyfederal.org/loans-cards/credit-cards/cash-rewards.html",
+    "caution": "Issued when the approved credit limit is $5,000 or more. Below that you get cashRewards, at 1.5%.",
+    "note": "The same application as cashRewards; the credit limit decides which card is issued, per navyfederal.org on 2026-09-28. Visa Signature or World Mastercard. Flat 2%, no categories.",
+    "rules": []
+  },
+  "navyfederal-more-rewards": {
+    "id": "navyfederal-more-rewards",
+    "issuer": "navyfederal",
+    "network": "amex",
+    "currency": "cash",
+    "name": "Navy Federal More Rewards Amex",
+    "common": 66,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.navyfederal.org/loans-cards/credit-cards/more-rewards.html",
+    "note": "Per navyfederal.org and its Rewards Program Description (NFCU 829B, 9-26) on 2026-09-28: 3 points per dollar on gas, transit, restaurants, food delivery and supermarkets, 1 elsewhere, no cap. Points are worth $0.01 as cash, so currency is 'cash'. Transit is defined as railway, ferries, taxi, limousines, bus lines, tolls and parking, which is travel_ground.",
+    "rules": [
+      {
+        "category": "dining",
+        "rate": 3.0,
+        "caveat": "Restaurants and food delivery."
+      },
+      {
+        "category": "groceries",
+        "rate": 3.0,
+        "caveat": "Supermarkets."
+      },
+      {
+        "category": "gas",
+        "rate": 3.0,
+        "caveat": "Gas bought at a superstore, supermarket or warehouse club may earn 1X."
+      },
+      {
+        "category": "travel_ground",
+        "rate": 3.0,
+        "caveat": "Transit: rail, taxis, buses, ferries, tolls and parking."
+      }
+    ]
+  },
+  "navyfederal-go-rewards": {
+    "id": "navyfederal-go-rewards",
+    "issuer": "navyfederal",
+    "network": "visa or mastercard",
+    "currency": "cash",
+    "name": "Navy Federal GO REWARDS",
+    "common": 76,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.navyfederal.org/loans-cards/credit-cards/go-rewards.html",
+    "note": "Per navyfederal.org and its Rewards Program Description (NFCU 829B, 9-26) on 2026-09-28: 3 points per dollar at restaurants, 2 on gas, 1 elsewhere, no cap; points are worth $0.01 as cash. Issued as Visa or Mastercard -- the page links benefit guides for both.",
+    "rules": [
+      {
+        "category": "dining",
+        "rate": 3.0,
+        "caveat": "Restaurants. One inside a hotel, casino or store may earn 1X."
+      },
+      {
+        "category": "gas",
+        "rate": 2.0,
+        "caveat": "Gas bought at a superstore, supermarket or warehouse club may earn 1X."
+      }
+    ]
+  },
+  "column-bilt-blue": {
+    "id": "column-bilt-blue",
+    "issuer": "column",
+    "network": "mastercard",
+    "currency": "bilt",
+    "name": "Bilt Blue Card",
+    "common": 70,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.bilt.com/card",
+    "caution": "Rent and mortgage points, Bilt Cash and partner-restaurant bonuses run through the Bilt app and are not ranked here.",
+    "note": "Issued by Column N.A. and serviced by Cardless, per bilt.com on 2026-09-28; issuer is keyed on the bank, as Apple Card's is. Rates read off bilt.com/card. The Bilt Card Offer Terms it links to download as a file rather than open as a page, so the category definitions behind these rates were NOT read -- re-read them before trusting anything beyond the headline rates. Portal rates need the Bilt Travel Portal and are modelled as a portal. The Lyft rate includes +2X that needs the Bilt and Lyft accounts linked, which is what requires_activation says. The bonus at 20,000 partner restaurants is a Bilt Neighborhood reward earned in person with a linked card, varies by restaurant and has no domain to rank on. Rent and mortgage points are paid through the Bilt app, and Bilt Cash is a separate currency spendable only with Bilt partners; neither is modelled. 'bilt' is valued at NerdWallet's baseline 1.25 cents, not its 1.8-cent transfer estimate.",
+    "rules": [
+      {
+        "category": "travel_ground",
+        "rate": 3.0,
+        "merchant_allowlist": [
+          "lyft.com"
+        ],
+        "requires_activation": true,
+        "caveat": "After linking your Bilt and Lyft accounts."
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 3.0,
+        "portal_only": true,
+        "portal": "Bilt Travel",
+        "caveat": "Hotels booked on the Bilt Travel Portal."
+      },
+      {
+        "category": "travel_air",
+        "rate": 2.0,
+        "portal_only": true,
+        "portal": "Bilt Travel",
+        "caveat": "Flights booked on the Bilt Travel Portal."
+      }
+    ]
+  },
+  "column-bilt-obsidian": {
+    "id": "column-bilt-obsidian",
+    "issuer": "column",
+    "network": "mastercard",
+    "currency": "bilt",
+    "name": "Bilt Obsidian Card",
+    "common": 79,
+    "annual_fee": 95,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.bilt.com/card",
+    "caution": "Rent and mortgage points, Bilt Cash and partner-restaurant bonuses run through the Bilt app and are not ranked here.",
+    "note": "Issued by Column N.A. and serviced by Cardless, per bilt.com on 2026-09-28; issuer is keyed on the bank, as Apple Card's is. Rates read off bilt.com/card. The Bilt Card Offer Terms it links to download as a file rather than open as a page, so the category definitions behind these rates were NOT read -- re-read them before trusting anything beyond the headline rates. Portal rates need the Bilt Travel Portal and are modelled as a portal. The Lyft rate includes +2X that needs the Bilt and Lyft accounts linked, which is what requires_activation says. The bonus at 20,000 partner restaurants is a Bilt Neighborhood reward earned in person with a linked card, varies by restaurant and has no domain to rank on. Rent and mortgage points are paid through the Bilt app, and Bilt Cash is a separate currency spendable only with Bilt partners; neither is modelled. 'bilt' is valued at NerdWallet's baseline 1.25 cents, not its 1.8-cent transfer estimate. The 3X is on ONE of dining or grocery, the cardholder's choice, which is what selection_group is for. \"Other travel\" at 2X is modelled on flights, hotels and car rentals; whether transit counts was not readable, so travel_ground carries only the Lyft rule.",
+    "user_config": {
+      "selections": [
+        {
+          "key": "three",
+          "label": "Your 3X category",
+          "max": 1,
+          "options": {
+            "dining": "Dining",
+            "grocery": "Grocery"
+          }
+        }
+      ]
+    },
+    "rules": [
+      {
+        "category": "dining",
+        "rate": 3.0,
+        "selection_group": "dining",
+        "caveat": "If dining is the 3X category you picked."
+      },
+      {
+        "category": "groceries",
+        "rate": 3.0,
+        "selection_group": "grocery",
+        "cap": {
+          "amount": 25000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "If grocery is the 3X category you picked."
+      },
+      {
+        "category": "travel_air",
+        "rate": 2.0,
+        "caveat": "Other travel, booked anywhere."
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 2.0,
+        "caveat": "Other travel, booked anywhere."
+      },
+      {
+        "category": "car_rental",
+        "rate": 2.0,
+        "caveat": "Other travel, booked anywhere."
+      },
+      {
+        "category": "travel_ground",
+        "rate": 3.0,
+        "merchant_allowlist": [
+          "lyft.com"
+        ],
+        "requires_activation": true,
+        "caveat": "After linking your Bilt and Lyft accounts."
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 4.0,
+        "portal_only": true,
+        "portal": "Bilt Travel",
+        "caveat": "Hotels booked on the Bilt Travel Portal."
+      },
+      {
+        "category": "travel_air",
+        "rate": 3.0,
+        "portal_only": true,
+        "portal": "Bilt Travel",
+        "caveat": "Flights booked on the Bilt Travel Portal."
+      }
+    ]
+  },
+  "column-bilt-palladium": {
+    "id": "column-bilt-palladium",
+    "issuer": "column",
+    "network": "mastercard",
+    "currency": "bilt",
+    "name": "Bilt Palladium Card",
+    "common": 80,
+    "annual_fee": 495,
+    "base_rate": 2.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.bilt.com/card",
+    "caution": "Rent and mortgage points, Bilt Cash and partner-restaurant bonuses run through the Bilt app and are not ranked here.",
+    "note": "Issued by Column N.A. and serviced by Cardless, per bilt.com on 2026-09-28; issuer is keyed on the bank, as Apple Card's is. Rates read off bilt.com/card. The Bilt Card Offer Terms it links to download as a file rather than open as a page, so the category definitions behind these rates were NOT read -- re-read them before trusting anything beyond the headline rates. Portal rates need the Bilt Travel Portal and are modelled as a portal. The Lyft rate includes +2X that needs the Bilt and Lyft accounts linked, which is what requires_activation says. The bonus at 20,000 partner restaurants is a Bilt Neighborhood reward earned in person with a linked card, varies by restaurant and has no domain to rank on. Rent and mortgage points are paid through the Bilt app, and Bilt Cash is a separate currency spendable only with Bilt partners; neither is modelled. 'bilt' is valued at NerdWallet's baseline 1.25 cents, not its 1.8-cent transfer estimate.",
+    "rules": [
+      {
+        "category": "travel_ground",
+        "rate": 4.0,
+        "merchant_allowlist": [
+          "lyft.com"
+        ],
+        "requires_activation": true,
+        "caveat": "After linking your Bilt and Lyft accounts."
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 4.0,
+        "portal_only": true,
+        "portal": "Bilt Travel",
+        "caveat": "Hotels booked on the Bilt Travel Portal."
+      },
+      {
+        "category": "travel_air",
+        "rate": 3.0,
+        "portal_only": true,
+        "portal": "Bilt Travel",
+        "caveat": "Flights booked on the Bilt Travel Portal."
       }
     ]
   }

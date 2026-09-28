@@ -35,9 +35,10 @@
     "issuer_overrides": {
       "amex": "other",
       "chase": "other",
-      "citi": "other"
+      "citi": "other",
+      "barclays": "other"
     },
-    "note": "third-party delivery; most issuers do NOT code this as a supermarket"
+    "note": "third-party delivery; most issuers do NOT code this as a supermarket. barclays added 2026-09-28: the JetBlue cards' reward rules withhold bonus points from purchases made through third parties"
   },
   "wholefoodsmarket.com": {
     "category": "groceries",

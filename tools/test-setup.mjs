@@ -32,10 +32,11 @@ eq('no picks: no currency earns a cents-per-point field', cur([]), []);
 // which is the test doing its job on its first run. Four since 2026-09-27: the
 // two BofA cards added then ask for the BofA Rewards tier and nothing else.
 // Five since 2026-09-28: Macy's asks for the Star Rewards status that sets its rate.
-eq('exactly five cards in the catalogue ask the user something',
+// Six later that day: Bilt Obsidian asks which of dining or grocery earns its 3X.
+eq('exactly six cards in the catalogue ask the user something',
    tunableCards(Object.keys(products).filter(k => !k.startsWith('_')), products),
    ['bofa-customized-cash', 'usbank-cash-plus', 'bofa-unlimited-cash', 'bofa-travel-rewards',
-    'citi-macys']);
+    'citi-macys', 'column-bilt-obsidian']);
 eq('a tier-only card earns the fine-tune step with no category to choose',
    ids(['bofa-unlimited-cash']), ['intro', 'cards', 'tune', 'mode']);
 

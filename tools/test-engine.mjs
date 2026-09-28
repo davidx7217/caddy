@@ -988,7 +988,7 @@ eq('...and its 5x hotels rate stays a portal note, never a ranking',
      cards.filter(p => !ISSUER[p.issuer] || !CURRENCY[p.currency]).map(p => p.id), []);
   eq('every card is ranked, 1 to the catalogue size, with no gaps and no repeats',
      cards.map(p => p.common).sort((a, b) => a - b), Array.from({ length: cards.length }, (_, i) => i + 1));
-  eq('...and there are 63 of them', cards.length, 63);
+  eq('...and there are 82 of them', cards.length, 82);
   // A store card that names a domain nothing resolves to could never rank at all.
   eq('every store a store card works at is in merchants.json',
      cards.flatMap(p => (p.only_at || []).filter(d => !merchants[d]).map(d => `${p.id}:${d}`)), []);
@@ -1279,6 +1279,93 @@ eq('IHG Premier: 10x at ihg.com, 5x on other travel, 3x on everything else',
    ['ihg.com', 'marriott.com', 'amazon.com'].map(h => tier('chase-ihg-premier', h).rate), [10, 5, 3]);
 eq('IHG Traveler: 5x at ihg.com, 3x on utilities, 2x on everything else',
    ['ihg.com', 'coned.com', 'amazon.com'].map(h => tier('chase-ihg-traveler', h).rate), [5, 3, 2]);
+
+// --- issuers Caddy did not cover, 2026-09-28 ---------------------------------
+// Synchrony's general-purpose cards, Barclays, USAA, Navy Federal and Bilt, each
+// read off its issuer's page that day.
+const picked = (id, h, selections) =>
+  run(h, [{ productId: id, config: { selections } }], { now: new Date('2026-09-28T12:00:00') }).all[0];
+
+eq('PayPal Cashback: 1.5% everywhere, its PayPal-checkout 3% left unranked',
+   ['amazon.com', 'target.com', 'doordash.com'].map(h => tier('synchrony-paypal-cashback', h).rate), [1.5, 1.5, 1.5]);
+eq('Venmo: 3% on dining, entertainment, streaming and health clubs',
+   ['doordash.com', 'ticketmaster.com', 'netflix.com', 'planetfitness.com'].map(h => tier('synchrony-venmo', h).rate),
+   [3, 3, 3, 3]);
+eq('...and 1% on everything else', tier('synchrony-venmo', 'kroger.com').rate, 1);
+eq('Sam\'s Club Mastercard: 5% on gas and EV charging, to $6,000 a year',
+   [tier('synchrony-sams-club', 'shell.us').rate, tier('synchrony-sams-club', 'evgo.com').caveats[0]],
+   [5, 'Capped at $6,000 per year, then 1x']);
+eq('...3% at samsclub.com and on dining, 1% at Costco',
+   ['samsclub.com', 'doordash.com', 'costco.com'].map(h => tier('synchrony-sams-club', h).rate), [3, 3, 1]);
+eq('OnePay CashRewards: 5% at walmart.com, 1.5% at Target',
+   [tier('synchrony-onepay', 'walmart.com').rate, tier('synchrony-onepay', 'target.com').rate], [5, 1.5]);
+
+eq('JetBlue Card: 3x at jetblue.com, worth 4.2%',
+   [tier('barclays-jetblue', 'jetblue.com').rate, tier('barclays-jetblue', 'jetblue.com').value], [3, 4.2]);
+eq('...1x on another airline', tier('barclays-jetblue', 'delta.com').rate, 1);
+eq('...2x at a restaurant and at a supermarket',
+   [tier('barclays-jetblue', 'chipotle.com').rate, tier('barclays-jetblue', 'kroger.com').rate], [2, 2]);
+eq('...but 1x through a delivery app or Instacart, which are third parties',
+   [tier('barclays-jetblue', 'doordash.com').rate, tier('barclays-jetblue', 'instacart.com').rate], [1, 1]);
+eq('...with TrueBlue Travel as a portal note on hotels',
+   store('hotels.com', 'barclays-jetblue').notes.map(n => n.text)[0],
+   'JetBlue Card: 3x (4.20%) if you book through TrueBlue Travel instead');
+eq('JetBlue Plus and Premier: 6x at jetblue.com, 2x at a supermarket',
+   [tier('barclays-jetblue-plus', 'jetblue.com').rate, tier('barclays-jetblue-premier', 'jetblue.com').rate,
+    tier('barclays-jetblue-plus', 'kroger.com').rate, tier('barclays-jetblue-premier', 'kroger.com').rate],
+   [6, 6, 2, 2]);
+
+eq('USAA Preferred Cash: 1.5% everywhere', tier('usaa-preferred-cash', 'amazon.com').rate, 1.5);
+eq('USAA Cashback Rewards Plus: 5% on gas and 3% at supermarkets, each to $3,000 a year',
+   [tier('usaa-cashback-rewards-plus', 'shell.us').rate, tier('usaa-cashback-rewards-plus', 'shell.us').caveats[0],
+    tier('usaa-cashback-rewards-plus', 'kroger.com').rate, tier('usaa-cashback-rewards-plus', 'kroger.com').caveats[0]],
+   [5, 'Capped at $3,000 per year, then 1x', 3, 'Capped at $3,000 per year, then 1x']);
+eq('...and 1% on EV charging, which it does not name', tier('usaa-cashback-rewards-plus', 'evgo.com').rate, 1);
+eq('USAA Eagle Adapt: 3% across all fourteen of its categories at once',
+   ['kroger.com', 'doordash.com', 'homedepot.com', 'shell.us', 'evgo.com', 'delta.com', 'hotels.com', 'hertz.com',
+    'uber.com', 'cvs.com', 'planetfitness.com', 'ticketmaster.com', 'netflix.com', 'xfinity.com']
+     .map(h => tier('usaa-eagle-adapt', h).rate), Array(14).fill(3));
+eq('...under one $3,000 quarterly cap', tier('usaa-eagle-adapt', 'kroger.com').caveats[0],
+   'Capped at $3,000 per quarter, then 1x');
+eq('...and 1% elsewhere, wholesale clubs included',
+   [tier('usaa-eagle-adapt', 'amazon.com').rate, tier('usaa-eagle-adapt', 'costco.com').rate], [1, 1]);
+eq('USAA Eagle Navigator: 3x on travel and transit, 2x elsewhere, at a cent a point',
+   ['delta.com', 'hotels.com', 'hertz.com', 'uber.com', 'amazon.com'].map(h => tier('usaa-eagle-navigator', h).value),
+   [3, 3, 3, 3, 2]);
+
+eq('Navy Federal Flagship Premier: 4x on travel with no portal, 3x on dining, 1x elsewhere',
+   ['delta.com', 'hotels.com', 'hertz.com', 'uber.com', 'doordash.com', 'amazon.com']
+     .map(h => tier('navyfederal-flagship-premier', h).rate), [4, 4, 4, 4, 3, 1]);
+eq('Navy Federal cashRewards 1.5%, cashRewards Plus 2%',
+   [tier('navyfederal-cashrewards', 'amazon.com').rate, tier('navyfederal-cashrewards-plus', 'amazon.com').rate],
+   [1.5, 2]);
+eq('Navy Federal More Rewards: 3x on dining, supermarkets, gas and transit',
+   ['doordash.com', 'kroger.com', 'shell.us', 'uber.com', 'amazon.com']
+     .map(h => tier('navyfederal-more-rewards', h).rate), [3, 3, 3, 3, 1]);
+eq('Navy Federal GO REWARDS: 3x at restaurants, 2x on gas',
+   ['chipotle.com', 'shell.us', 'amazon.com'].map(h => tier('navyfederal-go-rewards', h).rate), [3, 2, 1]);
+
+eq('Bilt Blue: 1x everywhere, worth 1.25%',
+   [tier('column-bilt-blue', 'amazon.com').rate, tier('column-bilt-blue', 'amazon.com').value], [1, 1.25]);
+eq('...3x on Lyft once the accounts are linked, and says so',
+   [tier('column-bilt-blue', 'lyft.com').rate, tier('column-bilt-blue', 'lyft.com').needsActivation], [3, true]);
+eq('...but not on Uber', tier('column-bilt-blue', 'uber.com').rate, 1);
+eq('...with Bilt Travel as a portal note, 3x on hotels and 2x on flights',
+   [store('hilton.com', 'column-bilt-blue').notes.map(n => n.text)[0],
+    store('delta.com', 'column-bilt-blue').notes.map(n => n.text)[0]],
+   ['Bilt Blue Card: 3x (3.75%) if you book through Bilt Travel instead',
+    'Bilt Blue Card: 2x (2.50%) if you book through Bilt Travel instead']);
+eq('Bilt Obsidian: 3x on whichever of dining or grocery you pick, and only that one',
+   [picked('column-bilt-obsidian', 'doordash.com', ['dining']).rate,
+    picked('column-bilt-obsidian', 'kroger.com', ['dining']).rate,
+    picked('column-bilt-obsidian', 'kroger.com', ['grocery']).rate,
+    picked('column-bilt-obsidian', 'doordash.com', ['grocery']).rate], [3, 1, 3, 1]);
+eq('...grocery capped at $25,000 a year', picked('column-bilt-obsidian', 'kroger.com', ['grocery']).caveats[0],
+   'Capped at $25,000 per year, then 1x');
+eq('...and 2x on other travel, booked anywhere',
+   ['delta.com', 'hotels.com', 'hertz.com'].map(h => tier('column-bilt-obsidian', h).rate), [2, 2, 2]);
+eq('Bilt Palladium: 2x everywhere, 4x on linked Lyft',
+   [tier('column-bilt-palladium', 'amazon.com').rate, tier('column-bilt-palladium', 'lyft.com').rate], [2, 4]);
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
