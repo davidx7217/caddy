@@ -1,6 +1,6 @@
 # Handoff
 
-Where Caddy stands as of **13 September 2026**, and what is left.
+Where Caddy stands as of **27 September 2026**, and what is left.
 
 Written to be picked up cold. The README is the reference for how the extension
 works and why; this file is only the state of play.
@@ -9,10 +9,11 @@ works and why; this file is only the state of play.
 
 ## State
 
-- **v1.0.0**, 20 cards across 9 issuers, 83 merchant rows, 19 categories.
+- **v1.0.0**, 40 cards across 10 issuers, 139 merchant rows, 27 categories.
+  The second twenty cards landed 2026-09-27; see section 6.
 - **Every card verified** against its issuer's own page, each carrying a
   `source_url` and the date it was read.
-- **Tests green**: 285 engine + 24 setup + 49 lifecycle + 40 worker. `npm test`.
+- **Tests green**: 378 engine + 25 setup + 49 lifecycle + 40 worker. `npm test`.
 - **Nothing unpushed, nothing untracked.** All three store screenshots are
   current, so nothing is blocking submission any more.
 - **`caddy-1.0.0.zip` sits in the repo root**, rebuilt on every commit. See the
@@ -168,14 +169,52 @@ the README and a real person's card list.
   `node tools/check-redirects-browser.mjs` does the HTTP pass first and browses
   whatever it could not confirm. Do not use `--headless`: measured 2026-09-10, it
   reported a moved row as CLEAN.
-- **`department_store` and `utilities` are closed**, both by U.S. Bank Cash+. The
-  category audit runs clean in both directions. Re-run it whenever a card or a
-  category is added: rules without merchants are dead, merchants without rules
-  are inert.
-- **Amex Platinum and Citi Custom Cash are deliberately absent.** Platinum's fee
-  and base rate could not be read off americanexpress.com; Custom Cash pays 5% on
-  whichever category you spent most in that cycle, which is not knowable from a
-  domain. Both are recorded in the README with the reasoning.
+- **The category audit is a test now**, in `test-engine.mjs`, both directions:
+  rules without merchants are dead, merchants without rules are inert. Adding a
+  card or a category that leaves either behind fails `npm test` and names it.
+- **Citi Custom Cash is deliberately absent.** It pays 5% on whichever category
+  you spent most in that cycle, which is not knowable from a domain, and Citi
+  stopped taking applications, so its terms can no longer be read off the issuer.
+  Amex Platinum, the other absentee, went in on 2026-09-27 once its page stated a
+  fee and a base rate.
+
+---
+
+## 6. The second twenty cards, 27 September 2026
+
+Added as ranks 21 to 40 of `common`, each read off its issuer's page that day:
+Apple Card, Costco Anywhere Visa, Venture X, Amex Platinum, Delta SkyMiles Gold,
+Southwest Rapid Rewards Plus, United Explorer, BofA Unlimited Cash Rewards, BofA
+Travel Rewards, VentureOne, Wells Fargo Autograph, Marriott Bonvoy Boundless,
+Hilton Honors Amex, Citi Strata Premier, Citi AAdvantage Platinum Select, Discover
+it Chrome, Chase Freedom Rise, Ink Business Unlimited, Ink Business Preferred and
+Amex Blue Business Plus.
+
+What they changed about the categories, all pinned in `test-engine.mjs`:
+
+- **Eight new categories**: `car_rental`, `electronics`, `clothing`,
+  `sporting_goods`, `fitness`, `shipping`, `advertising`, and `phone_internet`
+  split into `phone` and `internet_cable`. Each has merchant rows; 56 were added.
+- **Existing cards reorganised to match their issuers' definitions**: Blue Cash
+  Everyday's online retail and BofA Customized Cash's Online Shopping are
+  channels, so both now pay across the store categories; Cash+ gained its four
+  missing 5% picks; car rentals joined Sapphire Preferred's 2x travel and the
+  Capital One, Citi and Amex Gold portal rates. The README has the reasoning.
+- **Two engine changes**: a portal rule now pays only on its own category unless
+  it is filed under `travel_portal`, and a relationship tier multiplies portal
+  rates as well as everything else.
+- **BofA Rewards replaced Preferred Rewards** on 2026-05-26. All three BofA cards
+  use the new five-step tier picker; users who saved a tier keep the same number.
+
+Left open, for you:
+
+- `bhphotovideo.com` and `microcenter.com` answered a Cloudflare challenge in the
+  browser sweep and are unconfirmed. `node tools/check-redirects-browser.mjs`
+  may get through where the in-app browser could not.
+- Nobody has watched the dock on the new merchants. Gym, carrier and shipping
+  homepages may carry a price or a cart link and mount it on marketing pages.
+- Wholesale clubs are left out of Blue Cash Everyday's online retail until card
+  acceptance at each club is checked; see the card's `note`.
 
 ---
 
