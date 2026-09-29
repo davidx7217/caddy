@@ -32,10 +32,6 @@ works and why; this file is only the state of play.
   screenshots are still current -- the new cards rank after the ones they show.
 - **`caddy-1.0.0.zip` sits in the repo root**, rebuilt on every commit. See the
   packaging note below.
-- **`caddy-1.0.0/` in the root is untracked and STALE**: an unzip of the build
-  made 2026-09-27 21:24, before any of this week's work -- 20 cards, no setup
-  resume, no store cards. If Chrome has that folder loaded, it is running old
-  code. Load the repo root instead, or delete the folder and unzip a fresh one.
 - **Rules David decided 2026-09-28.** A store rate is what the card adds over
   whatever the store's free program pays members with any card (section 11). Keep
   extension text minimal: one-line cautions, and rule caveats short or absent,
@@ -48,8 +44,6 @@ works and why; this file is only the state of play.
   private vulnerability reporting, switched on 2026-09-29 (a repository setting,
   not a file). Nothing in the tree or its history is secret, but every commit
   carries David's Gmail address as author.
-- **One stray branch**: `second-twenty-cards`, merged long ago, still exists
-  locally and on GitHub. Safe to delete.
 
 ---
 
