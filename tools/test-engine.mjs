@@ -226,7 +226,7 @@ eq('unknown domain resolves to null', resolveMerchant('some-random-site.example'
 // --- CSR verified against chase.com 2026-08-29 ---------------------------
 {
   const csr = products['chase-sapphire-reserve'];
-  eq('CSR is now a verified record', [csr.verified, csr.last_verified], [true, '2026-08-29']);
+  eq('CSR is now a verified record', [csr.verified, csr.last_verified], [true, '2026-09-28']);
   const r = run('lyft.com');
   eq('CSR 5x Lyft applies inside the open-ended window', card(r, 'chase-sapphire-reserve').rate, 5);
   eq('and it wins rideshare at 7.5%', r.winner.productId, 'chase-sapphire-reserve');

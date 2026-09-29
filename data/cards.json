@@ -14,7 +14,7 @@
     "annual_fee": 795,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-08-29",
+    "last_verified": "2026-09-28",
     "source_url": "https://creditcards.chase.com/rewards-credit-cards/sapphire/reserve",
     "rules": [
       {
@@ -84,7 +84,7 @@
     "annual_fee": 0,
     "base_rate": 1.5,
     "verified": true,
-    "last_verified": "2026-08-29",
+    "last_verified": "2026-09-28",
     "source_url": "https://creditcards.chase.com/cash-back-credit-cards/freedom/unlimited",
     "rules": [
       {
@@ -208,7 +208,7 @@
     "annual_fee": 0,
     "base_rate": 3.0,
     "verified": true,
-    "last_verified": "2026-08-29",
+    "last_verified": "2026-09-28",
     "source_url": "https://robinhood.com/creditcard/",
     "note": "Third-party sites report 5% on travel booked through a Robinhood travel portal; robinhood.com did NOT confirm it, so it is deliberately not modelled. Verify before adding.",
     "rules": [],
@@ -449,7 +449,7 @@
     "annual_fee": 95,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-09-09",
+    "last_verified": "2026-09-28",
     "source_url": "https://www.americanexpress.com/us/credit-cards/card/blue-cash-preferred/",
     "caution": "$0 annual fee the first year, then $95. The 6% groceries rate stops at $6,000 a year, which is roughly $115 a week.",
     "rules": [
@@ -486,7 +486,7 @@
     "annual_fee": 0,
     "base_rate": 2.0,
     "verified": true,
-    "last_verified": "2026-09-09",
+    "last_verified": "2026-09-28",
     "source_url": "https://www.citi.com/credit-cards/citi-double-cash-credit-card",
     "caution": "The 2% is 1% when you buy and 1% again as you pay. Carry a balance and the second half is delayed, so the flat rate this ranks on assumes you pay in full.",
     "note": "Added in place of Citi Custom Cash, which citi.com states it stopped accepting applications for on 2026-05-28 and which therefore cannot be verified from the issuer any more. Citi names this card as the replacement. Rewards are ThankYou Points; the default 1.4 cpp valuation assumes transfers, and points redeemed as statement credit are worth 1.0 -- override in Options. The 5x Citi Travel rate names hotels, car rentals and attractions and not flights, so since 2026-09-27 it is filed under travel_hotel and car_rental rather than travel_portal, which would have put a 5x note on airline sites.",
@@ -517,7 +517,7 @@
     "annual_fee": 0,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-09-09",
+    "last_verified": "2026-09-28",
     "source_url": "https://www.capitalone.com/credit-cards/savor/",
     "note": "Currency is 'cash', not 'c1'. This is a cash back card; the 1.4 cpp 'c1' valuation belongs to the Venture miles family and would overstate this card by 40%. Also earns 8% on the Capital One Entertainment ticketing platform, which is not modelled: it is a single first-party storefront, not a category.",
     "rules": [
@@ -565,7 +565,7 @@
     "annual_fee": 0,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-09-09",
+    "last_verified": "2026-09-28",
     "source_url": "https://www.discover.com/credit-cards/cash-back/cashback-calendar.html",
     "caution": "Each quarter's 5% must be ACTIVATED with Discover, and it stops at $1,500 of spend in that quarter.",
     "note": "Unlike Chase, Discover publishes the whole year's calendar in advance, so Q4 2026 is modelled here already and this card will not go stale on 2026-10-01. Past quarters are deliberately NOT modelled: an expired rule with no current rule in its category would fire a staleness warning that is noise, since the quarter ended on schedule. First-year Cashback Match is not modelled either -- it doubles everything at year end and needs spend tracking.",
