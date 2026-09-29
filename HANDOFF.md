@@ -1,6 +1,6 @@
 # Handoff
 
-Where Caddy stands as of **28 September 2026**, and what is left.
+Where Caddy stands as of **29 September 2026**, and what is left.
 
 Written to be picked up cold. The README is the reference for how the extension
 works and why; this file is only the state of play.
@@ -15,13 +15,19 @@ works and why; this file is only the state of play.
   thirteen business cards, eight smaller store cards, seven missing tiers,
   sixteen more Barclays co-brands and fourteen co-branded business cards, on
   2026-09-28. See sections 6, 7 and 9 to 14.
-- **Every card verified** against its issuer's own page, each carrying a
-  `source_url` and the date it was read. The one soft spot: the three Bilt cards'
-  category definitions were not readable (section 9).
-- **Tests green**: 537 engine + 31 setup + 49 lifecycle + 45 worker. `npm test`.
-- **Two scheduled agents keep the data current** (section 15). Rate changes they
-  find wait on `rates-*` and `upkeep-*` branches for David's approval; only
-  `last_verified` date bumps land on `main` by themselves.
+- **Every card audited 2026-09-29** (section 16): all 140 read against their
+  issuer's own pages -- fourteen of them only in the in-app browser -- and every
+  card ranked on every merchant row. The fixes it found are merged. The one soft
+  spot left: the three Bilt cards' category definitions (section 9).
+- **28 merchant rows record how they actually code** (`mcc`, `mcc_source`); the
+  other 134 are still unverified seed data (section 16).
+- **Freedom Flex carries Q4 2026 and Q1 2027**, dining 7X in Q4 (section 2). Rates
+  switch at local midnight even in a tab left open.
+- **Tests green**: 573 engine + 31 setup + 54 lifecycle + 47 worker. `npm test`.
+- **Two scheduled agents keep the data current** (section 15), and run without
+  permission prompts. Rate changes they find wait on `rates-*` and `upkeep-*`
+  branches for David's approval; only `last_verified` date bumps land on `main`
+  by themselves.
 - **Nothing unpushed.** `main` on GitHub is the whole tree. All three store
   screenshots are still current -- the new cards rank after the ones they show.
 - **`caddy-1.0.0.zip` sits in the repo root**, rebuilt on every commit. See the
@@ -30,10 +36,13 @@ works and why; this file is only the state of play.
   made 2026-09-27 21:24, before any of this week's work -- 20 cards, no setup
   resume, no store cards. If Chrome has that folder loaded, it is running old
   code. Load the repo root instead, or delete the folder and unzip a fresh one.
-- **Two rules decided 2026-09-28, both David's call.** A store rate is what the
-  card adds over whatever the store's free program pays members with any card
-  (section 11). And keep extension text minimal: one-line cautions, and rule
-  caveats short or absent, because they print in the popup.
+- **Rules David decided 2026-09-28.** A store rate is what the card adds over
+  whatever the store's free program pays members with any card (section 11). Keep
+  extension text minimal: one-line cautions, and rule caveats short or absent,
+  because they print in the popup. The extension must never tell a user its
+  rotating categories are out of date -- a quarter goes in the day the issuer
+  posts it. And every rate and mapping rests on the issuer's own definitions,
+  researched as thoroughly as possible.
 - **One stray branch**: `second-twenty-cards`, merged long ago, still exists
   locally and on GitHub. Safe to delete.
 
@@ -41,13 +50,28 @@ works and why; this file is only the state of play.
 
 ## Start here
 
-In order. The first is dated; the second needs a real install, so it is David's.
+In order. The first two wait on David's decisions; the third is dated.
 
-1. **Approve pending `rates-*` branches** (`git branch --list 'rates-*'`). The
-   first is Freedom Flex's Q4 2026 categories, due before its Q3 ones expire
-   2026-09-30. Sections 2 and 15.
-2. **Hand checks only a real install can do.** Load unpacked from the repo root,
-   then:
+1. **Three changes the merchant-code evidence supports, none applied** (section
+   16). Each needs David's yes:
+   - Autograph's 3X pay-TV rule at xfinity.com, spectrum.com, cox.com,
+     optimum.com and audible.com. About 10 minutes.
+   - The Gap Encore Mastercard's 3X "apparel" without tjmaxx.tjx.com,
+     marshalls.com and nike.com. About 10 minutes.
+   - A `travel_agency` category for the booking sites, so each card says whether
+     they count. One to two hours: it touches every travel card.
+2. **The Chrome Web Store submission is blocked.** The listing links the privacy
+   policy at github.com/davidx7217/card-picker/blob/main/store/privacy-policy.md,
+   which returns 404 because the repo is private (checked 2026-09-29). Make the
+   repo public or host the policy elsewhere, then section 1.
+3. **Check the agents' first scheduled runs**: the rates keeper on Thursday
+   2026-10-01 at 8:15 and the monthly upkeep on 2026-10-02 at 10:30. Each should
+   finish without stopping for approval (section 15); review any `rates-*` or
+   `upkeep-*` branch it leaves. The fourteen browser-only cards will show as
+   unreadable -- expected (section 16).
+4. **Hand checks only a real install can do.** Reload Caddy in
+   `chrome://extensions` first, so the installed copy has Q4. Load unpacked from
+   the repo root, then:
    - Remove and re-add Caddy, close setup on Your cards, click the toolbar icon:
      setup should reopen on Your cards (`runtime.getContexts` and the popup
      closing on focus change were only verified against stubs).
@@ -60,7 +84,8 @@ In order. The first is dated; the second needs a real install, so it is David's.
      rows -- and note any that mount the dock on a marketing page.
    - `node tools/check-redirects-browser.mjs` to confirm `bhphotovideo.com` and
      `microcenter.com`, which met a Cloudflare challenge.
-3. **Keep widening coverage, with the recipe in section 8.** By a rough
+5. **Continue the merchant-code evidence**, about fifteen rows a batch, method in
+   section 16, then **keep widening coverage, with the recipe in section 8.** By a rough
    bank-by-bank judgment made before section 9's cards -- no public data exists
    per card -- Caddy covered about 55-60% of US rewards-card spending. The
    issuers it lacked, the general-purpose business cards, the smaller store
@@ -71,23 +96,21 @@ In order. The first is dated; the second needs a real install, so it is David's.
    - **Cruise and timeshare categories**, if you want them: without them
      Carnival's 3X and the RCI and Capital Vacations 5X go unranked, and adding
      either means a rule on every card whose travel covers it (section 13).
+   - **The Kroger Rewards World Elite Mastercard** (First Bank & Trust, launched
+     2026-09-24), which the monthly scout logged.
 
    Loose ends, each small, each explained in its section:
-   - **Wyndham Earner's 3X on gas and EV charging** follows the Reward Rules,
-     which the product page's summary leaves out (section 13).
+   - **Wyndham Earner's 3X** follows the Reward Rules; its own product page says
+     2X in one place and 3X in another (sections 13 and 16).
    - **GM points are valued at a full cent**, GM's own figure, though they spend
      only with GM, so the GM card reads 3% everywhere (section 13).
    - **U.S. Bank Altitude points** are assumed to be worth a cent; no U.S. Bank
      page states a figure (section 12).
    - **Bilt's offer terms** were never readable -- the link downloads a file --
      so Obsidian's "other travel" is unconfirmed (section 9).
-   - **Target's member rate** was not re-read: target.com showed a press-and-hold
-     bot check. Its card's 5% off is card-only either way (section 11).
    - **Amex Business Gold's 4X** is a caution, not rules, because it follows the
      business's top two categories. A Cash+-style picker is the alternative if
      David wants it (section 10).
-4. **Submit to the Chrome Web Store** -- section 1, unchanged. The listing's
-   counts were kept current through this week.
 
 ---
 
@@ -752,6 +775,34 @@ the booking sites, the cable and phone companies, the off-price stores, Nike,
 Wayfair, HomeGoods, StubHub, Audible, YouTube, Starbucks, and the rows the Cash+
 recheck leaned on. The engine does not read either field; a test keeps every `mcc`
 four digits with a source beside it. Next: the other 134 rows, a batch at a time.
+
+**How to continue it** -- what worked on 2026-09-29:
+- In the in-app browser, open awardwallet.com/merchants, find the "Merchant Name"
+  box and type the merchant. The newest `POST /api/merchants/data` response in
+  the network log lists every billing-name variant with an id and a category.
+  Open `awardwallet.com/merchants/<nameToUrl>` for the main variant and read the
+  line "has been seen to be coded as": a Chase label is the Visa code's own
+  description ("Discount stores" is 5310). Leave the cookie banner unaccepted.
+  Never call those endpoints outside the page -- a plain request is refused, and
+  it would be scraping.
+- Write the rows with a short script: `data/merchants.json` round-trips exactly
+  through `json.dumps(d, indent=2, ensure_ascii=False)` plus a newline, so the
+  diff stays to the new fields.
+- What every card pays on every merchant row, with every picker option on -- the
+  audit's main view, and the fastest way to spot a wrong mapping:
+
+      node --input-type=module -e "
+      import {readFileSync} from 'node:fs'; import {rank} from './src/engine.js';
+      const L=n=>JSON.parse(readFileSync('data/'+n+'.json','utf8')), P=L('cards'), M=L('merchants'), V=L('valuations');
+      const I=Object.keys(P).filter(k=>!k.startsWith('_')).map(id=>({productId:id,config:{selections:(P[id].user_config?.selections||[]).flatMap(g=>Object.keys(g.options))}}));
+      for (const d of Object.keys(M).filter(k=>!k.startsWith('_'))) console.log(d+':', rank({hostname:d,merchants:M,products:P,instances:I,valuations:V,now:new Date()}).all.filter(e=>e.matchedCategory).sort((a,b)=>b.rate-a.rate).map(e=>e.productId+' '+e.rate+'x').join(', '));
+      "
+
+- Amex pages overflow WebFetch: read them raw (curl, strip the HTML) or in the
+  browser. USAA and the store-card pages render in script: in-app browser, and
+  wait about five seconds after each load before reading.
+- Before breaking a test on purpose, copy the data file aside. `git checkout`
+  restores the last commit, not uncommitted work -- that wiped this batch once.
 
 **What the evidence says should change**, none of it applied yet:
 - Autograph's 3X pay-TV rule should reach xfinity.com, spectrum.com, cox.com and
