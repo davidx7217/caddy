@@ -121,6 +121,41 @@
     "category": "online_retail",
     "confidence": "medium"
   },
+  "barnesandnoble.com": {
+    "category": "online_retail",
+    "confidence": "high",
+    "note": "Barnes & Noble's own site; bn.com redirects here. Books, filed as online retail: Caddy has no bookstore category"
+  },
+  "accessories.chevrolet.com": {
+    "category": "online_retail",
+    "confidence": "medium",
+    "note": "GM's accessories store for the brand. An exact host, so the rest of the brand's site -- vehicle shopping, bought at dealers -- is not a merchant"
+  },
+  "accessories.buick.com": {
+    "category": "online_retail",
+    "confidence": "medium",
+    "note": "GM's accessories store for the brand. An exact host, so the rest of the brand's site -- vehicle shopping, bought at dealers -- is not a merchant"
+  },
+  "accessories.gmc.com": {
+    "category": "online_retail",
+    "confidence": "medium",
+    "note": "GM's accessories store for the brand. An exact host, so the rest of the brand's site -- vehicle shopping, bought at dealers -- is not a merchant"
+  },
+  "accessories.cadillac.com": {
+    "category": "online_retail",
+    "confidence": "medium",
+    "note": "GM's accessories store for the brand. An exact host, so the rest of the brand's site -- vehicle shopping, bought at dealers -- is not a merchant"
+  },
+  "gmparts.com": {
+    "category": "online_retail",
+    "confidence": "medium",
+    "note": "GM Genuine and ACDelco parts. The store itself is parts.gmparts.com, which the suffix walk covers"
+  },
+  "gmcompanystore.com": {
+    "category": "online_retail",
+    "confidence": "medium",
+    "note": "GM's official merchandise store for all four brands"
+  },
   "newegg.com": {
     "category": "electronics",
     "confidence": "medium"

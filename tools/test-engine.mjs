@@ -988,7 +988,7 @@ eq('...and its 5x hotels rate stays a portal note, never a ranking',
      cards.filter(p => !ISSUER[p.issuer] || !CURRENCY[p.currency]).map(p => p.id), []);
   eq('every card is ranked, 1 to the catalogue size, with no gaps and no repeats',
      cards.map(p => p.common).sort((a, b) => a - b), Array.from({ length: cards.length }, (_, i) => i + 1));
-  eq('...and there are 120 of them', cards.length, 120);
+  eq('...and there are 126 of them', cards.length, 126);
   // A store card that names a domain nothing resolves to could never rank at all.
   eq('every store a store card works at is in merchants.json',
      cards.flatMap(p => (p.only_at || []).filter(d => !merchants[d]).map(d => `${p.id}:${d}`)), []);
@@ -1548,6 +1548,29 @@ eq('Miles & More: 2x at the five partner airlines that fly to the US, worth 2.4%
    ['lufthansa.com', 'swiss.com', 'austrian.com', 'brusselsairlines.com', 'lot.com']
      .map(h => tier('barclays-miles-more', h)?.value), Array(5).fill(2.4));
 eq('...1x on another airline', tier('barclays-miles-more', 'united.com')?.rate, 1);
+
+// GM, Carnival, Barnes & Noble, Breeze, RCI and Capital Vacations, the rest of
+// Barclays' list, read the same way that day.
+eq('GM Rewards: 7x at GM\'s own web stores, 3x everywhere else',
+   ['accessories.chevrolet.com', 'accessories.cadillac.com', 'parts.gmparts.com', 'www.gmcompanystore.com',
+    'amazon.com', 'doordash.com'].map(h => tier('barclays-gm-rewards', h)?.rate), [7, 7, 7, 7, 3, 3]);
+eq('...where chevrolet.com itself is not a merchant: vehicles are bought at dealers',
+   resolveMerchant('www.chevrolet.com', merchants), null);
+eq('Carnival Rewards: 2x at a restaurant and a supermarket, 1x through a delivery app',
+   ['chipotle.com', 'kroger.com', 'doordash.com'].map(h => tier('barclays-carnival', h)?.rate), [2, 2, 1]);
+eq('...worth 1.84% at 0.92 cents a point', tier('barclays-carnival', 'chipotle.com')?.value, 1.84);
+eq('Barnes & Noble: 5% back at barnesandnoble.com, found through www. as well',
+   ['barnesandnoble.com', 'www.barnesandnoble.com'].map(h => tier('barclays-barnes-noble', h)?.value), [5, 5]);
+eq('...2x at a restaurant, 1x through a delivery app and at another online store',
+   ['chipotle.com', 'doordash.com', 'amazon.com'].map(h => tier('barclays-barnes-noble', h)?.rate), [2, 1, 1]);
+eq('Breeze Easy: 2x at a restaurant and a supermarket, 1x on airfare, its fare bundles left to the caution',
+   ['chipotle.com', 'kroger.com', 'delta.com'].map(h => tier('barclays-breeze', h)?.rate), [2, 2, 1]);
+eq('RCI and Capital Vacations: 2% on travel, OTAs included, rideshare, gas and EV charging',
+   ['barclays-rci', 'barclays-capital-vacations'].flatMap(id =>
+     ['delta.com', 'marriott.com', 'hotels.com', 'hertz.com', 'uber.com', 'shell.us', 'evgo.com']
+       .map(h => tier(id, h)?.rate)), Array(14).fill(2));
+eq('...and 1% elsewhere', ['barclays-rci', 'barclays-capital-vacations'].map(id => tier(id, 'chipotle.com')?.rate),
+   [1, 1]);
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

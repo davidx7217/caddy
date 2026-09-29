@@ -1,9 +1,9 @@
 {
   "_note_field": "MAINTAINER-ONLY. `note` records why a card is modelled the way it is -- provenance, schema reasoning, what was deliberately not modelled. Never render it in the UI. `caution` is the user-facing field.",
-  "_business_note": "`business` marks a card issued on business underwriting rather than personal. Absent means personal -- only the field's presence is meaningful, so there is nothing to keep in sync on a hundred and three records. It filters the catalogue and nothing else reads it: the ranker does not care whose name is on the account.",
-  "_common_note": "`common` is a POPULARITY RANK, 1 to 120, and it is EDITORIAL. There is no public card-level ranking of US cardholders -- Nilson publishes issuer volume, not how many people hold a Freedom Unlimited -- so this is judgement, not a sourced fact, and it is the only field here that is. It orders the setup picker so a new user meets mass-market cards first. 21 to 40 were added on 2026-09-27 as the next twenty after the first, 41 to 63 on 2026-09-28 -- store cards, then the remaining tiers of airline and hotel programs already present -- 64 to 82 later that day, the cards of issuers Caddy did not yet cover, 83 to 95 after those, business cards, 96 to 103, smaller store cards, 104 to 110, the missing tiers of covered programs, and 111 to 120, Barclays' other co-branded cards, so each batch ranks below the one before by construction. Re-rank it freely; nothing computes from it.",
+  "_business_note": "`business` marks a card issued on business underwriting rather than personal. Absent means personal -- only the field's presence is meaningful, so there is nothing to keep in sync on a hundred and nine records. It filters the catalogue and nothing else reads it: the ranker does not care whose name is on the account.",
+  "_common_note": "`common` is a POPULARITY RANK, 1 to 126, and it is EDITORIAL. There is no public card-level ranking of US cardholders -- Nilson publishes issuer volume, not how many people hold a Freedom Unlimited -- so this is judgement, not a sourced fact, and it is the only field here that is. It orders the setup picker so a new user meets mass-market cards first. 21 to 40 were added on 2026-09-27 as the next twenty after the first, 41 to 63 on 2026-09-28 -- store cards, then the remaining tiers of airline and hotel programs already present -- 64 to 82 later that day, the cards of issuers Caddy did not yet cover, 83 to 95 after those, business cards, 96 to 103, smaller store cards, 104 to 110, the missing tiers of covered programs, and 111 to 126, Barclays' other co-branded cards, so each batch ranks below the one before by construction. Re-rank it freely; nothing computes from it.",
   "_only_at_note": "`only_at` marks a STORE CARD: the merchant domains where it works, and nowhere else. The ranker drops the card from consideration on any other domain rather than ranking it on its base rate, because recommending a card the till refuses is worse than not mentioning it. base_rate is then what the card adds at that store: where a store pays its free program's members something whatever card they use, that share is left out, because it cannot change which card to use. Store cards with no rewards at all -- Home Depot's, for one -- are deliberately left out: a card that earns nothing can never be the best card to use.",
-  "_comment": "All 120 records verified against issuer sources; 5 on 2026-08-29, 6 on 2026-09-09, 5 on 2026-09-10, 24 on 2026-09-27 -- the twenty added that day, plus Blue Cash Everyday, Amex Gold, BofA Customized Cash and U.S. Bank Cash+, re-read because their categories changed -- and 80 on 2026-09-28: the store cards and the remaining airline and hotel tiers, then nineteen cards from Synchrony's general-purpose line, Barclays, USAA, Navy Federal and Bilt, then thirteen business cards from Amex, Capital One, Chase and Barclays, then eight smaller store cards from Gap Inc., Nordstrom, Ulta and JCPenney, then seven missing tiers: Citi AAdvantage Executive and Globe, Wells Fargo Autograph Journey, BofA Premium Rewards and Premium Rewards Elite, and U.S. Bank Altitude Go and Connect, then ten more Barclays co-brands: three Wyndham Rewards Earner tiers, two AARP cards, Upromise, Frontier, two Emirates Skywards cards and Lufthansa Miles & More. The Bilt cards' offer terms could not be read (the link downloads a file), so their category definitions are unconfirmed; see their notes. Each carries its source_url. Chase Freedom Flex rotating categories MUST be re-verified 2026-10-01. Amex Platinum was absent until 2026-09-27 because no reachable americanexpress.com page stated its annual fee or base rate on 2026-09-10; the product page states both now.",
+  "_comment": "All 126 records verified against issuer sources; 5 on 2026-08-29, 6 on 2026-09-09, 5 on 2026-09-10, 24 on 2026-09-27 -- the twenty added that day, plus Blue Cash Everyday, Amex Gold, BofA Customized Cash and U.S. Bank Cash+, re-read because their categories changed -- and 86 on 2026-09-28: the store cards and the remaining airline and hotel tiers, then nineteen cards from Synchrony's general-purpose line, Barclays, USAA, Navy Federal and Bilt, then thirteen business cards from Amex, Capital One, Chase and Barclays, then eight smaller store cards from Gap Inc., Nordstrom, Ulta and JCPenney, then seven missing tiers: Citi AAdvantage Executive and Globe, Wells Fargo Autograph Journey, BofA Premium Rewards and Premium Rewards Elite, and U.S. Bank Altitude Go and Connect, then sixteen more Barclays co-brands: three Wyndham Rewards Earner tiers, two AARP cards, Upromise, Frontier, two Emirates Skywards cards, Lufthansa Miles & More, GM Rewards, Carnival Rewards, Barnes & Noble, Breeze Easy, RCI Elite Rewards and Capital Vacations. The Bilt cards' offer terms could not be read (the link downloads a file), so their category definitions are unconfirmed; see their notes. Each carries its source_url. Chase Freedom Flex rotating categories MUST be re-verified 2026-10-01. Amex Platinum was absent until 2026-09-27 because no reachable americanexpress.com page stated its annual fee or base rate on 2026-09-10; the product page states both now.",
   "chase-sapphire-reserve": {
     "id": "chase-sapphire-reserve",
     "issuer": "chase",
@@ -5237,6 +5237,213 @@
           "brusselsairlines.com",
           "lot.com"
         ]
+      }
+    ]
+  },
+  "barclays-gm-rewards": {
+    "id": "barclays-gm-rewards",
+    "issuer": "barclays",
+    "network": "mastercard",
+    "currency": "gm",
+    "name": "GM Rewards Mastercard",
+    "common": 121,
+    "annual_fee": 0,
+    "base_rate": 3.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://cards.barclaycardus.com/banking/cards/general-motors/",
+    "caution": "GM points are worth a cent only toward GM vehicles, service, parts, accessories or a GM Financial loan.",
+    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc47943). 7X on eligible GM purchases -- new and certified pre-owned vehicles and Certified Service at GM dealers, GM Genuine and ACDelco parts and GM accessories at dealers or on GM's websites, SiriusXM, GM Energy, the GM Company Store, GM Insurance and OnStar -- and 3X on everything else. The page's 'up to 10x' adds the 3 points GM Rewards members earn with any card; the card's own share is the 7X. Only GM's own web stores are ranked, filed as online retail: the four brands' accessories hosts, gmparts.com, whose store is parts.gmparts.com, and gmcompanystore.com. Vehicles and service are bought at dealers, and OnStar, SiriusXM, GM Energy and GM Insurance are services with no clean category, so none of those is ranked. GM prices a point at $0.01 redeemed through GM (experience.gm.com/rewards/redeem), hence gm at 1.0 -- a currency of its own rather than cash, so anyone who will not spend points with GM can mark it down.",
+    "rules": [
+      {
+        "category": "online_retail",
+        "rate": 7.0,
+        "merchant_allowlist": [
+          "accessories.chevrolet.com",
+          "accessories.buick.com",
+          "accessories.gmc.com",
+          "accessories.cadillac.com",
+          "gmparts.com",
+          "gmcompanystore.com"
+        ]
+      }
+    ]
+  },
+  "barclays-carnival": {
+    "id": "barclays-carnival",
+    "issuer": "barclays",
+    "network": "mastercard",
+    "currency": "carnival",
+    "name": "Carnival Rewards Mastercard",
+    "common": 122,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://cards.barclaycardus.com/banking/cards/carnival-rewards-mastercard/",
+    "caution": "Bonus points may not post when you pay through a digital wallet, PayPal or another third party.",
+    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48596). 3X on purchases billed directly by Carnival Cruise Line, 2X at restaurants and fast food and at grocery stores other than Target and Walmart, 1X elsewhere. The page's 'up to 6x' adds the 3 points Carnival Rewards members earn with any card. The 3X is not ranked: carnival.com is not in merchants.json, because Caddy has no cruise category, and filing a cruise line under an existing one would misrank every card whose travel includes cruise lines, Chase's among them. The rules withhold bonus points from purchases made through third parties, so the delivery apps are denylisted on dining. Carnival Rewards replaced VIFP and the old card's FunPoints in September 2026, and no Carnival page states what a point is worth.",
+    "rules": [
+      {
+        "category": "dining",
+        "rate": 2.0,
+        "merchant_denylist": [
+          "doordash.com",
+          "ubereats.com",
+          "grubhub.com",
+          "seamless.com"
+        ]
+      },
+      {
+        "category": "groceries",
+        "rate": 2.0
+      }
+    ]
+  },
+  "barclays-barnes-noble": {
+    "id": "barclays-barnes-noble",
+    "issuer": "barclays",
+    "network": "mastercard",
+    "currency": "cash",
+    "name": "Barnes & Noble Mastercard",
+    "common": 123,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://cards.barclaycardus.com/banking/cards/barnes-noble-mastercard/",
+    "caution": "Points are paid as Barnes & Noble gift cards, $25 for every 2,500.",
+    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48297). A 5% rebate, paid as a statement credit, at Barnes & Noble and Paper Source stores and online at bn.com, which now redirects to barnesandnoble.com; 2X at restaurants and fast food other than the Barnes & Noble Cafe; 1X elsewhere. barnesandnoble.com is filed as online retail -- physical goods on a U.S. retailer's own website, as Amex and BofA define the channel. Points arrive as a $25 Barnes & Noble eGift card for every 2,500, so a point is a cent in store money, valued as cash as the other store currencies are. The rules withhold bonus points from purchases made through third parties, so the delivery apps are denylisted on dining.",
+    "rules": [
+      {
+        "category": "online_retail",
+        "rate": 5.0,
+        "merchant_allowlist": [
+          "barnesandnoble.com"
+        ]
+      },
+      {
+        "category": "dining",
+        "rate": 2.0,
+        "merchant_denylist": [
+          "doordash.com",
+          "ubereats.com",
+          "grubhub.com",
+          "seamless.com"
+        ]
+      }
+    ]
+  },
+  "barclays-breeze": {
+    "id": "barclays-breeze",
+    "issuer": "barclays",
+    "network": "visa",
+    "currency": "breeze",
+    "name": "Breeze Easy Visa",
+    "common": 124,
+    "annual_fee": 89,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://cards.barclaycardus.com/banking/cards/breeze-airways/",
+    "caution": "At flybreeze.com: 5X on Nicer and Nicest bundles, 2X on Nice, 1X on No Flex fares.",
+    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48620). A Visa Signature. Breeze purchases earn by fare bundle -- 5X on Nicer and Nicest bundles and their trip add-ons, 2X on Nice, 1X on No Flex fares -- which Caddy cannot see from the domain, so they are the caution, not rules, and flybreeze.com is not in merchants.json. The page's 'up to 10x' adds points Breeze itself awards once the trip is flown. 2X at restaurants, bars and fast food, Breeze's inflight food included, and at grocery stores other than Target and Walmart; 1X elsewhere. The rules withhold bonus points from purchases made through third parties, so the delivery apps are denylisted on dining. Barclays' page prices 30,000 BreezePoints at $300 of award travel, so breeze is 1.0.",
+    "rules": [
+      {
+        "category": "dining",
+        "rate": 2.0,
+        "merchant_denylist": [
+          "doordash.com",
+          "ubereats.com",
+          "grubhub.com",
+          "seamless.com"
+        ]
+      },
+      {
+        "category": "groceries",
+        "rate": 2.0
+      }
+    ]
+  },
+  "barclays-rci": {
+    "id": "barclays-rci",
+    "issuer": "barclays",
+    "network": "mastercard",
+    "currency": "cash",
+    "name": "RCI Elite Rewards Mastercard",
+    "common": 125,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://cards.barclaycardus.com/banking/cards/rci-elite-rewards-mastercard/",
+    "caution": "Bonus rewards may not post when you pay through a digital wallet, PayPal or another third party.",
+    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48579). 5X on eligible RCI products and services -- not RCI Travel, cruises or the other travel RCI sells -- 2X on travel, rideshare, gas and EV charging, and 1X elsewhere, timeshare maintenance fees included. Travel is airlines, hotels, motels, timeshares, campgrounds, car rental, cruise lines, travel agencies and discount travel sites, trains, buses, taxis, limousines and ferries, so OTAs earn 2X and the hotel rule carries no denylist. The 5X is not ranked: rci.com is not in merchants.json, because timeshare charges have no category, and filing them under an existing one would misrank every card whose travel includes timeshares, Chase's among them. Rewards redeem as a bank deposit or a statement credit at a cent each from $25, so they are valued as cash; the 5% of each redemption paid back as a bonus is not modelled.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 2.0
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 2.0
+      },
+      {
+        "category": "car_rental",
+        "rate": 2.0
+      },
+      {
+        "category": "travel_ground",
+        "rate": 2.0
+      },
+      {
+        "category": "gas",
+        "rate": 2.0
+      },
+      {
+        "category": "ev_charging",
+        "rate": 2.0
+      }
+    ]
+  },
+  "barclays-capital-vacations": {
+    "id": "barclays-capital-vacations",
+    "issuer": "barclays",
+    "network": "mastercard",
+    "currency": "cash",
+    "name": "Capital Vacations Mastercard",
+    "common": 126,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://cards.barclaycardus.com/banking/cards/capital-vacations/",
+    "caution": "Bonus rewards may not post when you pay through a digital wallet, PayPal or another third party.",
+    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48558). 5X on eligible Capital Vacations purchases -- maintenance fees, exchange fees and Lifestyles+ -- 2X on RCI, travel, gas and EV charging, and 1X elsewhere. Travel is airlines, hotels, motels, timeshares, campgrounds, car rental, cruise lines, travel agencies and discount travel sites, trains, buses, taxis, limousines and ferries, so OTAs earn 2X and the hotel rule carries no denylist; taxis and limousines are travel_ground. The 5X and the 2X at RCI are not ranked: neither capitalvacations.com nor rci.com is in merchants.json, because timeshare charges have no category, and filing them under an existing one would misrank every card whose travel includes timeshares, Chase's among them. Rewards redeem as a bank deposit or a statement credit at a cent each from $25, so they are valued as cash; the 5% of each redemption paid back as a bonus is not modelled.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 2.0
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 2.0
+      },
+      {
+        "category": "car_rental",
+        "rate": 2.0
+      },
+      {
+        "category": "travel_ground",
+        "rate": 2.0
+      },
+      {
+        "category": "gas",
+        "rate": 2.0
+      },
+      {
+        "category": "ev_charging",
+        "rate": 2.0
       }
     ]
   }

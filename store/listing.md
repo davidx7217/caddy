@@ -78,7 +78,7 @@ HOW IT DECIDES
 
 Caddy reads the domain of the page you are on and, on that page only, whether
 you have reached a checkout. It matches the site against a hand-verified table of
-155 merchants mapped to 27 spending categories, then ranks the cards you told it
+162 merchants mapped to 27 spending categories, then ranks the cards you told it
 you own against their published issuer terms.
 
 It knows about caps, activation requirements, rotating quarterly categories, and
@@ -92,7 +92,7 @@ card rather than quietly falling back to a base rate.
 
 THE DATA
 
-120 cards from 17 issuers, every one verified against the issuer's own published
+126 cards from 17 issuers, every one verified against the issuer's own published
 terms, each carrying the source URL and the date it was read. Not scraped, not
 crowd-sourced, not copied from a blog. When an issuer's page could not confirm a
 rate, that rate is not in here -- there are cards deliberately left out of the
