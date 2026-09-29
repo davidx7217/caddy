@@ -367,13 +367,16 @@ function ruleApplies(rule, ctx) {
  * people stop reading.
  *
  * So the lapsed rule only means "stale" when it is the LAST word the card has.
+ * Only a later rotating quarter counts: a promo that happens to end later --
+ * Freedom Flex's 2% on Lyft runs to 2027-09-30 -- says nothing about whether the
+ * quarters were kept up, and counting it silenced this warning for six months.
  * Dates are YYYY-MM-DD, which compares correctly as a string.
  */
 function hasLaterWindow(product, expired) {
   const end = expired.window && expired.window.end;
   if (!end) return false;
   return (product.rules || []).some(r =>
-    r !== expired && r.window && r.window.end && r.window.end > end);
+    r !== expired && isRotating(r) && r.window.end && r.window.end > end);
 }
 
 // A rotating quarter is dated at both ends and needs activating. Anything else

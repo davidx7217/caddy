@@ -1274,6 +1274,38 @@ eq('Cash+ "cell phone providers" pays on a cell phone plan, not on cable',
    [on('usbank-cash-plus', 't-mobile.com', plus(['five_phone'])).rate,
     on('usbank-cash-plus', 'xfinity.com', plus(['five_phone'])).rate], [5, 1]);
 
+// --- audit 2026-09-29: choices narrower than the category they sit in -------
+// Three Cash+ choices name one kind of merchant inside a wider Caddy category.
+// Until they were allowlisted, picking "Fast food" ranked 5% at DoorDash,
+// "Furniture stores" at Home Depot and "Movie theaters" at Ticketmaster.
+eq('Cash+ fast food: 5% at chipotle.com, not at doordash.com or opentable.com',
+   ['chipotle.com', 'doordash.com', 'opentable.com']
+     .map(h => on('usbank-cash-plus', h, plus(['five_fastfood'])).rate), [5, 1, 1]);
+eq('Cash+ furniture stores: 5% at homegoods.com, not at homedepot.com or lowes.com',
+   ['homegoods.com', 'homedepot.com', 'lowes.com']
+     .map(h => on('usbank-cash-plus', h, plus(['five_furniture'])).rate), [5, 1, 1]);
+eq('Cash+ movie theaters: 5% at fandango.com, not at ticketmaster.com or stubhub.com',
+   ['fandango.com', 'ticketmaster.com', 'stubhub.com']
+     .map(h => on('usbank-cash-plus', h, plus(['five_movies'])).rate), [5, 1, 1]);
+// Wells Fargo defines Autograph's streaming by type, and pay TV is one of them.
+eq('Autograph: 3x at directv.com and dish.com, still 1x at xfinity.com',
+   ['directv.com', 'dish.com', 'xfinity.com'].map(h => on('wellsfargo-autograph', h).rate), [3, 3, 1]);
+// The Freedom cards' 2% on Lyft, on the card pages 2026-09-29. Dated outside
+// Freedom Flex's Q3 transit quarter so its 5x there does not mask the rule.
+{
+  const lyftOn = (id, d) => run('lyft.com', [{ productId: id, config: {} }],
+    { now: new Date(d + 'T12:00:00') }).all[0].rate;
+  eq('Freedom Unlimited, Flex and Rise: 2% on Lyft',
+     ['chase-freedom-unlimited', 'chase-freedom-flex', 'chase-freedom-rise']
+       .map(id => lyftOn(id, '2026-10-15')), [2, 2, 2]);
+  eq('...and back to each base rate once the offer ends',
+     ['chase-freedom-unlimited', 'chase-freedom-flex', 'chase-freedom-rise']
+       .map(id => lyftOn(id, '2027-10-01')), [1.5, 1, 1.5]);
+  eq('...and only at Lyft',
+     run('uber.com', [{ productId: 'chase-freedom-unlimited', config: {} }],
+       { now: new Date('2026-10-15T12:00:00') }).all[0].rate, 1.5);
+}
+
 // BofA's Online Shopping choice is a channel: anything bought on a website or
 // app. It names department stores, cable, streaming and tickets among its
 // examples, and it had only ever been ranked on online_retail.

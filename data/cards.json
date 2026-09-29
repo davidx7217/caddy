@@ -84,8 +84,9 @@
     "annual_fee": 0,
     "base_rate": 1.5,
     "verified": true,
-    "last_verified": "2026-09-28",
+    "last_verified": "2026-09-29",
     "source_url": "https://creditcards.chase.com/cash-back-credit-cards/freedom/unlimited",
+    "note": "Lyft read 2026-09-29 on the card page: '2% cash back total on qualifying Lyft products and services purchased through the Lyft mobile application through 09/30/2027'.",
     "rules": [
       {
         "category": "dining",
@@ -94,6 +95,15 @@
       {
         "category": "drugstore",
         "rate": 3.0
+      },
+      {
+        "category": "travel_ground",
+        "rate": 2.0,
+        "merchant_allowlist": [
+          "lyft.com"
+        ],
+        "window": { "end": "2027-09-30" },
+        "caveat": "Lyft app purchases only. Offer ends 2027-09-30."
       },
       {
         "category": "travel_portal",
@@ -113,9 +123,9 @@
     "annual_fee": 0,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-09-28",
+    "last_verified": "2026-09-29",
     "source_url": "https://creditcards.chase.com/cash-back-credit-cards/freedom/flex",
-    "note": "Q4 2026 (Oct-Dec) read 2026-09-28 on the source_url's quarterly calendar and in Chase's release of 2026-09-15 (media.chase.com/news/chase-freedom-2026-q4-categories): grocery stores excluding Walmart and Target, dining, and American Red Cross donations, on up to $1,500 combined. The release's own footnote puts dining at 7% total (1% base + 4% quarterly + 2% dining). Walmart, Target and wholesale clubs, which Chase excludes, already resolve outside groceries. Red Cross donations have no category and are left out. Q1 2027 read the same day on the same calendar and in Chase's release of 2026-09-21 (media.chase.com/news/chase-freedom-flex-more-travel-value: 'Q1 2027 categories are top streaming services and grocery stores (excluding Walmart and Target)'). Chase's Q1 release was not out yet, so a third Q1 category may still be announced. Category definitions read on chase.com/RewardsCategoryFAQs 2026-09-28: grocery stores exclude warehouse clubs, discount stores and drugstores, and delivery counts only if it codes as a grocery store; dining includes delivery and takeout that code as restaurants; top streaming services is a named list (Apple Music, Apple TV, Disney+, ESPN+, Fubo TV, Max, Hulu, Netflix, Pandora, Paramount+, Peacock, Showtime, SiriusXM, Sling, Spotify, YouTube Premium, YouTube TV, Vudu), so the Q1 rule is allowlisted to the streaming sites Caddy knows that are on it. Q1 2027 groceries and streaming pay 5% on their own: the card has no standing bonus in either. Fee, base rate, 3% dining and drugstores and 5% Chase Travel unchanged. Q3 2026 rules kept for the tests pinned to it.",
+    "note": "Q4 2026 (Oct-Dec) read 2026-09-28 on the source_url's quarterly calendar and in Chase's release of 2026-09-15 (media.chase.com/news/chase-freedom-2026-q4-categories): grocery stores excluding Walmart and Target, dining, and American Red Cross donations, on up to $1,500 combined. The release's own footnote puts dining at 7% total (1% base + 4% quarterly + 2% dining). Walmart, Target and wholesale clubs, which Chase excludes, already resolve outside groceries. Red Cross donations have no category and are left out. Q1 2027 read the same day on the same calendar and in Chase's release of 2026-09-21 (media.chase.com/news/chase-freedom-flex-more-travel-value: 'Q1 2027 categories are top streaming services and grocery stores (excluding Walmart and Target)'). Chase's Q1 release was not out yet, so a third Q1 category may still be announced. Category definitions read on chase.com/RewardsCategoryFAQs 2026-09-28: grocery stores exclude warehouse clubs, discount stores and drugstores, and delivery counts only if it codes as a grocery store; dining includes delivery and takeout that code as restaurants; top streaming services is a named list (Apple Music, Apple TV, Disney+, ESPN+, Fubo TV, Max, Hulu, Netflix, Pandora, Paramount+, Peacock, Showtime, SiriusXM, Sling, Spotify, YouTube Premium, YouTube TV, Vudu), so the Q1 rule is allowlisted to the streaming sites Caddy knows that are on it. Q1 2027 groceries and streaming pay 5% on their own: the card has no standing bonus in either. Fee, base rate, 3% dining and drugstores and 5% Chase Travel unchanged. Q3 2026 rules kept for the tests pinned to it. Lyft read 2026-09-29 on the card page: '2% cash back total on qualifying Lyft products and services purchased through the Lyft mobile application through 09/30/2027'.",
     "rules": [
       {
         "category": "dining",
@@ -124,6 +134,15 @@
       {
         "category": "drugstore",
         "rate": 3.0
+      },
+      {
+        "category": "travel_ground",
+        "rate": 2.0,
+        "merchant_allowlist": [
+          "lyft.com"
+        ],
+        "window": { "end": "2027-09-30" },
+        "caveat": "Lyft app purchases only. Offer ends 2027-09-30."
       },
       {
         "category": "gas",
@@ -1141,10 +1160,10 @@
     "annual_fee": 0,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-09-27",
+    "last_verified": "2026-09-29",
     "source_url": "https://www.usbank.com/credit-cards/cash-plus-visa-signature-credit-card.html",
     "caution": "You pick the categories each quarter, and they reset. Two 5% picks share one $2,000 quarterly cap.",
-    "note": "All twelve of the issuer's 5% choices are modelled as of 2026-09-27. Four -- electronics stores, gyms and fitness centres, select clothing stores and sporting goods stores -- were left out until then because Caddy had no category for them and no merchants behind one; those categories exist now, each with merchant rows, so none of them is dead. 'TV, internet and streaming' maps to streaming and internet_cable, and 'Cell phone providers' to phone: before phone_internet was split, each of those two picks also paid 5% on the other's bills.",
+    "note": "All twelve of the issuer's 5% choices are modelled as of 2026-09-27. Four -- electronics stores, gyms and fitness centres, select clothing stores and sporting goods stores -- were left out until then because Caddy had no category for them and no merchants behind one; those categories exist now, each with merchant rows, so none of them is dead. 'TV, internet and streaming' maps to streaming and internet_cable, and 'Cell phone providers' to phone: before phone_internet was split, each of those two picks also paid 5% on the other's bills. Audit 2026-09-29: three 5% choices are narrower than the Caddy category they sit in, so each is allowlisted to the merchants that fit: Fast food to chipotle.com and starbucks.com (delivery apps and sit-down restaurants code as restaurants), Movie theaters to fandango.com (not Ticketmaster or StubHub), Furniture stores to homegoods.com and homesense.com (Home Depot and Lowe's are home supply warehouses).",
     "user_config": {
       "selections": [
         {
@@ -1225,6 +1244,10 @@
         "category": "dining",
         "rate": 5.0,
         "selection_group": "five_fastfood",
+        "merchant_allowlist": [
+          "chipotle.com",
+          "starbucks.com"
+        ],
         "cap": { "amount": 2000, "period": "quarter", "then_rate": 1.0 },
         "caveat": "Fast food only, not restaurants generally. The $2,000 quarterly cap is COMBINED across both 5% choices."
       },
@@ -1239,6 +1262,9 @@
         "category": "entertainment",
         "rate": 5.0,
         "selection_group": "five_movies",
+        "merchant_allowlist": [
+          "fandango.com"
+        ],
         "cap": { "amount": 2000, "period": "quarter", "then_rate": 1.0 },
         "caveat": "Movie theatres only. The $2,000 quarterly cap is COMBINED across both 5% choices."
       },
@@ -1246,6 +1272,10 @@
         "category": "home_improvement",
         "rate": 5.0,
         "selection_group": "five_furniture",
+        "merchant_allowlist": [
+          "homegoods.com",
+          "homesense.com"
+        ],
         "cap": { "amount": 2000, "period": "quarter", "then_rate": 1.0 },
         "caveat": "Furniture stores only, not home improvement generally. The $2,000 quarterly cap is COMBINED across both 5% choices."
       },
@@ -1685,9 +1715,9 @@
     "annual_fee": 0,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-09-27",
+    "last_verified": "2026-09-29",
     "source_url": "https://creditcards.wellsfargo.com/autograph-visa-credit-card/",
-    "note": "Categories read off footnote 2 on the product page, which defines each by Visa merchant code. Travel includes car rental, cruise lines and travel agencies, so the hotel rule carries no OTA denylist. 'Phone plans' is landline and cell phone providers -- not internet or cable, which is why phone_internet was split into phone and internet_cable the day this card was added. Streaming is the list at wellsfargo.com/autographstreaming. Currency 'wf': the same page prices a point at one cent, and the points also transfer to airline and hotel partners.",
+    "note": "Categories read off footnote 2 on the product page, which defines each by Visa merchant code. Travel includes car rental, cruise lines and travel agencies, so the hotel rule carries no OTA denylist. 'Phone plans' is landline and cell phone providers -- not internet or cable, which is why phone_internet was split into phone and internet_cable the day this card was added. Streaming, read again 2026-09-29, is defined by type, not by merchant: 'cable and other pay television, digital goods, books, movies, music, and continuity/subscription services' -- wellsfargo.com/autographstreaming names no merchants. So DirecTV and DISH, which sell only pay TV, earn 3X; cable companies that also bill home internet stay at 1X until a statement shows how they code. Currency 'wf': the same page prices a point at one cent, and the points also transfer to airline and hotel partners.",
     "rules": [
       {
         "category": "dining",
@@ -1720,8 +1750,16 @@
       },
       {
         "category": "streaming",
+        "rate": 3.0
+      },
+      {
+        "category": "internet_cable",
         "rate": 3.0,
-        "caveat": "Popular streaming services on Wells Fargo's published list only."
+        "merchant_allowlist": [
+          "directv.com",
+          "dish.com"
+        ],
+        "caveat": "Pay TV counts as streaming for Wells Fargo; home internet does not."
       },
       {
         "category": "phone",
@@ -1972,10 +2010,20 @@
     "annual_fee": 0,
     "base_rate": 1.5,
     "verified": true,
-    "last_verified": "2026-09-27",
+    "last_verified": "2026-09-29",
     "source_url": "https://creditcards.chase.com/cash-back-credit-cards/freedom/rise",
-    "note": "Modelled as 'ur' for the reason Freedom Unlimited is: the offer details say cash back is tracked as points, 100 to the dollar, under chase.com/ultimaterewards. At the default 1.5 cpp that values the 1.5% at 2.25%, which only holds if you hold a Sapphire card to move the points to -- override the valuation in Options if you do not. Network read off the card art.",
-    "rules": []
+    "note": "Modelled as 'ur' for the reason Freedom Unlimited is: the offer details say cash back is tracked as points, 100 to the dollar, under chase.com/ultimaterewards. At the default 1.5 cpp that values the 1.5% at 2.25%, which only holds if you hold a Sapphire card to move the points to -- override the valuation in Options if you do not. Network read off the card art. Lyft read 2026-09-29 on the card page: '2% cash back total on qualifying Lyft products and services purchased through the Lyft mobile application through 09/30/2027'.",
+    "rules": [
+      {
+        "category": "travel_ground",
+        "rate": 2.0,
+        "merchant_allowlist": [
+          "lyft.com"
+        ],
+        "window": { "end": "2027-09-30" },
+        "caveat": "Lyft app purchases only. Offer ends 2027-09-30."
+      }
+    ]
   },
   "chase-ink-business-unlimited": {
     "id": "chase-ink-business-unlimited",
