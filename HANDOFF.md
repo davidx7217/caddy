@@ -9,15 +9,15 @@ works and why; this file is only the state of play.
 
 ## State
 
-- **v1.0.0**, 120 cards across 17 issuers, 155 merchant rows, 27 categories.
+- **v1.0.0**, 126 cards across 17 issuers, 162 merchant rows, 27 categories.
   The second twenty cards landed 2026-09-27; store cards plus the remaining
   airline and hotel tiers, nineteen cards from five issuers Caddy lacked,
   thirteen business cards, eight smaller store cards, seven missing tiers and
-  ten more Barclays co-brands, on 2026-09-28. See sections 6, 7 and 9 to 13.
+  sixteen more Barclays co-brands, on 2026-09-28. See sections 6, 7 and 9 to 13.
 - **Every card verified** against its issuer's own page, each carrying a
   `source_url` and the date it was read. The one soft spot: the three Bilt cards'
   category definitions were not readable (section 9).
-- **Tests green**: 509 engine + 31 setup + 49 lifecycle + 45 worker. `npm test`.
+- **Tests green**: 518 engine + 31 setup + 49 lifecycle + 45 worker. `npm test`.
 - **Nothing unpushed.** `main` on GitHub is the whole tree. All three store
   screenshots are still current -- the new cards rank after the ones they show.
 - **`caddy-1.0.0.zip` sits in the repo root**, rebuilt on every commit. See the
@@ -59,21 +59,22 @@ In order. The first is dated; the second needs a real install, so it is David's.
    bank-by-bank judgment made before section 9's cards -- no public data exists
    per card -- Caddy covered about 55-60% of US rewards-card spending. The
    issuers it lacked, the general-purpose business cards, the smaller store
-   cards, the missing tiers and Barclays' Wyndham, AARP, Upromise, Frontier,
-   Emirates and Miles & More cards are in now (sections 9 to 13). The next
-   gaps, largest first:
+   cards, the missing tiers and Barclays' other co-brands are in now (sections
+   9 to 13). The next gaps, largest first:
    - **Co-branded business cards**, none read yet: Amex's Delta SkyMiles Gold,
      Platinum and Reserve Business, Marriott Bonvoy Business and Hilton Honors
      Business; Chase's United, Southwest, IHG and World of Hyatt business cards;
      Barclays' Wyndham Earner Business and GM Business. Also Amex Business Green,
      listed and not read.
-   - **Barclays' remaining co-brands**, on its card list but missing from this
-     list before 2026-09-28, so not read: Carnival, GM, Barnes & Noble, Breeze
-     Airways, Capital Vacations and RCI Elite Rewards.
+   - **Cruise and timeshare categories**, if you want them: without them
+     Carnival's 3X and the RCI and Capital Vacations 5X go unranked, and adding
+     either means a rule on every card whose travel covers it (section 13).
 
    Loose ends, each small, each explained in its section:
    - **Wyndham Earner's 3X on gas and EV charging** follows the Reward Rules,
      which the product page's summary leaves out (section 13).
+   - **GM points are valued at a full cent**, GM's own figure, though they spend
+     only with GM, so the GM card reads 3% everywhere (section 13).
    - **U.S. Bank Altitude points** are assumed to be worth a cent; no U.S. Bank
      page states a figure (section 12).
    - **Bilt's offer terms** were never readable -- the link downloads a file --
@@ -320,7 +321,7 @@ Card and TJX Rewards. Every one read off its issuer's or retailer's page that da
 
 ---
 
-## 8. Adding a card: the recipe this week's 100 followed
+## 8. Adding a card: the recipe this week's 106 followed
 
 1. **Read the issuer's own page** in the in-app browser -- `get_page_text`, or a
    short `javascript_tool` regex over `document.body.innerText`. Never a blog or
@@ -528,7 +529,7 @@ Left open, for you:
 
 ## 13. Barclays' other co-brands, 28 September 2026
 
-Ten cards, ranks 111 to 120: Wyndham Rewards Earner, Earner Plus and Earner Premier;
+Sixteen cards, ranks 111 to 126, in two batches. The first ten, 111 to 120: Wyndham Rewards Earner, Earner Plus and Earner Premier;
 AARP Travel Rewards and Essential Rewards; Upromise World Mastercard; Frontier
 Airlines World Mastercard; Emirates Skywards Rewards and Premium; and the Lufthansa
 Miles & More Mastercard. Each read off the Reward Rules in its Barclays terms that
@@ -560,10 +561,43 @@ the five it met with a 403 confirmed in the browser.
   1.25% in the caution, as Prime Visa does with Prime.
 - **Not ranked:** AARP Essential's 2% on medical purchases, which has no category;
   Wyndham's vacation-club earning; the statement credits on the Premier.
-- **Not added:** Barclays also lists Carnival, GM, Barnes & Noble, Breeze Airways,
-  Capital Vacations and RCI Elite Rewards cards, missing from this file's list, so
-  not read. GM Business and Wyndham Earner Business wait with the co-branded
-  business cards.
+- **Not added:** GM Business and Wyndham Earner Business, which wait with the
+  co-branded business cards.
+
+The other six, 121 to 126, missing from this file's list until David asked for
+them: GM Rewards, Carnival Rewards, Barnes & Noble, Breeze Easy Visa, RCI Elite
+Rewards and Capital Vacations. Three new currencies -- `gm`, `carnival`, `breeze`
+-- and seven merchant rows, all online retail: barnesandnoble.com (bn.com redirects
+there), the accessories hosts of Chevrolet, Buick, GMC and Cadillac, gmparts.com and
+gmcompanystore.com, each confirmed by the HTTP sweep.
+
+- **Cruise lines and timeshares have no category, so three headline rates are
+  unranked**: Carnival's 3X at Carnival, RCI's 5X at RCI, Capital Vacations' 5X on
+  its own charges. Filing carnival.com or rci.com under an existing category would
+  misrank every card whose travel includes cruise lines or timeshares -- Chase's,
+  Autograph Journey, BofA Premium Rewards, USAA, Navy Federal -- so those sites are
+  not in merchants.json. A `cruise` or `timeshare` category would rank them, at
+  the cost of a rule on each of those cards.
+- **GM points are valued at a full cent**, GM's own figure for a point redeemed
+  through GM, as store money is valued as cash elsewhere. They spend only with GM,
+  so the card reads 3% everywhere and ties or beats every flat card; `gm` is its own
+  currency so Settings can mark it down, and the caution says where points go.
+- **GM's 7X ranks only on GM's own web stores.** Vehicles and service are bought at
+  dealers; OnStar, SiriusXM, GM Energy and GM Insurance are services with no clean
+  category. The brand sites themselves, chevrolet.com and the rest, are not
+  merchants -- only their accessories hosts are.
+- **Breeze's airfare rate depends on the fare bundle** -- 5X Nicer and Nicest, 2X
+  Nice, 1X No Flex -- which the domain cannot show, so it is the caution, per the
+  recipe, and flybreeze.com is not a merchant row. BreezePoints are a cent each by
+  Barclays' own figure, 30,000 for $300.
+- **`carnival` is WalletHub's 0.92**, the lowest figure found; Carnival states none
+  for its new program, and TPG's launch review put sample redemptions at 1 to 2
+  cents.
+- **Barnes & Noble's 5% is a statement credit and its points are B&N gift cards**,
+  a cent each, so the card earns cash, as the other store currencies do.
+- **RCI and Capital Vacations rewards are cash**, a cent each from $25; the 5% of
+  each redemption paid back as a bonus is not modelled. Their travel includes OTAs,
+  so their hotel rules carry no denylist.
 
 ---
 
