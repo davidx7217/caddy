@@ -530,7 +530,7 @@
     "category": "clothing",
     "confidence": "medium",
     "note": "Footwear as much as apparel, so a shoe-store merchant code is as likely as a clothing one",
-    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Nike.com orders show 'Internet' (online-order codes), one 'U.S. Online Retailers'; no per-issuer codings. Not a clothing or shoe store code."
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Nike.com descriptors carry only AwardWallet's own labels, 'Internet' and one 'U.S. Online Retailers', and no per-issuer codings, so how it codes is unknown."
   },
   "dickssportinggoods.com": {
     "category": "sporting_goods",
