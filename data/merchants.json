@@ -149,6 +149,34 @@
     "category": "travel_air",
     "confidence": "high"
   },
+  "flyfrontier.com": {
+    "category": "travel_air",
+    "confidence": "high"
+  },
+  "emirates.com": {
+    "category": "travel_air",
+    "confidence": "high"
+  },
+  "lufthansa.com": {
+    "category": "travel_air",
+    "confidence": "high"
+  },
+  "swiss.com": {
+    "category": "travel_air",
+    "confidence": "high"
+  },
+  "austrian.com": {
+    "category": "travel_air",
+    "confidence": "high"
+  },
+  "brusselsairlines.com": {
+    "category": "travel_air",
+    "confidence": "high"
+  },
+  "lot.com": {
+    "category": "travel_air",
+    "confidence": "high"
+  },
   "marriott.com": {
     "category": "travel_hotel",
     "confidence": "high"

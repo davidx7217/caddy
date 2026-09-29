@@ -1,9 +1,9 @@
 {
   "_note_field": "MAINTAINER-ONLY. `note` records why a card is modelled the way it is -- provenance, schema reasoning, what was deliberately not modelled. Never render it in the UI. `caution` is the user-facing field.",
-  "_business_note": "`business` marks a card issued on business underwriting rather than personal. Absent means personal -- only the field's presence is meaningful, so there is nothing to keep in sync on seventy-eight records. It filters the catalogue and nothing else reads it: the ranker does not care whose name is on the account.",
-  "_common_note": "`common` is a POPULARITY RANK, 1 to 110, and it is EDITORIAL. There is no public card-level ranking of US cardholders -- Nilson publishes issuer volume, not how many people hold a Freedom Unlimited -- so this is judgement, not a sourced fact, and it is the only field here that is. It orders the setup picker so a new user meets mass-market cards first. 21 to 40 were added on 2026-09-27 as the next twenty after the first, 41 to 63 on 2026-09-28 -- store cards, then the remaining tiers of airline and hotel programs already present -- 64 to 82 later that day, the cards of issuers Caddy did not yet cover, 83 to 95 after those, business cards, 96 to 103, smaller store cards, and 104 to 110, the missing tiers of covered programs, so each batch ranks below the one before by construction. Re-rank it freely; nothing computes from it.",
+  "_business_note": "`business` marks a card issued on business underwriting rather than personal. Absent means personal -- only the field's presence is meaningful, so there is nothing to keep in sync on a hundred and three records. It filters the catalogue and nothing else reads it: the ranker does not care whose name is on the account.",
+  "_common_note": "`common` is a POPULARITY RANK, 1 to 120, and it is EDITORIAL. There is no public card-level ranking of US cardholders -- Nilson publishes issuer volume, not how many people hold a Freedom Unlimited -- so this is judgement, not a sourced fact, and it is the only field here that is. It orders the setup picker so a new user meets mass-market cards first. 21 to 40 were added on 2026-09-27 as the next twenty after the first, 41 to 63 on 2026-09-28 -- store cards, then the remaining tiers of airline and hotel programs already present -- 64 to 82 later that day, the cards of issuers Caddy did not yet cover, 83 to 95 after those, business cards, 96 to 103, smaller store cards, 104 to 110, the missing tiers of covered programs, and 111 to 120, Barclays' other co-branded cards, so each batch ranks below the one before by construction. Re-rank it freely; nothing computes from it.",
   "_only_at_note": "`only_at` marks a STORE CARD: the merchant domains where it works, and nowhere else. The ranker drops the card from consideration on any other domain rather than ranking it on its base rate, because recommending a card the till refuses is worse than not mentioning it. base_rate is then what the card adds at that store: where a store pays its free program's members something whatever card they use, that share is left out, because it cannot change which card to use. Store cards with no rewards at all -- Home Depot's, for one -- are deliberately left out: a card that earns nothing can never be the best card to use.",
-  "_comment": "All 110 records verified against issuer sources; 5 on 2026-08-29, 6 on 2026-09-09, 5 on 2026-09-10, 24 on 2026-09-27 -- the twenty added that day, plus Blue Cash Everyday, Amex Gold, BofA Customized Cash and U.S. Bank Cash+, re-read because their categories changed -- and 70 on 2026-09-28: the store cards and the remaining airline and hotel tiers, then nineteen cards from Synchrony's general-purpose line, Barclays, USAA, Navy Federal and Bilt, then thirteen business cards from Amex, Capital One, Chase and Barclays, then eight smaller store cards from Gap Inc., Nordstrom, Ulta and JCPenney, then seven missing tiers: Citi AAdvantage Executive and Globe, Wells Fargo Autograph Journey, BofA Premium Rewards and Premium Rewards Elite, and U.S. Bank Altitude Go and Connect. The Bilt cards' offer terms could not be read (the link downloads a file), so their category definitions are unconfirmed; see their notes. Each carries its source_url. Chase Freedom Flex rotating categories MUST be re-verified 2026-10-01. Amex Platinum was absent until 2026-09-27 because no reachable americanexpress.com page stated its annual fee or base rate on 2026-09-10; the product page states both now.",
+  "_comment": "All 120 records verified against issuer sources; 5 on 2026-08-29, 6 on 2026-09-09, 5 on 2026-09-10, 24 on 2026-09-27 -- the twenty added that day, plus Blue Cash Everyday, Amex Gold, BofA Customized Cash and U.S. Bank Cash+, re-read because their categories changed -- and 80 on 2026-09-28: the store cards and the remaining airline and hotel tiers, then nineteen cards from Synchrony's general-purpose line, Barclays, USAA, Navy Federal and Bilt, then thirteen business cards from Amex, Capital One, Chase and Barclays, then eight smaller store cards from Gap Inc., Nordstrom, Ulta and JCPenney, then seven missing tiers: Citi AAdvantage Executive and Globe, Wells Fargo Autograph Journey, BofA Premium Rewards and Premium Rewards Elite, and U.S. Bank Altitude Go and Connect, then ten more Barclays co-brands: three Wyndham Rewards Earner tiers, two AARP cards, Upromise, Frontier, two Emirates Skywards cards and Lufthansa Miles & More. The Bilt cards' offer terms could not be read (the link downloads a file), so their category definitions are unconfirmed; see their notes. Each carries its source_url. Chase Freedom Flex rotating categories MUST be re-verified 2026-10-01. Amex Platinum was absent until 2026-09-27 because no reachable americanexpress.com page stated its annual fee or base rate on 2026-09-10; the product page states both now.",
   "chase-sapphire-reserve": {
     "id": "chase-sapphire-reserve",
     "issuer": "chase",
@@ -4828,6 +4828,415 @@
       {
         "category": "travel_ground",
         "rate": 2.0
+      }
+    ]
+  },
+  "barclays-wyndham-earner": {
+    "id": "barclays-wyndham-earner",
+    "issuer": "barclays",
+    "network": "visa",
+    "currency": "wyndham",
+    "name": "Wyndham Rewards Earner Card",
+    "common": 112,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://cards.barclaycardus.com/banking/cards/wyndham-rewards-earner-card/",
+    "caution": "Bonus points may not post when you pay through a digital wallet, PayPal or another third party.",
+    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48413). A Visa. 5X at participating Hotels by Wyndham, which is wyndhamhotels.com; 3X on dining, grocery stores other than Target and Walmart, gas and EV charging; 1X elsewhere. The product page's summary of the 3X names only the vacation clubs, dining and groceries; the Reward Rules, which are the agreement, add gas and EV charging, so those are in. Wyndham's vacation clubs -- Club Wyndham, WorldMark, Margaritaville Vacation Club and Shell Vacations Club stays, maintenance fees and timeshare loan payments -- earn the same and are not ranked. The rules withhold bonus points from purchases made through third parties, so the delivery apps are denylisted on dining and instacart.com's barclays override applies.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 5.0,
+        "merchant_allowlist": [
+          "wyndhamhotels.com"
+        ]
+      },
+      {
+        "category": "dining",
+        "rate": 3.0,
+        "merchant_denylist": [
+          "doordash.com",
+          "ubereats.com",
+          "grubhub.com",
+          "seamless.com"
+        ]
+      },
+      {
+        "category": "groceries",
+        "rate": 3.0
+      },
+      {
+        "category": "gas",
+        "rate": 3.0
+      },
+      {
+        "category": "ev_charging",
+        "rate": 3.0
+      }
+    ]
+  },
+  "barclays-wyndham-earner-plus": {
+    "id": "barclays-wyndham-earner-plus",
+    "issuer": "barclays",
+    "network": "visa",
+    "currency": "wyndham",
+    "name": "Wyndham Rewards Earner Plus Card",
+    "common": 111,
+    "annual_fee": 95,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://cards.barclaycardus.com/banking/cards/wyndham-rewards-earner-plus-card/",
+    "caution": "Bonus points may not post when you pay through a digital wallet, PayPal or another third party.",
+    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48411). A Visa. 6X at participating Hotels by Wyndham, which is wyndhamhotels.com; 4X on dining, grocery stores other than Target and Walmart, and travel, which the rules define as airfare, car rental, rideshare, gas, EV charging, tolls and trains -- no hotels, so another chain's earns 1X; 1X elsewhere. Wyndham's vacation clubs -- Club Wyndham, WorldMark, Margaritaville Vacation Club and Shell Vacations Club stays, maintenance fees and timeshare loan payments -- earn the same and are not ranked. The rules withhold bonus points from purchases made through third parties, so the delivery apps are denylisted on dining and instacart.com's barclays override applies.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 6.0,
+        "merchant_allowlist": [
+          "wyndhamhotels.com"
+        ]
+      },
+      {
+        "category": "dining",
+        "rate": 4.0,
+        "merchant_denylist": [
+          "doordash.com",
+          "ubereats.com",
+          "grubhub.com",
+          "seamless.com"
+        ]
+      },
+      {
+        "category": "groceries",
+        "rate": 4.0
+      },
+      {
+        "category": "travel_air",
+        "rate": 4.0
+      },
+      {
+        "category": "car_rental",
+        "rate": 4.0
+      },
+      {
+        "category": "travel_ground",
+        "rate": 4.0
+      },
+      {
+        "category": "gas",
+        "rate": 4.0
+      },
+      {
+        "category": "ev_charging",
+        "rate": 4.0
+      }
+    ]
+  },
+  "barclays-wyndham-earner-premier": {
+    "id": "barclays-wyndham-earner-premier",
+    "issuer": "barclays",
+    "network": "visa",
+    "currency": "wyndham",
+    "name": "Wyndham Rewards Earner Premier Card",
+    "common": 119,
+    "annual_fee": 395,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://cards.barclaycardus.com/banking/cards/wyndham-rewards-earner-premier-card/",
+    "caution": "Bonus points may not post when you pay through a digital wallet, PayPal or another third party.",
+    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48434). A Visa. 8X at participating Hotels by Wyndham, which is wyndhamhotels.com; 4X on dining, grocery stores other than Target and Walmart, and travel, which the rules define as airfare, car rental, rideshare, gas, EV charging, tolls and trains -- no hotels, so another chain's earns 1X; 1X elsewhere. The statement credits for Wyndham hotels, meal delivery, streaming, wholesale club membership and Global Entry are not modelled. Wyndham's vacation clubs -- Club Wyndham, WorldMark, Margaritaville Vacation Club and Shell Vacations Club stays, maintenance fees and timeshare loan payments -- earn the same and are not ranked. The rules withhold bonus points from purchases made through third parties, so the delivery apps are denylisted on dining and instacart.com's barclays override applies.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 8.0,
+        "merchant_allowlist": [
+          "wyndhamhotels.com"
+        ]
+      },
+      {
+        "category": "dining",
+        "rate": 4.0,
+        "merchant_denylist": [
+          "doordash.com",
+          "ubereats.com",
+          "grubhub.com",
+          "seamless.com"
+        ]
+      },
+      {
+        "category": "groceries",
+        "rate": 4.0
+      },
+      {
+        "category": "travel_air",
+        "rate": 4.0
+      },
+      {
+        "category": "car_rental",
+        "rate": 4.0
+      },
+      {
+        "category": "travel_ground",
+        "rate": 4.0
+      },
+      {
+        "category": "gas",
+        "rate": 4.0
+      },
+      {
+        "category": "ev_charging",
+        "rate": 4.0
+      }
+    ]
+  },
+  "barclays-aarp-travel-rewards": {
+    "id": "barclays-aarp-travel-rewards",
+    "issuer": "barclays",
+    "network": "mastercard",
+    "currency": "cash",
+    "name": "AARP Travel Rewards Mastercard",
+    "common": 113,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://cards.barclaycardus.com/banking/cards/aarp-travel-rewards-mastercard/",
+    "caution": "Bonus cash back may not post when you pay through a digital wallet, PayPal or another third party.",
+    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48293). 3% at airlines, hotels, motels and car rental agencies, 2% at restaurants and fast food, 1% elsewhere, each by merchant code. Travel agencies are not named and the rules withhold bonus rewards from purchases made through third parties, so a hotel booked through an OTA earns 1%, which the denylist on the hotel rule says, and the delivery apps are denylisted on dining. Rewards redeem as a bank deposit or a statement credit from $25, so they are valued as cash.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 3.0
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 3.0,
+        "merchant_denylist": [
+          "expedia.com",
+          "booking.com",
+          "airbnb.com",
+          "hotels.com",
+          "priceline.com",
+          "vrbo.com",
+          "kayak.com",
+          "orbitz.com",
+          "travelocity.com"
+        ]
+      },
+      {
+        "category": "car_rental",
+        "rate": 3.0
+      },
+      {
+        "category": "dining",
+        "rate": 2.0,
+        "merchant_denylist": [
+          "doordash.com",
+          "ubereats.com",
+          "grubhub.com",
+          "seamless.com"
+        ]
+      }
+    ]
+  },
+  "barclays-aarp-essential-rewards": {
+    "id": "barclays-aarp-essential-rewards",
+    "issuer": "barclays",
+    "network": "mastercard",
+    "currency": "cash",
+    "name": "AARP Essential Rewards Mastercard",
+    "common": 114,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://cards.barclaycardus.com/banking/cards/aarp-essential-rewards-mastercard/",
+    "caution": "Bonus cash back may not post when you pay through a digital wallet, PayPal or another third party.",
+    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48294). 3% at gas stations and drugstores other than Target and Walmart, 2% on medical purchases -- dentists, doctors, opticians, hospitals, hearing aids and the other medical merchant codes the rules list -- and 1% elsewhere. Caddy has no medical category, so the 2% is not ranked. EV charging is not named. Rewards redeem as a bank deposit or a statement credit from $25, so they are valued as cash.",
+    "rules": [
+      {
+        "category": "gas",
+        "rate": 3.0
+      },
+      {
+        "category": "drugstore",
+        "rate": 3.0
+      }
+    ]
+  },
+  "barclays-upromise": {
+    "id": "barclays-upromise",
+    "issuer": "barclays",
+    "network": "mastercard",
+    "currency": "cash",
+    "name": "Upromise World Mastercard",
+    "common": 116,
+    "annual_fee": 0,
+    "base_rate": 1.529,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://cards.barclaycardus.com/banking/cards/upromise-world-mastercard/",
+    "caution": "The 1.529% needs your Upromise account linked to an eligible 529 plan. Without it, every purchase earns 1.25%.",
+    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48506). A flat 1.529% when the Upromise account is linked to an eligible college savings plan, 1.25% when it is not. It is in at the linked rate, Prime Visa's membership convention, with the other rate in the caution. Cash back lands in the Upromise account and is valued as cash. Up to $250 a year back on gift cards bought at MyGiftCardsPlus is not ranked.",
+    "rules": []
+  },
+  "barclays-frontier": {
+    "id": "barclays-frontier",
+    "issuer": "barclays",
+    "network": "mastercard",
+    "currency": "frontier",
+    "name": "Frontier Airlines World Mastercard",
+    "common": 115,
+    "annual_fee": 99,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://cards.barclaycardus.com/banking/cards/frontier-airlines-world-mastercard/",
+    "caution": "Bonus miles may not post when you pay through a digital wallet, PayPal or another third party.",
+    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48877). 5X on tickets, goods and services bought directly from Frontier -- flyfrontier.com, reservations, onboard and at airport counters -- but not car rentals, hotels, Frontier Airlines Vacations packages or duty free; 3X at restaurants, bars and fast food; 1X elsewhere. The page's 'up to 17x' adds the 12 miles Frontier Miles members earn on a non-Basic fare whatever card pays; the card's own share is the 5X. The rules withhold bonus miles from purchases made through third parties, so the delivery apps are denylisted on dining.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 5.0,
+        "merchant_allowlist": [
+          "flyfrontier.com"
+        ]
+      },
+      {
+        "category": "dining",
+        "rate": 3.0,
+        "merchant_denylist": [
+          "doordash.com",
+          "ubereats.com",
+          "grubhub.com",
+          "seamless.com"
+        ]
+      }
+    ]
+  },
+  "barclays-emirates-rewards": {
+    "id": "barclays-emirates-rewards",
+    "issuer": "barclays",
+    "network": "mastercard",
+    "currency": "emirates",
+    "name": "Emirates Skywards Rewards Mastercard",
+    "common": 117,
+    "annual_fee": 99,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://cards.barclaycardus.com/banking/cards/emirates-skywards-rewards-world-elite-mastercard/",
+    "caution": "Bonus miles may not post when you pay through a digital wallet, PayPal or another third party.",
+    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48264). A World Elite Mastercard. 3X on emirates.com and at Emirates sales offices, not inflight; 2X on other airfare, hotels and car rentals; 1X elsewhere. The rules withhold bonus miles from purchases made through third parties, so a hotel booked through an OTA earns 1X, which the denylist on the hotel rule says.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 3.0,
+        "merchant_allowlist": [
+          "emirates.com"
+        ]
+      },
+      {
+        "category": "travel_air",
+        "rate": 2.0
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 2.0,
+        "merchant_denylist": [
+          "expedia.com",
+          "booking.com",
+          "airbnb.com",
+          "hotels.com",
+          "priceline.com",
+          "vrbo.com",
+          "kayak.com",
+          "orbitz.com",
+          "travelocity.com"
+        ]
+      },
+      {
+        "category": "car_rental",
+        "rate": 2.0
+      }
+    ]
+  },
+  "barclays-emirates-premium": {
+    "id": "barclays-emirates-premium",
+    "issuer": "barclays",
+    "network": "mastercard",
+    "currency": "emirates",
+    "name": "Emirates Skywards Premium Mastercard",
+    "common": 120,
+    "annual_fee": 499,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://cards.barclaycardus.com/banking/cards/emirates-skywards-premium-world-elite-mastercard/",
+    "caution": "Bonus miles may not post when you pay through a digital wallet, PayPal or another third party.",
+    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48635). A World Elite Mastercard earning as the Rewards card does: 3X on emirates.com and at Emirates sales offices, not inflight; 2X on other airfare, hotels and car rentals; 1X elsewhere. The rules withhold bonus miles from purchases made through third parties, so a hotel booked through an OTA earns 1X, which the denylist on the hotel rule says. The 10,000-mile bonus for $30,000 a year is not modelled.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 3.0,
+        "merchant_allowlist": [
+          "emirates.com"
+        ]
+      },
+      {
+        "category": "travel_air",
+        "rate": 2.0
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 2.0,
+        "merchant_denylist": [
+          "expedia.com",
+          "booking.com",
+          "airbnb.com",
+          "hotels.com",
+          "priceline.com",
+          "vrbo.com",
+          "kayak.com",
+          "orbitz.com",
+          "travelocity.com"
+        ]
+      },
+      {
+        "category": "car_rental",
+        "rate": 2.0
+      }
+    ]
+  },
+  "barclays-miles-more": {
+    "id": "barclays-miles-more",
+    "issuer": "barclays",
+    "network": "mastercard",
+    "currency": "milesandmore",
+    "name": "Lufthansa Miles & More Mastercard",
+    "common": 118,
+    "annual_fee": 89,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://cards.barclaycardus.com/banking/cards/lufthansa-miles-more-world-elite-mastercard/",
+    "caution": "Bonus miles may not post when you pay through a digital wallet, PayPal or another third party.",
+    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48714). The Miles & More World Elite Mastercard. 2X on tickets bought directly from the Miles & More integrated airline partners -- Air Dolomiti, Austrian, Brussels Airlines, Croatia Airlines, Eurowings, LOT, Lufthansa, Luxair and SWISS -- and 1X elsewhere. The five that fly to the US are allowlisted by their own sites; the other four are not in merchants.json. Miles stop expiring only while the card makes a purchase every month.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 2.0,
+        "merchant_allowlist": [
+          "lufthansa.com",
+          "swiss.com",
+          "austrian.com",
+          "brusselsairlines.com",
+          "lot.com"
+        ]
       }
     ]
   }

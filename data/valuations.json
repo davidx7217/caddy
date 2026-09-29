@@ -1,6 +1,6 @@
 {
   "_comment": "Cents per point. cash = 1.0 by definition. These are DEFAULTS and are opinions, not facts. User-overridable in Options.",
-  "_sources": "Added 2026-09-27. wf and bofa are the issuers' own fixed values: Wells Fargo prices a point at one cent on the Autograph page, and BofA Travel Rewards points redeem at one cent against travel and dining. The airline and hotel currencies are NerdWallet's September 2026 estimates (nerdwallet.com/travel/learn/airline-miles-and-hotel-points-valuations, updated 2026-09-14; hyatt, ihg and jetblue added 2026-09-28 from the same table), which price a typical award redemption rather than the best one. usaa is the issuer's own figure: the Eagle Navigator terms price 10,000 points at $100 in travel ($70 as cash). bilt is the same NerdWallet page's baseline for Bilt Rewards, 1.25 cents, rather than its 1.8-cent transfer estimate, because the defaults assume a booking through the issuer's own travel portal. ulta is the floor of Ulta Beauty's own redemption scale, 100 points = $3.00; larger redemptions are worth up to 6.25 cents (2,000 points = $125). usbank is an assumption, not a published figure: U.S. Bank's Altitude pages say only that a deposit to a U.S. Bank account gets the maximum point value, so 1.0 stands until a page states one, and each Altitude card's caution says so.",
+  "_sources": "Added 2026-09-27. wf and bofa are the issuers' own fixed values: Wells Fargo prices a point at one cent on the Autograph page, and BofA Travel Rewards points redeem at one cent against travel and dining. The airline and hotel currencies are NerdWallet's September 2026 estimates (nerdwallet.com/travel/learn/airline-miles-and-hotel-points-valuations, updated 2026-09-14; hyatt, ihg and jetblue added 2026-09-28 from the same table, and wyndham and emirates after them), which price a typical award redemption rather than the best one. usaa is the issuer's own figure: the Eagle Navigator terms price 10,000 points at $100 in travel ($70 as cash). bilt is the same NerdWallet page's baseline for Bilt Rewards, 1.25 cents, rather than its 1.8-cent transfer estimate, because the defaults assume a booking through the issuer's own travel portal. ulta is the floor of Ulta Beauty's own redemption scale, 100 points = $3.00; larger redemptions are worth up to 6.25 cents (2,000 points = $125). usbank is an assumption, not a published figure: U.S. Bank's Altitude pages say only that a deposit to a U.S. Bank account gets the maximum point value, so 1.0 stands until a page states one, and each Altitude card's caution says so. frontier and milesandmore are not in NerdWallet's table, so each is the lowest September 2026 figure found, in keeping with a typical redemption rather than the best: frontier is WalletHub's average, 0.98 cents (wallethub.com, 2026-09-15; Upgraded Points says 1.1 and The Points Guy 1.3), and milesandmore is One Mile at a Time's 1.2 cents (onemileatatime.com/guides/value-miles-points, 2026-09-02; Upgraded Points says 1.3).",
   "cash":  1.0,
   "ur":    1.5,
   "mr":    1.6,
@@ -22,5 +22,9 @@
   "usaa":  1.0,
   "bilt":  1.25,
   "ulta":  3.0,
-  "usbank": 1.0
+  "usbank": 1.0,
+  "wyndham": 0.7,
+  "emirates": 1.0,
+  "frontier": 0.98,
+  "milesandmore": 1.2
 }

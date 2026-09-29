@@ -988,7 +988,7 @@ eq('...and its 5x hotels rate stays a portal note, never a ranking',
      cards.filter(p => !ISSUER[p.issuer] || !CURRENCY[p.currency]).map(p => p.id), []);
   eq('every card is ranked, 1 to the catalogue size, with no gaps and no repeats',
      cards.map(p => p.common).sort((a, b) => a - b), Array.from({ length: cards.length }, (_, i) => i + 1));
-  eq('...and there are 110 of them', cards.length, 110);
+  eq('...and there are 120 of them', cards.length, 120);
   // A store card that names a domain nothing resolves to could never rank at all.
   eq('every store a store card works at is in merchants.json',
      cards.flatMap(p => (p.only_at || []).filter(d => !merchants[d]).map(d => `${p.id}:${d}`)), []);
@@ -1503,6 +1503,51 @@ eq('...4x on gas to $1,000 a quarter, 2x on dining, groceries and streaming',
    [tier('usbank-altitude-connect', 'shell.us')?.caveats[0],
     ...['doordash.com', 'kroger.com', 'netflix.com'].map(h => tier('usbank-altitude-connect', h)?.rate)],
    ['Capped at $1,000 per quarter, then 1x', 2, 2, 2]);
+
+// --- Barclays' other co-brands, 2026-09-28 ---------------------------------------
+// Wyndham, AARP, Upromise, Frontier, Emirates and Miles & More, each read off the
+// Reward Rules in the card's terms on barclaycardus.com that day.
+eq('Wyndham Earner: 5x at wyndhamhotels.com, 3x on dining, groceries, gas and EV charging',
+   ['wyndhamhotels.com', 'chipotle.com', 'kroger.com', 'shell.us', 'evgo.com']
+     .map(h => tier('barclays-wyndham-earner', h)?.rate), [5, 3, 3, 3, 3]);
+eq('...1x on airfare, at another chain, and through a delivery app or Instacart',
+   ['delta.com', 'marriott.com', 'doordash.com', 'instacart.com']
+     .map(h => tier('barclays-wyndham-earner', h)?.rate), [1, 1, 1, 1]);
+eq('Wyndham Earner Plus: 6x at wyndhamhotels.com, worth 4.2%',
+   [tier('barclays-wyndham-earner-plus', 'wyndhamhotels.com')?.rate,
+    tier('barclays-wyndham-earner-plus', 'wyndhamhotels.com')?.value], [6, 4.2]);
+eq('...4x on dining, groceries and travel: airfare, car rental, rideshare, gas and EV charging',
+   ['chipotle.com', 'kroger.com', 'delta.com', 'hertz.com', 'uber.com', 'shell.us', 'evgo.com']
+     .map(h => tier('barclays-wyndham-earner-plus', h)?.rate), Array(7).fill(4));
+eq('...but 1x at another chain, which its travel category leaves out',
+   tier('barclays-wyndham-earner-plus', 'marriott.com')?.rate, 1);
+eq('Wyndham Earner Premier: 8x at wyndhamhotels.com, 4x as the Plus earns it, 1x at another chain',
+   ['wyndhamhotels.com', 'chipotle.com', 'hertz.com', 'marriott.com']
+     .map(h => tier('barclays-wyndham-earner-premier', h)?.rate), [8, 4, 4, 1]);
+eq('AARP Travel Rewards: 3% on airfare, a hotel booked direct and car rental, 2% on dining',
+   ['delta.com', 'marriott.com', 'hertz.com', 'chipotle.com']
+     .map(h => tier('barclays-aarp-travel-rewards', h)?.rate), [3, 3, 3, 2]);
+eq('...but 1% through an OTA or a delivery app, which are third parties',
+   ['hotels.com', 'airbnb.com', 'doordash.com'].map(h => tier('barclays-aarp-travel-rewards', h)?.rate), [1, 1, 1]);
+eq('AARP Essential Rewards: 3% on gas and at drugstores, 1% on EV charging and elsewhere',
+   ['shell.us', 'cvs.com', 'evgo.com', 'amazon.com'].map(h => tier('barclays-aarp-essential-rewards', h)?.rate),
+   [3, 3, 1, 1]);
+eq('Upromise: 1.529% everywhere, the rate with a linked 529 plan',
+   ['amazon.com', 'chipotle.com'].map(h => tier('barclays-upromise', h)?.value), [1.529, 1.529]);
+eq('Frontier: 5x at flyfrontier.com, worth 4.9% at 0.98 cents a mile',
+   [tier('barclays-frontier', 'flyfrontier.com')?.rate, tier('barclays-frontier', 'flyfrontier.com')?.value],
+   [5, 4.9]);
+eq('...3x at a restaurant, 1x through a delivery app and on another airline',
+   ['chipotle.com', 'doordash.com', 'delta.com'].map(h => tier('barclays-frontier', h)?.rate), [3, 1, 1]);
+eq('Emirates Rewards and Premium: 3x at emirates.com, 2x on other airfare, hotels booked direct and car rental',
+   ['barclays-emirates-rewards', 'barclays-emirates-premium'].flatMap(id =>
+     ['emirates.com', 'delta.com', 'marriott.com', 'hertz.com'].map(h => tier(id, h)?.rate)),
+   [3, 2, 2, 2, 3, 2, 2, 2]);
+eq('...1x through an OTA', tier('barclays-emirates-rewards', 'hotels.com')?.rate, 1);
+eq('Miles & More: 2x at the five partner airlines that fly to the US, worth 2.4%',
+   ['lufthansa.com', 'swiss.com', 'austrian.com', 'brusselsairlines.com', 'lot.com']
+     .map(h => tier('barclays-miles-more', h)?.value), Array(5).fill(2.4));
+eq('...1x on another airline', tier('barclays-miles-more', 'united.com')?.rate, 1);
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

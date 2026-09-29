@@ -46,7 +46,9 @@ export const CURRENCY = {
   delta: 'Delta miles', united: 'United miles', southwest: 'Southwest points',
   aa: 'AAdvantage miles', marriott: 'Marriott points', hilton: 'Hilton points',
   hyatt: 'Hyatt points', ihg: 'IHG points', jetblue: 'TrueBlue points',
-  usaa: 'USAA points', bilt: 'Bilt points', ulta: 'Ulta points', usbank: 'U.S. Bank points'
+  usaa: 'USAA points', bilt: 'Bilt points', ulta: 'Ulta points', usbank: 'U.S. Bank points',
+  wyndham: 'Wyndham points', emirates: 'Skywards Miles', frontier: 'Frontier Miles',
+  milesandmore: 'Miles & More miles'
 };
 
 export const money = c => c ? `$${c}/yr` : 'no annual fee';
@@ -66,7 +68,8 @@ const KIND = {
   wf: 'points', bofa: 'points', delta: 'points', united: 'points',
   southwest: 'points', aa: 'points', marriott: 'points', hilton: 'points',
   hyatt: 'points', ihg: 'points', jetblue: 'points', usaa: 'points', bilt: 'points',
-  ulta: 'points', usbank: 'points'
+  ulta: 'points', usbank: 'points', wyndham: 'points', emirates: 'points', frontier: 'points',
+  milesandmore: 'points'
 };
 
 export const kindOf = currency => KIND[currency] || 'points';
