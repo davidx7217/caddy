@@ -720,15 +720,32 @@ removes it when done. The prompts are the spec:
 
 ## 16. Full audit, 29 September 2026
 
-Every card's rates read against its issuer page -- 117 that day, 9 by the rates
-keeper the day before -- and every card ranked on all 162 merchant rows to see what
-the extension actually recommends. Fixed on `audit-2026-09-29`: Cash+'s fast food,
-movie and furniture choices, Autograph's pay TV, the Freedom cards' 2% on Lyft, and
-an engine bug where a later-ending promo silenced the stale-quarter warning.
+All 140 cards' rates read against their issuer pages -- 117 that day plus the 14
+below, 9 by the rates keeper the day before -- and every card ranked on all 162
+merchant rows to see what the extension actually recommends. Fixed: Cash+'s fast
+food, restaurants, movie, furniture, department store and clothing choices, checked
+against U.S. Bank's own sample-merchant lists; Autograph's pay TV; the Freedom
+cards' 2% on Lyft; the Gap cards' dead source link; and an engine bug where a
+later-ending promo silenced the stale-quarter warning.
 
-**Cannot be read automatically** (a browser or a person must check them): the four
-USAA cards (usaa.com returns nothing to a fetch), Sam's Club, and the store cards
-whose sites block bots -- Amazon, Target, Lowe's, TJX, Gap x2, JCPenney x2, Macy's.
+**Fourteen cards need the in-app browser, not a fetch**: the four USAA cards
+(usaa.com renders everything in script), Sam's Club, and the store cards --
+Amazon, Target, Lowe's, TJX, Gap x2, JCPenney x2, Macy's. All fourteen matched
+their pages in the browser on 2026-09-29. The rates keeper reads with WebFetch
+only, so it will report these as unreadable; re-read them by hand in a session.
+
+**Where merchant-code evidence comes from** (the next gap: merchants.json still
+calls itself UNVERIFIED SEED DATA and no agent checks how a merchant codes):
+- The issuer's own lists beat everything. U.S. Bank publishes sample merchants per
+  Cash+ choice at cashplus.usbank.com/cash-plus/samplemerchants; Chase names its
+  streaming list in chase.com/RewardsCategoryFAQs; Wells Fargo defines Autograph's
+  categories by merchant code type in the product page's footnote.
+- awardwallet.com/merchants shows how real purchases coded, per issuer, from its
+  users' statements -- Starbucks is "FAST FOOD RESTAURANTS" at Chase and Citi,
+  T.J.Maxx "Discount stores" at Chase. It only works in a real browser, and some
+  merchants (HomeGoods) have no codings yet. Look things up there; do not script it.
+- Visa's Merchant Data Standards Manual and Mastercard's Quick Reference Booklet
+  define what each code covers, not which merchant uses which.
 
 **Open questions, each a call for David or a statement to settle it:**
 - Wyndham Earner: its own page says 2X in one place and 3X in another on dining,
@@ -738,17 +755,17 @@ whose sites block bots -- Amazon, Target, Lowe's, TJX, Gap x2, JCPenney x2, Macy
 - Altitude Connect excludes booking sites from its 4X travel and the Emirates cards
   from their 2X; RCI and Capital Vacations do not. The same question answered two
   ways.
-- Cash+ "Department stores" counts target.com and walmart.com, which are discount
-  stores; "Furniture stores" counts HomeGoods and HomeSense but not Wayfair.
-- Cable companies (Xfinity, Cox, Spectrum, Optimum) for Autograph's pay-TV 3X.
+- T.J.Maxx and Marshalls are filed as clothing, but Chase codes T.J.Maxx as a
+  discount store, so the Gap Encore Mastercard's 3X "apparel" there is doubtful.
+- Cable companies (Xfinity, Cox, Spectrum, Optimum) for Autograph's pay-TV 3X:
+  U.S. Bank files Comcast and Charter under cable and satellite TV, which points
+  to yes, but no Wells Fargo statement confirms it.
 - Sapphire Preferred's 3X "vacation homes at top brands" is not modelled.
 - Venture X's portal note says 10X on vrbo.com and airbnb.com; vacation rentals
   through Capital One Travel earn 5X.
 - Merchant rows that are not really checkouts: kayak.com (search only), opentable.com
   (meals are paid at the table), riteaid.com (no longer a drugstore storefront),
   traderjoes.com, wholefoodsmarket.com.
-- merchants.json still calls itself UNVERIFIED SEED DATA, and no agent checks how a
-  merchant codes. That is the next gap.
 
 ---
 
