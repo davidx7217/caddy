@@ -820,7 +820,8 @@ on another).
   for a cable bill was found either way; the one on myFICO (2022) is Xfinity Mobile
   earning 3X as a phone plan.
 - **Held, one source each**: cox.com and optimum.com (AwardWallet's own "Cable" and
-  "Select Streaming Services" labels, no issuer coding under any variant) and
+  "Select Streaming Services" labels; none of the 17 variants carrying them shows
+  an issuer coding) and
   audible.com (AwardWallet's Chase and Citi codings as continuity/subscription).
 - **Held, one source and a contrary one**: dropping T.J.Maxx and Marshalls from the
   Gap Encore Mastercard's 3X. Barclays' terms (tc47922) and Gap's Encore FAQ define
