@@ -134,14 +134,27 @@ than hiding it.
 
 ## 2. Rotating categories: the rates keeper adds each quarter
 
-Freedom Flex's rotating 5% categories change every quarter, and Chase posts the
-next quarter's about two weeks ahead. The rates keeper (section 15) reads them
-off chase.com and puts them on a `rates-*` branch; a rule dated in the future
-switches itself on, so approving early is safe.
+Freedom Flex's rotating 5% categories change every quarter. Chase now shows the
+next quarter on the card page a full quarter ahead (Q1 2027 was up on 2026-09-28).
+The rates keeper (section 15) adds each quarter to a `rates-*` branch **as soon as
+the issuer posts it**; a rule dated in the future switches itself on, so approving
+early is safe. David's rule, 2026-09-28: the extension must never tell a user that
+rotating categories have not been updated. It always has the latest categories.
 
-The extension does not silently mis-rank when a quarter lapses unreplaced --
-`windowState()` returns `expired` and `stalenessFor()` says so on the card --
-but it cannot invent the new quarter.
+`stalenessFor()` still carries that line as a last-resort tripwire for a rotating
+quarter (`requires_activation` plus a start date) that lapses with no later quarter
+modelled. Reaching it means the keeper failed. Any other dated rule -- Aeroplan's
+3x dining stepping down to 2x after 2026-12-31, the Lyft offers ending 2027-09-30 --
+is an end the issuer announced and the data already holds, so it never triggers
+the line (`isRotating()`, pinned in `test-engine.mjs`).
+
+**Read the definitions, not the headline.** Every category mapping rests on the
+issuer's own definition: chase.com/RewardsCategoryFAQs for Chase (Travel names
+airlines, hotels, car rental agencies, cruise lines, travel agencies, discount
+travel sites, trains, buses, taxis, limousines, ferries, tolls and parking), the
+calendar footnotes for Discover, americanexpress.com/rewards-info for Amex. Reading
+Discover's Q4 footnote is what showed its Utilities covers phone and internet
+bought online, and that it does not name delivery apps under Restaurants.
 
 **Stacking.** `rank()` takes the single best rule and never adds two, so when a
 rotating category lands on one Freedom Flex already pays 3x on, the rule carries

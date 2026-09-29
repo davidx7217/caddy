@@ -66,9 +66,12 @@ caution says what members earn anyway.
 
 **Standing obligations:**
 
-- **Chase Freedom Flex rotating categories expire 2026-09-30.** Re-verify on 2026-10-01.
-  The extension does not silently mis-rank when they lapse -- it says so, in the dock
-  and in the popup -- but it cannot invent the new quarter's categories for you.
+- **Rotating categories must always be current.** Freedom Flex is modelled through
+  Q1 2027 and Discover it through Q4 2026. The rates keeper adds each quarter as soon
+  as the issuer posts it, so a quarter never lapses unreplaced; the "rotating
+  categories have not been updated" line in the dock is a last-resort tripwire, not
+  something a user should ever see. Dated ends the issuer announced (Aeroplan's 3x
+  dining stepping down to 2x, a Lyft offer ending) never trigger it.
 - Merchant categories in `merchants.json` are still hand-assigned and unverified.
 - Robinhood's rumoured 5% travel-portal rate is deliberately **not** modelled: several
   third-party sites report it, robinhood.com does not confirm it. Capital One
@@ -739,7 +742,7 @@ it; run it whenever you add a card.
   are the one thing `cards.json` refuses. Citi Double Cash was added instead, which
   is the replacement Citi itself names. Add Custom Cash as `verified: false` if you
   hold one -- the popup already banners unverified data.
-- Rotating categories (Freedom Flex) are verified for Q3 2026 and expire 2026-09-30.
+- Rotating categories are verified through Q1 2027 (Freedom Flex) and Q4 2026 (Discover it).
 - The store listing is **written but not submittable**. `store/listing.md` holds
   the name, both descriptions, the single-purpose statement, a justification per
   permission and the data-use answers; `store/privacy-policy.md` is the policy it

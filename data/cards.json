@@ -3,7 +3,7 @@
   "_business_note": "`business` marks a card issued on business underwriting rather than personal. Absent means personal -- only the field's presence is meaningful, so there is nothing to keep in sync on a hundred and nine records. It filters the catalogue and nothing else reads it: the ranker does not care whose name is on the account.",
   "_common_note": "`common` is a POPULARITY RANK, 1 to 140, and it is EDITORIAL. There is no public card-level ranking of US cardholders -- Nilson publishes issuer volume, not how many people hold a Freedom Unlimited -- so this is judgement, not a sourced fact, and it is the only field here that is. It orders the setup picker so a new user meets mass-market cards first. 21 to 40 were added on 2026-09-27 as the next twenty after the first, 41 to 63 on 2026-09-28 -- store cards, then the remaining tiers of airline and hotel programs already present -- 64 to 82 later that day, the cards of issuers Caddy did not yet cover, 83 to 95 after those, business cards, 96 to 103, smaller store cards, 104 to 110, the missing tiers of covered programs, 111 to 126, Barclays' other co-branded cards, and 127 to 140, co-branded business cards, so each batch ranks below the one before by construction. Re-rank it freely; nothing computes from it.",
   "_only_at_note": "`only_at` marks a STORE CARD: the merchant domains where it works, and nowhere else. The ranker drops the card from consideration on any other domain rather than ranking it on its base rate, because recommending a card the till refuses is worse than not mentioning it. base_rate is then what the card adds at that store: where a store pays its free program's members something whatever card they use, that share is left out, because it cannot change which card to use. Store cards with no rewards at all -- Home Depot's, for one -- are deliberately left out: a card that earns nothing can never be the best card to use.",
-  "_comment": "All 140 records verified against issuer sources; 5 on 2026-08-29, 6 on 2026-09-09, 5 on 2026-09-10, 24 on 2026-09-27 -- the twenty added that day, plus Blue Cash Everyday, Amex Gold, BofA Customized Cash and U.S. Bank Cash+, re-read because their categories changed -- and 100 on 2026-09-28: the store cards and the remaining airline and hotel tiers, then nineteen cards from Synchrony's general-purpose line, Barclays, USAA, Navy Federal and Bilt, then thirteen business cards from Amex, Capital One, Chase and Barclays, then eight smaller store cards from Gap Inc., Nordstrom, Ulta and JCPenney, then seven missing tiers: Citi AAdvantage Executive and Globe, Wells Fargo Autograph Journey, BofA Premium Rewards and Premium Rewards Elite, and U.S. Bank Altitude Go and Connect, then sixteen more Barclays co-brands: three Wyndham Rewards Earner tiers, two AARP cards, Upromise, Frontier, two Emirates Skywards cards, Lufthansa Miles & More, GM Rewards, Carnival Rewards, Barnes & Noble, Breeze Easy, RCI Elite Rewards and Capital Vacations, then fourteen co-branded business cards: Amex's Delta SkyMiles Gold, Platinum and Reserve Business, Marriott Bonvoy Business, Hilton Honors Business and Business Green, Chase's United and United Club Business, Southwest Performance and Premier Business, IHG One Rewards Premier Business and World of Hyatt Business, and Barclays' Wyndham Earner Business and GM Business. The Bilt cards' offer terms could not be read (the link downloads a file), so their category definitions are unconfirmed; see their notes. Each carries its source_url. Chase Freedom Flex rotating categories are modelled through Q4 2026 and MUST be re-verified by 2026-12-31. Amex Platinum was absent until 2026-09-27 because no reachable americanexpress.com page stated its annual fee or base rate on 2026-09-10; the product page states both now.",
+  "_comment": "All 140 records verified against issuer sources; 5 on 2026-08-29, 6 on 2026-09-09, 5 on 2026-09-10, 24 on 2026-09-27 -- the twenty added that day, plus Blue Cash Everyday, Amex Gold, BofA Customized Cash and U.S. Bank Cash+, re-read because their categories changed -- and 100 on 2026-09-28: the store cards and the remaining airline and hotel tiers, then nineteen cards from Synchrony's general-purpose line, Barclays, USAA, Navy Federal and Bilt, then thirteen business cards from Amex, Capital One, Chase and Barclays, then eight smaller store cards from Gap Inc., Nordstrom, Ulta and JCPenney, then seven missing tiers: Citi AAdvantage Executive and Globe, Wells Fargo Autograph Journey, BofA Premium Rewards and Premium Rewards Elite, and U.S. Bank Altitude Go and Connect, then sixteen more Barclays co-brands: three Wyndham Rewards Earner tiers, two AARP cards, Upromise, Frontier, two Emirates Skywards cards, Lufthansa Miles & More, GM Rewards, Carnival Rewards, Barnes & Noble, Breeze Easy, RCI Elite Rewards and Capital Vacations, then fourteen co-branded business cards: Amex's Delta SkyMiles Gold, Platinum and Reserve Business, Marriott Bonvoy Business, Hilton Honors Business and Business Green, Chase's United and United Club Business, Southwest Performance and Premier Business, IHG One Rewards Premier Business and World of Hyatt Business, and Barclays' Wyndham Earner Business and GM Business. The Bilt cards' offer terms could not be read (the link downloads a file), so their category definitions are unconfirmed; see their notes. Each carries its source_url. Chase Freedom Flex rotating categories are modelled through Q1 2027; re-read Chase's Q1 2027 release when it posts (around 2026-12-15) and add Q2 2027 as soon as Chase posts it, before 2027-03-31. Amex Platinum was absent until 2026-09-27 because no reachable americanexpress.com page stated its annual fee or base rate on 2026-09-10; the product page states both now.",
   "chase-sapphire-reserve": {
     "id": "chase-sapphire-reserve",
     "issuer": "chase",
@@ -115,7 +115,7 @@
     "verified": true,
     "last_verified": "2026-09-28",
     "source_url": "https://creditcards.chase.com/cash-back-credit-cards/freedom/flex",
-    "note": "Q4 2026 (Oct-Dec) read 2026-09-28 on the source_url's quarterly calendar and in Chase's release of 2026-09-15 (media.chase.com/news/chase-freedom-2026-q4-categories): grocery stores excluding Walmart and Target, dining, and American Red Cross donations, on up to $1,500 combined. The release's own footnote puts dining at 7% total (1% base + 4% quarterly + 2% dining). Walmart, Target and wholesale clubs, which Chase excludes, already resolve outside groceries. Red Cross donations have no category and are left out. Q1 2027 (grocery stores excluding Walmart and Target, top streaming services) is posted on the same page and in Chase's release of 2026-09-21 but not modelled yet. Fee, base rate, 3% dining and drugstores and 5% Chase Travel unchanged. Q3 2026 rules kept for the tests pinned to it.",
+    "note": "Q4 2026 (Oct-Dec) read 2026-09-28 on the source_url's quarterly calendar and in Chase's release of 2026-09-15 (media.chase.com/news/chase-freedom-2026-q4-categories): grocery stores excluding Walmart and Target, dining, and American Red Cross donations, on up to $1,500 combined. The release's own footnote puts dining at 7% total (1% base + 4% quarterly + 2% dining). Walmart, Target and wholesale clubs, which Chase excludes, already resolve outside groceries. Red Cross donations have no category and are left out. Q1 2027 read the same day on the same calendar and in Chase's release of 2026-09-21 (media.chase.com/news/chase-freedom-flex-more-travel-value: 'Q1 2027 categories are top streaming services and grocery stores (excluding Walmart and Target)'). Chase's Q1 release was not out yet, so a third Q1 category may still be announced. Category definitions read on chase.com/RewardsCategoryFAQs 2026-09-28: grocery stores exclude warehouse clubs, discount stores and drugstores, and delivery counts only if it codes as a grocery store; dining includes delivery and takeout that code as restaurants; top streaming services is a named list (Apple Music, Apple TV, Disney+, ESPN+, Fubo TV, Max, Hulu, Netflix, Pandora, Paramount+, Peacock, Showtime, SiriusXM, Sling, Spotify, YouTube Premium, YouTube TV, Vudu), so the Q1 rule is allowlisted to the streaming sites Caddy knows that are on it. Q1 2027 groceries and streaming pay 5% on their own: the card has no standing bonus in either. Fee, base rate, 3% dining and drugstores and 5% Chase Travel unchanged. Q3 2026 rules kept for the tests pinned to it.",
     "rules": [
       {
         "category": "dining",
@@ -220,13 +220,52 @@
         "caveat": "Q4 2026 rotating category: 7% total with the everyday 3% dining. The $1,500 cap is combined across all 5% categories."
       },
       {
+        "category": "groceries",
+        "rate": 5.0,
+        "window": {
+          "start": "2027-01-01",
+          "end": "2027-03-31"
+        },
+        "requires_activation": true,
+        "cap": {
+          "amount": 1500,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "Q1 2027 rotating category, excluding Walmart and Target. The $1,500 cap is combined across all 5% categories."
+      },
+      {
+        "category": "streaming",
+        "rate": 5.0,
+        "merchant_allowlist": [
+          "netflix.com",
+          "spotify.com",
+          "hulu.com",
+          "disneyplus.com",
+          "max.com",
+          "hbomax.com",
+          "youtube.com"
+        ],
+        "window": {
+          "start": "2027-01-01",
+          "end": "2027-03-31"
+        },
+        "requires_activation": true,
+        "cap": {
+          "amount": 1500,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "Q1 2027 rotating category: Chase's named top streaming services only. The $1,500 cap is combined across all 5% categories."
+      },
+      {
         "category": "travel_portal",
         "rate": 5.0,
         "portal_only": true,
         "portal": "Chase Travel"
       }
     ],
-    "caution": "Q4 2026 rotating 5%: groceries, dining (7% total) and American Red Cross donations, which Caddy cannot rank."
+    "caution": "Q4 2026 rotating 5%: groceries, dining (7% total) and American Red Cross donations, which Caddy cannot rank. Q1 2027: groceries and top streaming services."
   },
   "robinhood-gold": {
     "id": "robinhood-gold",
@@ -371,7 +410,7 @@
       }
     ],
     "caution": "The extra 2X Air Canada pays Aeroplan 25K members on eligible flights comes from Air Canada, not the card, and is not counted.",
-    "note": "Refreshed 2026-09-10 for new and existing cardmembers (Chase release media.chase.com/news/the-chase-air-canada-aeroplan-credit-card-refresh, read 2026-09-28). Offer details on the source_url, read 2026-09-28: 3X on Air Canada purchases made directly and on travel; grocery and dining 3X on purchases posting by 2026-12-31, then 2X; 2X at gas stations; 1X otherwise. Annual fee $195. Travel spans air, hotel, car rental and ground, the same mapping Sapphire Preferred uses for Chase's travel category; the definition itself was not re-read this run. Network is World Elite Mastercard per the release. The monthly 500-points-per-$2,000 bonus is no longer on the page."
+    "note": "Refreshed 2026-09-10 for new and existing cardmembers (Chase release media.chase.com/news/the-chase-air-canada-aeroplan-credit-card-refresh, read 2026-09-28). Offer details on the source_url, read 2026-09-28: 3X on Air Canada purchases made directly and on travel; grocery and dining 3X on purchases posting by 2026-12-31, then 2X; 2X at gas stations; 1X otherwise. Annual fee $195. Chase's travel definition, read on chase.com/RewardsCategoryFAQs 2026-09-28: airlines, hotels, motels, timeshares, car rental agencies, cruise lines, travel agencies, discount travel sites, campgrounds and operators of passenger trains, buses, taxis, limousines, ferries, toll bridges and highways, and parking lots and garages. So the 3X covers travel_air, travel_hotel (OTAs included, since travel agencies and discount travel sites are named), car_rental and travel_ground. Rideshare is not named in that sentence, but Chase's own Rideshare category groups it with taxis and limousines ('operators of taxi, limousine, and rideshare services') and six other Chase travel cards here already count it, so uber.com and lyft.com earn the 3X. Rates also confirmed in the Rewards Program Agreement RPA0538 (05/20/2026, asset.chase.com/content/dam/card/rulesregulations/en/RPA0538_Web.pdf, read 2026-09-28), which gives the 2027 schedule outright: from January 1, 2027, 3X Air Canada and travel, 2X gas, grocery and dining, 1X otherwise. Network is World Elite Mastercard per the release. The monthly 500-points-per-$2,000 bonus is no longer on the page."
   },
   "chase-ink-business-cash": {
     "id": "chase-ink-business-cash",
@@ -628,7 +667,7 @@
     "last_verified": "2026-09-28",
     "source_url": "https://www.discover.com/credit-cards/cash-back/cashback-calendar.html",
     "caution": "Each quarter's 5% must be ACTIVATED with Discover, and it stops at $1,500 of spend in that quarter.",
-    "note": "Unlike Chase, Discover publishes the whole year's calendar in advance, so Q4 2026 is modelled here already and this card will not go stale on 2026-10-01. Past quarters are deliberately NOT modelled: an expired rule with no current rule in its category would fire a staleness warning that is noise, since the quarter ended on schedule. First-year Cashback Match is not modelled either -- it doubles everything at year end and needs spend tracking.",
+    "note": "Unlike Chase, Discover publishes the whole year's calendar in advance, so Q4 2026 is modelled here already and this card will not go stale on 2026-10-01. Q4 definitions read on the source_url 2026-09-28 (footnote 4): Utilities covers residential electricity, natural gas and water, and also internet, cable, satellite TV and mobile and landline phone service bought online or by phone, so the Q4 5% sits on phone and internet_cable too; standalone streaming is excluded. Entertainment is tickets at movie theaters, sports, theatrical and concert promoters, amusement parks and attractions; streaming and subscription services are excluded. Restaurants are merchants classified as full-service restaurants, cafes, cafeterias, fast food and caterers; Discover does not name delivery apps, so doordash.com, ubereats.com, grubhub.com and seamless.com are denylisted from the Q4 dining 5% rather than assumed to code as restaurants. Discover had not posted 2027 on 2026-09-28. Past quarters are deliberately NOT modelled: an expired rule with no current rule in its category would fire a staleness warning that is noise, since the quarter ended on schedule. First-year Cashback Match is not modelled either -- it doubles everything at year end and needs spend tracking.",
     "rules": [
       {
         "category": "gas",
@@ -657,6 +696,7 @@
       {
         "category": "dining",
         "rate": 5.0,
+        "merchant_denylist": ["doordash.com", "ubereats.com", "grubhub.com", "seamless.com"],
         "window": { "start": "2026-10-01", "end": "2026-12-31" },
         "requires_activation": true,
         "cap": { "amount": 1500, "period": "quarter", "then_rate": 1.0 },
@@ -677,6 +717,22 @@
         "requires_activation": true,
         "cap": { "amount": 1500, "period": "quarter", "then_rate": 1.0 },
         "caveat": "Q4 2026 rotating category. The $1,500 cap is combined across all three Q4 categories."
+      },
+      {
+        "category": "phone",
+        "rate": 5.0,
+        "window": { "start": "2026-10-01", "end": "2026-12-31" },
+        "requires_activation": true,
+        "cap": { "amount": 1500, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "Q4 2026 Utilities category, which covers phone service paid online or by phone, not in a store. The $1,500 cap is combined across all three Q4 categories."
+      },
+      {
+        "category": "internet_cable",
+        "rate": 5.0,
+        "window": { "start": "2026-10-01", "end": "2026-12-31" },
+        "requires_activation": true,
+        "cap": { "amount": 1500, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "Q4 2026 Utilities category, which covers internet, cable and satellite TV paid online or by phone, not in a store. The $1,500 cap is combined across all three Q4 categories."
       }
     ]
   },

@@ -376,10 +376,19 @@ function hasLaterWindow(product, expired) {
     r !== expired && r.window && r.window.end && r.window.end > end);
 }
 
+// A rotating quarter is dated at both ends and needs activating. Anything else
+// with a window -- Aeroplan's 3x dining stepping down to 2x, a Lyft offer ending
+// -- is an end the issuer announced and the data already holds, so its lapse is
+// the card working as published, not a calendar that ran out.
+function isRotating(rule) {
+  return !!(rule.requires_activation && rule.window && rule.window.start);
+}
+
 function stalenessFor(product, best, expired, now) {
   // Only worth saying if the expiry actually cost something. If another rule
   // still pays more, the lapsed one changed nothing and the warning is noise.
-  if (expired && (!best || expired.rate > best.rate) && !hasLaterWindow(product, expired)) {
+  if (expired && isRotating(expired) && (!best || expired.rate > best.rate) &&
+      !hasLaterWindow(product, expired)) {
     return `${expired.rate}x on ${expired.category.replace(/_/g, ' ')} expired ` +
            `${expired.window.end}. This card's rotating categories have not been updated, ` +
            `so it is being ranked on its base rate.`;

@@ -155,6 +155,14 @@ eq('unknown domain resolves to null', resolveMerchant('some-random-site.example'
   eq('...falling back to the standing 3x past the cap',
      ff('doordash.com', '2026-11-15').caveats.includes('Capped at $1,500 per quarter, then 3x'), true);
   eq('...and the day before Q4 starts dining is the standing 3x', ff('doordash.com', '2026-09-30').rate, 3);
+  // Q1 2027, posted on chase.com and in Chase's 2026-09-21 release: grocery
+  // stores (excluding Walmart and Target) and Chase's named top streaming services.
+  eq('Q1 2027 groceries pay 5x mid-quarter', ff('kroger.com', '2027-02-15').rate, 5);
+  eq('Q1 2027 streaming pays 5x mid-quarter', ff('netflix.com', '2027-02-15').rate, 5);
+  eq('...and is 1x the day before Q1 starts', ff('netflix.com', '2026-12-31').rate, 1);
+  eq('...while Q4 dining is back to 3x in Q1', ff('doordash.com', '2027-02-15').rate, 3);
+  eq('...and Q4 groceries rolling into Q1 never claim the categories are out of date',
+     /rotating/.test(ff('kroger.com', '2027-01-01').staleReason || ''), false);
 }
 
 // --- Chase Aeroplan, refreshed 2026-09-10, read on chase.com 2026-09-28 ------
@@ -848,18 +856,35 @@ eq('inside the last two weeks, it says when the rate ends',
    gasOn('2026-09-20').all[0].staleReason, 'This 5x rate ends 2026-09-30 (10 days).');
 eq('on the last day it says today',
    gasOn('2026-09-30').all[0].staleReason, 'This 5x rate ends 2026-09-30 (today).');
-// Expiry is checked the day after the NEWEST modelled quarter ends (Q4 2026),
-// on groceries: a category Q4 adds and the card does not otherwise bonus.
-const groceryOn = d => run('kroger.com', flex(), { now: at(d) });
+// Expiry is checked the day after the NEWEST modelled quarter ends (Q1 2027),
+// on streaming: a category Q1 adds and the card does not otherwise bonus.
+const streamOn = d => run('netflix.com', flex(), { now: at(d) });
 eq('once expired, it says so and says what it fell back to',
-   groceryOn('2027-01-01').all[0].staleReason,
-   "5x on groceries expired 2026-12-31. This card's rotating categories have not been " +
+   streamOn('2027-04-01').all[0].staleReason,
+   "5x on streaming expired 2027-03-31. This card's rotating categories have not been " +
    'updated, so it is being ranked on its base rate.');
-eq('...and the rate really has dropped', groceryOn('2027-01-01').all[0].rate, 1);
+eq('...and the rate really has dropped', streamOn('2027-04-01').all[0].rate, 1);
 eq('the reason is mirrored into caveats, which is what the popup renders',
-   groceryOn('2027-01-01').all[0].caveats.some(c => c.startsWith('5x on groceries expired')), true);
+   streamOn('2027-04-01').all[0].caveats.some(c => c.startsWith('5x on streaming expired')), true);
 eq('rank reports one flag so a banner needs no walk of the list',
-   [gasOn('2026-09-09').stale, groceryOn('2027-01-01').stale], [false, true]);
+   [gasOn('2026-09-09').stale, streamOn('2027-04-01').stale], [false, true]);
+
+// A dated end the issuer announced is not a calendar that ran out. Aeroplan's
+// 3x dining steps down to 2x after 2026-12-31 and a Lyft offer simply ends; the
+// data already says so, and neither may claim rotating categories are missing.
+{
+  const dated = { 'dated-card': { id: 'dated-card', name: 'Dated Card', issuer: 'x',
+    currency: 'cash', base_rate: 1, verified: true, last_verified: '2027-01-10',
+    rules: [{ category: 'dining', rate: 3, window: { end: '2026-12-31' } },
+            { category: 'dining', rate: 2 },
+            { category: 'travel_ground', rate: 5, window: { end: '2026-12-31' } }] } };
+  const on = h => rank({ hostname: h, merchants, products: dated,
+    instances: own('dated-card'), valuations, now: at('2027-01-15') }).all[0];
+  eq('a step-down to a standing rate does not say categories were not updated',
+     [on('doordash.com').rate, on('doordash.com').staleReason], [2, null]);
+  eq('...nor does an offer that ends onto the base rate',
+     [on('uber.com').rate, on('uber.com').staleReason], [1, null]);
+}
 
 // An expiry that costs nothing is not worth saying. Dining is not a rotating
 // category on this card, so the lapsed gas rule changed no outcome there.
@@ -981,9 +1006,22 @@ eq('Q3 pays 5x at the pump', disco('exxonmobilfuels.com', '2026-09-09').all[0].r
 eq('...on transport', disco('uber.com', '2026-09-09').all[0].rate, 5);
 eq('...and at the drugstore', disco('cvs.com', '2026-09-09').all[0].rate, 5);
 eq('Q4 is already live in the data, so it just works on 15 October',
-   [disco('doordash.com', '2026-10-15').all[0].rate,
+   [disco('chipotle.com', '2026-10-15').all[0].rate,
     disco('ticketmaster.com', '2026-10-15').all[0].rate,
     disco('coned.com', '2026-10-15').all[0].rate], [5, 5, 5]);
+// Discover's Q4 Utilities definition (footnote 4, read 2026-09-28) includes
+// internet, cable, satellite TV and phone service bought online or by phone.
+eq('...Q4 utilities covers phone and internet bought online',
+   [disco('t-mobile.com', '2026-10-15').all[0].rate,
+    disco('xfinity.com', '2026-10-15').all[0].rate], [5, 5]);
+eq('...which were 1x the quarter before',
+   [disco('t-mobile.com', '2026-09-09').all[0].rate,
+    disco('xfinity.com', '2026-09-09').all[0].rate], [1, 1]);
+// Restaurants are merchants classified as restaurants, cafes, fast food and
+// caterers; Discover does not name delivery apps, so they are not assumed.
+eq('...and delivery apps do not get the Q4 restaurant 5x',
+   [disco('doordash.com', '2026-10-15').all[0].rate,
+    disco('ubereats.com', '2026-10-15').all[0].rate], [1, 1]);
 eq('...which is what finally makes utilities rank something',
    disco('coned.com', '2026-10-15').category, 'utilities');
 eq('...and every quarter needs activating', disco('coned.com', '2026-10-15').all[0].needsActivation, true);
@@ -995,14 +1033,14 @@ eq('...and every quarter needs activating', disco('coned.com', '2026-10-15').all
 eq('a category whose quarter ended does NOT claim the data is stale',
    disco('exxonmobilfuels.com', '2026-10-15').all[0].staleReason, null);
 eq('...but once the LAST modelled quarter lapses, it does say so',
-   disco('doordash.com', '2027-01-05').all[0].staleReason,
+   disco('chipotle.com', '2027-01-05').all[0].staleReason,
    "5x on dining expired 2026-12-31. This card's rotating categories have not been " +
    'updated, so it is being ranked on its base rate.');
 // Freedom Flex models one quarter only, so its lapse is genuinely stale data and
 // must still warn. The fix had to tell these two cases apart, not silence both.
 eq('Freedom Flex, with no later quarter modelled, still warns',
-   only('chase-freedom-flex', 'kroger.com', '2027-01-01').all[0].staleReason,
-   "5x on groceries expired 2026-12-31. This card's rotating categories have not been " +
+   only('chase-freedom-flex', 'netflix.com', '2027-04-01').all[0].staleReason,
+   "5x on streaming expired 2027-03-31. This card's rotating categories have not been " +
    'updated, so it is being ranked on its base rate.');
 
 // Venture is the card the 'c1' valuation was written for: transferable miles, so
