@@ -9,7 +9,7 @@ works and why; this file is only the state of play.
 
 ## State
 
-- **v1.0.0**, 140 cards across 17 issuers, 162 merchant rows, 27 categories.
+- **v1.0.0**, 140 cards across 17 issuers, 163 merchant rows, 27 categories.
   The second twenty cards landed 2026-09-27; store cards plus the remaining
   airline and hotel tiers, nineteen cards from five issuers Caddy lacked,
   thirteen business cards, eight smaller store cards, seven missing tiers,
@@ -20,7 +20,7 @@ works and why; this file is only the state of play.
   card ranked on every merchant row. The fixes it found are merged. The one soft
   spot left: the three Bilt cards' category definitions (section 9).
 - **28 merchant rows record how they actually code** (`mcc`, `mcc_source`); the
-  other 134 are still unverified seed data (section 16).
+  other 135 are still unverified seed data (section 16).
 - **Freedom Flex carries Q4 2026 and Q1 2027**, dining 7X in Q4 (section 2). Rates
   switch at local midnight even in a tab left open.
 - **Tests green**: 572 engine + 31 setup + 54 lifecycle + 47 worker. `npm test`.
@@ -314,7 +314,9 @@ the README and a real person's card list.
 - **Re-run the redirect sweep after any long gap.**
   `node tools/check-redirects-browser.mjs` does the HTTP pass first and browses
   whatever it could not confirm. Do not use `--headless`: measured 2026-09-10, it
-  reported a moved row as CLEAN.
+  reported a moved row as CLEAN. A row reported as moved to `na.network-auth.com`
+  has not moved: that is a guest Wi-Fi sign-in page catching the request (hulu.com
+  and jcpenney.com, 2026-09-29).
 - **The category audit is a test now**, in `test-engine.mjs`, both directions:
   rules without merchants are dead, merchants without rules are inert. Adding a
   card or a category that leaves either behind fails `npm test` and names it.
@@ -538,7 +540,11 @@ confirmed by the HTTP sweep.
   per product stands for all four designs, named so a search for any brand finds it.
   500 points = $1, so Barclays' "5X, 3X, 1X" are 5%, 3% and 1%. All four brands sell
   from gap.com hosts (oldnavy.gap.com and so on), so the existing gap.com row covers
-  them. Gap Factory is not named for the 5% and is not listed.
+  them. Gap Factory and Banana Republic Factory earn the 5% too (2026-09-29): Gap's
+  Encore FAQ puts both in the Family of Brands, Barclays' terms cover the brands'
+  Outlet/Factory stores, and gapfactory.com's own Encore page offers the 25 points.
+  One gapfactory.com row covers both. Cash+ is not extended there: U.S. Bank's
+  clothing list names GAP, and nothing says Gap Factory counts as GAP.
 - **Nordstrom has a status picker.** Cardmembers start at Influencer, 2 points per $1
   at Nordstrom; Ambassador and Icon earn 3. It is a selection rather than Macy's tier
   multiplier, because a multiplier would also scale the 5% off at Nordstrom Rack and
@@ -560,8 +566,7 @@ confirmed by the HTTP sweep.
   gone (they print in the popup); definitions live in each card's `note`, which the
   extension never shows.
 - **Not added:** Ulta's Platinum and Diamond rates (2.25 and 2.5 points with the card,
-  noted in the records), the Nordstrom debit card, and Gap Factory for the Encore
-  cards.
+  noted in the records) and the Nordstrom debit card.
 
 ---
 
@@ -777,7 +782,7 @@ calls itself UNVERIFIED SEED DATA and no agent checks how a merchant codes):
 the booking sites, the cable and phone companies, the off-price stores, Nike,
 Wayfair, HomeGoods, StubHub, Audible, YouTube, Starbucks, and the rows the Cash+
 recheck leaned on. The engine does not read either field; a test keeps every `mcc`
-four digits with a source beside it. Next: the other 134 rows, a batch at a time.
+four digits with a source beside it. Next: the other 135 rows, a batch at a time.
 
 **How to continue it** -- what worked on 2026-09-29:
 - In the in-app browser, open awardwallet.com/merchants, find the "Merchant Name"
