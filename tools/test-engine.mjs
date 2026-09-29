@@ -1275,18 +1275,29 @@ eq('Cash+ "cell phone providers" pays on a cell phone plan, not on cable',
     on('usbank-cash-plus', 'xfinity.com', plus(['five_phone'])).rate], [5, 1]);
 
 // --- audit 2026-09-29: choices narrower than the category they sit in -------
-// Three Cash+ choices name one kind of merchant inside a wider Caddy category.
-// Until they were allowlisted, picking "Fast food" ranked 5% at DoorDash,
-// "Furniture stores" at Home Depot and "Movie theaters" at Ticketmaster.
-eq('Cash+ fast food: 5% at chipotle.com, not at doordash.com or opentable.com',
-   ['chipotle.com', 'doordash.com', 'opentable.com']
-     .map(h => on('usbank-cash-plus', h, plus(['five_fastfood'])).rate), [5, 1, 1]);
-eq('Cash+ furniture stores: 5% at homegoods.com, not at homedepot.com or lowes.com',
+// Cash+ choices name one kind of merchant inside a wider Caddy category, and
+// U.S. Bank's own sample-merchant lists say which. Until they were narrowed,
+// "Fast food" ranked 5% at DoorDash, "Furniture stores" at Home Depot, "Movie
+// theaters" at Ticketmaster, "Department stores" at Target and "Select
+// clothing stores" at H&M.
+eq('Cash+ fast food: 5% at chipotle.com and starbucks.com, not at doordash.com or opentable.com',
+   ['chipotle.com', 'starbucks.com', 'doordash.com', 'opentable.com']
+     .map(h => on('usbank-cash-plus', h, plus(['five_fastfood'])).rate), [5, 5, 1, 1]);
+eq('Cash+ 2% restaurants: doordash.com yes, fast food no',
+   ['doordash.com', 'chipotle.com', 'starbucks.com']
+     .map(h => on('usbank-cash-plus', h, plus(['two_dining'])).rate), [2, 1, 1]);
+eq('Cash+ furniture stores: no row in the table is one, so no 5% at homegoods.com, homedepot.com or lowes.com',
    ['homegoods.com', 'homedepot.com', 'lowes.com']
-     .map(h => on('usbank-cash-plus', h, plus(['five_furniture'])).rate), [5, 1, 1]);
+     .map(h => on('usbank-cash-plus', h, plus(['five_furniture'])).rate), [1, 1, 1]);
 eq('Cash+ movie theaters: 5% at fandango.com, not at ticketmaster.com or stubhub.com',
    ['fandango.com', 'ticketmaster.com', 'stubhub.com']
      .map(h => on('usbank-cash-plus', h, plus(['five_movies'])).rate), [5, 1, 1]);
+eq('Cash+ department stores: 5% at kohls.com and macys.com, not at target.com or walmart.com',
+   ['kohls.com', 'macys.com', 'target.com', 'walmart.com']
+     .map(h => on('usbank-cash-plus', h, plus(['five_department'])).rate), [5, 5, 1, 1]);
+eq('Cash+ select clothing stores: only the named ones',
+   ['gap.com', 'jcrew.com', 'ae.com', 'hm.com', 'nike.com', 'tjmaxx.tjx.com']
+     .map(h => on('usbank-cash-plus', h, plus(['five_clothing'])).rate), [5, 5, 5, 1, 1, 1]);
 // Wells Fargo defines Autograph's streaming by type, and pay TV is one of them.
 eq('Autograph: 3x at directv.com and dish.com, still 1x at xfinity.com',
    ['directv.com', 'dish.com', 'xfinity.com'].map(h => on('wellsfargo-autograph', h).rate), [3, 3, 1]);

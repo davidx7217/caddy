@@ -1163,7 +1163,7 @@
     "last_verified": "2026-09-29",
     "source_url": "https://www.usbank.com/credit-cards/cash-plus-visa-signature-credit-card.html",
     "caution": "You pick the categories each quarter, and they reset. Two 5% picks share one $2,000 quarterly cap.",
-    "note": "All twelve of the issuer's 5% choices are modelled as of 2026-09-27. Four -- electronics stores, gyms and fitness centres, select clothing stores and sporting goods stores -- were left out until then because Caddy had no category for them and no merchants behind one; those categories exist now, each with merchant rows, so none of them is dead. 'TV, internet and streaming' maps to streaming and internet_cable, and 'Cell phone providers' to phone: before phone_internet was split, each of those two picks also paid 5% on the other's bills. Audit 2026-09-29: three 5% choices are narrower than the Caddy category they sit in, so each is allowlisted to the merchants that fit: Fast food to chipotle.com and starbucks.com (delivery apps and sit-down restaurants code as restaurants), Movie theaters to fandango.com (not Ticketmaster or StubHub), Furniture stores to homegoods.com and homesense.com (Home Depot and Lowe's are home supply warehouses).",
+    "note": "All twelve of the issuer's 5% choices are modelled as of 2026-09-27. Four -- electronics stores, gyms and fitness centres, select clothing stores and sporting goods stores -- were left out until then because Caddy had no category for them and no merchants behind one; those categories exist now, each with merchant rows, so none of them is dead. 'TV, internet and streaming' maps to streaming and internet_cable, and 'Cell phone providers' to phone: before phone_internet was split, each of those two picks also paid 5% on the other's bills. Audit 2026-09-29, against U.S. Bank's own sample-merchant lists (cashplus.usbank.com/cash-plus/samplemerchants), because several choices are narrower than the Caddy category they sit in: Fast food lists Chipotle and the burger chains, and Starbucks codes as fast food at Chase and Citi (awardwallet.com/merchants), so the 5% is allowlisted to chipotle.com and starbucks.com and the 2% Restaurants choice, which 'excludes most fast food', denylists them -- the Restaurants list names DoorDash, Grubhub, Uber Eats and Postmates. Movie theaters lists Fandango.com and says live theatrical performances do not qualify, so it is allowlisted to fandango.com. Furniture stores lists IKEA, Ashley, La-Z-Boy and similar; no row in merchants.json is one, so it is allowlisted to none -- not HomeGoods, which the list does not name, nor Home Depot or Lowe's. Department stores says 'purchases at discount stores like Wal-Mart, Target and Costco do not qualify', so target.com and walmart.com are denylisted. Select Clothing Stores 'includes only the merchants listed' (Gap, Old Navy, Banana Republic, J.Crew, American Eagle, Express, Ann Taylor and a few more), so it is allowlisted to gap.com, jcrew.com and ae.com.",
     "user_config": {
       "selections": [
         {
@@ -1209,8 +1209,12 @@
         "category": "department_store",
         "rate": 5.0,
         "selection_group": "five_department",
+        "merchant_denylist": [
+          "target.com",
+          "walmart.com"
+        ],
         "cap": { "amount": 2000, "period": "quarter", "then_rate": 1.0 },
-        "caveat": "The $2,000 quarterly cap is COMBINED across both 5% choices."
+        "caveat": "Discount stores like Target and Walmart do not count. The $2,000 quarterly cap is COMBINED across both 5% choices."
       },
       {
         "category": "utilities",
@@ -1272,12 +1276,9 @@
         "category": "home_improvement",
         "rate": 5.0,
         "selection_group": "five_furniture",
-        "merchant_allowlist": [
-          "homegoods.com",
-          "homesense.com"
-        ],
+        "merchant_allowlist": [],
         "cap": { "amount": 2000, "period": "quarter", "then_rate": 1.0 },
-        "caveat": "Furniture stores only, not home improvement generally. The $2,000 quarterly cap is COMBINED across both 5% choices."
+        "caveat": "Furniture stores only, like IKEA or Ashley; none are in Caddy's merchant table yet. The $2,000 quarterly cap is COMBINED across both 5% choices."
       },
       {
         "category": "electronics",
@@ -1297,6 +1298,11 @@
         "category": "clothing",
         "rate": 5.0,
         "selection_group": "five_clothing",
+        "merchant_allowlist": [
+          "ae.com",
+          "gap.com",
+          "jcrew.com"
+        ],
         "cap": { "amount": 2000, "period": "quarter", "then_rate": 1.0 },
         "caveat": "SELECT clothing stores only -- U.S. Bank does not count every shop that sells clothes. The $2,000 quarterly cap is COMBINED across both 5% choices."
       },
@@ -1325,7 +1331,12 @@
       {
         "category": "dining",
         "rate": 2.0,
-        "selection_group": "two_dining"
+        "selection_group": "two_dining",
+        "merchant_denylist": [
+          "chipotle.com",
+          "starbucks.com"
+        ],
+        "caveat": "Fast food is not Restaurants for U.S. Bank."
       }
     ]
   },
@@ -4412,7 +4423,7 @@
     "base_rate": 4.0,
     "verified": true,
     "last_verified": "2026-09-28",
-    "source_url": "https://www.gap.com/customer-service/encore-program",
+    "source_url": "https://cards.barclaycardus.com/banking/cards/gap-encore-mastercard/",
     "only_at": [
       "gap.com"
     ],
@@ -4431,7 +4442,7 @@
     "base_rate": 1.0,
     "verified": true,
     "last_verified": "2026-09-28",
-    "source_url": "https://www.gap.com/customer-service/encore-program",
+    "source_url": "https://cards.barclaycardus.com/banking/cards/gap-encore-mastercard/",
     "caution": "Members also earn 1% with any card.",
     "note": "The Gap Inc. Encore program, per gap.com and barclaycardus.com on 2026-09-28. Cards are issued by Barclays Bank Delaware under each brand's name -- Gap, Old Navy, Banana Republic and Athleta Encore -- with identical rewards, so one record stands for all four designs. 500 points = $1 reward, so the 25, 15 and 5 points per $1 that Barclays calls 5X, 3X and 1X are 5%, 3% and 1%; rewards are spent at Gap Inc. brands or in the Encore Market and are valued as cash, as Kohl's Cash is. Gap, Old Navy, Banana Republic and Athleta all sell from gap.com hosts -- oldnavy.gap.com and the rest -- so the one gap.com row covers all four through the parent-domain walk. Gap Factory is not among the brands named for the 5X, so gapfactory.com is not listed. Any Encore member earns 1% at the brands without the card, so the card adds 4% there. The rate is what the card adds on top of the member share, which a member earns whatever card pays, so it cannot tip the choice between cards (decided 2026-09-28). Which apparel retailers count for the 3% is not listed on either page; every clothing row here gets it.",
     "rules": [
