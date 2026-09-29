@@ -74,7 +74,9 @@ eq('unknown domain resolves to null', resolveMerchant('some-random-site.example'
   eq('a four-way tie is surfaced, not silently resolved', r.resolvedBy, 'unresolved');
 }
 
-// --- merchant_allowlist (Aeroplan only bonuses Air Canada) --------------
+// --- merchant_allowlist --------------------------------------------------
+// Aeroplan was the allowlist example until Chase's 2026-09-10 refresh made its 3x
+// cover all travel; United Explorer's 3x is still United purchases only.
 {
   const r = run('aircanada.com');
   eq('Aeroplan 3x applies on Air Canada', card(r, 'chase-aeroplan').rate, 3);
@@ -82,7 +84,9 @@ eq('unknown domain resolves to null', resolveMerchant('some-random-site.example'
 }
 {
   const r = run('delta.com');
-  eq('Aeroplan gets no air bonus off-allowlist', card(r, 'chase-aeroplan').rate, 1);
+  eq('United Explorer gets no air bonus off-allowlist',
+     run('delta.com', own('chase-united-explorer')).winner.rate, 1);
+  eq('Aeroplan 3x travel now reaches every airline', card(r, 'chase-aeroplan').rate, 3);
   eq('CSR wins airfare at 4x', r.winner.productId, 'chase-sapphire-reserve');
   eq('CSR portal rate surfaced as a note, not ranked',
      r.notes.some(n => n.text.includes('8x') && n.text.includes('Chase Travel')), true);
@@ -133,9 +137,37 @@ eq('unknown domain resolves to null', resolveMerchant('some-random-site.example'
 {
   const r = run('shell.us', WALLET, { now: IN_Q1 });
   eq('rotating rule ignored outside its window', card(r, 'chase-freedom-flex').rate, 1);
-  eq('and BCE 3% gas ties the Robinhood 3% flat', ids(r),
-     ['amex-blue-cash-everyday', 'robinhood-gold']);
+  // Aeroplan's 2x gas (Chase, 2026-09-10 refresh) at 1.5 cpp is 3.00% too.
+  eq('and BCE 3% gas ties the Robinhood 3% flat and Aeroplan 2x gas', ids(r),
+     ['amex-blue-cash-everyday', 'chase-aeroplan', 'robinhood-gold']);
   eq('so it asks instead of picking', r.resolvedBy, 'unresolved');
+}
+// Freedom Flex Q4 2026, read on chase.com and media.chase.com 2026-09-28:
+// grocery stores (excluding Walmart and Target), dining, American Red Cross.
+{
+  const ff = (h, d) => run(h, own('chase-freedom-flex'), { now: new Date(d + 'T12:00:00') }).all[0];
+  eq('Q4 2026 groceries pay 5x mid-quarter', ff('kroger.com', '2026-11-15').rate, 5);
+  eq('...named as Q4 2026 and needing activation',
+     [ff('kroger.com', '2026-11-15').caveats.some(c => c.includes('Q4 2026')),
+      ff('kroger.com', '2026-11-15').needsActivation], [true, true]);
+  eq('...and Walmart, which Chase excludes, stays at 1x', ff('walmart.com', '2026-11-15').rate, 1);
+  eq('Q4 2026 dining stacks to 7x mid-quarter', ff('doordash.com', '2026-11-15').rate, 7);
+  eq('...falling back to the standing 3x past the cap',
+     ff('doordash.com', '2026-11-15').caveats.includes('Capped at $1,500 per quarter, then 3x'), true);
+  eq('...and the day before Q4 starts dining is the standing 3x', ff('doordash.com', '2026-09-30').rate, 3);
+}
+
+// --- Chase Aeroplan, refreshed 2026-09-10, read on chase.com 2026-09-28 ------
+{
+  const ae = (h, d = '2026-10-15') => run(h, own('chase-aeroplan'), { now: new Date(d + 'T12:00:00') }).all[0];
+  eq('Aeroplan annual fee is $195', products['chase-aeroplan'].annual_fee, 195);
+  eq('Aeroplan dining and groceries are 3x through 2026-12-31',
+     [ae('doordash.com').rate, ae('kroger.com').rate], [3, 3]);
+  eq('...then 2x', [ae('doordash.com', '2027-01-15').rate, ae('kroger.com', '2027-01-15').rate], [2, 2]);
+  eq('Aeroplan gas is 2x', ae('exxonmobilfuels.com').rate, 2);
+  eq('Aeroplan travel is 3x on air, hotel, car rental and transit',
+     [ae('delta.com').rate, ae('hilton.com').rate, ae('hertz.com').rate, ae('uber.com').rate], [3, 3, 3, 3]);
+  eq('Aeroplan everything else is 1x', ae('bestbuy.com').rate, 1);
 }
 
 // --- Freedom Flex stacking guard, 2026-09-28 ------------------------------
@@ -251,7 +283,7 @@ eq('unknown domain resolves to null', resolveMerchant('some-random-site.example'
   const r = run('expedia.com');
   eq('CSR 4x does NOT apply on an OTA (rate is booked-direct only)',
      card(r, 'chase-sapphire-reserve').rate, 1);
-  eq('so the flat 3% takes Expedia', r.winner.productId, 'robinhood-gold');
+  eq('so Aeroplan 3x travel at 1.5 cpp takes Expedia', r.winner.productId, 'chase-aeroplan');
   eq('but the portal detour is still surfaced',
      r.notes.some(n => n.text.includes('Chase Travel')), true);
 }
@@ -816,15 +848,18 @@ eq('inside the last two weeks, it says when the rate ends',
    gasOn('2026-09-20').all[0].staleReason, 'This 5x rate ends 2026-09-30 (10 days).');
 eq('on the last day it says today',
    gasOn('2026-09-30').all[0].staleReason, 'This 5x rate ends 2026-09-30 (today).');
+// Expiry is checked the day after the NEWEST modelled quarter ends (Q4 2026),
+// on groceries: a category Q4 adds and the card does not otherwise bonus.
+const groceryOn = d => run('kroger.com', flex(), { now: at(d) });
 eq('once expired, it says so and says what it fell back to',
-   gasOn('2026-10-01').all[0].staleReason,
-   "5x on gas expired 2026-09-30. This card's rotating categories have not been " +
+   groceryOn('2027-01-01').all[0].staleReason,
+   "5x on groceries expired 2026-12-31. This card's rotating categories have not been " +
    'updated, so it is being ranked on its base rate.');
-eq('...and the rate really has dropped', gasOn('2026-10-01').all[0].rate, 1);
+eq('...and the rate really has dropped', groceryOn('2027-01-01').all[0].rate, 1);
 eq('the reason is mirrored into caveats, which is what the popup renders',
-   gasOn('2026-10-01').all[0].caveats.some(c => c.startsWith('5x on gas expired')), true);
+   groceryOn('2027-01-01').all[0].caveats.some(c => c.startsWith('5x on groceries expired')), true);
 eq('rank reports one flag so a banner needs no walk of the list',
-   [gasOn('2026-09-09').stale, gasOn('2026-10-01').stale], [false, true]);
+   [gasOn('2026-09-09').stale, groceryOn('2027-01-01').stale], [false, true]);
 
 // An expiry that costs nothing is not worth saying. Dining is not a rotating
 // category on this card, so the lapsed gas rule changed no outcome there.
@@ -966,8 +1001,8 @@ eq('...but once the LAST modelled quarter lapses, it does say so',
 // Freedom Flex models one quarter only, so its lapse is genuinely stale data and
 // must still warn. The fix had to tell these two cases apart, not silence both.
 eq('Freedom Flex, with no later quarter modelled, still warns',
-   only('chase-freedom-flex', 'exxonmobilfuels.com', '2026-10-01').all[0].staleReason,
-   "5x on gas expired 2026-09-30. This card's rotating categories have not been " +
+   only('chase-freedom-flex', 'kroger.com', '2027-01-01').all[0].staleReason,
+   "5x on groceries expired 2026-12-31. This card's rotating categories have not been " +
    'updated, so it is being ranked on its base rate.');
 
 // Venture is the card the 'c1' valuation was written for: transferable miles, so

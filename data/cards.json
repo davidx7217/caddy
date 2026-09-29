@@ -3,7 +3,7 @@
   "_business_note": "`business` marks a card issued on business underwriting rather than personal. Absent means personal -- only the field's presence is meaningful, so there is nothing to keep in sync on a hundred and nine records. It filters the catalogue and nothing else reads it: the ranker does not care whose name is on the account.",
   "_common_note": "`common` is a POPULARITY RANK, 1 to 140, and it is EDITORIAL. There is no public card-level ranking of US cardholders -- Nilson publishes issuer volume, not how many people hold a Freedom Unlimited -- so this is judgement, not a sourced fact, and it is the only field here that is. It orders the setup picker so a new user meets mass-market cards first. 21 to 40 were added on 2026-09-27 as the next twenty after the first, 41 to 63 on 2026-09-28 -- store cards, then the remaining tiers of airline and hotel programs already present -- 64 to 82 later that day, the cards of issuers Caddy did not yet cover, 83 to 95 after those, business cards, 96 to 103, smaller store cards, 104 to 110, the missing tiers of covered programs, 111 to 126, Barclays' other co-branded cards, and 127 to 140, co-branded business cards, so each batch ranks below the one before by construction. Re-rank it freely; nothing computes from it.",
   "_only_at_note": "`only_at` marks a STORE CARD: the merchant domains where it works, and nowhere else. The ranker drops the card from consideration on any other domain rather than ranking it on its base rate, because recommending a card the till refuses is worse than not mentioning it. base_rate is then what the card adds at that store: where a store pays its free program's members something whatever card they use, that share is left out, because it cannot change which card to use. Store cards with no rewards at all -- Home Depot's, for one -- are deliberately left out: a card that earns nothing can never be the best card to use.",
-  "_comment": "All 140 records verified against issuer sources; 5 on 2026-08-29, 6 on 2026-09-09, 5 on 2026-09-10, 24 on 2026-09-27 -- the twenty added that day, plus Blue Cash Everyday, Amex Gold, BofA Customized Cash and U.S. Bank Cash+, re-read because their categories changed -- and 100 on 2026-09-28: the store cards and the remaining airline and hotel tiers, then nineteen cards from Synchrony's general-purpose line, Barclays, USAA, Navy Federal and Bilt, then thirteen business cards from Amex, Capital One, Chase and Barclays, then eight smaller store cards from Gap Inc., Nordstrom, Ulta and JCPenney, then seven missing tiers: Citi AAdvantage Executive and Globe, Wells Fargo Autograph Journey, BofA Premium Rewards and Premium Rewards Elite, and U.S. Bank Altitude Go and Connect, then sixteen more Barclays co-brands: three Wyndham Rewards Earner tiers, two AARP cards, Upromise, Frontier, two Emirates Skywards cards, Lufthansa Miles & More, GM Rewards, Carnival Rewards, Barnes & Noble, Breeze Easy, RCI Elite Rewards and Capital Vacations, then fourteen co-branded business cards: Amex's Delta SkyMiles Gold, Platinum and Reserve Business, Marriott Bonvoy Business, Hilton Honors Business and Business Green, Chase's United and United Club Business, Southwest Performance and Premier Business, IHG One Rewards Premier Business and World of Hyatt Business, and Barclays' Wyndham Earner Business and GM Business. The Bilt cards' offer terms could not be read (the link downloads a file), so their category definitions are unconfirmed; see their notes. Each carries its source_url. Chase Freedom Flex rotating categories MUST be re-verified 2026-10-01. Amex Platinum was absent until 2026-09-27 because no reachable americanexpress.com page stated its annual fee or base rate on 2026-09-10; the product page states both now.",
+  "_comment": "All 140 records verified against issuer sources; 5 on 2026-08-29, 6 on 2026-09-09, 5 on 2026-09-10, 24 on 2026-09-27 -- the twenty added that day, plus Blue Cash Everyday, Amex Gold, BofA Customized Cash and U.S. Bank Cash+, re-read because their categories changed -- and 100 on 2026-09-28: the store cards and the remaining airline and hotel tiers, then nineteen cards from Synchrony's general-purpose line, Barclays, USAA, Navy Federal and Bilt, then thirteen business cards from Amex, Capital One, Chase and Barclays, then eight smaller store cards from Gap Inc., Nordstrom, Ulta and JCPenney, then seven missing tiers: Citi AAdvantage Executive and Globe, Wells Fargo Autograph Journey, BofA Premium Rewards and Premium Rewards Elite, and U.S. Bank Altitude Go and Connect, then sixteen more Barclays co-brands: three Wyndham Rewards Earner tiers, two AARP cards, Upromise, Frontier, two Emirates Skywards cards, Lufthansa Miles & More, GM Rewards, Carnival Rewards, Barnes & Noble, Breeze Easy, RCI Elite Rewards and Capital Vacations, then fourteen co-branded business cards: Amex's Delta SkyMiles Gold, Platinum and Reserve Business, Marriott Bonvoy Business, Hilton Honors Business and Business Green, Chase's United and United Club Business, Southwest Performance and Premier Business, IHG One Rewards Premier Business and World of Hyatt Business, and Barclays' Wyndham Earner Business and GM Business. The Bilt cards' offer terms could not be read (the link downloads a file), so their category definitions are unconfirmed; see their notes. Each carries its source_url. Chase Freedom Flex rotating categories are modelled through Q4 2026 and MUST be re-verified by 2026-12-31. Amex Platinum was absent until 2026-09-27 because no reachable americanexpress.com page stated its annual fee or base rate on 2026-09-10; the product page states both now.",
   "chase-sapphire-reserve": {
     "id": "chase-sapphire-reserve",
     "issuer": "chase",
@@ -113,9 +113,9 @@
     "annual_fee": 0,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-08-29",
+    "last_verified": "2026-09-28",
     "source_url": "https://creditcards.chase.com/cash-back-credit-cards/freedom/flex",
-    "note": "Rotating categories confirmed on chase.com for Q3 2026 (Jul-Sep).",
+    "note": "Q4 2026 (Oct-Dec) read 2026-09-28 on the source_url's quarterly calendar and in Chase's release of 2026-09-15 (media.chase.com/news/chase-freedom-2026-q4-categories): grocery stores excluding Walmart and Target, dining, and American Red Cross donations, on up to $1,500 combined. The release's own footnote puts dining at 7% total (1% base + 4% quarterly + 2% dining). Walmart, Target and wholesale clubs, which Chase excludes, already resolve outside groceries. Red Cross donations have no category and are left out. Q1 2027 (grocery stores excluding Walmart and Target, top streaming services) is posted on the same page and in Chase's release of 2026-09-21 but not modelled yet. Fee, base rate, 3% dining and drugstores and 5% Chase Travel unchanged. Q3 2026 rules kept for the tests pinned to it.",
     "rules": [
       {
         "category": "dining",
@@ -190,13 +190,43 @@
         "caveat": "Q3 2026 category is SELECT LIVE entertainment only, not cinema. Cap is combined across all 5% categories."
       },
       {
+        "category": "groceries",
+        "rate": 5.0,
+        "window": {
+          "start": "2026-10-01",
+          "end": "2026-12-31"
+        },
+        "requires_activation": true,
+        "cap": {
+          "amount": 1500,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "Q4 2026 rotating category, excluding Walmart and Target. The $1,500 cap is combined across all 5% categories."
+      },
+      {
+        "category": "dining",
+        "rate": 7.0,
+        "window": {
+          "start": "2026-10-01",
+          "end": "2026-12-31"
+        },
+        "requires_activation": true,
+        "cap": {
+          "amount": 1500,
+          "period": "quarter",
+          "then_rate": 3.0
+        },
+        "caveat": "Q4 2026 rotating category: 7% total with the everyday 3% dining. The $1,500 cap is combined across all 5% categories."
+      },
+      {
         "category": "travel_portal",
         "rate": 5.0,
         "portal_only": true,
         "portal": "Chase Travel"
       }
     ],
-    "caution": "Rotating 5% categories are Q3 2026. Re-verify 1 Oct 2026."
+    "caution": "Q4 2026 rotating 5%: groceries, dining (7% total) and American Red Cross donations, which Caddy cannot rank."
   },
   "robinhood-gold": {
     "id": "robinhood-gold",
@@ -285,33 +315,63 @@
   "chase-aeroplan": {
     "id": "chase-aeroplan",
     "issuer": "chase",
-    "network": "visa",
+    "network": "mastercard",
     "currency": "aeroplan",
     "name": "Chase Aeroplan",
     "common": 18,
-    "annual_fee": 95,
+    "annual_fee": 195,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-08-29",
+    "last_verified": "2026-09-28",
     "source_url": "https://creditcards.chase.com/travel-credit-cards/aircanada/aeroplan",
     "rules": [
       {
         "category": "dining",
-        "rate": 3.0
+        "rate": 3.0,
+        "window": {
+          "end": "2026-12-31"
+        },
+        "caveat": "3x on purchases that post by 2026-12-31, then 2x."
       },
       {
         "category": "groceries",
-        "rate": 3.0
+        "rate": 3.0,
+        "window": {
+          "end": "2026-12-31"
+        },
+        "caveat": "3x on purchases that post by 2026-12-31, then 2x."
+      },
+      {
+        "category": "dining",
+        "rate": 2.0
+      },
+      {
+        "category": "groceries",
+        "rate": 2.0
+      },
+      {
+        "category": "gas",
+        "rate": 2.0
       },
       {
         "category": "travel_air",
-        "rate": 3.0,
-        "merchant_allowlist": [
-          "aircanada.com"
-        ]
+        "rate": 3.0
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 3.0
+      },
+      {
+        "category": "car_rental",
+        "rate": 3.0
+      },
+      {
+        "category": "travel_ground",
+        "rate": 3.0
       }
     ],
-    "note": "Also earns 500 bonus points per $2,000 spent in a calendar month, up to 1,500/month. Not modelled: needs spend tracking."
+    "caution": "The extra 2X Air Canada pays Aeroplan 25K members on eligible flights comes from Air Canada, not the card, and is not counted.",
+    "note": "Refreshed 2026-09-10 for new and existing cardmembers (Chase release media.chase.com/news/the-chase-air-canada-aeroplan-credit-card-refresh, read 2026-09-28). Offer details on the source_url, read 2026-09-28: 3X on Air Canada purchases made directly and on travel; grocery and dining 3X on purchases posting by 2026-12-31, then 2X; 2X at gas stations; 1X otherwise. Annual fee $195. Travel spans air, hotel, car rental and ground, the same mapping Sapphire Preferred uses for Chase's travel category; the definition itself was not re-read this run. Network is World Elite Mastercard per the release. The monthly 500-points-per-$2,000 bonus is no longer on the page."
   },
   "chase-ink-business-cash": {
     "id": "chase-ink-business-cash",
