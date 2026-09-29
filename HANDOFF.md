@@ -43,6 +43,11 @@ works and why; this file is only the state of play.
   rotating categories are out of date -- a quarter goes in the day the issuer
   posts it. And every rate and mapping rests on the issuer's own definitions,
   researched as thoroughly as possible.
+- **Public since 2026-09-29, as davidx7217/caddy.** The local `origin` points at
+  the new name. `SECURITY.md` sends vulnerability reports through GitHub's
+  private vulnerability reporting, switched on 2026-09-29 (a repository setting,
+  not a file). Nothing in the tree or its history is secret, but every commit
+  carries David's Gmail address as author.
 - **One stray branch**: `second-twenty-cards`, merged long ago, still exists
   locally and on GitHub. Safe to delete.
 
@@ -63,10 +68,10 @@ dated.
      nike.com. About 10 minutes, same condition.
    - A `travel_agency` category: not approved as stated, because booking sites
      are not always the merchant. A call for David, then one to two hours.
-2. **The Chrome Web Store submission is blocked.** The listing links the privacy
-   policy at github.com/davidx7217/card-picker/blob/main/store/privacy-policy.md,
-   which returns 404 because the repo is private (checked 2026-09-29). Make the
-   repo public or host the policy elsewhere, then section 1.
+2. **Submit to the Chrome Web Store** -- unblocked 2026-09-29. The repo is public
+   as github.com/davidx7217/caddy (renamed from card-picker; old URLs redirect),
+   and the listing's privacy-policy URL now names it and returns 200. Section 1
+   has everything; about 30 minutes in the developer dashboard, David's to do.
 3. **Check the agents' first scheduled runs**: the rates keeper on Thursday
    2026-10-01 at 8:15 and the monthly upkeep on 2026-10-02 at 10:30. Each should
    finish without stopping for approval (section 15); review any `rates-*` or
@@ -129,7 +134,7 @@ Everything is written, checked and current. Nothing about it is blocked.
   rather than writing fresh copy; the permission justifications are read by a
   human reviewer and each one matches what the manifest actually declares.
 - `store/privacy-policy.md` — the published policy. The listing links to
-  `https://github.com/davidx7217/card-picker/blob/main/store/privacy-policy.md`,
+  `https://github.com/davidx7217/caddy/blob/main/store/privacy-policy.md`,
   which is stable, public and versioned. Editing the file and pushing publishes
   the change.
 - Icons ship already, drawn by `tools/make-icons.mjs`.
