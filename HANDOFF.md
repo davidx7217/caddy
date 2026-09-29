@@ -9,15 +9,16 @@ works and why; this file is only the state of play.
 
 ## State
 
-- **v1.0.0**, 126 cards across 17 issuers, 162 merchant rows, 27 categories.
+- **v1.0.0**, 140 cards across 17 issuers, 162 merchant rows, 27 categories.
   The second twenty cards landed 2026-09-27; store cards plus the remaining
   airline and hotel tiers, nineteen cards from five issuers Caddy lacked,
-  thirteen business cards, eight smaller store cards, seven missing tiers and
-  sixteen more Barclays co-brands, on 2026-09-28. See sections 6, 7 and 9 to 13.
+  thirteen business cards, eight smaller store cards, seven missing tiers,
+  sixteen more Barclays co-brands and fourteen co-branded business cards, on
+  2026-09-28. See sections 6, 7 and 9 to 14.
 - **Every card verified** against its issuer's own page, each carrying a
   `source_url` and the date it was read. The one soft spot: the three Bilt cards'
   category definitions were not readable (section 9).
-- **Tests green**: 518 engine + 31 setup + 49 lifecycle + 45 worker. `npm test`.
+- **Tests green**: 536 engine + 31 setup + 49 lifecycle + 45 worker. `npm test`.
 - **Nothing unpushed.** `main` on GitHub is the whole tree. All three store
   screenshots are still current -- the new cards rank after the ones they show.
 - **`caddy-1.0.0.zip` sits in the repo root**, rebuilt on every commit. See the
@@ -59,13 +60,10 @@ In order. The first is dated; the second needs a real install, so it is David's.
    bank-by-bank judgment made before section 9's cards -- no public data exists
    per card -- Caddy covered about 55-60% of US rewards-card spending. The
    issuers it lacked, the general-purpose business cards, the smaller store
-   cards, the missing tiers and Barclays' other co-brands are in now (sections
-   9 to 13). The next gaps, largest first:
-   - **Co-branded business cards**, none read yet: Amex's Delta SkyMiles Gold,
-     Platinum and Reserve Business, Marriott Bonvoy Business and Hilton Honors
-     Business; Chase's United, Southwest, IHG and World of Hyatt business cards;
-     Barclays' Wyndham Earner Business and GM Business. Also Amex Business Green,
-     listed and not read.
+   cards, the missing tiers, Barclays' other co-brands and the co-branded
+   business cards are in now (sections 9 to 14). The next gaps:
+   - **Business cards from the issuers section 10 did not cover** -- BofA, U.S.
+     Bank, Wells Fargo and Citi -- not yet looked for.
    - **Cruise and timeshare categories**, if you want them: without them
      Carnival's 3X and the RCI and Capital Vacations 5X go unranked, and adding
      either means a rule on every card whose travel covers it (section 13).
@@ -321,7 +319,7 @@ Card and TJX Rewards. Every one read off its issuer's or retailer's page that da
 
 ---
 
-## 8. Adding a card: the recipe this week's 106 followed
+## 8. Adding a card: the recipe this week's 120 followed
 
 1. **Read the issuer's own page** in the in-app browser -- `get_page_text`, or a
    short `javascript_tool` regex over `document.body.innerText`. Never a blog or
@@ -561,8 +559,8 @@ the five it met with a 403 confirmed in the browser.
   1.25% in the caution, as Prime Visa does with Prime.
 - **Not ranked:** AARP Essential's 2% on medical purchases, which has no category;
   Wyndham's vacation-club earning; the statement credits on the Premier.
-- **Not added:** GM Business and Wyndham Earner Business, which wait with the
-  co-branded business cards.
+- **GM Business and Wyndham Earner Business** went in with the co-branded business
+  cards, section 14.
 
 The other six, 121 to 126, missing from this file's list until David asked for
 them: GM Rewards, Carnival Rewards, Barnes & Noble, Breeze Easy Visa, RCI Elite
@@ -598,6 +596,41 @@ gmcompanystore.com, each confirmed by the HTTP sweep.
 - **RCI and Capital Vacations rewards are cash**, a cent each from $25; the 5% of
   each redemption paid back as a bonus is not modelled. Their travel includes OTAs,
   so their hotel rules carry no denylist.
+
+---
+
+## 14. Co-branded business cards, 28 September 2026
+
+Fourteen cards, ranks 127 to 140, all `business: true`, each read off its issuer's
+page that day: Amex's Delta SkyMiles Gold, Platinum and Reserve Business, Marriott
+Bonvoy Business, Hilton Honors Business and Business Green; Chase's United and United
+Club Business, Southwest Performance and Premier Business, IHG One Rewards Premier
+Business and World of Hyatt Business; Barclays' Wyndham Rewards Earner Business and
+GM Business. One new currency, `gmbusiness`. No new issuer, category, merchant row or
+engine change.
+
+- **The business Delta cards are not the personal ones.** Platinum Business has no
+  restaurant bonus; its 1.5X on transit and U.S. shipping shares a $100,000 yearly
+  cap with purchases of $5,000 or more, which is not ranked. Reserve Business earns
+  1.5X on shipping, transit and office supply and 1X on hotels. Gold Business caps
+  shipping and ads at $50,000 each.
+- **Hilton Honors Business earns 5X on everything to $100,000 a year, then 3X.** The
+  5X is the base rate, which carries no cap, so the $100,000 is in the caution, as
+  Blue Business Plus's $50,000 is.
+- **World of Hyatt Business's 2X goes to the top three of eight categories each
+  quarter**, which no page shows, so it is a caution and ranks 1X -- the same call as
+  Business Gold's 4X.
+- **The airline cards' headline totals include member miles**, as on the personal
+  cards: United's 8x is 6 MileagePlus miles plus the card's 2.
+- **Southwest Performance Business's offer details still list categories that ended
+  2025-12-31** -- 3X at Rapid Rewards partners, 2X on ads and on internet, cable and
+  phone. They have lapsed and are not modelled.
+- **GM Business Card Points are not GM Rewards points** and redeem only at GM dealers.
+  GM's support page converted the old Marcus card's Earnings at 100 points per $1, so
+  `gmbusiness` is 1.0, a currency of its own.
+- **Networks**: the Chase cards are Visas by their card art or Visa Signature
+  benefits, except IHG's, a Mastercard like the personal IHG cards; Wyndham is a Visa
+  and GM a Mastercard.
 
 ---
 
