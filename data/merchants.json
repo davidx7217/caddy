@@ -494,6 +494,11 @@
     "category": "clothing",
     "confidence": "high"
   },
+  "gapfactory.com": {
+    "category": "clothing",
+    "confidence": "high",
+    "note": "Gap Factory at www.gapfactory.com and Banana Republic Factory at bananarepublicfactory.gapfactory.com, both covered by this one row through the parent-domain walk"
+  },
   "hm.com": {
     "category": "clothing",
     "confidence": "high"

@@ -1590,9 +1590,14 @@ eq('...but 1x through a delivery app, and no grocery bonus',
 eq('Encore Credit Card: 4% at every Gap Inc. brand, each on its own gap.com host',
    ['www.gap.com', 'oldnavy.gap.com', 'bananarepublic.gap.com', 'athleta.gap.com']
      .map(h => tier('barclays-gap-encore-card', h)?.rate), [4, 4, 4, 4]);
+// Gap's Encore FAQ puts both Factory brands in the Family of Brands, 2026-09-29.
+eq('...and at Gap Factory and Banana Republic Factory, on gapfactory.com hosts',
+   ['www.gapfactory.com', 'bananarepublicfactory.gapfactory.com']
+     .map(h => tier('barclays-gap-encore-card', h)?.rate), [4, 4]);
 eq('...and not a candidate at another clothing store', store('hm.com', 'barclays-gap-encore-card').all.length, 0);
-eq('Encore Mastercard: 4% at Gap brands, 3% at other apparel stores, 1% elsewhere',
-   ['oldnavy.gap.com', 'hm.com', 'amazon.com'].map(h => tier('barclays-gap-encore-mastercard', h)?.rate), [4, 3, 1]);
+eq('Encore Mastercard: 4% at Gap brands and Gap Factory, 3% at other apparel stores, 1% elsewhere',
+   ['oldnavy.gap.com', 'www.gapfactory.com', 'hm.com', 'amazon.com']
+     .map(h => tier('barclays-gap-encore-mastercard', h)?.rate), [4, 4, 3, 1]);
 eq('JCPenney Credit Card: 2.5% at jcpenney.com, what it adds to the 5% members earn anyway',
    [tier('synchrony-jcpenney-card', 'jcpenney.com')?.rate, store('macys.com', 'synchrony-jcpenney-card').all.length],
    [2.5, 0]);
