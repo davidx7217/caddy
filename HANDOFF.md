@@ -720,6 +720,14 @@ removes it when done. The prompts are the spec:
 
 ## Working agreements
 
+- **Never add a permission.** Once a reader installs Caddy they never approve it
+  again (David, 2026-09-28). Chrome installs updates silently, but an update that
+  adds a permission with a warning is disabled until the reader re-approves it.
+  `storage`, `activeTab`, `scripting` and `<all_urls>` already cover everything
+  Caddy does. The "permissions are frozen" test in `test-worker.mjs` fails on any
+  change to them, including optional permissions; changing that test is David's
+  call, never a fix.
+
 - **Do not spawn Chrome to test.** Serve the files over a small local server and
   use the in-app browser. The exceptions are the tools that genuinely need a
   browser process -- `make-screenshots.mjs` writing PNGs to disk, and

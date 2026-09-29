@@ -193,6 +193,22 @@ const WALLET = [{ productId: 'chase-freedom-unlimited', config: {} },
      w.localStore.read().overlayPos, { bottom: 240 });
 }
 
+// ---------- permissions are frozen ----------
+{
+  // David's rule, 2026-09-28: once a reader installs Caddy they never approve it
+  // again. Chrome installs updates silently, EXCEPT one that adds a permission
+  // with a warning: that update is disabled until the reader re-approves, and a
+  // reader who does not click loses the extension. This set already covers every
+  // site (<all_urls>), so nothing Caddy does needs more. Any change here -- even
+  // a warning-free permission, or an optional one requested at runtime, which is
+  // its own prompt -- is a decision for David, not a way to get a test green.
+  const m = JSON.parse(readFileSync(new URL('../manifest.json', import.meta.url), 'utf8'));
+  eq('permissions are exactly the ones readers approved at install',
+     [m.permissions, m.host_permissions, m.optional_permissions, m.optional_host_permissions,
+      m.content_scripts],
+     [['storage', 'activeTab', 'scripting'], ['<all_urls>'], undefined, undefined, undefined]);
+}
+
 // ---------- reaching Settings ----------
 {
   // A source-level guard, and deliberately so. For one release the toolbar click
