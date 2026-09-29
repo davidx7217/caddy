@@ -1,5 +1,5 @@
 {
-  "_comment": "UNVERIFIED SEED DATA. domain -> normalized category. issuer_overrides encode the known disputes (e.g. Amex does not treat Instacart as a US supermarket). confidence: high|medium|low.",
+  "_comment": "Domain -> normalized category. issuer_overrides encode the known disputes (e.g. Amex does not treat Instacart as a US supermarket). confidence: high|medium|low, shown in the popup. mcc_source records how a row was checked against the way purchases actually code: an issuer's own merchant list or a lookup of real statement codings, with the date. mcc, where present, is the Visa merchant category code that evidence names (e.g. a Chase label that is the code's own description). Rows without mcc_source are still unverified seed data.",
   "doordash.com": {
     "category": "dining",
     "confidence": "high"
@@ -19,11 +19,15 @@
   "starbucks.com": {
     "category": "dining",
     "confidence": "medium",
-    "note": "reloads may code as dining, gift cards may not"
+    "note": "reloads may code as dining, gift cards may not",
+    "mcc": "5814",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Chase 'FAST FOOD RESTAURANTS', Citi 'Restaurants - FAST FOOD RESTAURANTS', Amex 'Restaurant', Capital One 'dining'."
   },
   "chipotle.com": {
     "category": "dining",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5814",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-29: listed under Fast Food."
   },
   "seamless.com": {
     "category": "dining",
@@ -65,12 +69,16 @@
   "target.com": {
     "category": "department_store",
     "confidence": "high",
-    "note": "classic trap: Target does NOT code as groceries on any major issuer"
+    "note": "classic trap: Target does NOT code as groceries on any major issuer",
+    "mcc": "5310",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-29: 'purchases at discount stores like Wal-Mart, Target and Costco do not qualify' as Department Stores."
   },
   "walmart.com": {
     "category": "department_store",
     "confidence": "high",
-    "note": "same trap as Target"
+    "note": "same trap as Target",
+    "mcc": "5310",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-29: 'purchases at discount stores like Wal-Mart, Target and Costco do not qualify' as Department Stores."
   },
   "macys.com": {
     "category": "department_store",
@@ -96,7 +104,9 @@
     "category": "online_retail",
     "confidence": "high",
     "content_site": true,
-    "note": "Named in Prime Visa's 5% allowlist and missing from this table until 2026-09-10, which made that rule dead: audible.com resolved to no merchant, fell to `other`, and the card earned its 1% base. Category is online_retail because that is the rule the allowlist sits on, and because Audible sells digital goods. content_site is MEASURED 2026-09-10: the homepage carries Organization and FAQPage markup, og:type `book`, a price, no cart link and no buy control -- price only and nothing structural, which is the netflix.com shape, and one domain serves both the store and the player you listen in. Product pages carry Product and Offer, and commerce markup on the page beats content_site in isMerchantPage, so flagging darkens the homepage and the library while /pd/ pages and checkout still show. That is the opposite call from spotify.com for the opposite reason: Spotify's purchase surface has no markup to save it, Audible's does."
+    "note": "Named in Prime Visa's 5% allowlist and missing from this table until 2026-09-10, which made that rule dead: audible.com resolved to no merchant, fell to `other`, and the card earned its 1% base. Category is online_retail because that is the rule the allowlist sits on, and because Audible sells digital goods. content_site is MEASURED 2026-09-10: the homepage carries Organization and FAQPage markup, og:type `book`, a price, no cart link and no buy control -- price only and nothing structural, which is the netflix.com shape, and one domain serves both the store and the player you listen in. Product pages carry Product and Offer, and commerce markup on the page beats content_site in isMerchantPage, so flagging darkens the homepage and the library while /pd/ pages and checkout still show. That is the opposite call from spotify.com for the opposite reason: Spotify's purchase surface has no markup to save it, Audible's does.",
+    "mcc": "5968",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Chase 'Direct Marketing - Continuity/Subscription Merchant', Citi 'DIRECT MARKETING-CONTINUITY SUBSCRIPTION', Amex 'Merchandise & Supplies', Capital One 'OTHER SERVICES'."
   },
   "amazon.com": {
     "category": "online_retail",
@@ -117,7 +127,8 @@
   },
   "wayfair.com": {
     "category": "online_retail",
-    "confidence": "medium"
+    "confidence": "medium",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Wayfair.com shows 'Internet'; no per-issuer codings. U.S. Bank Cash+ sample merchants 2026-09-29: not on the Furniture Stores list."
   },
   "barnesandnoble.com": {
     "category": "online_retail",
@@ -225,17 +236,22 @@
   "booking.com": {
     "category": "travel_hotel",
     "confidence": "high",
-    "note": "Online travel agency, not a direct booking. Issuers that pay elevated rates only on 'booked direct' travel pay base rate here."
+    "note": "Online travel agency, not a direct booking. Issuers that pay elevated rates only on 'booked direct' travel pay base rate here.",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Capital One 'Other Travel'. Descriptors billed by the hotel ('Hotel at Booking.com') show 'Hotels', so the code depends on who charges."
   },
   "expedia.com": {
     "category": "travel_hotel",
     "confidence": "medium",
-    "note": "Online travel agency, not a direct booking. Issuers that pay elevated rates only on 'booked direct' travel pay base rate here."
+    "note": "Online travel agency, not a direct booking. Issuers that pay elevated rates only on 'booked direct' travel pay base rate here.",
+    "mcc": "4722",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Chase 'Travel agencies and tour operators'. Some Expedia.com descriptors show 'Airlines (direct booking)' -- flights the airline bills itself."
   },
   "airbnb.com": {
     "category": "travel_hotel",
     "confidence": "medium",
-    "note": "Online travel agency, not a direct booking. Issuers that pay elevated rates only on 'booked direct' travel pay base rate here."
+    "note": "Online travel agency, not a direct booking. Issuers that pay elevated rates only on 'booked direct' travel pay base rate here.",
+    "mcc": "4722",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Chase 'Travel agencies and tour operators', Amex 'Travel - Travel Agencies', Capital One 'Other Travel'."
   },
   "uber.com": {
     "category": "travel_ground",
@@ -297,7 +313,9 @@
     "category": "streaming",
     "confidence": "low",
     "content_site": true,
-    "note": "only YouTube Premium/TV charges code as streaming"
+    "note": "only YouTube Premium/TV charges code as streaming",
+    "mcc": "4899",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29 (Google YouTube Premium): Chase 'Cable and other pay television', Capital One 'Phone/Cable'. YouTube TV descriptors also show 'Cable' and 'Select Streaming Services'."
   },
   "chargepoint.com": {
     "category": "ev_charging",
@@ -317,27 +335,37 @@
   "t-mobile.com": {
     "category": "phone",
     "confidence": "medium",
-    "note": "measured 2026-09-09: already showed via cart link + price, but ranked as everything else. Handset purchases here may code as retail rather than telecom"
+    "note": "measured 2026-09-09: already showed via cart link + price, but ranked as everything else. Handset purchases here may code as retail rather than telecom",
+    "mcc": "4814",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29 (Tmobile Auto Pay): Chase 'Telecommunication services', Amex 'Communications - Mobile Telecom'."
   },
   "verizon.com": {
     "category": "phone",
     "confidence": "medium",
-    "note": "measured 2026-09-09: og:type article, no JSON-LD, price only. Same handset-vs-bill ambiguity as t-mobile.com. Split from phone_internet 2026-09-27 as phone: wireless is the bulk of what verizon.com bills, though Fios home internet is sold here too"
+    "note": "measured 2026-09-09: og:type article, no JSON-LD, price only. Same handset-vs-bill ambiguity as t-mobile.com. Split from phone_internet 2026-09-27 as phone: wireless is the bulk of what verizon.com bills, though Fios home internet is sold here too",
+    "mcc": "4814",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Verizon and Verizon Fios bills show 'Telecommunication Services'."
   },
   "xfinity.com": {
     "category": "internet_cable",
     "confidence": "medium",
-    "note": "measured 2026-09-09: no JSON-LD, no controls, price only. Split from phone_internet 2026-09-27 as internet_cable: Xfinity Mobile is sold here too, but home internet and TV are the bulk of it"
+    "note": "measured 2026-09-09: no JSON-LD, no controls, price only. Split from phone_internet 2026-09-27 as internet_cable: Xfinity Mobile is sold here too, but home internet and TV are the bulk of it",
+    "mcc": "4899",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29 (Comcast): Chase 'Cable and other pay television', Capital One 'Phone/Cable'."
   },
   "att.com": {
     "category": "phone",
     "confidence": "low",
-    "note": "UNMEASURED: category assigned from the brand, signals not read off the live site. Filed as phone, not internet_cable: wireless is the bulk of what att.com bills, though AT&T Fiber is sold here too"
+    "note": "UNMEASURED: category assigned from the brand, signals not read off the live site. Filed as phone, not internet_cable: wireless is the bulk of what att.com bills, though AT&T Fiber is sold here too",
+    "mcc": "4814",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29 (Att Bill): 'Telecommunication Services'; other AT&T bill descriptors show 'Cable' and 'Bills & utilities'."
   },
   "spectrum.com": {
     "category": "internet_cable",
     "confidence": "low",
-    "note": "UNMEASURED: category assigned from the brand, signals not read off the live site"
+    "note": "UNMEASURED: category assigned from the brand, signals not read off the live site",
+    "mcc": "4899",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Chase 'Cable and other pay television', Capital One 'Phone/Cable'."
   },
   "coned.com": {
     "category": "utilities",
@@ -350,11 +378,14 @@
   },
   "stubhub.com": {
     "category": "entertainment",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Capital One 'Entertainment'."
   },
   "fandango.com": {
     "category": "entertainment",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "7832",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-29: listed under Movie Theaters."
   },
   "staples.com": {
     "category": "office_supply",
@@ -416,17 +447,20 @@
   "hotels.com": {
     "category": "travel_hotel",
     "confidence": "high",
-    "note": "Online travel agency, not a direct booking. Issuers paying elevated rates only on 'booked direct' travel pay base rate here."
+    "note": "Online travel agency, not a direct booking. Issuers paying elevated rates only on 'booked direct' travel pay base rate here.",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: its descriptors show 'Travel' and 'Travel Agency'; no per-issuer codings."
   },
   "priceline.com": {
     "category": "travel_hotel",
     "confidence": "high",
-    "note": "Online travel agency, not a direct booking. Issuers paying elevated rates only on 'booked direct' travel pay base rate here."
+    "note": "Online travel agency, not a direct booking. Issuers paying elevated rates only on 'booked direct' travel pay base rate here.",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: 'Priceline Hotel' descriptors show 'Travel', 'Hotels', 'Travel Agency' and 'Airlines (direct booking)' -- the code depends on who charges."
   },
   "vrbo.com": {
     "category": "travel_hotel",
     "confidence": "high",
-    "note": "Online travel agency, not a direct booking. Issuers paying elevated rates only on 'booked direct' travel pay base rate here."
+    "note": "Online travel agency, not a direct booking. Issuers paying elevated rates only on 'booked direct' travel pay base rate here.",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: 'VRBO / HomeAway' descriptors show 'Hotels', 'Travel' and 'Real estate agents and managers'."
   },
   "kayak.com": {
     "category": "travel_hotel",
@@ -495,7 +529,8 @@
   "nike.com": {
     "category": "clothing",
     "confidence": "medium",
-    "note": "Footwear as much as apparel, so a shoe-store merchant code is as likely as a clothing one"
+    "note": "Footwear as much as apparel, so a shoe-store merchant code is as likely as a clothing one",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Nike.com orders show 'Internet' (online-order codes), one 'U.S. Online Retailers'; no per-issuer codings. Not a clothing or shoe store code."
   },
   "dickssportinggoods.com": {
     "category": "sporting_goods",
@@ -657,19 +692,27 @@
   },
   "cox.com": {
     "category": "internet_cable",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "4899",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Cox descriptors show 'Cable' and 'Select Streaming Services'; no per-issuer codings."
   },
   "optimum.com": {
     "category": "internet_cable",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "4899",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Optimum descriptors show 'Cable'; Optimum Mobile shows 'Telecommunication Services'."
   },
   "directv.com": {
     "category": "internet_cable",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "4899",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-29: listed as a TV provider under 'TV, Internet & Streaming' (cable and satellite TV)."
   },
   "dish.com": {
     "category": "internet_cable",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "4899",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-29: DISH Network listed as a TV provider under 'TV, Internet & Streaming' (cable and satellite TV)."
   },
   "frontier.com": {
     "category": "internet_cable",
@@ -678,17 +721,22 @@
   "tjmaxx.tjx.com": {
     "category": "clothing",
     "confidence": "medium",
-    "note": "T.J.Maxx's own site; tjmaxx.com redirects here. An exact host, so the rest of tjx.com -- the corporate site -- is not a merchant. Off-price apparel and home goods, filed as clothing, which is most of what it sells"
+    "note": "T.J.Maxx's own site; tjmaxx.com redirects here. An exact host, so the rest of tjx.com -- the corporate site -- is not a merchant. Off-price apparel and home goods, filed as clothing, which is most of what it sells",
+    "mcc": "5310",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Chase 'Discount stores', Capital One 'Merchandise'; Amex files it under 'Clothing Stores'."
   },
   "marshalls.com": {
     "category": "clothing",
     "confidence": "medium",
-    "note": "Same off-price shape as T.J.Maxx, and the same TJX Rewards card"
+    "note": "Same off-price shape as T.J.Maxx, and the same TJX Rewards card",
+    "mcc": "5310",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Chase 'Discount stores', Amex 'Merchandise & Supplies - Clothing Stores', Capital One 'Merchandise'."
   },
   "homegoods.com": {
     "category": "home_improvement",
     "confidence": "medium",
-    "note": "Home furnishings, which is the home_improvement bucket; a TJX Rewards store"
+    "note": "Home furnishings, which is the home_improvement bucket; a TJX Rewards store",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: no codings recorded. U.S. Bank Cash+ sample merchants 2026-09-29: not on the Furniture Stores list."
   },
   "homesense.com": {
     "category": "home_improvement",

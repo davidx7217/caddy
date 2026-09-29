@@ -1075,6 +1075,10 @@ eq('...and its 5x hotels rate stays a portal note, never a ranking',
 
   eq('every rule names a category that exists', [...ruled].filter(c => !categories[c]), []);
   eq('every merchant row names a category that exists', [...listed].filter(c => !categories[c]), []);
+  // A merchant code is evidence, so it never stands without the source it came from.
+  eq('every mcc is a four-digit code with its source beside it',
+     Object.entries(merchants).filter(([k, m]) => !k.startsWith('_') && 'mcc' in m &&
+       !(/^\d{4}$/.test(m.mcc) && m.mcc_source)).map(([k]) => k), []);
   eq('every category but `other` has a card rule behind it',
      cats.filter(c => c !== 'other' && !ruled.has(c)), []);
   // travel_portal is where issuer-portal rules are filed; no website IS the portal.
