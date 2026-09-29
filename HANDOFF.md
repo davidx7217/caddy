@@ -651,8 +651,16 @@ engine change.
 
 Two Claude scheduled tasks on David's Mac. They run while the Claude app is open;
 a missed run catches up at the next launch. Each works in its own git worktree
-under its task folder, never in the checkout people work in, and removes it when
-done. The prompts are the spec: `~/.claude/scheduled-tasks/<task>/SKILL.md`.
+in `~/Documents/Projects/.agent-work/`, never in the checkout people work in, and
+removes it when done. The prompts are the spec:
+`~/.claude/scheduled-tasks/<task>/SKILL.md`.
+
+- **They must run without permission prompts.** The runs are in bypass mode, yet
+  the first one stopped three times for approval, every time for its worktree,
+  which then lived inside `~/.claude/` -- a folder Claude Code guards even in
+  bypass mode. Keep the worktrees out of it. The agents also read pages with
+  WebFetch, not the built-in browser, which can stop to ask for a site; a page
+  WebFetch cannot read is reported as unreadable rather than waited on.
 
 | Task | When | Does |
 |---|---|---|
