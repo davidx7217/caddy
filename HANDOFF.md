@@ -655,16 +655,20 @@ in `~/Documents/Projects/.agent-work/`, never in the checkout people work in, an
 removes it when done. The prompts are the spec:
 `~/.claude/scheduled-tasks/<task>/SKILL.md`.
 
-- **They must run without permission prompts.** The runs are in bypass mode, yet
-  the first one stopped three times for approval, every time for its worktree,
-  which then lived inside `~/.claude/` -- a folder Claude Code guards even in
-  bypass mode. Keep the worktrees out of it. The agents also read pages with
-  WebFetch, not the built-in browser, which can stop to ask for a site; a page
-  WebFetch cannot read is reported as unreadable rather than waited on.
+- **They run without permission prompts because of an allowlist, not a mode.**
+  Scheduled runs start in default (ask) mode whatever mode the app keeps for the
+  folder -- measured 2026-09-28 with a test run. What keeps them unattended is
+  `~/Documents/Projects/.claude/settings.local.json`: it allows Bash, Read,
+  WebFetch, WebSearch and edits under `.agent-work/`, and denies force pushes
+  (tested). A default-mode test run then finished with zero prompts. It applies to
+  every session started in `~/Documents/Projects`, and the edit allowance is why
+  the worktrees must stay in `.agent-work/`. The agents read pages with WebFetch,
+  not the built-in browser, which can stop to ask for a site; a page WebFetch
+  cannot read is reported as unreadable rather than waited on.
 
 | Task | When | Does |
 |---|---|---|
-| `caddy-rates-keeper` | Mon and Thu, 8:15 | Next quarter's rotating categories (Freedom Flex, Discover) and any dated rule about to lapse; then re-reads the 8 least recently verified cards, so each is re-read about every 9 weeks, inside the 90-day staleness line |
+| `caddy-rates-keeper` | Mon and Thu, 8:15 | Every rotating quarter the issuers have posted (Freedom Flex, Discover) and any dated rule about to lapse; then re-reads the 8 least recently verified cards, so each is re-read about every 9 weeks, inside the 90-day staleness line |
 | `caddy-monthly-upkeep` | 2nd of the month, 10:30 | Point-valuation drift against `_sources`; the HTTP redirect sweep; a news scout for card launches, refreshes and closures |
 
 - **What lands by itself**: only `last_verified` bumps for cards whose issuer page
