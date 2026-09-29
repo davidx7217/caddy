@@ -718,6 +718,40 @@ removes it when done. The prompts are the spec:
 
 ---
 
+## 16. Full audit, 29 September 2026
+
+Every card's rates read against its issuer page -- 117 that day, 9 by the rates
+keeper the day before -- and every card ranked on all 162 merchant rows to see what
+the extension actually recommends. Fixed on `audit-2026-09-29`: Cash+'s fast food,
+movie and furniture choices, Autograph's pay TV, the Freedom cards' 2% on Lyft, and
+an engine bug where a later-ending promo silenced the stale-quarter warning.
+
+**Cannot be read automatically** (a browser or a person must check them): the four
+USAA cards (usaa.com returns nothing to a fetch), Sam's Club, and the store cards
+whose sites block bots -- Amazon, Target, Lowe's, TJX, Gap x2, JCPenney x2, Macy's.
+
+**Open questions, each a call for David or a statement to settle it:**
+- Wyndham Earner: its own page says 2X in one place and 3X in another on dining,
+  grocery and gas. The data follows the Reward Rules (3X).
+- Citi Strata Premier's "Air Travel and Other Hotel Purchases" has no published
+  definition; booking sites and Airbnb get 3X today.
+- Altitude Connect excludes booking sites from its 4X travel and the Emirates cards
+  from their 2X; RCI and Capital Vacations do not. The same question answered two
+  ways.
+- Cash+ "Department stores" counts target.com and walmart.com, which are discount
+  stores; "Furniture stores" counts HomeGoods and HomeSense but not Wayfair.
+- Cable companies (Xfinity, Cox, Spectrum, Optimum) for Autograph's pay-TV 3X.
+- Sapphire Preferred's 3X "vacation homes at top brands" is not modelled.
+- Venture X's portal note says 10X on vrbo.com and airbnb.com; vacation rentals
+  through Capital One Travel earn 5X.
+- Merchant rows that are not really checkouts: kayak.com (search only), opentable.com
+  (meals are paid at the table), riteaid.com (no longer a drugstore storefront),
+  traderjoes.com, wholefoodsmarket.com.
+- merchants.json still calls itself UNVERIFIED SEED DATA, and no agent checks how a
+  merchant codes. That is the next gap.
+
+---
+
 ## Working agreements
 
 - **Never add a permission.** Once a reader installs Caddy they never approve it
