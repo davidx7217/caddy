@@ -988,7 +988,7 @@ eq('...and its 5x hotels rate stays a portal note, never a ranking',
      cards.filter(p => !ISSUER[p.issuer] || !CURRENCY[p.currency]).map(p => p.id), []);
   eq('every card is ranked, 1 to the catalogue size, with no gaps and no repeats',
      cards.map(p => p.common).sort((a, b) => a - b), Array.from({ length: cards.length }, (_, i) => i + 1));
-  eq('...and there are 126 of them', cards.length, 126);
+  eq('...and there are 140 of them', cards.length, 140);
   // A store card that names a domain nothing resolves to could never rank at all.
   eq('every store a store card works at is in merchants.json',
      cards.flatMap(p => (p.only_at || []).filter(d => !merchants[d]).map(d => `${p.id}:${d}`)), []);
@@ -1571,6 +1571,67 @@ eq('RCI and Capital Vacations: 2% on travel, OTAs included, rideshare, gas and E
        .map(h => tier(id, h)?.rate)), Array(14).fill(2));
 eq('...and 1% elsewhere', ['barclays-rci', 'barclays-capital-vacations'].map(id => tier(id, 'chipotle.com')?.rate),
    [1, 1]);
+
+// --- co-branded business cards, 2026-09-28 ------------------------------------
+// Amex's Delta, Marriott, Hilton and Business Green cards, Chase's United,
+// Southwest, IHG and Hyatt business cards, and Barclays' Wyndham and GM, each
+// read off its issuer's page that day.
+const BIZ = ['amex-delta-gold-business', 'amex-delta-platinum-business', 'amex-delta-reserve-business',
+  'amex-marriott-business', 'amex-hilton-business', 'amex-business-green', 'chase-united-business',
+  'chase-united-club-business', 'chase-southwest-performance-business', 'chase-southwest-premier-business',
+  'chase-ihg-business-premier', 'chase-hyatt-business', 'barclays-wyndham-earner-business', 'barclays-gm-business'];
+eq('all fourteen are marked as business cards', BIZ.filter(id => !products[id]?.business), []);
+eq('Delta Gold Business: 2x at Delta, restaurants, U.S. shippers and ad providers, 1x elsewhere',
+   ['delta.com', 'doordash.com', 'ups.com', 'ads.google.com', 'amazon.com']
+     .map(h => tier('amex-delta-gold-business', h)?.rate), [2, 2, 2, 2, 1]);
+eq('...shipping capped at $50,000 a year', tier('amex-delta-gold-business', 'ups.com')?.caveats[0],
+   'Capped at $50,000 per year, then 1x');
+eq('Delta Platinum Business: 3x at Delta and on a hotel booked direct, 1x through an OTA',
+   ['delta.com', 'marriott.com', 'hotels.com'].map(h => tier('amex-delta-platinum-business', h)?.rate), [3, 3, 1]);
+eq('...1.5x on transit and shipping, and no restaurant bonus',
+   ['uber.com', 'ups.com', 'doordash.com'].map(h => tier('amex-delta-platinum-business', h)?.rate), [1.5, 1.5, 1]);
+eq('Delta Reserve Business: 3x at Delta, 1.5x on shipping, transit and office supply, 1x on hotels',
+   ['delta.com', 'ups.com', 'uber.com', 'staples.com', 'marriott.com']
+     .map(h => tier('amex-delta-reserve-business', h)?.rate), [3, 1.5, 1.5, 1.5, 1]);
+eq('Marriott Bonvoy Business: 6x at Marriott, 4x on dining, gas, wireless and shipping, 2x elsewhere',
+   ['marriott.com', 'doordash.com', 'shell.us', 't-mobile.com', 'ups.com', 'amazon.com']
+     .map(h => tier('amex-marriott-business', h)?.rate), [6, 4, 4, 4, 4, 2]);
+eq('Hilton Honors Business: 12x at Hilton, 5x everywhere else, worth 2%',
+   [tier('amex-hilton-business', 'hilton.com')?.rate, tier('amex-hilton-business', 'amazon.com')?.rate,
+    tier('amex-hilton-business', 'amazon.com')?.value], [12, 5, 2]);
+eq('Business Green: 1x on the airline\'s own site, 2x through Amex Travel as a note',
+   [tier('amex-business-green', 'delta.com')?.rate, noteAt('amex-business-green', 'hilton.com')],
+   [1, 'Amex Business Green Rewards Card: 2x (3.20%) if you book through Amex Travel instead']);
+eq('United Business: 2x at United, restaurants, gas, office supply and transit, 1x on another airline',
+   ['united.com', 'doordash.com', 'shell.us', 'staples.com', 'uber.com', 'delta.com']
+     .map(h => tier('chase-united-business', h)?.rate), [2, 2, 2, 2, 2, 1]);
+eq('United Club Business: 2x at United, 1.5x everywhere else, Renowned Hotels as a note',
+   [tier('chase-united-club-business', 'united.com')?.rate, tier('chase-united-club-business', 'amazon.com')?.rate,
+    noteAt('chase-united-club-business', 'hilton.com')],
+   [2, 1.5, 'United Club Business Card: 5x (6.00%) if you book through Renowned Hotels and Resorts instead']);
+eq('Southwest Performance Business: 4x at Southwest, 2x on hotels booked direct, gas, dining and transit',
+   ['southwest.com', 'marriott.com', 'shell.us', 'doordash.com', 'uber.com']
+     .map(h => tier('chase-southwest-performance-business', h)?.rate), [4, 2, 2, 2, 2]);
+eq('...1x through an OTA, and its lapsed 2025 categories earn nothing extra',
+   ['hotels.com', 'ads.google.com', 'xfinity.com'].map(h => tier('chase-southwest-performance-business', h)?.rate),
+   [1, 1, 1]);
+eq('Southwest Premier Business: 3x at Southwest, 2x on gas and dining to $8,000 a year',
+   [tier('chase-southwest-premier-business', 'southwest.com')?.rate,
+    tier('chase-southwest-premier-business', 'shell.us')?.rate,
+    tier('chase-southwest-premier-business', 'doordash.com')?.caveats[0]],
+   [3, 2, 'Capped at $8,000 per year, then 1x']);
+eq('IHG Premier Business: 10x at IHG, 5x on travel, OTAs included, dining, ads, office supply and gas, 3x elsewhere',
+   ['ihg.com', 'marriott.com', 'hotels.com', 'hertz.com', 'uber.com', 'doordash.com', 'ads.google.com',
+    'staples.com', 'shell.us', 'amazon.com'].map(h => tier('chase-ihg-business-premier', h)?.rate),
+   [10, 5, 5, 5, 5, 5, 5, 5, 5, 3]);
+eq('World of Hyatt Business: 4x at Hyatt, 2x at gyms, its top-three 2x left to the caution',
+   ['hyatt.com', 'planetfitness.com', 'doordash.com', 'amazon.com'].map(h => tier('chase-hyatt-business', h)?.rate),
+   [4, 2, 1, 1]);
+eq('Wyndham Earner Business: 8x at Wyndham, 5x on gas, EV charging, ads, shipping and office supply',
+   ['wyndhamhotels.com', 'shell.us', 'evgo.com', 'ads.google.com', 'ups.com', 'staples.com', 'doordash.com']
+     .map(h => tier('barclays-wyndham-earner-business', h)?.rate), [8, 5, 5, 5, 5, 5, 1]);
+eq('GM Business: 7x at GM\'s own web stores, 3x everywhere else',
+   ['accessories.gmc.com', 'amazon.com'].map(h => tier('barclays-gm-business', h)?.rate), [7, 3]);
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

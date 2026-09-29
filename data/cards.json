@@ -1,9 +1,9 @@
 {
   "_note_field": "MAINTAINER-ONLY. `note` records why a card is modelled the way it is -- provenance, schema reasoning, what was deliberately not modelled. Never render it in the UI. `caution` is the user-facing field.",
   "_business_note": "`business` marks a card issued on business underwriting rather than personal. Absent means personal -- only the field's presence is meaningful, so there is nothing to keep in sync on a hundred and nine records. It filters the catalogue and nothing else reads it: the ranker does not care whose name is on the account.",
-  "_common_note": "`common` is a POPULARITY RANK, 1 to 126, and it is EDITORIAL. There is no public card-level ranking of US cardholders -- Nilson publishes issuer volume, not how many people hold a Freedom Unlimited -- so this is judgement, not a sourced fact, and it is the only field here that is. It orders the setup picker so a new user meets mass-market cards first. 21 to 40 were added on 2026-09-27 as the next twenty after the first, 41 to 63 on 2026-09-28 -- store cards, then the remaining tiers of airline and hotel programs already present -- 64 to 82 later that day, the cards of issuers Caddy did not yet cover, 83 to 95 after those, business cards, 96 to 103, smaller store cards, 104 to 110, the missing tiers of covered programs, and 111 to 126, Barclays' other co-branded cards, so each batch ranks below the one before by construction. Re-rank it freely; nothing computes from it.",
+  "_common_note": "`common` is a POPULARITY RANK, 1 to 140, and it is EDITORIAL. There is no public card-level ranking of US cardholders -- Nilson publishes issuer volume, not how many people hold a Freedom Unlimited -- so this is judgement, not a sourced fact, and it is the only field here that is. It orders the setup picker so a new user meets mass-market cards first. 21 to 40 were added on 2026-09-27 as the next twenty after the first, 41 to 63 on 2026-09-28 -- store cards, then the remaining tiers of airline and hotel programs already present -- 64 to 82 later that day, the cards of issuers Caddy did not yet cover, 83 to 95 after those, business cards, 96 to 103, smaller store cards, 104 to 110, the missing tiers of covered programs, 111 to 126, Barclays' other co-branded cards, and 127 to 140, co-branded business cards, so each batch ranks below the one before by construction. Re-rank it freely; nothing computes from it.",
   "_only_at_note": "`only_at` marks a STORE CARD: the merchant domains where it works, and nowhere else. The ranker drops the card from consideration on any other domain rather than ranking it on its base rate, because recommending a card the till refuses is worse than not mentioning it. base_rate is then what the card adds at that store: where a store pays its free program's members something whatever card they use, that share is left out, because it cannot change which card to use. Store cards with no rewards at all -- Home Depot's, for one -- are deliberately left out: a card that earns nothing can never be the best card to use.",
-  "_comment": "All 126 records verified against issuer sources; 5 on 2026-08-29, 6 on 2026-09-09, 5 on 2026-09-10, 24 on 2026-09-27 -- the twenty added that day, plus Blue Cash Everyday, Amex Gold, BofA Customized Cash and U.S. Bank Cash+, re-read because their categories changed -- and 86 on 2026-09-28: the store cards and the remaining airline and hotel tiers, then nineteen cards from Synchrony's general-purpose line, Barclays, USAA, Navy Federal and Bilt, then thirteen business cards from Amex, Capital One, Chase and Barclays, then eight smaller store cards from Gap Inc., Nordstrom, Ulta and JCPenney, then seven missing tiers: Citi AAdvantage Executive and Globe, Wells Fargo Autograph Journey, BofA Premium Rewards and Premium Rewards Elite, and U.S. Bank Altitude Go and Connect, then sixteen more Barclays co-brands: three Wyndham Rewards Earner tiers, two AARP cards, Upromise, Frontier, two Emirates Skywards cards, Lufthansa Miles & More, GM Rewards, Carnival Rewards, Barnes & Noble, Breeze Easy, RCI Elite Rewards and Capital Vacations. The Bilt cards' offer terms could not be read (the link downloads a file), so their category definitions are unconfirmed; see their notes. Each carries its source_url. Chase Freedom Flex rotating categories MUST be re-verified 2026-10-01. Amex Platinum was absent until 2026-09-27 because no reachable americanexpress.com page stated its annual fee or base rate on 2026-09-10; the product page states both now.",
+  "_comment": "All 140 records verified against issuer sources; 5 on 2026-08-29, 6 on 2026-09-09, 5 on 2026-09-10, 24 on 2026-09-27 -- the twenty added that day, plus Blue Cash Everyday, Amex Gold, BofA Customized Cash and U.S. Bank Cash+, re-read because their categories changed -- and 100 on 2026-09-28: the store cards and the remaining airline and hotel tiers, then nineteen cards from Synchrony's general-purpose line, Barclays, USAA, Navy Federal and Bilt, then thirteen business cards from Amex, Capital One, Chase and Barclays, then eight smaller store cards from Gap Inc., Nordstrom, Ulta and JCPenney, then seven missing tiers: Citi AAdvantage Executive and Globe, Wells Fargo Autograph Journey, BofA Premium Rewards and Premium Rewards Elite, and U.S. Bank Altitude Go and Connect, then sixteen more Barclays co-brands: three Wyndham Rewards Earner tiers, two AARP cards, Upromise, Frontier, two Emirates Skywards cards, Lufthansa Miles & More, GM Rewards, Carnival Rewards, Barnes & Noble, Breeze Easy, RCI Elite Rewards and Capital Vacations, then fourteen co-branded business cards: Amex's Delta SkyMiles Gold, Platinum and Reserve Business, Marriott Bonvoy Business, Hilton Honors Business and Business Green, Chase's United and United Club Business, Southwest Performance and Premier Business, IHG One Rewards Premier Business and World of Hyatt Business, and Barclays' Wyndham Earner Business and GM Business. The Bilt cards' offer terms could not be read (the link downloads a file), so their category definitions are unconfirmed; see their notes. Each carries its source_url. Chase Freedom Flex rotating categories MUST be re-verified 2026-10-01. Amex Platinum was absent until 2026-09-27 because no reachable americanexpress.com page stated its annual fee or base rate on 2026-09-10; the product page states both now.",
   "chase-sapphire-reserve": {
     "id": "chase-sapphire-reserve",
     "issuer": "chase",
@@ -5444,6 +5444,566 @@
       {
         "category": "ev_charging",
         "rate": 2.0
+      }
+    ]
+  },
+  "amex-delta-gold-business": {
+    "id": "amex-delta-gold-business",
+    "issuer": "amex",
+    "network": "amex",
+    "currency": "delta",
+    "name": "Delta SkyMiles Gold Business Amex",
+    "common": 127,
+    "business": true,
+    "annual_fee": 150,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.americanexpress.com/en-us/business/credit-cards/delta-skymiles-gold/",
+    "caution": "Business card. $0 annual fee the first year, then $150.",
+    "note": "Rates read off the product page and its Offer & Benefit Terms on 2026-09-28. 2X on purchases made directly with Delta, at restaurants worldwide -- U.S. delivery included -- and at U.S. shipping providers and U.S. providers of advertising in select media, each of those last two capped at $50,000 a calendar year; 1X elsewhere.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 2.0,
+        "merchant_allowlist": [
+          "delta.com"
+        ]
+      },
+      {
+        "category": "dining",
+        "rate": 2.0
+      },
+      {
+        "category": "shipping",
+        "rate": 2.0,
+        "cap": {
+          "amount": 50000,
+          "period": "year",
+          "then_rate": 1.0
+        }
+      },
+      {
+        "category": "advertising",
+        "rate": 2.0,
+        "cap": {
+          "amount": 50000,
+          "period": "year",
+          "then_rate": 1.0
+        }
+      }
+    ]
+  },
+  "amex-delta-platinum-business": {
+    "id": "amex-delta-platinum-business",
+    "issuer": "amex",
+    "network": "amex",
+    "currency": "delta",
+    "name": "Delta SkyMiles Platinum Business Amex",
+    "common": 134,
+    "business": true,
+    "annual_fee": 350,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.americanexpress.com/en-us/business/credit-cards/delta-skymiles-platinum/",
+    "caution": "Business card. The 1.5X on transit and shipping shares one $100,000 yearly cap with purchases of $5,000 or more.",
+    "note": "Rates read off the product page and its Offer & Benefit Terms on 2026-09-28. 3X on purchases made directly with Delta and with hotels -- a hotel prepaid through an OTA earns 1X, which the denylist says; 1.5X on transit (trains, taxis, rideshare, ferries, tolls, parking, buses and subways), on U.S. shipping and on any single purchase of $5,000 or more, the three sharing one $100,000 cap a calendar year; 1X elsewhere. The $5,000 rule is not ranked. No restaurant bonus, unlike the personal card.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 3.0,
+        "merchant_allowlist": [
+          "delta.com"
+        ]
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 3.0,
+        "merchant_denylist": [
+          "expedia.com",
+          "booking.com",
+          "airbnb.com",
+          "hotels.com",
+          "priceline.com",
+          "vrbo.com",
+          "kayak.com",
+          "orbitz.com",
+          "travelocity.com"
+        ]
+      },
+      {
+        "category": "travel_ground",
+        "rate": 1.5,
+        "cap": {
+          "amount": 100000,
+          "period": "year",
+          "then_rate": 1.0
+        }
+      },
+      {
+        "category": "shipping",
+        "rate": 1.5,
+        "cap": {
+          "amount": 100000,
+          "period": "year",
+          "then_rate": 1.0
+        }
+      }
+    ]
+  },
+  "amex-delta-reserve-business": {
+    "id": "amex-delta-reserve-business",
+    "issuer": "amex",
+    "network": "amex",
+    "currency": "delta",
+    "name": "Delta SkyMiles Reserve Business Amex",
+    "common": 136,
+    "business": true,
+    "annual_fee": 650,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.americanexpress.com/en-us/business/credit-cards/delta-skymiles-reserve/",
+    "caution": "Business card. Everything earns 1.5X after $150,000 of purchases in a calendar year.",
+    "note": "Rates read off the product page and its Offer & Benefit Terms on 2026-09-28. 3X on purchases made directly with Delta; 1.5X on U.S. shipping, on transit (trains, taxis, rideshare, ferries, tolls, parking, buses and subways) and at U.S. office supply stores; 1X elsewhere, and 1.5X on everything once a calendar year's purchases pass $150,000, which Caddy tracks no spend to apply.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 3.0,
+        "merchant_allowlist": [
+          "delta.com"
+        ]
+      },
+      {
+        "category": "shipping",
+        "rate": 1.5
+      },
+      {
+        "category": "travel_ground",
+        "rate": 1.5
+      },
+      {
+        "category": "office_supply",
+        "rate": 1.5
+      }
+    ]
+  },
+  "amex-marriott-business": {
+    "id": "amex-marriott-business",
+    "issuer": "amex",
+    "network": "amex",
+    "currency": "marriott",
+    "name": "Marriott Bonvoy Business Amex",
+    "common": 128,
+    "business": true,
+    "annual_fee": 125,
+    "base_rate": 2.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.americanexpress.com/us/credit-cards/business/business-credit-cards/amex-marriott-bonvoy-business-credit-card/",
+    "note": "Rates read off the product page and its Offer & Benefit Terms on 2026-09-28. 6X at hotels participating in Marriott Bonvoy; 4X at restaurants worldwide, on gasoline at U.S. gas stations, on wireless phone service bought directly from U.S. providers (not Google Fi) and on U.S. shipping; 2X elsewhere.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 6.0,
+        "merchant_allowlist": [
+          "marriott.com"
+        ]
+      },
+      {
+        "category": "dining",
+        "rate": 4.0
+      },
+      {
+        "category": "gas",
+        "rate": 4.0
+      },
+      {
+        "category": "phone",
+        "rate": 4.0
+      },
+      {
+        "category": "shipping",
+        "rate": 4.0
+      }
+    ]
+  },
+  "amex-hilton-business": {
+    "id": "amex-hilton-business",
+    "issuer": "amex",
+    "network": "amex",
+    "currency": "hilton",
+    "name": "Hilton Honors Business Amex",
+    "common": 129,
+    "business": true,
+    "annual_fee": 195,
+    "base_rate": 5.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.americanexpress.com/us/credit-cards/business/business-credit-cards/hilton-honors/",
+    "caution": "Business card. The 5X on everyday purchases stops at $100,000 a calendar year; after that, 3X.",
+    "note": "Rates read off the product page and its Offer & Benefit Terms on 2026-09-28. 12X on bookings made directly with Hilton and on charges at a Hilton hotel; 5X on everything else for the first $100,000 a calendar year, then 3X. The 5X is the base rate, and a base rate carries no cap, so the $100,000 is in the caution, as Blue Business Plus's is.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 12.0,
+        "merchant_allowlist": [
+          "hilton.com"
+        ]
+      }
+    ]
+  },
+  "amex-business-green": {
+    "id": "amex-business-green",
+    "issuer": "amex",
+    "network": "amex",
+    "currency": "mr",
+    "name": "Amex Business Green Rewards Card",
+    "common": 138,
+    "business": true,
+    "annual_fee": 95,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://www.americanexpress.com/us/credit-cards/business/business-credit-cards/american-express-business-green-card-amex/",
+    "note": "Rates read off the product page and its Offer & Benefit Terms on 2026-09-28. 2X on flights and prepaid hotels booked on AmexTravel.com or the Amex Travel app, 1X elsewhere. A charge card with Pay Over Time.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 2.0,
+        "portal_only": true,
+        "portal": "Amex Travel"
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 2.0,
+        "portal_only": true,
+        "portal": "Amex Travel"
+      }
+    ]
+  },
+  "chase-united-business": {
+    "id": "chase-united-business",
+    "issuer": "chase",
+    "network": "visa",
+    "currency": "united",
+    "name": "United Business Card",
+    "common": 132,
+    "business": true,
+    "annual_fee": 150,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://creditcards.chase.com/business-credit-cards/united/united-business-card",
+    "note": "Rates read off the offer details on 2026-09-28. 2X on United tickets and other purchases from United, at restaurants including delivery, at gas stations, at office supply stores and on local transit and commuting, rideshare included; 1X elsewhere. The page's 8x on United flights adds the 6 MileagePlus member miles, which accrue whatever card pays; the card's share is 2X. A Visa, per the page's Visa Signature concierge benefit.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 2.0,
+        "merchant_allowlist": [
+          "united.com"
+        ]
+      },
+      {
+        "category": "dining",
+        "rate": 2.0
+      },
+      {
+        "category": "gas",
+        "rate": 2.0
+      },
+      {
+        "category": "office_supply",
+        "rate": 2.0
+      },
+      {
+        "category": "travel_ground",
+        "rate": 2.0
+      }
+    ]
+  },
+  "chase-united-club-business": {
+    "id": "chase-united-club-business",
+    "issuer": "chase",
+    "network": "visa",
+    "currency": "united",
+    "name": "United Club Business Card",
+    "common": 137,
+    "business": true,
+    "annual_fee": 695,
+    "base_rate": 1.5,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://creditcards.chase.com/business-credit-cards/united/united-club-business",
+    "note": "Rates read off the offer details on 2026-09-28. 1.5X on everything, 2X on United tickets and other purchases from United, and 5X on hotels prepaid through Renowned Hotels and Resorts for United Cardmembers in Chase Travel, modelled as a portal as on the personal United cards. The page's 8x on United flights adds the 6 MileagePlus member miles; the card's share is 2X. A Visa, per the page's Visa Signature concierge benefit.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 2.0,
+        "merchant_allowlist": [
+          "united.com"
+        ]
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "Renowned Hotels and Resorts"
+      }
+    ]
+  },
+  "chase-southwest-performance-business": {
+    "id": "chase-southwest-performance-business",
+    "issuer": "chase",
+    "network": "visa",
+    "currency": "southwest",
+    "name": "Southwest Rapid Rewards Performance Business",
+    "common": 130,
+    "business": true,
+    "annual_fee": 299,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://creditcards.chase.com/business-credit-cards/southwest/performance-business",
+    "note": "Rates read off the offer details on 2026-09-28. 4X on purchases made directly with Southwest; 2X at gas stations and restaurants, on hotels booked directly with the hotel -- an OTA booking earns 1X, which the denylist says -- and on local transit and commuting, rideshare included; 1X elsewhere. The offer details still list 3X at Rapid Rewards hotel and car partners and 2X on ads and on internet, cable and phone, each only until 2025-12-31, so they have lapsed and are not modelled. Network read off the card art.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 4.0,
+        "merchant_allowlist": [
+          "southwest.com"
+        ]
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 2.0,
+        "merchant_denylist": [
+          "expedia.com",
+          "booking.com",
+          "airbnb.com",
+          "hotels.com",
+          "priceline.com",
+          "vrbo.com",
+          "kayak.com",
+          "orbitz.com",
+          "travelocity.com"
+        ]
+      },
+      {
+        "category": "gas",
+        "rate": 2.0
+      },
+      {
+        "category": "dining",
+        "rate": 2.0
+      },
+      {
+        "category": "travel_ground",
+        "rate": 2.0
+      }
+    ]
+  },
+  "chase-southwest-premier-business": {
+    "id": "chase-southwest-premier-business",
+    "issuer": "chase",
+    "network": "visa",
+    "currency": "southwest",
+    "name": "Southwest Rapid Rewards Premier Business",
+    "common": 131,
+    "business": true,
+    "annual_fee": 149,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://creditcards.chase.com/business-credit-cards/southwest/premier-business",
+    "caution": "Business card. The 2X on gas and dining shares one $8,000 cap per account anniversary year.",
+    "note": "Rates read off the offer details on 2026-09-28. 3X on purchases made directly with Southwest; 2X at gas stations and restaurants on the first $8,000 a year of the two combined, per account anniversary year, then 1X; 1X elsewhere. Network read off the card art.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 3.0,
+        "merchant_allowlist": [
+          "southwest.com"
+        ]
+      },
+      {
+        "category": "gas",
+        "rate": 2.0,
+        "cap": {
+          "amount": 8000,
+          "period": "year",
+          "then_rate": 1.0
+        }
+      },
+      {
+        "category": "dining",
+        "rate": 2.0,
+        "cap": {
+          "amount": 8000,
+          "period": "year",
+          "then_rate": 1.0
+        }
+      }
+    ]
+  },
+  "chase-ihg-business-premier": {
+    "id": "chase-ihg-business-premier",
+    "issuer": "chase",
+    "network": "mastercard",
+    "currency": "ihg",
+    "name": "IHG One Rewards Premier Business",
+    "common": 133,
+    "business": true,
+    "annual_fee": 99,
+    "base_rate": 3.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://creditcards.chase.com/business-credit-cards/IHG/business-premier",
+    "note": "Rates read off the offer details on 2026-09-28. 10X at hotels participating in IHG One Rewards; 5X on travel, at restaurants including takeout and delivery, on social media and search engine advertising, at office supply stores and at gas stations; 3X elsewhere. Chase's travel covers airlines, hotels, car rental, cruise lines, travel agencies, rail, taxis, tolls and parking, so OTAs count and no denylist is needed. A Mastercard, per the page's World and World Elite Mastercard terms, as the personal IHG cards are.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 10.0,
+        "merchant_allowlist": [
+          "ihg.com"
+        ]
+      },
+      {
+        "category": "travel_air",
+        "rate": 5.0
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 5.0
+      },
+      {
+        "category": "car_rental",
+        "rate": 5.0
+      },
+      {
+        "category": "travel_ground",
+        "rate": 5.0
+      },
+      {
+        "category": "dining",
+        "rate": 5.0
+      },
+      {
+        "category": "advertising",
+        "rate": 5.0
+      },
+      {
+        "category": "office_supply",
+        "rate": 5.0
+      },
+      {
+        "category": "gas",
+        "rate": 5.0
+      }
+    ]
+  },
+  "chase-hyatt-business": {
+    "id": "chase-hyatt-business",
+    "issuer": "chase",
+    "network": "visa",
+    "currency": "hyatt",
+    "name": "World of Hyatt Business",
+    "common": 135,
+    "business": true,
+    "annual_fee": 199,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://creditcards.chase.com/business-credit-cards/world-of-hyatt/hyatt-business-card",
+    "caution": "Business card. 2X in whichever three of eight categories you spend most on each quarter, which Caddy cannot see, so it ranks 1X.",
+    "note": "Rates read off the offer details on 2026-09-28. 4X at Hyatt hotels and on World of Hyatt Experiences; 2X at fitness clubs and gyms; 2X in the three of eight categories -- dining, shipping, airline tickets bought direct, local transit, social media and search engine ads, car rental, gas, and internet, cable and phone -- where the business spends most each calendar quarter; 1X elsewhere. Which three is decided by the whole quarter's spending, which no page shows, so per the recipe that 2X is a caution and not rules, as Business Gold's 4X is. Network read off the card art.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 4.0,
+        "merchant_allowlist": [
+          "hyatt.com"
+        ]
+      },
+      {
+        "category": "fitness",
+        "rate": 2.0
+      }
+    ]
+  },
+  "barclays-wyndham-earner-business": {
+    "id": "barclays-wyndham-earner-business",
+    "issuer": "barclays",
+    "network": "visa",
+    "currency": "wyndham",
+    "name": "Wyndham Rewards Earner Business Card",
+    "common": 139,
+    "business": true,
+    "annual_fee": 149,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://cards.barclaycardus.com/banking/cards/wyndham-rewards-earner-business-card/",
+    "caution": "Business card. Bonus points may not post when you pay through a digital wallet, PayPal or another third party.",
+    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48371). A Visa. 8X at participating Hotels by Wyndham, which is wyndhamhotels.com; 5X on gas, EV charging, marketing and advertising -- Google, Facebook and other digital ad platforms among them -- shipping and office supply stores, and at Wyndham's vacation clubs, which are not ranked; 1X elsewhere.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 8.0,
+        "merchant_allowlist": [
+          "wyndhamhotels.com"
+        ]
+      },
+      {
+        "category": "gas",
+        "rate": 5.0
+      },
+      {
+        "category": "ev_charging",
+        "rate": 5.0
+      },
+      {
+        "category": "advertising",
+        "rate": 5.0
+      },
+      {
+        "category": "shipping",
+        "rate": 5.0
+      },
+      {
+        "category": "office_supply",
+        "rate": 5.0
+      }
+    ]
+  },
+  "barclays-gm-business": {
+    "id": "barclays-gm-business",
+    "issuer": "barclays",
+    "network": "mastercard",
+    "currency": "gmbusiness",
+    "name": "GM Business Mastercard",
+    "common": 140,
+    "business": true,
+    "annual_fee": 0,
+    "base_rate": 3.0,
+    "verified": true,
+    "last_verified": "2026-09-28",
+    "source_url": "https://cards.barclaycardus.com/banking/cards/general-motors-business/",
+    "caution": "Business card. Points are worth a cent only at GM dealers, toward vehicles, service, parts and accessories.",
+    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc47372). A World Elite Mastercard for Business with the GM Rewards card's shape: 7X on eligible GM purchases -- vehicles and Certified Service at dealers, parts and accessories at dealers or on GM's websites, SiriusXM, GM Energy, the GM Company Store, GM Insurance and OnStar -- and 3X on everything else. Only GM's own web stores are ranked, as for the GM Rewards card. Its points are GM Business Card Points, not GM Rewards points, redeemable only at GM dealers; GM's own support page converted the old Marcus card's Earnings at 100 points per $1, so gmbusiness is 1.0.",
+    "rules": [
+      {
+        "category": "online_retail",
+        "rate": 7.0,
+        "merchant_allowlist": [
+          "accessories.chevrolet.com",
+          "accessories.buick.com",
+          "accessories.gmc.com",
+          "accessories.cadillac.com",
+          "gmparts.com",
+          "gmcompanystore.com"
+        ]
       }
     ]
   }

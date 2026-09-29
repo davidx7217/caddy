@@ -92,7 +92,7 @@ card rather than quietly falling back to a base rate.
 
 THE DATA
 
-126 cards from 17 issuers, every one verified against the issuer's own published
+140 cards from 17 issuers, every one verified against the issuer's own published
 terms, each carrying the source URL and the date it was read. Not scraped, not
 crowd-sourced, not copied from a blog. When an issuer's page could not confirm a
 rate, that rate is not in here -- there are cards deliberately left out of the
