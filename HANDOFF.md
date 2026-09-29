@@ -747,6 +747,22 @@ calls itself UNVERIFIED SEED DATA and no agent checks how a merchant codes):
 - Visa's Merchant Data Standards Manual and Mastercard's Quick Reference Booklet
   define what each code covers, not which merchant uses which.
 
+**Recorded so far** (2026-09-29): 28 rows carry `mcc_source`, 20 of them an `mcc` --
+the booking sites, the cable and phone companies, the off-price stores, Nike,
+Wayfair, HomeGoods, StubHub, Audible, YouTube, Starbucks, and the rows the Cash+
+recheck leaned on. The engine does not read either field; a test keeps every `mcc`
+four digits with a source beside it. Next: the other 134 rows, a batch at a time.
+
+**What the evidence says should change**, none of it applied yet:
+- Autograph's 3X pay-TV rule should reach xfinity.com, spectrum.com, cox.com and
+  optimum.com (all code as cable and other pay television, Wells Fargo's own words)
+  and audible.com (a continuity/subscription merchant, also in its definition).
+- The Gap Encore Mastercard's 3X "apparel" should leave out tjmaxx.tjx.com,
+  marshalls.com and nike.com, which code as a discount store or as online orders.
+- The booking sites are travel agencies, not hotels. A `travel_agency` category
+  would let each card say outright whether they count, instead of the hotel bucket
+  plus denylists; Citi Strata Premier's 3X there still turns on Citi's definition.
+
 **Open questions, each a call for David or a statement to settle it:**
 - Wyndham Earner: its own page says 2X in one place and 3X in another on dining,
   grocery and gas. The data follows the Reward Rules (3X).
