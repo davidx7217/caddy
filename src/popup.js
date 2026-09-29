@@ -70,6 +70,11 @@ $('#opts').addEventListener('click', () => chrome.runtime.openOptionsPage());
     tab ? (await chrome.storage.session.get(`tab:${tab.id}`))[`tab:${tab.id}`] : null;
 
   let res = await cached();
+  // Ranked on an earlier day -- the tab sat open past midnight, when a new
+  // rotating quarter may have started. Rank again rather than show yesterday.
+  if (res && res.rankedOn !== new Date().toDateString()) {
+    res = await chrome.runtime.sendMessage({ type: 'RECOMMEND', hostname: host });
+  }
 
   // Nothing cached means no content script ran here: automatic mode is off, or
   // this page loaded before it was granted. activeTab lets us inject for this

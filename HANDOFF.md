@@ -154,7 +154,25 @@ airlines, hotels, car rental agencies, cruise lines, travel agencies, discount
 travel sites, trains, buses, taxis, limousines, ferries, tolls and parking), the
 calendar footnotes for Discover, americanexpress.com/rewards-info for Amex. Reading
 Discover's Q4 footnote is what showed its Utilities covers phone and internet
-bought online, and that it does not name delivery apps under Restaurants.
+bought online.
+
+**When a definition does not name a merchant, check how it codes.** Issuers build
+categories from merchant category codes, so the MCC settles it. Two sources:
+Visa's Merchant Data Standards Manual (usa.visa.com, April 2026) for what each MCC
+covers -- 4121 Taxicabs and Limousines "includes ride-share Merchants", 7011 lodging
+takes short-term rentals, a single-line marketplace must use that line's MCC --
+and awardwallet.com/merchants for how a merchant is actually observed coding on
+each issuer's statements. Found that way on 2026-09-28: Uber and Lyft code as
+taxis/limousines (Chase travel), DoorDash, Uber Eats and Grubhub as 5812
+restaurants (Discover's Q4 Restaurants), Airbnb as a travel agency at Chase, and
+Instacart as a grocery store at Chase and Citi, which is why their `instacart.com`
+overrides were removed.
+
+**Rates switch at local midnight, open tabs included.** The engine reads the clock
+on every ranking. The dock re-ranks when the local day turns while a page is open
+(`rerank()` in `content.js`, pinned in `test-lifecycle.mjs`), and the popup does not
+reuse a cached answer stamped (`rankedOn`) with an earlier day. So on 1 October the
+Q4 rates show without a reload -- provided Q4 is in the installed build by then.
 
 **Stacking.** `rank()` takes the single best rule and never adds two, so when a
 rotating category lands on one Freedom Flex already pays 3x on, the rule carries

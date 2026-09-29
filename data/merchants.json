@@ -34,11 +34,9 @@
     "confidence": "medium",
     "issuer_overrides": {
       "amex": "other",
-      "chase": "other",
-      "citi": "other",
       "barclays": "other"
     },
-    "note": "third-party delivery; most issuers do NOT code this as a supermarket. barclays added 2026-09-28: the JetBlue cards' reward rules withhold bonus points from purchases made through third parties"
+    "note": "third-party grocery delivery. Chase and Citi overrides removed 2026-09-28: both issuers count grocery delivery that codes as a grocery store or supermarket (chase.com rewards-category-faq; Citi Strata Premier terms), and Instacart charges are observed coding exactly that way on Chase ('Grocery stores and supermarkets') and Citi ('GROCERY STORE,SUPERMARKET') statements (awardwallet.com/merchants/Instacart_62245547, read 2026-09-28). amex kept: Amex's supermarket rate needs a merchant Amex classifies as a supermarket and its rewards-info pages do not say whether Instacart is one; Amex statements show it as 'Merchandise & Supplies - Groceries'. barclays: the JetBlue and other co-brand reward rules withhold bonus points from purchases made through third parties."
   },
   "wholefoodsmarket.com": {
     "category": "groceries",

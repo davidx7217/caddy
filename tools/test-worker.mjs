@@ -168,6 +168,9 @@ const WALLET = [{ productId: 'chase-freedom-unlimited', config: {} },
   const cached = w.sessionStore.read()['tab:42'];
   eq('PAGE caches its answer per tab, so the popup can read it with no permission',
      cached && cached.category, 'dining');
+  // Stamped with the local day it was ranked on: the popup ranks again rather
+  // than show a copy from before a midnight when a new quarter started.
+  eq('...stamped with the day it was ranked on', cached && cached.rankedOn, new Date().toDateString());
   w.closeTab(42);
   await new Promise(r => setTimeout(r, 0));
   eq('closing the tab drops the cache', 'tab:42' in w.sessionStore.read(), false);

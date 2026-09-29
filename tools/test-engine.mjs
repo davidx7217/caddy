@@ -46,8 +46,11 @@ eq('unknown domain resolves to null', resolveMerchant('some-random-site.example'
   const r = run('instacart.com');
   eq('Amex override sends Instacart to other', card(r, 'amex-blue-cash-everyday').category, 'other');
   eq('BCE gets 1x on Instacart', card(r, 'amex-blue-cash-everyday').rate, 1);
-  eq('Chase override applies too, so Aeroplan loses its 3x grocery',
-     card(r, 'chase-aeroplan').rate, 1);
+  // Chase counts grocery delivery that codes as a grocery store, and Instacart
+  // does on Chase statements ('Grocery stores and supermarkets', observed on
+  // awardwallet.com 2026-09-28), so Chase is no longer overridden to other.
+  eq('Chase has no override, so Aeroplan earns its 3x grocery at Instacart',
+     card(r, 'chase-aeroplan').rate, 3);
 }
 {
   const r = run('costco.com');
@@ -151,6 +154,7 @@ eq('unknown domain resolves to null', resolveMerchant('some-random-site.example'
      [ff('kroger.com', '2026-11-15').caveats.some(c => c.includes('Q4 2026')),
       ff('kroger.com', '2026-11-15').needsActivation], [true, true]);
   eq('...and Walmart, which Chase excludes, stays at 1x', ff('walmart.com', '2026-11-15').rate, 1);
+  eq('...and Instacart, which codes as a grocery store at Chase, pays the 5x', ff('instacart.com', '2026-11-15').rate, 5);
   eq('Q4 2026 dining stacks to 7x mid-quarter', ff('doordash.com', '2026-11-15').rate, 7);
   eq('...falling back to the standing 3x past the cap',
      ff('doordash.com', '2026-11-15').caveats.includes('Capped at $1,500 per quarter, then 3x'), true);
@@ -175,6 +179,10 @@ eq('unknown domain resolves to null', resolveMerchant('some-random-site.example'
   eq('Aeroplan gas is 2x', ae('exxonmobilfuels.com').rate, 2);
   eq('Aeroplan travel is 3x on air, hotel, car rental and transit',
      [ae('delta.com').rate, ae('hilton.com').rate, ae('hertz.com').rate, ae('uber.com').rate], [3, 3, 3, 3]);
+  // Rideshare codes as MCC 4121 Taxicabs and Limousines (Visa manual, April 2026:
+  // 'This MCC includes ride-share Merchants'), which Chase's travel names; Airbnb
+  // codes at Chase as a travel agency, which it also names.
+  eq('...including Lyft and Airbnb', [ae('lyft.com').rate, ae('airbnb.com').rate], [3, 3]);
   eq('Aeroplan everything else is 1x', ae('bestbuy.com').rate, 1);
 }
 
@@ -1017,11 +1025,12 @@ eq('...Q4 utilities covers phone and internet bought online',
 eq('...which were 1x the quarter before',
    [disco('t-mobile.com', '2026-09-09').all[0].rate,
     disco('xfinity.com', '2026-09-09').all[0].rate], [1, 1]);
-// Restaurants are merchants classified as restaurants, cafes, fast food and
-// caterers; Discover does not name delivery apps, so they are not assumed.
-eq('...and delivery apps do not get the Q4 restaurant 5x',
+// Restaurants are merchants classified as full-service restaurants; delivery
+// apps code as MCC 5812 Eating places and Restaurants (Visa's marketplace rule,
+// and Chase, Citi and Amex statements), so they earn the Q4 5x too.
+eq('...and delivery apps get the Q4 restaurant 5x',
    [disco('doordash.com', '2026-10-15').all[0].rate,
-    disco('ubereats.com', '2026-10-15').all[0].rate], [1, 1]);
+    disco('ubereats.com', '2026-10-15').all[0].rate], [5, 5]);
 eq('...which is what finally makes utilities rank something',
    disco('coned.com', '2026-10-15').category, 'utilities');
 eq('...and every quarter needs activating', disco('coned.com', '2026-10-15').all[0].needsActivation, true);
@@ -1208,8 +1217,10 @@ eq('...10x on Citi Travel hotels, as a note', noteOn('citi-strata-premier', 'hil
    'Citi Strata Premier: 10x (14.00%) if you book through Citi Travel instead');
 eq('...and no Citi Travel note on flights, which that rate does not name',
    noteOn('citi-strata-premier', 'delta.com'), []);
-eq('...and no supermarket rate at Instacart, which Citi reads as delivery',
-   on('citi-strata-premier', 'instacart.com').rate, 1);
+// Citi pays on grocery delivery that codes as a supermarket, and Instacart does
+// on Citi statements ('GROCERY STORE,SUPERMARKET', awardwallet.com 2026-09-28).
+eq('...and its supermarket rate at Instacart, which codes as a supermarket',
+   on('citi-strata-premier', 'instacart.com').rate, 3);
 
 // Discover it Chrome.
 eq('Discover it Chrome: 2% on gas and dining',

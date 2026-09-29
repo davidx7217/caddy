@@ -94,12 +94,17 @@
   let fontEl = null;
   let fontFamilyStack = null;
 
-  let mounted = null;      // { open, destroy } once the dock exists
+  let mounted = null;      // { open, isOpen, destroy } once the dock exists
   let everMounted = false; // once true, never stop watching this page
   let autoOpened = false;  // at most one auto-open per page or SPA route
   let misses = 0;
   let lastUrl = location.href;
   let poll = null;
+  // Rates are dated by the local calendar day: a rotating quarter starts at local
+  // midnight. A tab left open across that midnight must show the new quarter
+  // without a reload, so the dock remembers the day it was ranked on.
+  const today = () => new Date().toDateString();
+  let rankedOn = null;
 
   // Sites the user has excluded are checked FIRST, before any DOM is read.
   // On a blocked host this script does nothing at all: no signals collected,
@@ -177,6 +182,7 @@
       // lingering until the page happens to change route. Without this an
       // orphan on a static page polls forever.
       if (!contextAlive()) return shutdown();
+      if (mounted && rankedOn !== today()) rerank();
       if (location.href === lastUrl) return;
       lastUrl = location.href;
       autoOpened = false;
@@ -225,10 +231,24 @@
         if (!res.show) { if (onMiss) onMiss(); return; }
 
         misses = 0;
-        if (!mounted) { mounted = render(res); everMounted = true; }
+        if (!mounted) { mounted = render(res); everMounted = true; rankedOn = today(); }
         // Open itself at the moment of payment, but never fight the user: if
         // they close it, it stays closed until the next route.
         if (res.checkout && !autoOpened) { autoOpened = true; mounted.open(); }
+      });
+  }
+
+  // The day turned while the dock was up: rank again and repaint in place,
+  // keeping the panel open if it was. PAGE also refreshes the popup's copy.
+  function rerank() {
+    rankedOn = today();
+    send({ type: 'PAGE', hostname: location.hostname, signals: collectSignals(), wantFont: true },
+      res => {
+        if (!res || !res.winner || !mounted) return;
+        const wasOpen = mounted.isOpen();
+        mounted.destroy();
+        mounted = render(res);
+        if (wasOpen) mounted.open();
       });
   }
 
@@ -624,6 +644,7 @@
         icon.setAttribute('aria-expanded', 'true');
         reflow();
       },
+      isOpen() { return wrap.classList.contains('open'); },
       setTheme(stored) { storedTheme = stored; applyTheme(host, stored); },
       destroy() {
         // Drop the listener too -- mount/unmount cycles on a SPA would

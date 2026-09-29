@@ -78,6 +78,9 @@ export async function recommend(hostname, signals, wantFont = false) {
   });
   result.overlayPos = st.overlayPos;
   result.theme = st.theme;
+  // Local calendar day this was ranked on. Rates change at local midnight, so
+  // a copy from an earlier day is not reused.
+  result.rankedOn = new Date().toDateString();
   // The overlay cannot import, so hand it the font already resolved. Only when
   // it asks: the faces are inlined as base64 now, so shipping them on every
   // route change of an SPA would mean ~43KB per navigation for nothing.

@@ -15,9 +15,18 @@ const SRC = readFileSync(new URL('../src/content.js', import.meta.url), 'utf8');
 // too -- content.js calls __cpIsBlockedHost before it reads any DOM.
 const HOSTMATCH = readFileSync(new URL('../src/hostmatch.js', import.meta.url), 'utf8');
 
-function harness(initialRespond, blocked = [], startHref = 'https://shop.example/') {
+function harness(initialRespond, blocked = [], startHref = 'https://shop.example/',
+                 clockStart = '2026-09-09T12:00:00') {
   const log = [];
   let timers = [], now = 0, intervals = [];
+  // content.js reads the wall clock to tell when the local day turns. Driven by
+  // the same fake time as the timers, starting at clockStart (local time).
+  const base = new Date(clockStart).getTime();
+  const RealDate = Date;
+  class FakeDate extends RealDate {
+    constructor(...a) { if (a.length) super(...a); else super(base + now); }
+    static now() { return base + now; }
+  }
   let href = startHref;
   let respond = initialRespond || (() => ({ show: false }));
   const onChangedFns = [];
@@ -51,6 +60,7 @@ function harness(initialRespond, blocked = [], startHref = 'https://shop.example
 
   const sandbox = {
     console,
+    Date: FakeDate,
     window: {
       addEventListener(){}, removeEventListener(){},
       get innerWidth(){return 1400}, get innerHeight(){return 900},
@@ -154,6 +164,26 @@ const check = (name, got, want) => {
   // that price is visible in the diff when someone changes the ladder.
   check('...and stops evaluating well short of 12 routes',
         h.log.filter(x=>x==='evaluate').length, 23);
+}
+
+// 1b. Midnight. A tab left open from 30 September into 1 October must show the
+// new quarter without a reload: the dock ranks again once the local day turns,
+// and only once.
+{
+  let calls = 0;
+  const h = harness(() => { calls++; return { show: true }; }, [],
+                    'https://shop.example/', '2026-09-30T23:59:50');
+  h.tick(5000);
+  const before = calls;
+  check('mounted before midnight', h.log.filter(x=>x==='MOUNT').length, 1);
+  h.tick(4000);   // still 30 September
+  check('no re-rank while the day is unchanged', calls, before);
+  h.tick(3000);   // now 00:00:02 on 1 October
+  check('the day turning re-ranks the open page', calls, before + 1);
+  check('...and repaints the dock with the new answer',
+        [h.log.filter(x=>x==='UNMOUNT').length, h.log.filter(x=>x==='MOUNT').length], [1, 2]);
+  h.tick(10000);
+  check('...once, not every second after', calls, before + 1);
 }
 
 // 2. Commerce SPA: mount, then a non-merchant route unmounts only after settle.
