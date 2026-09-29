@@ -23,7 +23,7 @@ works and why; this file is only the state of play.
   other 134 are still unverified seed data (section 16).
 - **Freedom Flex carries Q4 2026 and Q1 2027**, dining 7X in Q4 (section 2). Rates
   switch at local midnight even in a tab left open.
-- **Tests green**: 573 engine + 31 setup + 54 lifecycle + 47 worker. `npm test`.
+- **Tests green**: 572 engine + 31 setup + 54 lifecycle + 47 worker. `npm test`.
 - **Two scheduled agents keep the data current** (section 15), and run without
   permission prompts. Rate changes they find wait on `rates-*` and `upkeep-*`
   branches for David's approval; only `last_verified` date bumps land on `main`
@@ -50,16 +50,19 @@ works and why; this file is only the state of play.
 
 ## Start here
 
-In order. The first two wait on David's decisions; the third is dated.
+In order. The first waits on a second source, the second on David; the third is
+dated.
 
-1. **Three changes the merchant-code evidence supports, none applied** (section
-   16). Each needs David's yes:
-   - Autograph's 3X pay-TV rule at xfinity.com, spectrum.com, cox.com,
-     optimum.com and audible.com. About 10 minutes.
-   - The Gap Encore Mastercard's 3X "apparel" without tjmaxx.tjx.com,
-     marshalls.com and nike.com. About 10 minutes.
-   - A `travel_agency` category for the booking sites, so each card says whether
-     they count. One to two hours: it touches every travel card.
+1. **The merchant-code changes, reviewed 2026-09-29 against a two-source bar**
+   (section 16). David approved whatever two real sources back. Applied:
+   Autograph's 3X at xfinity.com and spectrum.com. Held, each for want of a
+   second source:
+   - Autograph's 3X at cox.com, optimum.com and audible.com. About 10 minutes
+     once a second source turns up.
+   - The Gap Encore Mastercard's 3X without tjmaxx.tjx.com, marshalls.com and
+     nike.com. About 10 minutes, same condition.
+   - A `travel_agency` category: not approved as stated, because booking sites
+     are not always the merchant. A call for David, then one to two hours.
 2. **The Chrome Web Store submission is blocked.** The listing links the privacy
    policy at github.com/davidx7217/card-picker/blob/main/store/privacy-policy.md,
    which returns 404 because the repo is private (checked 2026-09-29). Make the
@@ -804,15 +807,38 @@ four digits with a source beside it. Next: the other 134 rows, a batch at a time
 - Before breaking a test on purpose, copy the data file aside. `git checkout`
   restores the last commit, not uncommitted work -- that wiped this batch once.
 
-**What the evidence says should change**, none of it applied yet:
-- Autograph's 3X pay-TV rule should reach xfinity.com, spectrum.com, cox.com and
-  optimum.com (all code as cable and other pay television, Wells Fargo's own words)
-  and audible.com (a continuity/subscription merchant, also in its definition).
-- The Gap Encore Mastercard's 3X "apparel" should leave out tjmaxx.tjx.com,
-  marshalls.com and nike.com, which code as a discount store or as online orders.
-- The booking sites are travel agencies, not hotels. A `travel_agency` category
-  would let each card say outright whether they count, instead of the hotel bucket
-  plus denylists; Citi Strata Premier's 3X there still turns on Citi's definition.
+**The changes the evidence suggested, reviewed 2026-09-29.** David's bar: apply
+what two real sources back. AwardWallet counts as one source however many issuers
+it shows, and the MCC directory sites (pxp.io, tagada.io and the like) count as
+none: they name no source and contradict each other (T.J.Maxx is 5310 on one, 5651
+on another).
+- **Applied**: Autograph's 3X at xfinity.com and spectrum.com. Wells Fargo's footnote
+  2 and wellsfargo.com/autographstreaming define streaming by Visa code, "cable and
+  other pay television" included. Comcast and Charter code that way by AwardWallet's
+  Chase codings and by U.S. Bank's Cash+ list, which names Comcast, Charter and Time
+  Warner Cable as cable and satellite TV providers. No Autograph cardholder report
+  for a cable bill was found either way; the one on myFICO (2022) is Xfinity Mobile
+  earning 3X as a phone plan.
+- **Held, one source each**: cox.com and optimum.com (AwardWallet's own "Cable" and
+  "Select Streaming Services" labels, no issuer coding under any variant) and
+  audible.com (AwardWallet's Chase and Citi codings as continuity/subscription).
+- **Held, one source and a contrary one**: dropping T.J.Maxx and Marshalls from the
+  Gap Encore Mastercard's 3X. Barclays' terms (tc47922) and Gap's Encore FAQ define
+  it as Mastercard "clothing store" merchant codes, excluding wholesale clubs, Amazon,
+  Target and Walmart. Chase codes both stores as discount stores; Amex files them as
+  clothing stores; nothing shows the code on Mastercard.
+- **Held, no source**: dropping nike.com. AwardWallet shows only its own "Internet"
+  and "U.S. Online Retailers" labels for it, no issuer coding. Its row used to call
+  that "online-order codes, not a clothing or shoe store code"; it now says the
+  code is unknown.
+- **Not approved as stated**: a `travel_agency` category. Booking sites code as
+  travel agencies when they take the payment (Expedia at Chase; Airbnb at Chase, Amex
+  and Capital One), but on a pay-at-property booking the property charges the card
+  under its own code -- Booking.com's partner documentation says so, and
+  AwardWallet's "Hotel at Booking.com" descriptors show Hotels. So no single category
+  is right for booking.com, priceline.com, hotels.com or vrbo.com, and the change
+  also needs each travel card's definition, which Citi (Strata Premier) does not
+  publish and Bilt's unread terms may hold. That makes it a modelling call for David.
 
 **Open questions, each a call for David or a statement to settle it:**
 - Wyndham Earner: its own page says 2X in one place and 3X in another on dining,
@@ -822,11 +848,6 @@ four digits with a source beside it. Next: the other 134 rows, a batch at a time
 - Altitude Connect excludes booking sites from its 4X travel and the Emirates cards
   from their 2X; RCI and Capital Vacations do not. The same question answered two
   ways.
-- T.J.Maxx and Marshalls are filed as clothing, but Chase codes T.J.Maxx as a
-  discount store, so the Gap Encore Mastercard's 3X "apparel" there is doubtful.
-- Cable companies (Xfinity, Cox, Spectrum, Optimum) for Autograph's pay-TV 3X:
-  U.S. Bank files Comcast and Charter under cable and satellite TV, which points
-  to yes, but no Wells Fargo statement confirms it.
 - Sapphire Preferred's 3X "vacation homes at top brands" is not modelled.
 - Venture X's portal note says 10X on vrbo.com and airbnb.com; vacation rentals
   through Capital One Travel earn 5X.
