@@ -148,7 +148,7 @@ card.
 
 ## Contact
 
-Issues and questions: https://github.com/davidx7217/card-picker/issues
+Issues and questions: https://github.com/davidx7217/caddy/issues
 
 ## Not financial advice
 

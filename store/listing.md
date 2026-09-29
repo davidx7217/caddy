@@ -120,7 +120,7 @@ MIT licensed. The rates, the merchant table, the ranking engine and the reasonin
 behind every judgement call are all in the repository, including the mistakes
 that were found and fixed along the way.
 
-https://github.com/davidx7217/card-picker
+https://github.com/davidx7217/caddy
 
 NOT FINANCIAL ADVICE
 
@@ -245,7 +245,7 @@ Two of those deserve a note when you tick them, because a reviewer may push back
 **Privacy policy URL**
 
 ```
-https://github.com/davidx7217/card-picker/blob/main/store/privacy-policy.md
+https://github.com/davidx7217/caddy/blob/main/store/privacy-policy.md
 ```
 
 The file in this repository IS the published policy. That URL is stable, public
