@@ -18,7 +18,10 @@ works and why; this file is only the state of play.
 - **Every card verified** against its issuer's own page, each carrying a
   `source_url` and the date it was read. The one soft spot: the three Bilt cards'
   category definitions were not readable (section 9).
-- **Tests green**: 536 engine + 31 setup + 49 lifecycle + 45 worker. `npm test`.
+- **Tests green**: 537 engine + 31 setup + 49 lifecycle + 45 worker. `npm test`.
+- **Two scheduled agents keep the data current** (section 15). Rate changes they
+  find wait on `rates-*` and `upkeep-*` branches for David's approval; only
+  `last_verified` date bumps land on `main` by themselves.
 - **Nothing unpushed.** `main` on GitHub is the whole tree. All three store
   screenshots are still current -- the new cards rank after the ones they show.
 - **`caddy-1.0.0.zip` sits in the repo root**, rebuilt on every commit. See the
@@ -40,8 +43,9 @@ works and why; this file is only the state of play.
 
 In order. The first is dated; the second needs a real install, so it is David's.
 
-1. **1 October 2026: re-verify Chase Freedom Flex** -- its Q3 5% categories expire
-   2026-09-30. Section 2.
+1. **Approve pending `rates-*` branches** (`git branch --list 'rates-*'`). The
+   first is Freedom Flex's Q4 2026 categories, due before its Q3 ones expire
+   2026-09-30. Sections 2 and 15.
 2. **Hand checks only a real install can do.** Load unpacked from the repo root,
    then:
    - Remove and re-add Caddy, close setup on Your cards, click the toolbar icon:
@@ -128,14 +132,23 @@ than hiding it.
 
 ---
 
-## 2. Dated: re-verify Chase Freedom Flex on 1 October 2026
+## 2. Rotating categories: the rates keeper adds each quarter
 
-Its rotating 5% categories are verified for **Q3 2026 and expire 2026-09-30**.
+Freedom Flex's rotating 5% categories change every quarter, and Chase posts the
+next quarter's about two weeks ahead. The rates keeper (section 15) reads them
+off chase.com and puts them on a `rates-*` branch; a rule dated in the future
+switches itself on, so approving early is safe.
 
-The extension does not silently mis-rank when they lapse -- `windowState()`
-returns `expired` and `stalenessFor()` says so on the card -- but it cannot
-invent the new quarter. Read the new categories off chase.com, update
-`chase-freedom-flex` in `data/cards.json`, and set `last_verified`.
+The extension does not silently mis-rank when a quarter lapses unreplaced --
+`windowState()` returns `expired` and `stalenessFor()` says so on the card --
+but it cannot invent the new quarter.
+
+**Stacking.** `rank()` takes the single best rule and never adds two, so when a
+rotating category lands on one Freedom Flex already pays 3x on, the rule carries
+the total: 1% base + 4% quarterly + 2% standing = **7x**, falling back to **3x**
+past the $1,500 cap, not 1x. Chase's Q4 2026 release states exactly that for
+dining. The "Freedom Flex stacking guard" in `test-engine.mjs` fails on anything
+else, and it was written by hand so the agent cannot talk itself past it.
 
 Discover it Cash Back does not need this: Discover publishes a full year in
 advance and both live quarters are already in the file. That distinction is
@@ -631,6 +644,34 @@ engine change.
 - **Networks**: the Chase cards are Visas by their card art or Visa Signature
   benefits, except IHG's, a Mastercard like the personal IHG cards; Wyndham is a Visa
   and GM a Mastercard.
+
+---
+
+## 15. Scheduled agents, 28 September 2026
+
+Two Claude scheduled tasks on David's Mac. They run while the Claude app is open;
+a missed run catches up at the next launch. Each works in its own git worktree
+under its task folder, never in the checkout people work in, and removes it when
+done. The prompts are the spec: `~/.claude/scheduled-tasks/<task>/SKILL.md`.
+
+| Task | When | Does |
+|---|---|---|
+| `caddy-rates-keeper` | Mon and Thu, 8:15 | Next quarter's rotating categories (Freedom Flex, Discover) and any dated rule about to lapse; then re-reads the 8 least recently verified cards, so each is re-read about every 9 weeks, inside the 90-day staleness line |
+| `caddy-monthly-upkeep` | 2nd of the month, 10:30 | Point-valuation drift against `_sources`; the HTTP redirect sweep; a news scout for card launches, refreshes and closures |
+
+- **What lands by itself**: only `last_verified` bumps for cards whose issuer page
+  matched the record in full, and only when this checkout is on a clean `main`
+  with nothing unpushed. Otherwise the `verify-*` branch waits for the next run.
+- **What waits for David**: every rate change, on `rates-YYYY-MM-DD`, and every
+  valuation change, on `upkeep-YYYY-MM`. Committed there, never pushed. The commit
+  body names each change, the issuer URL and the sentence it rests on.
+- **To approve** (say "approve rates-2026-09-28" in a Caddy session): rebase the
+  branch onto `main` if it moved, `npm test`, `git merge --ff-only`, push, delete
+  the branch, then update this file if the change touches anything it describes.
+- **They talk through the progress ledger.** The scout logs
+  `card-picker: re-verify now - <card id>: ...` for a refresh it read about, and the
+  rates keeper re-reads those cards first. Unreadable cards are logged as blocked.
+- **Silent when nothing needs David**; one push notification when something does.
 
 ---
 
