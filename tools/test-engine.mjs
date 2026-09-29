@@ -138,6 +138,28 @@ eq('unknown domain resolves to null', resolveMerchant('some-random-site.example'
   eq('so it asks instead of picking', r.resolvedBy, 'unresolved');
 }
 
+// --- Freedom Flex stacking guard, 2026-09-28 ------------------------------
+// rank() keeps the single best rule and never adds two together, so a rotating
+// category that lands on one the card already bonuses must carry the combined
+// total itself. Chase's Q4 2026 release spells it out for dining: 1% base + 4%
+// quarterly bonus + 2% dining bonus = 7%, and past the $1,500 cap the 4% stops
+// while the dining 3% carries on. Any other standing category is assumed to
+// stack the same way; if a Chase release ever says otherwise, change this test
+// rather than the data. Written by hand, so the scheduled rates agent cannot
+// pass npm test with 5 + 3 = 8x, a plain 5x, or a cap that falls back to 1x.
+{
+  const ff = products['chase-freedom-flex'];
+  const standing = ff.rules.filter(r => !r.window && !r.portal_only);
+  const wrong = ff.rules.filter(r => r.window && r.requires_activation).flatMap(q => {
+    const s = standing.find(r => r.category === q.category);
+    const rate = s ? 5 + s.rate - ff.base_rate : 5;
+    const floor = s ? s.rate : ff.base_rate;
+    return q.rate === rate && q.cap?.then_rate === floor ? [] :
+      [`${q.category} from ${q.window.start}: ${q.rate}x then ${q.cap?.then_rate}x, want ${rate}x then ${floor}x`];
+  });
+  eq('Freedom Flex rotating rules carry the stacked total and fall back to the standing rate', wrong, []);
+}
+
 // --- user-configured card (not in the wallet, kept for engine coverage) --
 {
   const r = run('shell.us', [{ productId: 'bofa-customized-cash', config: {} }]);
