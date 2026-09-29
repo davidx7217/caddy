@@ -1728,7 +1728,7 @@
     "verified": true,
     "last_verified": "2026-09-29",
     "source_url": "https://creditcards.wellsfargo.com/autograph-visa-credit-card/",
-    "note": "Categories read off footnote 2 on the product page, which defines each by Visa merchant code. Travel includes car rental, cruise lines and travel agencies, so the hotel rule carries no OTA denylist. 'Phone plans' is landline and cell phone providers -- not internet or cable, which is why phone_internet was split into phone and internet_cable the day this card was added. Streaming, read again 2026-09-29, is defined by type, not by merchant: 'cable and other pay television, digital goods, books, movies, music, and continuity/subscription services' -- wellsfargo.com/autographstreaming names no merchants. So DirecTV and DISH, which sell only pay TV, earn 3X; cable companies that also bill home internet stay at 1X until a statement shows how they code. Currency 'wf': the same page prices a point at one cent, and the points also transfer to airline and hotel partners.",
+    "note": "Categories read off footnote 2 on the product page, which defines each by Visa merchant code. Travel includes car rental, cruise lines and travel agencies, so the hotel rule carries no OTA denylist. 'Phone plans' is landline and cell phone providers -- not internet or cable, which is why phone_internet was split into phone and internet_cable the day this card was added. Streaming, read again 2026-09-29, is defined by type, not by merchant: 'cable and other pay television, digital goods, books, movies, music, and continuity/subscription services' -- wellsfargo.com/autographstreaming names no merchants. So DirecTV and DISH earn 3X, and since 2026-09-29 so do Xfinity and Spectrum: Comcast and Charter bill as cable and other pay television, per AwardWallet's Chase codings and U.S. Bank's Cash+ list of cable and satellite TV providers, so their internet bills earn it too. Cox and Optimum carry only AwardWallet's own 'Cable' label, with no issuer coding behind it, and Audible's 5968 rests on AwardWallet alone; they stay at 1X until a second source shows how they code. The streaming page also warns that a subscription bundled with another product or billed by a third party may not earn the bonus. Currency 'wf': the same page prices a point at one cent, and the points also transfer to airline and hotel partners.",
     "rules": [
       {
         "category": "dining",
@@ -1768,9 +1768,11 @@
         "rate": 3.0,
         "merchant_allowlist": [
           "directv.com",
-          "dish.com"
+          "dish.com",
+          "xfinity.com",
+          "spectrum.com"
         ],
-        "caveat": "Pay TV counts as streaming for Wells Fargo; home internet does not."
+        "caveat": "Bills here code as pay TV, which Wells Fargo counts as streaming."
       },
       {
         "category": "phone",

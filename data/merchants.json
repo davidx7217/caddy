@@ -351,7 +351,7 @@
     "confidence": "medium",
     "note": "measured 2026-09-09: no JSON-LD, no controls, price only. Split from phone_internet 2026-09-27 as internet_cable: Xfinity Mobile is sold here too, but home internet and TV are the bulk of it",
     "mcc": "4899",
-    "mcc_source": "AwardWallet merchant lookup 2026-09-29 (Comcast): Chase 'Cable and other pay television', Capital One 'Phone/Cable'."
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29 (Comcast): Chase 'Cable and other pay television', Capital One 'Phone/Cable'. U.S. Bank Cash+ sample merchants 2026-09-29: Comcast listed as a TV provider under 'TV, Internet & Streaming' (cable and satellite TV)."
   },
   "att.com": {
     "category": "phone",
@@ -365,7 +365,7 @@
     "confidence": "low",
     "note": "UNMEASURED: category assigned from the brand, signals not read off the live site",
     "mcc": "4899",
-    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Chase 'Cable and other pay television', Capital One 'Phone/Cable'."
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Chase 'Cable and other pay television', Capital One 'Phone/Cable'. U.S. Bank Cash+ sample merchants 2026-09-29: Charter and Time Warner Cable listed as TV providers under 'TV, Internet & Streaming' (cable and satellite TV)."
   },
   "coned.com": {
     "category": "utilities",

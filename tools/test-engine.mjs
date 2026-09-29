@@ -1210,8 +1210,6 @@ eq('Autograph: 3x across dining, travel, gas, transit and streaming',
    ['doordash.com', 'delta.com', 'hotels.com', 'hertz.com', 'uber.com', 'shell.us', 'evgo.com', 'netflix.com']
      .map(h => on('wellsfargo-autograph', h).rate), [3, 3, 3, 3, 3, 3, 3, 3]);
 eq('...3x on a phone plan', on('wellsfargo-autograph', 't-mobile.com').rate, 3);
-eq('...and 1x on internet and cable, which "phone plans" does not cover',
-   on('wellsfargo-autograph', 'xfinity.com').rate, 1);
 
 // Citi Strata Premier.
 eq('Strata Premier: 3x on air, hotels, dining, supermarkets, gas and EV charging',
@@ -1303,8 +1301,10 @@ eq('Cash+ select clothing stores: only the named ones',
    ['gap.com', 'jcrew.com', 'ae.com', 'hm.com', 'nike.com', 'tjmaxx.tjx.com']
      .map(h => on('usbank-cash-plus', h, plus(['five_clothing'])).rate), [5, 5, 5, 1, 1, 1]);
 // Wells Fargo defines Autograph's streaming by type, and pay TV is one of them.
-eq('Autograph: 3x at directv.com and dish.com, still 1x at xfinity.com',
-   ['directv.com', 'dish.com', 'xfinity.com'].map(h => on('wellsfargo-autograph', h).rate), [3, 3, 1]);
+// Comcast and Charter code as pay TV by two sources; Cox and Optimum by one.
+eq('Autograph: 3x at directv.com, dish.com, xfinity.com and spectrum.com, still 1x at cox.com and optimum.com',
+   ['directv.com', 'dish.com', 'xfinity.com', 'spectrum.com', 'cox.com', 'optimum.com']
+     .map(h => on('wellsfargo-autograph', h).rate), [3, 3, 3, 3, 1, 1]);
 // The Freedom cards' 2% on Lyft, on the card pages 2026-09-29. Dated outside
 // Freedom Flex's Q3 transit quarter so its 5x there does not mask the rule.
 {
