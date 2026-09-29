@@ -9,15 +9,15 @@ works and why; this file is only the state of play.
 
 ## State
 
-- **v1.0.0**, 110 cards across 17 issuers, 148 merchant rows, 27 categories.
+- **v1.0.0**, 120 cards across 17 issuers, 155 merchant rows, 27 categories.
   The second twenty cards landed 2026-09-27; store cards plus the remaining
   airline and hotel tiers, nineteen cards from five issuers Caddy lacked,
-  thirteen business cards, eight smaller store cards and seven missing tiers,
-  on 2026-09-28. See sections 6, 7 and 9 to 12.
+  thirteen business cards, eight smaller store cards, seven missing tiers and
+  ten more Barclays co-brands, on 2026-09-28. See sections 6, 7 and 9 to 13.
 - **Every card verified** against its issuer's own page, each carrying a
   `source_url` and the date it was read. The one soft spot: the three Bilt cards'
   category definitions were not readable (section 9).
-- **Tests green**: 493 engine + 31 setup + 49 lifecycle + 45 worker. `npm test`.
+- **Tests green**: 509 engine + 31 setup + 49 lifecycle + 45 worker. `npm test`.
 - **Nothing unpushed.** `main` on GitHub is the whole tree. All three store
   screenshots are still current -- the new cards rank after the ones they show.
 - **`caddy-1.0.0.zip` sits in the repo root**, rebuilt on every commit. See the
@@ -59,18 +59,21 @@ In order. The first is dated; the second needs a real install, so it is David's.
    bank-by-bank judgment made before section 9's cards -- no public data exists
    per card -- Caddy covered about 55-60% of US rewards-card spending. The
    issuers it lacked, the general-purpose business cards, the smaller store
-   cards and the missing tiers are in now (sections 9 to 12). The next gaps,
-   largest first:
-   - **Barclays' other co-brands**, listed on its card page but not read:
-     Wyndham Rewards Earner (three personal tiers), AARP, Upromise, Frontier,
-     Emirates, Miles & More.
+   cards, the missing tiers and Barclays' Wyndham, AARP, Upromise, Frontier,
+   Emirates and Miles & More cards are in now (sections 9 to 13). The next
+   gaps, largest first:
    - **Co-branded business cards**, none read yet: Amex's Delta SkyMiles Gold,
      Platinum and Reserve Business, Marriott Bonvoy Business and Hilton Honors
      Business; Chase's United, Southwest, IHG and World of Hyatt business cards;
-     Barclays' Wyndham Earner Business. Also Amex Business Green, listed and not
-     read.
+     Barclays' Wyndham Earner Business and GM Business. Also Amex Business Green,
+     listed and not read.
+   - **Barclays' remaining co-brands**, on its card list but missing from this
+     list before 2026-09-28, so not read: Carnival, GM, Barnes & Noble, Breeze
+     Airways, Capital Vacations and RCI Elite Rewards.
 
    Loose ends, each small, each explained in its section:
+   - **Wyndham Earner's 3X on gas and EV charging** follows the Reward Rules,
+     which the product page's summary leaves out (section 13).
    - **U.S. Bank Altitude points** are assumed to be worth a cent; no U.S. Bank
      page states a figure (section 12).
    - **Bilt's offer terms** were never readable -- the link downloads a file --
@@ -317,7 +320,7 @@ Card and TJX Rewards. Every one read off its issuer's or retailer's page that da
 
 ---
 
-## 8. Adding a card: the recipe this week's 90 followed
+## 8. Adding a card: the recipe this week's 100 followed
 
 1. **Read the issuer's own page** in the in-app browser -- `get_page_text`, or a
    short `javascript_tool` regex over `document.body.innerText`. Never a blog or
@@ -520,6 +523,47 @@ Left open, for you:
 
 - Confirm the U.S. Bank point value if you can find it stated; Settings takes an
   override meanwhile.
+
+---
+
+## 13. Barclays' other co-brands, 28 September 2026
+
+Ten cards, ranks 111 to 120: Wyndham Rewards Earner, Earner Plus and Earner Premier;
+AARP Travel Rewards and Essential Rewards; Upromise World Mastercard; Frontier
+Airlines World Mastercard; Emirates Skywards Rewards and Premium; and the Lufthansa
+Miles & More Mastercard. Each read off the Reward Rules in its Barclays terms that
+day. No new issuer, category or engine change. Four new currencies and seven new
+merchant rows -- flyfrontier.com, emirates.com, lufthansa.com, swiss.com,
+austrian.com, brusselsairlines.com and lot.com -- two confirmed by the HTTP sweep,
+the five it met with a 403 confirmed in the browser.
+
+- **Wyndham Earner's 3X follows the Reward Rules, not the page.** The product page
+  sums the 3X up as vacation clubs, dining and groceries; the Reward Rules, which are
+  the agreement, add gas and EV charging. The data has all four. If you would rather
+  go by the page, drop the card's gas and EV rules.
+- **Wyndham Plus and Premier define travel without hotels**: airfare, car rental,
+  rideshare, gas, EV charging, tolls and trains at 4X. Another chain's hotel earns 1X.
+  The Earner cards are Visas, unlike Barclays' other cards here.
+- **Frontier's "up to 17x" is 12 member miles plus the card's 5.** The 12 arrive with
+  any card, so the card goes in at 5X, per the store-rate rule.
+- **Two currencies NerdWallet does not price** take the lowest September 2026 figure
+  found: `frontier` at WalletHub's 0.98 (Upgraded Points says 1.1, TPG 1.3) and
+  `milesandmore` at One Mile at a Time's 1.2 (Upgraded Points says 1.3). `wyndham`
+  (0.7) and `emirates` (1.0) come from NerdWallet's table, as the others do.
+- **Barclays' third-party rule, as on the JetBlue cards**: bonus rewards are withheld
+  from purchases made through a third party, so the delivery apps are denylisted on
+  every new dining rule, and the OTAs on AARP Travel's and the Emirates cards' hotel
+  rules.
+- **Miles & More pays 2X at nine partner airlines.** The five that fly to the US are
+  allowlisted by their own sites; Air Dolomiti, Croatia, Eurowings and Luxair are not.
+- **Upromise goes in at 1.529%**, its rate with a linked 529 plan, with the unlinked
+  1.25% in the caution, as Prime Visa does with Prime.
+- **Not ranked:** AARP Essential's 2% on medical purchases, which has no category;
+  Wyndham's vacation-club earning; the statement credits on the Premier.
+- **Not added:** Barclays also lists Carnival, GM, Barnes & Noble, Breeze Airways,
+  Capital Vacations and RCI Elite Rewards cards, missing from this file's list, so
+  not read. GM Business and Wyndham Earner Business wait with the co-branded
+  business cards.
 
 ---
 
