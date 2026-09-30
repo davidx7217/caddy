@@ -22,8 +22,8 @@ works and why; this file is only the state of play.
   spot it left, the three Bilt cards' definitions, was read in Bilt's own terms
   the same day (section 9), and the twelve cards added later that day were read
   off their issuers' pages the same way (section 17).
-- **44 merchant rows record how they actually code** (`mcc`, `mcc_source`); the
-  other 135 are still unverified seed data (section 16).
+- **59 merchant rows record how they actually code** (`mcc`, `mcc_source`); the
+  other 120 are still unverified seed data (section 16).
 - **Freedom Flex carries Q4 2026 and Q1 2027**, dining 7X in Q4 (section 2). Rates
   switch at local midnight even in a tab left open.
 - **Tests green**: 612 engine + 36 setup + 54 lifecycle + 47 worker. `npm test`.
@@ -832,14 +832,20 @@ calls itself UNVERIFIED SEED DATA and no agent checks how a merchant codes):
 - Visa's Merchant Data Standards Manual and Mastercard's Quick Reference Booklet
   define what each code covers, not which merchant uses which.
 
-**Recorded so far** (2026-09-29): 44 rows carry `mcc_source`, 35 of them an `mcc` --
+**Recorded so far** (2026-09-30): 59 rows carry `mcc_source`, 49 of them an `mcc` --
 the booking sites, the cable and phone companies, the off-price stores, Nike,
 Wayfair, HomeGoods, StubHub, Audible, YouTube, Starbucks, and the rows the Cash+
 recheck leaned on; then a second batch: the four delivery apps, Instacart, Costco,
 Sam's Club, Amazon, Best Buy, Netflix, Spotify, Hulu, Uber, Lyft, CVS and
-Walgreens. The engine does not read either field; a test keeps every `mcc` four
-digits with a source beside it, and every card ranked the same on all 163 rows
-before and after the second batch. Next: the other 135 rows, a batch at a time.
+Walgreens; then a third, every row named on U.S. Bank's own lists: the five
+department stores, Kroger, Safeway, Publix, Apple, Newegg, REI, Dick's, Academy,
+Scheels and Bass Pro. The engine does not read either field; a test keeps every
+`mcc` four digits with a source beside it, and every card ranked the same on every
+row before and after the second and third batches. Next: the other 120 rows. U.S.
+Bank's lists name about twenty of them -- the eight gyms, Boost, Metro, Consumer
+Cellular, Cricket, EVgo, ChargePoint, Shell, ExxonMobil, and Ralphs, Fred Meyer,
+King Soopers, Pick'n Save, Trader Joe's and Whole Foods on the grocery list -- so
+they make a quick fourth batch.
 
 **How to continue it** -- what worked on 2026-09-29:
 - In the in-app browser, open awardwallet.com/merchants, find the "Merchant Name"
@@ -854,6 +860,11 @@ before and after the second batch. Next: the other 135 rows, a batch at a time.
   type it again a second later, and it answers. Search the billing form of the
   name -- "Samsclub", "Bestbuy.com" -- because "Sams Club" finds nothing and a
   site's own descriptor can fall outside the ten variants listed.
+- Every keystroke in that box sends a request. On 2026-09-30 AwardWallet answered
+  HTTP 429 after about thirty searches and was still refusing several minutes
+  later, so type only as much of a name as picks it out, space lookups out, and
+  stop at the first 429. Clicking a suggestion changes the address to
+  `/merchants/<nameToUrl>` without redrawing the page; reload it to read.
 - Cardholder datapoints: myFICO threads read fine in the in-app browser. U.S.
   Bank's transaction export puts the MCC in its Memo column, so Cash+ posters
   often quote exact codes.
@@ -935,6 +946,9 @@ on another).
 - Sapphire Preferred's 3X "vacation homes at top brands" is not modelled.
 - Venture X's portal note says 10X on vrbo.com and airbnb.com; vacation rentals
   through Capital One Travel earn 5X.
+- Cash+'s 5% sporting goods at basspro.com: U.S. Bank lists Bass Pro Shops but
+  says Cabelas.com, its sister chain's site, does not qualify, and nothing shows
+  how basspro.com orders code. One source against it, so the 5% stands.
 - Instacart's Amex override (`other`): its main descriptor is Amex "Merchandise &
   Supplies - Groceries" on AwardWallet, but another shows "U.S. Supermarkets". One
   source, mixed, so the override stands.
