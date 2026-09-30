@@ -58,7 +58,9 @@
   },
   "kroger.com": {
     "category": "groceries",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5411",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Kroger listed under 'Grocery stores and grocery delivery'. AwardWallet merchant lookup 2026-09-30 (Kroger): Chase 'Grocery stores and supermarkets', Citi 'Merchandise - GROCERY STORE,SUPERMARKET', Amex 'Merchandise & Supplies - Groceries', Capital One 'Grocery'."
   },
   "ralphs.com": {
     "category": "groceries",
@@ -127,7 +129,9 @@
   },
   "safeway.com": {
     "category": "groceries",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5411",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Safeway listed under 'Grocery stores and grocery delivery'. AwardWallet merchant lookup 2026-09-30 (Safeway): Chase 'Grocery stores and supermarkets', Citi 'Merchandise - GROCERY STORE,SUPERMARKET', Amex 'Merchandise & Supplies - Groceries', Capital One 'Grocery', Bilt 'Groceries'."
   },
   "freshdirect.com": {
     "category": "groceries",
@@ -135,7 +139,9 @@
   },
   "publix.com": {
     "category": "groceries",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5411",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Publix listed under 'Grocery stores and grocery delivery'. AwardWallet merchant lookup 2026-09-30 (Publix): Chase 'Grocery stores and supermarkets', Capital One 'Grocery', Bilt 'Groceries'."
   },
   "traderjoes.com": {
     "category": "groceries",
@@ -157,11 +163,15 @@
   },
   "macys.com": {
     "category": "department_store",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5311",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Macy's listed under Department Stores, where 'most online purchases from these merchants also qualify'. AwardWallet merchant lookup 2026-09-30 (Macys): Amex 'Merchandise & Supplies - Department Stores'; 'Macys .com' descriptors carry only AwardWallet's own labels."
   },
   "kohls.com": {
     "category": "department_store",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5311",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Kohl's listed under Department Stores, where 'most online purchases from these merchants also qualify'. AwardWallet merchant lookup 2026-09-30: Kohls.com and Kohls descriptors carry only AwardWallet's own 'Department Stores' label, no per-issuer codings."
   },
   "costco.com": {
     "category": "wholesale_club",
@@ -205,7 +215,7 @@
     "category": "electronics",
     "confidence": "high",
     "mcc": "5732",
-    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Bestbuy.com descriptors show Amex 'Merchandise & Supplies - U.S. Electronic Goods and Software' and 'Merchandise & Supplies - Internet Purchase'; a Best Buy store descriptor is Chase 'Electronics stores', Capital One 'Merchandise'."
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Bestbuy.com descriptors show Amex 'Merchandise & Supplies - U.S. Electronic Goods and Software' and 'Merchandise & Supplies - Internet Purchase'; a Best Buy store descriptor is Chase 'Electronics stores', Capital One 'Merchandise'. U.S. Bank Cash+ sample merchants 2026-09-30: Bestbuy.com listed under Electronics Stores by name."
   },
   "wayfair.com": {
     "category": "online_retail",
@@ -249,7 +259,9 @@
   },
   "newegg.com": {
     "category": "electronics",
-    "confidence": "medium"
+    "confidence": "medium",
+    "mcc": "5734",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-30 (Newegg Inc.): Chase 'Computer software stores', Capital One 'Merchandise'. U.S. Bank Cash+ sample merchants 2026-09-30: Newegg.com listed under Electronics Stores all the same."
   },
   "delta.com": {
     "category": "travel_air",
@@ -576,7 +588,9 @@
   "apple.com": {
     "category": "electronics",
     "confidence": "high",
-    "note": "Apple Card's 3% at Apple is merchant-scoped to this row, and the suffix walk carries it to every apple.com subdomain"
+    "note": "Apple Card's 3% at Apple is merchant-scoped to this row, and the suffix walk carries it to every apple.com subdomain",
+    "mcc": "5732",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: 'Apple Store' listed under Electronics Stores, which 'includes most online purchases from merchants like Bestbuy.com'. AwardWallet merchant lookup 2026-09-30: 'Apl Apple Online Store' descriptors show no per-issuer codings; App Store and iCloud billing ('Apple.com/bill') carries AwardWallet's own 'Digital goods: large merchant' label."
   },
   "bhphotovideo.com": {
     "category": "electronics",
@@ -635,23 +649,32 @@
   },
   "dickssportinggoods.com": {
     "category": "sporting_goods",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5941",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Dick's Sporting Goods listed under Sporting Goods Stores, which includes most online purchases but not, for example, Cabelas.com. AwardWallet merchant lookup 2026-09-30: 'Dickssportinggoods.com' shows no per-issuer codings."
   },
   "academy.com": {
     "category": "sporting_goods",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5941",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Academy Sports + Outdoors listed under Sporting Goods Stores, which includes most online purchases but not, for example, Cabelas.com."
   },
   "rei.com": {
     "category": "sporting_goods",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5941",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: REI listed under Sporting Goods Stores, which includes most online purchases but not, for example, Cabelas.com. AwardWallet merchant lookup 2026-09-30 (Rei.com): Chase 'SPORTING GOODS STORES', Capital One 'Merchandise'."
   },
   "basspro.com": {
     "category": "sporting_goods",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Bass Pro Shops listed under Sporting Goods Stores, which includes most online purchases but not, for example, Cabelas.com. Cabela's is Bass Pro's sister chain, so basspro.com orders may code differently too; no statement coding checked."
   },
   "scheels.com": {
     "category": "sporting_goods",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5941",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Scheels listed under Sporting Goods Stores, which includes most online purchases but not, for example, Cabelas.com."
   },
   "planetfitness.com": {
     "category": "fitness",
@@ -852,17 +875,23 @@
   "nordstrom.com": {
     "category": "department_store",
     "confidence": "high",
-    "note": "Added 2026-09-28 for the Nordstrom cards."
+    "note": "Added 2026-09-28 for the Nordstrom cards.",
+    "mcc": "5311",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Nordstrom listed under Department Stores, where 'most online purchases from these merchants also qualify'. AwardWallet merchant lookup 2026-09-30 (Nordstrom): Amex 'Merchandise & Supplies - Department Stores'; its online descriptor shows no per-issuer codings."
   },
   "nordstromrack.com": {
     "category": "department_store",
     "confidence": "medium",
-    "note": "Nordstrom's off-price chain, filed with its parent as a department store. Added 2026-09-28: the Nordstrom credit cards take 5% off here and earn no points."
+    "note": "Nordstrom's off-price chain, filed with its parent as a department store. Added 2026-09-28: the Nordstrom credit cards take 5% off here and earn no points.",
+    "mcc": "5311",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Nordstrom Rack listed under Department Stores, where 'most online purchases from these merchants also qualify'. AwardWallet merchant lookup 2026-09-30: Nordstrom Rack descriptors carry only AwardWallet's own labels, no per-issuer codings."
   },
   "jcpenney.com": {
     "category": "department_store",
     "confidence": "high",
-    "note": "Added 2026-09-28 for the JCPenney cards."
+    "note": "Added 2026-09-28 for the JCPenney cards.",
+    "mcc": "5311",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: JCPenney listed under Department Stores, where 'most online purchases from these merchants also qualify'. AwardWallet merchant lookup 2026-09-30 (Jcpenney): Chase 'Department stores', Capital One 'Merchandise'."
   },
   "ulta.com": {
     "category": "other",
