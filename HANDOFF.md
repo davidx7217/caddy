@@ -26,7 +26,7 @@ works and why; this file is only the state of play.
   other 126 are still unverified seed data (section 16).
 - **Booking sites stay hotels; cruise lines are a category** (section 18), both
   David's calls of 2026-09-29. Eight cruise-line rows, and a cruise rule on the
-  nineteen cards whose issuer definitions name cruise lines, plus Carnival's 3X.
+  twenty-three cards whose issuer definitions name cruise lines, plus Carnival's 3X.
   Navy Federal Flagship Premier no longer earns 4X through booking sites.
 - **Freedom Flex carries Q4 2026 and Q1 2027**, dining 7X in Q4 (section 2). Rates
   switch at local midnight even in a tab left open.
@@ -1089,18 +1089,24 @@ under its travel cap, on every card whose definition names cruise lines:
 | Chase | Sapphire Preferred 2X, Aeroplan 3X, Ink Business Preferred 3X, IHG Premier and Premier Business 5X | offer details name "travel"; chase.com/RewardsCategoryFAQs' Travel names cruise lines, on-board goods and services excluded |
 | Chase | United Quest and United Club 2X | "all other travel including ... cruise lines" |
 | Wells Fargo | Autograph 3X, Autograph Journey 3X | footnotes, by Visa merchant code |
-| BofA | Premium Rewards and Elite 2X; Customized Cash 3% with the travel choice | each card's T&C; the category page |
+| BofA | Premium Rewards and Elite 2X; Customized Cash and Business Customized Cash 3% with the travel choice | each card's T&C; the category pages |
 | USAA | Eagle Navigator 3X, Eagle Adapt 3% | each card's program terms |
 | Navy Federal | Flagship Premier 4X | product page footnote 1 |
-| U.S. Bank | Altitude Connect 4X | footnote 2: "directly with ... cruise line companies" |
+| U.S. Bank | Altitude Connect 4X; Business Altitude Connect 4X, under its $150,000 cap | footnote 2: "directly with ... cruise line companies" |
 | Barclays | RCI and Capital Vacations 2X; Carnival 3X at carnival.com only | Reward Rules; Carnival's 3X is "items billed directly from Carnival Cruise Line" |
-| Citi | Costco Anywhere 3% | "eligible travel ... including ... cruise lines" |
+| Citi | Costco Anywhere and Costco Anywhere Business 3% | "eligible travel ... including ... cruise lines" |
+| Bilt (Column) | Obsidian 2X | offer terms, read 2026-09-29: "purchases made directly with ... cruise lines" |
 
 Read and left at 1X: both Sapphire Reserves (4X is flights and hotels booked direct,
 and Chase's definition of that excludes packages sold by cruise lines), United
 Explorer, World of Hyatt, Marriott Bold, Strata Premier, AARP Travel Rewards,
-Emirates and Wyndham Earner Plus. Bilt Obsidian's "other travel" is undefined on
-bilt.com and its terms were not reopened, so it earns 1X there too.
+Emirates, Wyndham Earner Plus and Citi AAdvantage Business. The Kroger card names
+travel but publishes no code list, so a cruise stays at 1X there, as transit does.
+
+The business cards and Bilt's terms landed on `main` while this was in progress;
+the four that name cruise lines -- Business Customized Cash, Business Altitude
+Connect, Costco Anywhere Business and the Obsidian -- got the rule after the merge,
+each re-read on 2026-09-30 but the Obsidian, whose terms were read the day before.
 
 Left out on purpose:
 - **Timeshares.** Owners' fees, codes unchecked, and RCI's own terms pay 2X on
