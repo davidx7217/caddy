@@ -78,7 +78,7 @@ HOW IT DECIDES
 
 Caddy reads the domain of the page you are on and, on that page only, whether
 you have reached a checkout. It matches the site against a hand-verified table of
-163 merchants mapped to 27 spending categories, then ranks the cards you told it
+171 merchants mapped to 28 spending categories, then ranks the cards you told it
 you own against their published issuer terms.
 
 It knows about caps, activation requirements, rotating quarterly categories, and

@@ -1488,7 +1488,7 @@ eq('USAA Eagle Navigator: 3x on travel and transit, 2x elsewhere, at a cent a po
    [3, 3, 3, 3, 2]);
 
 eq('Navy Federal Flagship Premier: 4x on travel with no portal, 3x on dining, 1x elsewhere',
-   ['delta.com', 'hotels.com', 'hertz.com', 'uber.com', 'doordash.com', 'amazon.com']
+   ['delta.com', 'marriott.com', 'hertz.com', 'uber.com', 'doordash.com', 'amazon.com']
      .map(h => tier('navyfederal-flagship-premier', h).rate), [4, 4, 4, 4, 3, 1]);
 eq('Navy Federal cashRewards 1.5%, cashRewards Plus 2%',
    [tier('navyfederal-cashrewards', 'amazon.com').rate, tier('navyfederal-cashrewards-plus', 'amazon.com').rate],
@@ -1790,6 +1790,64 @@ eq('Wyndham Earner Business: 8x at Wyndham, 5x on gas, EV charging, ads, shippin
      .map(h => tier('barclays-wyndham-earner-business', h)?.rate), [8, 5, 5, 5, 5, 5, 1]);
 eq('GM Business: 7x at GM\'s own web stores, 3x everywhere else',
    ['accessories.gmc.com', 'amazon.com'].map(h => tier('barclays-gm-business', h)?.rate), [7, 3]);
+
+// --- booking sites and cruise lines, 2026-09-29 and 30 ---------------------------
+// Booking sites stay hotels, on purpose (David, 2026-09-29): a pay-at-property
+// booking codes as the hotel, so no single category is right for them, and a
+// travel_agency category would rank every card the same as the denylists do.
+// Cruise lines are a category of their own, with a rule on every card whose
+// issuer definition names them, each definition read 2026-09-29 or 30.
+const sail = (id, h = 'royalcaribbean.com', config = {}) =>
+  run(h, [{ productId: id, config }], { now: new Date('2026-09-30T12:00:00') }).all[0];
+const CRUISE_ROWS = ['carnival.com', 'royalcaribbean.com', 'ncl.com', 'princess.com', 'celebritycruises.com',
+  'hollandamerica.com', 'msccruisesusa.com', 'virginvoyages.com'];
+eq('every cruise line resolves to cruise, www. included',
+   CRUISE_ROWS.flatMap(h => [run(h).category, run('www.' + h).category]), Array(16).fill('cruise'));
+eq('Carnival Rewards: 3x at carnival.com, worth 2.76%, the card\'s share of "up to 6x"',
+   [sail('barclays-carnival', 'carnival.com')?.rate, sail('barclays-carnival', 'carnival.com')?.value], [3, 2.76]);
+eq('...1x at another cruise line: the 3X is purchases billed by Carnival Cruise Line',
+   sail('barclays-carnival')?.rate, 1);
+eq('cruise lines earn the travel rate on every card whose definition names them',
+   [['chase-sapphire-preferred', 2], ['chase-aeroplan', 3], ['chase-ink-business-preferred', 3],
+    ['chase-ihg-premier', 5], ['chase-ihg-business-premier', 5], ['chase-united-quest', 2],
+    ['chase-united-club', 2], ['wellsfargo-autograph', 3], ['wellsfargo-autograph-journey', 3],
+    ['bofa-premium-rewards', 2], ['bofa-premium-rewards-elite', 2], ['usaa-eagle-adapt', 3],
+    ['usaa-eagle-navigator', 3], ['navyfederal-flagship-premier', 4], ['usbank-altitude-connect', 4],
+    ['barclays-rci', 2], ['barclays-capital-vacations', 2], ['citi-costco-anywhere', 3]]
+     .map(([id, rate]) => [id, sail(id)?.rate]),
+   [['chase-sapphire-preferred', 2], ['chase-aeroplan', 3], ['chase-ink-business-preferred', 3],
+    ['chase-ihg-premier', 5], ['chase-ihg-business-premier', 5], ['chase-united-quest', 2],
+    ['chase-united-club', 2], ['wellsfargo-autograph', 3], ['wellsfargo-autograph-journey', 3],
+    ['bofa-premium-rewards', 2], ['bofa-premium-rewards-elite', 2], ['usaa-eagle-adapt', 3],
+    ['usaa-eagle-navigator', 3], ['navyfederal-flagship-premier', 4], ['usbank-altitude-connect', 4],
+    ['barclays-rci', 2], ['barclays-capital-vacations', 2], ['citi-costco-anywhere', 3]]);
+eq('...under the same caps as the rest of their travel',
+   [sail('chase-ink-business-preferred')?.caveats[0], sail('usaa-eagle-adapt')?.caveats[0]],
+   ['Capped at $150,000 per year, then 1x', 'Capped at $3,000 per quarter, then 1x']);
+eq('...and on BofA Customized Cash only with travel picked, whose page names cruises',
+   [sail('bofa-customized-cash', 'royalcaribbean.com', { selections: ['travel'] })?.rate,
+    sail('bofa-customized-cash', 'royalcaribbean.com', { selections: ['online'] })?.rate], [3, 1]);
+eq('cruise lines earn 1x where the definition leaves them out, or went unread (Bilt)',
+   ['chase-sapphire-reserve', 'chase-sapphire-reserve-business', 'chase-united-explorer', 'citi-strata-premier',
+    'barclays-aarp-travel-rewards', 'barclays-emirates-rewards', 'barclays-wyndham-earner-plus',
+    'column-bilt-obsidian', 'amex-platinum'].map(id => sail(id)?.rate), Array(9).fill(1));
+eq('no portal note on a cruise line: only Chase Travel sells cruises at its portal rate, and that is not modelled',
+   run('carnival.com', own('chase-sapphire-reserve', 'capitalone-venture-x'),
+     { now: new Date('2026-09-30T12:00:00') }).notes, []);
+
+// Navy Federal's travel is "typically coded as airline, hotel, car rental, bus
+// lines, taxis, cruise lines, time shares, parking, rideshare, and transit" --
+// no travel agencies -- while its page names vacation home rentals as eligible.
+eq('Navy Federal Flagship Premier: 1x through a booking site, which its travel codes leave out',
+   ['expedia.com', 'booking.com', 'hotels.com', 'priceline.com', 'kayak.com', 'orbitz.com', 'travelocity.com']
+     .map(h => sail('navyfederal-flagship-premier', h)?.rate), Array(7).fill(1));
+eq('...4x on vacation home rentals, which its page names, and on a hotel booked direct',
+   ['airbnb.com', 'vrbo.com', 'marriott.com'].map(h => sail('navyfederal-flagship-premier', h)?.rate), [4, 4, 4]);
+// BofA's category page names travel agencies and cruises, with Airbnb, Expedia
+// and Royal Caribbean among its merchant examples.
+eq('BofA Customized Cash travel choice: 3% on booking sites',
+   ['expedia.com', 'airbnb.com', 'booking.com']
+     .map(h => sail('bofa-customized-cash', h, { selections: ['travel'] })?.rate), [3, 3, 3]);
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

@@ -426,10 +426,14 @@
       {
         "category": "travel_ground",
         "rate": 3.0
+      },
+      {
+        "category": "cruise",
+        "rate": 3.0
       }
     ],
     "caution": "The extra 2X Air Canada pays Aeroplan 25K members on eligible flights comes from Air Canada, not the card, and is not counted.",
-    "note": "Refreshed 2026-09-10 for new and existing cardmembers (Chase release media.chase.com/news/the-chase-air-canada-aeroplan-credit-card-refresh, read 2026-09-28). Offer details on the source_url, read 2026-09-28: 3X on Air Canada purchases made directly and on travel; grocery and dining 3X on purchases posting by 2026-12-31, then 2X; 2X at gas stations; 1X otherwise. Annual fee $195. Chase's travel definition, read on chase.com/RewardsCategoryFAQs 2026-09-28: airlines, hotels, motels, timeshares, car rental agencies, cruise lines, travel agencies, discount travel sites, campgrounds and operators of passenger trains, buses, taxis, limousines, ferries, toll bridges and highways, and parking lots and garages. So the 3X covers travel_air, travel_hotel (OTAs included, since travel agencies and discount travel sites are named), car_rental and travel_ground. Rideshare is not named in that sentence, but it codes as taxis and limousines: Visa's Merchant Data Standards Manual (April 2026) says of MCC 4121 Taxicabs and Limousines 'This MCC includes ride-share Merchants', and Uber and Lyft charges are observed on Chase statements as 'Taxicabs and limousines' (awardwallet.com, read 2026-09-28). So uber.com and lyft.com earn the 3X. Airbnb is observed on Chase statements as 'Travel agencies and tour operators', a merchant type the definition names, so it earns the 3X too; Visa files short-term rentals under MCC 7011 lodging either way. Rates also confirmed in the Rewards Program Agreement RPA0538 (05/20/2026, asset.chase.com/content/dam/card/rulesregulations/en/RPA0538_Web.pdf, read 2026-09-28), which gives the 2027 schedule outright: from January 1, 2027, 3X Air Canada and travel, 2X gas, grocery and dining, 1X otherwise. Network is World Elite Mastercard per the release. The monthly 500-points-per-$2,000 bonus is no longer on the page."
+    "note": "Refreshed 2026-09-10 for new and existing cardmembers (Chase release media.chase.com/news/the-chase-air-canada-aeroplan-credit-card-refresh, read 2026-09-28). Offer details on the source_url, read 2026-09-28: 3X on Air Canada purchases made directly and on travel; grocery and dining 3X on purchases posting by 2026-12-31, then 2X; 2X at gas stations; 1X otherwise. Annual fee $195. Chase's travel definition, read on chase.com/RewardsCategoryFAQs 2026-09-28: airlines, hotels, motels, timeshares, car rental agencies, cruise lines, travel agencies, discount travel sites, campgrounds and operators of passenger trains, buses, taxis, limousines, ferries, toll bridges and highways, and parking lots and garages. So the 3X covers travel_air, travel_hotel (OTAs included, since travel agencies and discount travel sites are named), car_rental and travel_ground. Rideshare is not named in that sentence, but it codes as taxis and limousines: Visa's Merchant Data Standards Manual (April 2026) says of MCC 4121 Taxicabs and Limousines 'This MCC includes ride-share Merchants', and Uber and Lyft charges are observed on Chase statements as 'Taxicabs and limousines' (awardwallet.com, read 2026-09-28). So uber.com and lyft.com earn the 3X. Airbnb is observed on Chase statements as 'Travel agencies and tour operators', a merchant type the definition names, so it earns the 3X too; Visa files short-term rentals under MCC 7011 lodging either way. Rates also confirmed in the Rewards Program Agreement RPA0538 (05/20/2026, asset.chase.com/content/dam/card/rulesregulations/en/RPA0538_Web.pdf, read 2026-09-28), which gives the 2027 schedule outright: from January 1, 2027, 3X Air Canada and travel, 2X gas, grocery and dining, 1X otherwise. Network is World Elite Mastercard per the release. The monthly 500-points-per-$2,000 bonus is no longer on the page. Cruise lines earn the 3X under the cruise category since 2026-09-29, when the offer details were re-read: they name 'travel' and point to that same FAQ."
   },
   "chase-ink-business-cash": {
     "id": "chase-ink-business-cash",
@@ -796,7 +800,7 @@
     "verified": true,
     "last_verified": "2026-09-27",
     "source_url": "https://www.bankofamerica.com/credit-cards/products/cash-back-credit-card/cash-back-category-choices/",
-    "note": "Kept because people hold it, not because it exercises the schema. Its 3% is ONE category the cardholder picks from six, which is what selection_group is for: without it the only choices are giving all six 3% (overstates badly) or picking for the user (worse). tier_multiplier is the BofA Rewards bonus, which replaced Preferred Rewards on 2026-05-26 with new names and thresholds and a new 10% Member tier (bankofamerica.com/bofa-rewards/increasing-bofa-rewards-with-credit-cards/, read 2026-09-27); it is the difference between 3% and 5.25%, so dropping it would understate the card by up to 75%. Online Shopping is a CHANNEL, not a store type: the category page defines it as purchases made on a website or app, minus utilities, insurance, schools, membership clubs, medical, government and non-retail services, and gives Amazon, Comcast, Etsy, Netflix, Nordstrom, Ticketmaster and Walmart as examples. Every purchase Caddy sees is online, so the online group carries a rule on every category that sells goods, plus the three services BofA names: cable and internet, streaming, and tickets. Travel, dining and phone bought online may well qualify too, but BofA names none of them, so they are not ranked under this choice. Wholesale clubs are left to the automatic 2%.",
+    "note": "Kept because people hold it, not because it exercises the schema. Its 3% is ONE category the cardholder picks from six, which is what selection_group is for: without it the only choices are giving all six 3% (overstates badly) or picking for the user (worse). tier_multiplier is the BofA Rewards bonus, which replaced Preferred Rewards on 2026-05-26 with new names and thresholds and a new 10% Member tier (bankofamerica.com/bofa-rewards/increasing-bofa-rewards-with-credit-cards/, read 2026-09-27); it is the difference between 3% and 5.25%, so dropping it would understate the card by up to 75%. Online Shopping is a CHANNEL, not a store type: the category page defines it as purchases made on a website or app, minus utilities, insurance, schools, membership clubs, medical, government and non-retail services, and gives Amazon, Comcast, Etsy, Netflix, Nordstrom, Ticketmaster and Walmart as examples. Every purchase Caddy sees is online, so the online group carries a rule on every category that sells goods, plus the three services BofA names: cable and internet, streaming, and tickets. Travel, dining and phone bought online may well qualify too, but BofA names none of them, so they are not ranked under this choice. Wholesale clubs are left to the automatic 2%. The Travel choice, read 2026-09-29 on the same page, is airlines, cruises, hotels and resorts, amusement parks, aquariums, tourist attractions, travel agencies, buses, rideshare and taxis, passenger railways, tolls, and car, RV, truck and boat rentals, with Airbnb, Expedia and Royal Caribbean among BofA's merchant examples, so booking sites and cruise lines earn it.",
     "user_config": {
       "selections": [
         {
@@ -935,6 +939,9 @@
       { "category": "car_rental", "rate": 3.0, "selection_group": "travel",
         "cap": { "amount": 2500, "period": "quarter", "then_rate": 1.0 },
         "caveat": "The $2,500 quarterly cap is COMBINED across the 3% choice category and the 2% grocery/wholesale spend." },
+      { "category": "cruise", "rate": 3.0, "selection_group": "travel",
+        "cap": { "amount": 2500, "period": "quarter", "then_rate": 1.0 },
+        "caveat": "The $2,500 quarterly cap is COMBINED across the 3% choice category and the 2% grocery/wholesale spend." },
       {
         "category": "drugstore",
         "rate": 3.0,
@@ -991,7 +998,7 @@
     "verified": true,
     "last_verified": "2026-09-10",
     "source_url": "https://creditcards.chase.com/rewards-credit-cards/sapphire/preferred",
-    "note": "The 3x 'vacation homes at top brands' rate is deliberately NOT modelled: Chase does not publish the brand list, and travel_hotel already earns 2x here, so the only honest options were an unsourced allowlist or this. The 5x Peloton rate through 2027-12-31 is one first-party storefront rather than a category, left out for the same reason as Savor's Capital One Entertainment rate. car_rental earns the 2x other-travel rate because Chase's own travel definition names car rental agencies (chase.com/RewardsCategoryFAQs, read 2026-09-27); it had no category to sit in before then.",
+    "note": "The 3x 'vacation homes at top brands' rate is deliberately NOT modelled: Chase does not publish the brand list, and travel_hotel already earns 2x here, so the only honest options were an unsourced allowlist or this. The 5x Peloton rate through 2027-12-31 is one first-party storefront rather than a category, left out for the same reason as Savor's Capital One Entertainment rate. car_rental earns the 2x other-travel rate because Chase's own travel definition names car rental agencies (chase.com/RewardsCategoryFAQs, read 2026-09-27); it had no category to sit in before then. Cruise lines, read 2026-09-29: the offer details pay 2X on 'purchases made in the travel category', which that FAQ defines to include cruise lines (on-board goods and services excluded), so cruises earn 2X.",
     "rules": [
       {
         "category": "travel_portal",
@@ -1051,6 +1058,10 @@
       },
       {
         "category": "car_rental",
+        "rate": 2.0
+      },
+      {
+        "category": "cruise",
         "rate": 2.0
       }
     ]
@@ -1378,7 +1389,7 @@
     "last_verified": "2026-09-27",
     "source_url": "https://www.citi.com/credit-cards/costco-anywhere-visa-card",
     "caution": "Needs a paid Costco membership. Cash back arrives once a year as a certificate you redeem at Costco.",
-    "note": "annual_fee is 0 because citi.com states no annual fee with a paid Costco membership; the membership itself is the price of entry and is not modelled. currency is 'cash': the reward is an annual certificate redeemable for cash or merchandise at a U.S. warehouse. The 5% on gas AT Costco is not modelled: Costco gas is paid at the pump, never on a website. Train and commuter travel earn 1%, not the 3% travel rate, per citi.com, so travel_ground carries no rule. Eligible travel names travel agencies, so the hotel rule has no OTA denylist.",
+    "note": "annual_fee is 0 because citi.com states no annual fee with a paid Costco membership; the membership itself is the price of entry and is not modelled. currency is 'cash': the reward is an annual certificate redeemable for cash or merchandise at a U.S. warehouse. The 5% on gas AT Costco is not modelled: Costco gas is paid at the pump, never on a website. Train and commuter travel earn 1%, not the 3% travel rate, per citi.com, so travel_ground carries no rule. Eligible travel names travel agencies, so the hotel rule has no OTA denylist. Read 2026-09-30 on citi.com: eligible travel is airfare, hotels, car rentals, travel agencies, cruise lines and Costco Travel, so cruises earn 3%.",
     "rules": [
       {
         "category": "gas",
@@ -1416,6 +1427,10 @@
       },
       {
         "category": "car_rental",
+        "rate": 3.0
+      },
+      {
+        "category": "cruise",
         "rate": 3.0
       },
       {
@@ -1728,7 +1743,7 @@
     "verified": true,
     "last_verified": "2026-09-29",
     "source_url": "https://creditcards.wellsfargo.com/autograph-visa-credit-card/",
-    "note": "Categories read off footnote 2 on the product page, which defines each by Visa merchant code. Travel includes car rental, cruise lines and travel agencies, so the hotel rule carries no OTA denylist. 'Phone plans' is landline and cell phone providers -- not internet or cable, which is why phone_internet was split into phone and internet_cable the day this card was added. Streaming, read again 2026-09-29, is defined by type, not by merchant: 'cable and other pay television, digital goods, books, movies, music, and continuity/subscription services' -- wellsfargo.com/autographstreaming names no merchants. So DirecTV and DISH earn 3X, and since 2026-09-29 so do Xfinity and Spectrum: Comcast and Charter bill as cable and other pay television, per AwardWallet's Chase codings and U.S. Bank's Cash+ list of cable and satellite TV providers, so their internet bills earn it too. Cox and Optimum carry only AwardWallet's own 'Cable' label, with no issuer coding behind it, and Audible's 5968 rests on AwardWallet alone; they stay at 1X until a second source shows how they code. The streaming page also warns that a subscription bundled with another product or billed by a third party may not earn the bonus. Currency 'wf': the same page prices a point at one cent, and the points also transfer to airline and hotel partners.",
+    "note": "Categories read off footnote 2 on the product page, which defines each by Visa merchant code. Travel includes car rental, cruise lines and travel agencies, so the hotel rule carries no OTA denylist. 'Phone plans' is landline and cell phone providers -- not internet or cable, which is why phone_internet was split into phone and internet_cable the day this card was added. Streaming, read again 2026-09-29, is defined by type, not by merchant: 'cable and other pay television, digital goods, books, movies, music, and continuity/subscription services' -- wellsfargo.com/autographstreaming names no merchants. So DirecTV and DISH earn 3X, and since 2026-09-29 so do Xfinity and Spectrum: Comcast and Charter bill as cable and other pay television, per AwardWallet's Chase codings and U.S. Bank's Cash+ list of cable and satellite TV providers, so their internet bills earn it too. Cox and Optimum carry only AwardWallet's own 'Cable' label, with no issuer coding behind it, and Audible's 5968 rests on AwardWallet alone; they stay at 1X until a second source shows how they code. The streaming page also warns that a subscription bundled with another product or billed by a third party may not earn the bonus. Currency 'wf': the same page prices a point at one cent, and the points also transfer to airline and hotel partners. Re-read 2026-09-30: footnote 2 names cruise lines under Travel, so cruises earn 3X.",
     "rules": [
       {
         "category": "dining",
@@ -1750,6 +1765,10 @@
         "category": "travel_ground",
         "rate": 3.0,
         "caveat": "Transit: passenger rail, taxis and limousines, ferries, tolls and parking."
+      },
+      {
+        "category": "cruise",
+        "rate": 3.0
       },
       {
         "category": "gas",
@@ -1886,7 +1905,7 @@
     "verified": true,
     "last_verified": "2026-09-27",
     "source_url": "https://www.citi.com/credit-cards/citi-strata-premier-credit-card",
-    "note": "Definitions read off the page's Additional Information on 2026-09-27; citi.com's FAQ states the card is a Mastercard. 'Air Travel and Other Hotel Purchases' includes travel agencies, so neither travel rule carries an OTA denylist. The 10X Citi Travel rate names hotels, car rentals and attractions but not flights, so it is filed under travel_hotel and car_rental rather than travel_portal. Grocery delivery counts only where the merchant codes as a supermarket. Instacart does on Citi statements ('GROCERY STORE,SUPERMARKET', awardwallet.com, read 2026-09-28), so since then instacart.com carries no Citi override and earns the 3x.",
+    "note": "Definitions read off the page's Additional Information on 2026-09-27; citi.com's FAQ states the card is a Mastercard. 'Air Travel and Other Hotel Purchases' includes travel agencies, so neither travel rule carries an OTA denylist. The 10X Citi Travel rate names hotels, car rentals and attractions but not flights, so it is filed under travel_hotel and car_rental rather than travel_portal. Grocery delivery counts only where the merchant codes as a supermarket. Instacart does on Citi statements ('GROCERY STORE,SUPERMARKET', awardwallet.com, read 2026-09-28), so since then instacart.com carries no Citi override and earns the 3x. Re-read 2026-09-29 on the page's Additional Information: 'Air Travel and Other Hotel Purchases: Includes purchases at airlines, hotels (not booked through the Citi Travel site via cititravel.com), and travel agencies' -- no cruise lines, so cruises earn 1X.",
     "rules": [
       {
         "category": "travel_hotel",
@@ -2080,7 +2099,7 @@
     "last_verified": "2026-09-27",
     "source_url": "https://creditcards.chase.com/business-credit-cards/ink/business-preferred",
     "caution": "Business card. The 3X stops at $150,000 of combined spend in its categories per account anniversary year.",
-    "note": "Rates and the 3X list read off the offer details 2026-09-27; category definitions off chase.com/RewardsCategoryFAQs the same day. Chase's travel covers airlines, hotels, car rental agencies, cruise lines, travel agencies, rail, taxis, tolls and parking -- every travel category Caddy has, OTAs included, so no denylist. 'Internet, cable and phone services' spans both phone and internet_cable. Advertising counts only when bought directly from a social media site or search engine, and shipping means couriers, postal and freight services. Network read off the card art.",
+    "note": "Rates and the 3X list read off the offer details 2026-09-27; category definitions off chase.com/RewardsCategoryFAQs the same day. Chase's travel covers airlines, hotels, car rental agencies, cruise lines, travel agencies, rail, taxis, tolls and parking -- every travel category Caddy has, OTAs included, so no denylist. 'Internet, cable and phone services' spans both phone and internet_cable. Advertising counts only when bought directly from a social media site or search engine, and shipping means couriers, postal and freight services. Network read off the card art. Cruise lines, read 2026-09-29: the offer details' travel is the Travel category of chase.com/RewardsCategoryFAQs, which names cruise lines (on-board goods and services excluded), so cruises earn 3X, under the same combined cap.",
     "rules": [
       {
         "category": "travel_air",
@@ -2114,6 +2133,16 @@
       },
       {
         "category": "travel_ground",
+        "rate": 3.0,
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "The $150,000 cap is combined across every 3X category, and runs per account anniversary year."
+      },
+      {
+        "category": "cruise",
         "rate": 3.0,
         "cap": {
           "amount": 150000,
@@ -2528,7 +2557,7 @@
     "verified": true,
     "last_verified": "2026-09-28",
     "source_url": "https://creditcards.chase.com/travel-credit-cards/united/united-quest",
-    "note": "The card's share of the advertised 10x on United flights is 4x; the other 6x is MileagePlus member earning, paid whatever card is used. Network per the page's Visa Signature terms.",
+    "note": "The card's share of the advertised 10x on United flights is 4x; the other 6x is MileagePlus member earning, paid whatever card is used. Network per the page's Visa Signature terms. Cruise lines, read 2026-09-29: the offer details name them in 'all other travel', so cruises earn 2X.",
     "rules": [
       {
         "category": "travel_air",
@@ -2562,6 +2591,11 @@
       },
       {
         "category": "travel_ground",
+        "rate": 2.0,
+        "caveat": "All other travel: airfare, trains, local transit, cruise lines, hotels, car rentals, taxis, rideshare and tolls."
+      },
+      {
+        "category": "cruise",
         "rate": 2.0,
         "caveat": "All other travel: airfare, trains, local transit, cruise lines, hotels, car rentals, taxis, rideshare and tolls."
       },
@@ -2622,7 +2656,7 @@
     "verified": true,
     "last_verified": "2026-09-28",
     "source_url": "https://creditcards.chase.com/travel-credit-cards/united/club-infinite",
-    "note": "The card's share of the advertised 11x on United flights is 5x. Network per the page's Visa Infinite terms.",
+    "note": "The card's share of the advertised 11x on United flights is 5x. Network per the page's Visa Infinite terms. Cruise lines, read 2026-09-29: the offer details name them in 'all other travel', so cruises earn 2X.",
     "rules": [
       {
         "category": "travel_air",
@@ -2656,6 +2690,11 @@
       },
       {
         "category": "travel_ground",
+        "rate": 2.0,
+        "caveat": "All other travel: airfare, trains, local transit, cruise lines, hotels, car rentals, taxis, rideshare and tolls."
+      },
+      {
+        "category": "cruise",
         "rate": 2.0,
         "caveat": "All other travel: airfare, trains, local transit, cruise lines, hotels, car rentals, taxis, rideshare and tolls."
       },
@@ -2978,7 +3017,7 @@
     "verified": true,
     "last_verified": "2026-09-28",
     "source_url": "https://creditcards.chase.com/travel-credit-cards/ihg-rewards-club/premier",
-    "note": "A Mastercard, unlike Chase's other co-brands here: the page carries World and World Elite Mastercard terms. Rates read off the offer details.",
+    "note": "A Mastercard, unlike Chase's other co-brands here: the page carries World and World Elite Mastercard terms. Rates read off the offer details. Cruise lines, read 2026-09-29: the offer details' travel is the Travel category of chase.com/RewardsCategoryFAQs, which names cruise lines (on-board goods and services excluded), so cruises earn 5X.",
     "rules": [
       {
         "category": "travel_hotel",
@@ -3005,6 +3044,11 @@
       },
       {
         "category": "travel_ground",
+        "rate": 5.0,
+        "caveat": "Chase's travel category: airlines, hotels, car rentals, cruises, travel agencies, rail, taxis, tolls and parking."
+      },
+      {
+        "category": "cruise",
         "rate": 5.0,
         "caveat": "Chase's travel category: airlines, hotels, car rentals, cruises, travel agencies, rail, taxis, tolls and parking."
       },
@@ -3427,7 +3471,7 @@
     "last_verified": "2026-09-28",
     "source_url": "https://www.usaa.com/banking/credit-cards-public/cash-back/eagle-adapt/",
     "caution": "The 3% stops at $3,000 of combined spend across all its categories each calendar quarter.",
-    "note": "Rates and category definitions read off its Reward Program Terms and Conditions (usaa.com/banking/terms/eagle-adapt-visa-credit-card-reward-program/) on 2026-09-28. Every eligible category earns 3% at once until the quarter's combined $3,000 is spent -- it is not a top-category card, despite the page's \"earn the most where you spend the most\" -- so each category carries the same shared cap. Points redeem at $0.01 for cash, so currency is 'cash'. Health and Wellness is drugstores, pharmacies, cosmetic stores and membership clubs: drugstore and fitness. Live Entertainment and Streaming names ticketing agencies, live events, amusement parks, concerts, cable, satellite and pay TV, radio and streaming: entertainment, streaming and internet_cable, though an internet-only bill may code elsewhere. Travel names third-party travel websites, so OTAs count. Network read off the card art.",
+    "note": "Rates and category definitions read off its Reward Program Terms and Conditions (usaa.com/banking/terms/eagle-adapt-visa-credit-card-reward-program/) on 2026-09-28. Every eligible category earns 3% at once until the quarter's combined $3,000 is spent -- it is not a top-category card, despite the page's \"earn the most where you spend the most\" -- so each category carries the same shared cap. Points redeem at $0.01 for cash, so currency is 'cash'. Health and Wellness is drugstores, pharmacies, cosmetic stores and membership clubs: drugstore and fitness. Live Entertainment and Streaming names ticketing agencies, live events, amusement parks, concerts, cable, satellite and pay TV, radio and streaming: entertainment, streaming and internet_cable, though an internet-only bill may code elsewhere. Travel names third-party travel websites, so OTAs count. Network read off the card art. Re-read 2026-09-30: Travel names cruise lines, so cruises earn 3% under the same cap.",
     "rules": [
       {
         "category": "groceries",
@@ -3520,6 +3564,16 @@
         "caveat": "Transit: taxis, rideshare, buses, trains, parking and tolls. The $3,000 quarterly cap is combined across every 3% category."
       },
       {
+        "category": "cruise",
+        "rate": 3.0,
+        "cap": {
+          "amount": 3000,
+          "period": "quarter",
+          "then_rate": 1.0
+        },
+        "caveat": "The $3,000 quarterly cap is combined across every 3% category."
+      },
+      {
         "category": "drugstore",
         "rate": 3.0,
         "cap": {
@@ -3584,7 +3638,7 @@
     "last_verified": "2026-09-28",
     "source_url": "https://www.usaa.com/banking/credit-cards-public/rewards/travel-eagle-navigator/",
     "caution": "Points are worth a cent each against travel booked through USAA, but 0.7 cents as cash.",
-    "note": "Rates and category definitions read off its Reward Program Terms and Conditions (usaa.com/banking/terms/usaa-eagle-navigator-visa-credit-card-reward-program/) on 2026-09-28. Travel names airlines, hotels, vacation rentals, cruise lines, travel agencies, third-party travel websites and car rental agencies; Transit names taxis, rideshares, buses, ferries, parking, tolls and passenger trains. No cap. The terms price 10,000 points at $100 in travel and $70 as cash for a holder of this card alone, so 'usaa' is valued at the travel figure -- the issuer-portal assumption Caddy's defaults make -- and the caution names the cash rate.",
+    "note": "Rates and category definitions read off its Reward Program Terms and Conditions (usaa.com/banking/terms/usaa-eagle-navigator-visa-credit-card-reward-program/) on 2026-09-28. Travel names airlines, hotels, vacation rentals, cruise lines, travel agencies, third-party travel websites and car rental agencies; Transit names taxis, rideshares, buses, ferries, parking, tolls and passenger trains. No cap. The terms price 10,000 points at $100 in travel and $70 as cash for a holder of this card alone, so 'usaa' is valued at the travel figure -- the issuer-portal assumption Caddy's defaults make -- and the caution names the cash rate. Re-read 2026-09-30: Travel names cruise lines, so cruises earn 3X.",
     "rules": [
       {
         "category": "travel_air",
@@ -3603,6 +3657,10 @@
         "category": "travel_ground",
         "rate": 3.0,
         "caveat": "Transit: taxis, rideshare, buses, trains, parking and tolls."
+      },
+      {
+        "category": "cruise",
+        "rate": 3.0
       }
     ]
   },
@@ -3618,7 +3676,7 @@
     "verified": true,
     "last_verified": "2026-09-28",
     "source_url": "https://www.navyfederal.org/loans-cards/credit-cards/flagship-premier-visa-signature.html",
-    "note": "The Flagship Premier Visa Signature, per navyfederal.org and its Rewards Program Description (NFCU 829B, 9-26) on 2026-09-28. Every point is worth $0.01 redeemed for cash, per that description, so currency is 'cash'. Travel is coded airline, hotel, car rental, bus lines, taxis, cruise lines, timeshares, parking, rideshare and transit, and no booking portal is required, so OTAs count. The original Flagship Rewards, 3X travel and 2X everything else, takes no new applications and is not modelled.",
+    "note": "The Flagship Premier Visa Signature, per navyfederal.org and its Rewards Program Description (NFCU 829B, 9-26) on 2026-09-28. Every point is worth $0.01 redeemed for cash, per that description, so currency is 'cash'. Travel, per footnote 1 on the product page (re-read 2026-09-29), 'is typically coded as airline, hotel, car rental, bus lines, taxis, cruise lines, time shares, parking, rideshare, and transit' -- no travel agencies -- and the program description adds that buying directly from a merchant is what makes a code reflect the purchase. So the booking sites are denylisted on the hotel rule; until 2026-09-29 they earned 4X on the reasoning that no booking portal is required, which does not follow. The page names vacation home rentals among eligible purchases, so airbnb.com and vrbo.com keep the 4X, though Airbnb codes as a travel agency at Chase, Amex and Capital One (AwardWallet). Cruise lines are named, so cruises earn 4X. The original Flagship Rewards, 3X travel and 2X everything else, takes no new applications and is not modelled.",
     "rules": [
       {
         "category": "travel_air",
@@ -3628,7 +3686,16 @@
       {
         "category": "travel_hotel",
         "rate": 4.0,
-        "caveat": "No booking portal needed; OTAs count."
+        "caveat": "No booking portal needed.",
+        "merchant_denylist": [
+          "expedia.com",
+          "booking.com",
+          "hotels.com",
+          "priceline.com",
+          "kayak.com",
+          "orbitz.com",
+          "travelocity.com"
+        ]
       },
       {
         "category": "car_rental",
@@ -3638,6 +3705,10 @@
         "category": "travel_ground",
         "rate": 4.0,
         "caveat": "Rideshare, taxis, transit, parking and tolls."
+      },
+      {
+        "category": "cruise",
+        "rate": 4.0
       },
       {
         "category": "dining",
@@ -3792,7 +3863,7 @@
     "last_verified": "2026-09-28",
     "source_url": "https://www.bilt.com/card",
     "caution": "Rent and mortgage points, Bilt Cash and partner-restaurant bonuses run through the Bilt app and are not ranked here.",
-    "note": "Issued by Column N.A. and serviced by Cardless, per bilt.com on 2026-09-28; issuer is keyed on the bank, as Apple Card's is. Rates read off bilt.com/card. The Bilt Card Offer Terms it links to download as a file rather than open as a page, so the category definitions behind these rates were NOT read -- re-read them before trusting anything beyond the headline rates. Portal rates need the Bilt Travel Portal and are modelled as a portal. The Lyft rate includes +2X that needs the Bilt and Lyft accounts linked, which is what requires_activation says. The bonus at 20,000 partner restaurants is a Bilt Neighborhood reward earned in person with a linked card, varies by restaurant and has no domain to rank on. Rent and mortgage points are paid through the Bilt app, and Bilt Cash is a separate currency spendable only with Bilt partners; neither is modelled. 'bilt' is valued at NerdWallet's baseline 1.25 cents, not its 1.8-cent transfer estimate. The 3X is on ONE of dining or grocery, the cardholder's choice, which is what selection_group is for. \"Other travel\" at 2X is modelled on flights, hotels and car rentals; whether transit counts was not readable, so travel_ground carries only the Lyft rule.",
+    "note": "Issued by Column N.A. and serviced by Cardless, per bilt.com on 2026-09-28; issuer is keyed on the bank, as Apple Card's is. Rates read off bilt.com/card. The Bilt Card Offer Terms it links to download as a file rather than open as a page, so the category definitions behind these rates were NOT read -- re-read them before trusting anything beyond the headline rates. Portal rates need the Bilt Travel Portal and are modelled as a portal. The Lyft rate includes +2X that needs the Bilt and Lyft accounts linked, which is what requires_activation says. The bonus at 20,000 partner restaurants is a Bilt Neighborhood reward earned in person with a linked card, varies by restaurant and has no domain to rank on. Rent and mortgage points are paid through the Bilt app, and Bilt Cash is a separate currency spendable only with Bilt partners; neither is modelled. 'bilt' is valued at NerdWallet's baseline 1.25 cents, not its 1.8-cent transfer estimate. The 3X is on ONE of dining or grocery, the cardholder's choice, which is what selection_group is for. \"Other travel\" at 2X is modelled on flights, hotels and car rentals; whether transit counts was not readable, so travel_ground carries only the Lyft rule. No cruise rule: bilt.com/card/obsidian, read 2026-09-30, says '2X points on other travel' without defining it, and the terms were not reopened, so cruises earn 1X until they are read.",
     "user_config": {
       "selections": [
         {
@@ -4677,7 +4748,7 @@
     "verified": true,
     "last_verified": "2026-09-28",
     "source_url": "https://www.bankofamerica.com/credit-cards/products/premium-rewards-credit-card/",
-    "note": "Read off the product page and its Terms and Conditions on 2026-09-28: 2 points per $1 on travel and dining, 1.5 on everything else, no cap. Travel is airlines, hotels, timeshares, campgrounds, car and RV rental, cruise lines, travel agencies and tour operators, passenger trains, buses, taxis, limousines, ferries, parking, tolls, and tourist attractions such as amusement parks and zoos -- so every travel category, OTAs included; the attractions have no category here. The terms price every point at $0.01 redeemed as cash, so currency is 'cash'. The BofA Rewards bonus applies, as on the other BofA cards, through the same tier picker. Network read off the page: Visa Signature.",
+    "note": "Read off the product page and its Terms and Conditions on 2026-09-28: 2 points per $1 on travel and dining, 1.5 on everything else, no cap. Travel is airlines, hotels, timeshares, campgrounds, car and RV rental, cruise lines, travel agencies and tour operators, passenger trains, buses, taxis, limousines, ferries, parking, tolls, and tourist attractions such as amusement parks and zoos -- so every travel category, OTAs included; the attractions have no category here. The terms price every point at $0.01 redeemed as cash, so currency is 'cash'. The BofA Rewards bonus applies, as on the other BofA cards, through the same tier picker. Network read off the page: Visa Signature. Re-read 2026-09-30 in the card's own Terms and Conditions: Travel names cruise lines, so cruises earn 2X.",
     "user_config": {
       "tier_multiplier": {
         "label": "BofA Rewards tier",
@@ -4709,6 +4780,10 @@
       },
       {
         "category": "travel_ground",
+        "rate": 2.0
+      },
+      {
+        "category": "cruise",
         "rate": 2.0
       }
     ]
@@ -4767,7 +4842,7 @@
     "verified": true,
     "last_verified": "2026-09-28",
     "source_url": "https://creditcards.wellsfargo.com/autograph-journey-visa-credit-card/",
-    "note": "Categories read off the product page's footnotes on 2026-09-28, each by merchant code: 5 points at hotels and motels, 4 at airlines, 3 at restaurants and on other travel -- timeshares, car rental, cruise lines, travel agencies, discount travel sites and campgrounds -- and 1 elsewhere. So a hotel booked with the hotel earns 5 and one booked through an OTA earns 3, which the denylisted 5X rule and the plain 3X hotel rule say between them. Transit is not named, so travel_ground has no rule. Currency 'wf', as the Autograph's. Visa Signature.",
+    "note": "Categories read off the product page's footnotes on 2026-09-28, each by merchant code: 5 points at hotels and motels, 4 at airlines, 3 at restaurants and on other travel -- timeshares, car rental, cruise lines, travel agencies, discount travel sites and campgrounds -- and 1 elsewhere. So a hotel booked with the hotel earns 5 and one booked through an OTA earns 3, which the denylisted 5X rule and the plain 3X hotel rule say between them. Transit is not named, so travel_ground has no rule. Currency 'wf', as the Autograph's. Visa Signature. Re-read 2026-09-30: Other Travel names cruise lines, so cruises earn 3X.",
     "rules": [
       {
         "category": "travel_hotel",
@@ -4798,6 +4873,10 @@
       },
       {
         "category": "travel_hotel",
+        "rate": 3.0
+      },
+      {
+        "category": "cruise",
         "rate": 3.0
       }
     ]
@@ -4851,7 +4930,7 @@
     "last_verified": "2026-09-28",
     "source_url": "https://www.usbank.com/credit-cards/altitude-connect-visa-signature-credit-card.html",
     "caution": "U.S. Bank publishes no point value; Caddy assumes a cent.",
-    "note": "Read off footnote 2 of the product page on 2026-09-28: 5 points on prepaid hotels and car rentals in the Travel Center; 4 on travel \"such as purchases made directly with airlines, hotels, car rentals, taxicabs, limousines, passenger trains and cruise line companies\" -- \"directly\", so OTAs are denylisted on hotels; 4 on the first $1,000 a quarter at gas stations and EV charging; 2 at restaurants, grocery stores and on qualifying streaming; 1 elsewhere. No annual fee, per the page. Visa Signature. U.S. Bank's pages give no cents-per-point figure -- only that a deposit to a U.S. Bank account gets the maximum value -- so 'usbank' is valued at 1.0 as an assumption, not a published number, and the caution says so.",
+    "note": "Read off footnote 2 of the product page on 2026-09-28: 5 points on prepaid hotels and car rentals in the Travel Center; 4 on travel \"such as purchases made directly with airlines, hotels, car rentals, taxicabs, limousines, passenger trains and cruise line companies\" -- \"directly\", so OTAs are denylisted on hotels; 4 on the first $1,000 a quarter at gas stations and EV charging; 2 at restaurants, grocery stores and on qualifying streaming; 1 elsewhere. No annual fee, per the page. Visa Signature. U.S. Bank's pages give no cents-per-point figure -- only that a deposit to a U.S. Bank account gets the maximum value -- so 'usbank' is valued at 1.0 as an assumption, not a published number, and the caution says so. Re-read 2026-09-30: footnote 2's 'directly with ... cruise line companies' puts a cruise line's own site at 4X.",
     "rules": [
       {
         "category": "travel_hotel",
@@ -4890,6 +4969,10 @@
       },
       {
         "category": "travel_ground",
+        "rate": 4.0
+      },
+      {
+        "category": "cruise",
         "rate": 4.0
       },
       {
@@ -4936,7 +5019,7 @@
     "verified": true,
     "last_verified": "2026-09-28",
     "source_url": "https://www.bankofamerica.com/credit-cards/products/premium-rewards-elite-credit-card/",
-    "note": "Read off the product page and its Terms and Conditions on 2026-09-28: 2 points per $1 on travel and dining, 1.5 on everything else, no cap. Travel is airlines, hotels, timeshares, campgrounds, car and RV rental, cruise lines, travel agencies and tour operators, passenger trains, buses, taxis, limousines, ferries, parking, tolls, and tourist attractions such as amusement parks and zoos -- so every travel category, OTAs included; the attractions have no category here. The terms price every point at $0.01 redeemed as cash, so currency is 'cash'. The BofA Rewards bonus applies, as on the other BofA cards, through the same tier picker. Network read off the page: Visa Infinite. Earning is the Premium Rewards card's; the $550 fee buys credits and benefits that do not change what a purchase earns.",
+    "note": "Read off the product page and its Terms and Conditions on 2026-09-28: 2 points per $1 on travel and dining, 1.5 on everything else, no cap. Travel is airlines, hotels, timeshares, campgrounds, car and RV rental, cruise lines, travel agencies and tour operators, passenger trains, buses, taxis, limousines, ferries, parking, tolls, and tourist attractions such as amusement parks and zoos -- so every travel category, OTAs included; the attractions have no category here. The terms price every point at $0.01 redeemed as cash, so currency is 'cash'. The BofA Rewards bonus applies, as on the other BofA cards, through the same tier picker. Network read off the page: Visa Infinite. Earning is the Premium Rewards card's; the $550 fee buys credits and benefits that do not change what a purchase earns. Re-read 2026-09-30 in the card's own Terms and Conditions: Travel names cruise lines, so cruises earn 2X.",
     "user_config": {
       "tier_multiplier": {
         "label": "BofA Rewards tier",
@@ -4968,6 +5051,10 @@
       },
       {
         "category": "travel_ground",
+        "rate": 2.0
+      },
+      {
+        "category": "cruise",
         "rate": 2.0
       }
     ]
@@ -5460,8 +5547,15 @@
     "last_verified": "2026-09-28",
     "source_url": "https://cards.barclaycardus.com/banking/cards/carnival-rewards-mastercard/",
     "caution": "Bonus points may not post when you pay through a digital wallet, PayPal or another third party.",
-    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48596). 3X on purchases billed directly by Carnival Cruise Line, 2X at restaurants and fast food and at grocery stores other than Target and Walmart, 1X elsewhere. The page's 'up to 6x' adds the 3 points Carnival Rewards members earn with any card. The 3X is not ranked: carnival.com is not in merchants.json, because Caddy has no cruise category, and filing a cruise line under an existing one would misrank every card whose travel includes cruise lines, Chase's among them. The rules withhold bonus points from purchases made through third parties, so the delivery apps are denylisted on dining. Carnival Rewards replaced VIFP and the old card's FunPoints in September 2026, and no Carnival page states what a point is worth.",
+    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48596). 3X on purchases billed directly by Carnival Cruise Line, 2X at restaurants and fast food and at grocery stores other than Target and Walmart, 1X elsewhere. The page's 'up to 6x' adds the 3 points Carnival Rewards members earn with any card. The 3X ranks at carnival.com under the cruise category since 2026-09-30, when the Reward Rules were re-read: 'items billed directly from Carnival Cruise Line', identified by merchant identifiers and codes, so other cruise lines earn 1X. The rules withhold bonus points from purchases made through third parties, so the delivery apps are denylisted on dining. Carnival Rewards replaced VIFP and the old card's FunPoints in September 2026, and no Carnival page states what a point is worth.",
     "rules": [
+      {
+        "category": "cruise",
+        "rate": 3.0,
+        "merchant_allowlist": [
+          "carnival.com"
+        ]
+      },
       {
         "category": "dining",
         "rate": 2.0,
@@ -5556,7 +5650,7 @@
     "last_verified": "2026-09-28",
     "source_url": "https://cards.barclaycardus.com/banking/cards/rci-elite-rewards-mastercard/",
     "caution": "Bonus rewards may not post when you pay through a digital wallet, PayPal or another third party.",
-    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48579). 5X on eligible RCI products and services -- not RCI Travel, cruises or the other travel RCI sells -- 2X on travel, rideshare, gas and EV charging, and 1X elsewhere, timeshare maintenance fees included. Travel is airlines, hotels, motels, timeshares, campgrounds, car rental, cruise lines, travel agencies and discount travel sites, trains, buses, taxis, limousines and ferries, so OTAs earn 2X and the hotel rule carries no denylist. The 5X is not ranked: rci.com is not in merchants.json, because timeshare charges have no category, and filing them under an existing one would misrank every card whose travel includes timeshares, Chase's among them. Rewards redeem as a bank deposit or a statement credit at a cent each from $25, so they are valued as cash; the 5% of each redemption paid back as a bonus is not modelled.",
+    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48579). 5X on eligible RCI products and services -- not RCI Travel, cruises or the other travel RCI sells -- 2X on travel, rideshare, gas and EV charging, and 1X elsewhere, timeshare maintenance fees included. Travel is airlines, hotels, motels, timeshares, campgrounds, car rental, cruise lines, travel agencies and discount travel sites, trains, buses, taxis, limousines and ferries, so OTAs earn 2X and the hotel rule carries no denylist. The 5X is not ranked: rci.com is not in merchants.json, because timeshare charges have no category, and filing them under an existing one would misrank every card whose travel includes timeshares, Chase's among them. Rewards redeem as a bank deposit or a statement credit at a cent each from $25, so they are valued as cash; the 5% of each redemption paid back as a bonus is not modelled. Re-read 2026-09-30: travel names cruise lines, so cruises earn 2X; RCI Cruise is excluded from the 5X.",
     "rules": [
       {
         "category": "travel_air",
@@ -5572,6 +5666,10 @@
       },
       {
         "category": "travel_ground",
+        "rate": 2.0
+      },
+      {
+        "category": "cruise",
         "rate": 2.0
       },
       {
@@ -5597,7 +5695,7 @@
     "last_verified": "2026-09-28",
     "source_url": "https://cards.barclaycardus.com/banking/cards/capital-vacations/",
     "caution": "Bonus rewards may not post when you pay through a digital wallet, PayPal or another third party.",
-    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48558). 5X on eligible Capital Vacations purchases -- maintenance fees, exchange fees and Lifestyles+ -- 2X on RCI, travel, gas and EV charging, and 1X elsewhere. Travel is airlines, hotels, motels, timeshares, campgrounds, car rental, cruise lines, travel agencies and discount travel sites, trains, buses, taxis, limousines and ferries, so OTAs earn 2X and the hotel rule carries no denylist; taxis and limousines are travel_ground. The 5X and the 2X at RCI are not ranked: neither capitalvacations.com nor rci.com is in merchants.json, because timeshare charges have no category, and filing them under an existing one would misrank every card whose travel includes timeshares, Chase's among them. Rewards redeem as a bank deposit or a statement credit at a cent each from $25, so they are valued as cash; the 5% of each redemption paid back as a bonus is not modelled.",
+    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48558). 5X on eligible Capital Vacations purchases -- maintenance fees, exchange fees and Lifestyles+ -- 2X on RCI, travel, gas and EV charging, and 1X elsewhere. Travel is airlines, hotels, motels, timeshares, campgrounds, car rental, cruise lines, travel agencies and discount travel sites, trains, buses, taxis, limousines and ferries, so OTAs earn 2X and the hotel rule carries no denylist; taxis and limousines are travel_ground. The 5X and the 2X at RCI are not ranked: neither capitalvacations.com nor rci.com is in merchants.json, because timeshare charges have no category, and filing them under an existing one would misrank every card whose travel includes timeshares, Chase's among them. Rewards redeem as a bank deposit or a statement credit at a cent each from $25, so they are valued as cash; the 5% of each redemption paid back as a bonus is not modelled. Re-read 2026-09-30: travel names cruise lines, so cruises earn 2X.",
     "rules": [
       {
         "category": "travel_air",
@@ -5613,6 +5711,10 @@
       },
       {
         "category": "travel_ground",
+        "rate": 2.0
+      },
+      {
+        "category": "cruise",
         "rate": 2.0
       },
       {
@@ -6038,7 +6140,7 @@
     "verified": true,
     "last_verified": "2026-09-28",
     "source_url": "https://creditcards.chase.com/business-credit-cards/IHG/business-premier",
-    "note": "Rates read off the offer details on 2026-09-28. 10X at hotels participating in IHG One Rewards; 5X on travel, at restaurants including takeout and delivery, on social media and search engine advertising, at office supply stores and at gas stations; 3X elsewhere. Chase's travel covers airlines, hotels, car rental, cruise lines, travel agencies, rail, taxis, tolls and parking, so OTAs count and no denylist is needed. A Mastercard, per the page's World and World Elite Mastercard terms, as the personal IHG cards are.",
+    "note": "Rates read off the offer details on 2026-09-28. 10X at hotels participating in IHG One Rewards; 5X on travel, at restaurants including takeout and delivery, on social media and search engine advertising, at office supply stores and at gas stations; 3X elsewhere. Chase's travel covers airlines, hotels, car rental, cruise lines, travel agencies, rail, taxis, tolls and parking, so OTAs count and no denylist is needed. A Mastercard, per the page's World and World Elite Mastercard terms, as the personal IHG cards are. Cruise lines, read 2026-09-29: the offer details' travel is the Travel category of chase.com/RewardsCategoryFAQs, which names cruise lines (on-board goods and services excluded), so cruises earn 5X.",
     "rules": [
       {
         "category": "travel_hotel",
@@ -6061,6 +6163,10 @@
       },
       {
         "category": "travel_ground",
+        "rate": 5.0
+      },
+      {
+        "category": "cruise",
         "rate": 5.0
       },
       {

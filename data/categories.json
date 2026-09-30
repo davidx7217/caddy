@@ -16,6 +16,7 @@
   "travel_air":       { "label": "Airfare" },
   "travel_hotel":     { "label": "Hotels" },
   "car_rental":       { "label": "Car rentals" },
+  "cruise":           { "label": "Cruise lines" },
   "travel_ground":    { "label": "Transit & rideshare" },
   "travel_portal":    { "label": "Issuer travel portal" },
   "streaming":        { "label": "Streaming services" },

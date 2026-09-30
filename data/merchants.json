@@ -625,6 +625,41 @@
     "category": "car_rental",
     "confidence": "high"
   },
+  "carnival.com": {
+    "category": "cruise",
+    "confidence": "high",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-30: its 'Carnival Cruise Line Rsvr' descriptors carry only AwardWallet's own labels -- Cruise Lines, Travel, Hotels, Fees & adjustments -- and no issuer coding."
+  },
+  "royalcaribbean.com": {
+    "category": "cruise",
+    "confidence": "high",
+    "mcc_source": "Bank of America's Customized Cash category page, read 2026-09-29, names Royal Caribbean among the merchants that frequently appear in its Travel category. AwardWallet merchant lookup 2026-09-30: its Royal Caribbean descriptors carry only AwardWallet's own 'Travel' label, no issuer coding."
+  },
+  "ncl.com": {
+    "category": "cruise",
+    "confidence": "high"
+  },
+  "princess.com": {
+    "category": "cruise",
+    "confidence": "high"
+  },
+  "celebritycruises.com": {
+    "category": "cruise",
+    "confidence": "high"
+  },
+  "hollandamerica.com": {
+    "category": "cruise",
+    "confidence": "high"
+  },
+  "msccruisesusa.com": {
+    "category": "cruise",
+    "confidence": "high",
+    "note": "MSC's US site: msccruises.com redirects here from a US browser."
+  },
+  "virginvoyages.com": {
+    "category": "cruise",
+    "confidence": "high"
+  },
   "usps.com": {
     "category": "shipping",
     "confidence": "high"
