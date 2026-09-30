@@ -23,7 +23,7 @@ works and why; this file is only the state of play.
   other 135 are still unverified seed data (section 16).
 - **Freedom Flex carries Q4 2026 and Q1 2027**, dining 7X in Q4 (section 2). Rates
   switch at local midnight even in a tab left open.
-- **Tests green**: 572 engine + 31 setup + 54 lifecycle + 47 worker. `npm test`.
+- **Tests green**: 577 engine + 31 setup + 54 lifecycle + 47 worker. `npm test`.
 - **Two scheduled agents keep the data current** (section 15), and run without
   permission prompts. Rate changes they find wait on `rates-*` and `upkeep-*`
   branches for David's approval; only `last_verified` date bumps land on `main`
@@ -102,17 +102,13 @@ dated.
      2026-09-24), which the monthly scout logged.
 
    Loose ends, each small, each explained in its section:
-   - **Wyndham Earner's 3X** follows the Reward Rules; its own product page says
-     2X in one place and 3X in another (sections 13 and 16).
-   - **GM points are valued at a full cent**, GM's own figure, though they spend
-     only with GM, so the GM card reads 3% everywhere (section 13).
    - **U.S. Bank Altitude points** are assumed to be worth a cent; no U.S. Bank
      page states a figure (section 12).
    - **Bilt's offer terms** were never readable -- the link downloads a file --
      so Obsidian's "other travel" is unconfirmed (section 9).
-   - **Amex Business Gold's 4X** is a caution, not rules, because it follows the
-     business's top two categories. A Cash+-style picker is the alternative if
-     David wants it (section 10).
+
+   Settled 2026-09-29: Wyndham Earner's 3X stands, `gm` stays at a cent, and
+   Business Gold has a picker for its 4X (sections 10 and 13).
 
 ---
 
@@ -500,11 +496,13 @@ Card. No new issuer, currency, category or merchant row, and no engine change.
 - **Business Platinum's 5X is portal-only.** Unlike the consumer Platinum, a flight
   bought from the airline earns 1X; the 5X is for flights and prepaid hotels booked
   through Amex Travel.
-- **Business Gold's 4X is a caution, not rules**, per the recipe: it goes to
-  whichever two of six categories a business spent most on each cycle, which no page
-  shows. So it ranks 1X outside Amex Travel. If that undersells it for you, the
-  alternative is a Cash+-style picker for the two categories you usually hit -- a
-  data change, no engine work.
+- **Business Gold's 4X has a picker (2026-09-29).** It goes to whichever two of six
+  categories a business spent most on each cycle, which no page shows, so it was a
+  caution at first and ranked 1X. David chose a Cash+-style picker instead: the
+  cardholder names the two they usually hit. Amex works the two out from spending on
+  this card and Caddy decides what goes on it, so following Caddy keeps them on top.
+  The six map onto advertising, electronics, dining, gas, transit and phone, each 4X
+  under the $150,000 yearly cap; with nothing picked it still ranks 1X. Data only.
 - **Graphite Business Cash Unlimited is new** in Amex's lineup (2%, 5% through Amex
   Travel, $295) and went in alongside Blue Business Cash, whose old URL now 404s; the
   live page is americanexpress.com/en-us/business/credit-cards/blue-business-cash/.
@@ -612,8 +610,9 @@ the five it met with a 403 confirmed in the browser.
 
 - **Wyndham Earner's 3X follows the Reward Rules, not the page.** The product page
   sums the 3X up as vacation clubs, dining and groceries; the Reward Rules, which are
-  the agreement, add gas and EV charging. The data has all four. If you would rather
-  go by the page, drop the card's gas and EV rules.
+  the agreement, add gas and EV charging. The data has all four, confirmed by David
+  2026-09-29. The page's 2X is stale text in its compare panel, hidden until you
+  compare cards; the Plus, Premier and Business panels match their pages.
 - **Wyndham Plus and Premier define travel without hotels**: airfare, car rental,
   rideshare, gas, EV charging, tolls and trains at 4X. Another chain's hotel earns 1X.
   The Earner cards are Visas, unlike Barclays' other cards here.
@@ -653,7 +652,11 @@ gmcompanystore.com, each confirmed by the HTTP sweep.
 - **GM points are valued at a full cent**, GM's own figure for a point redeemed
   through GM, as store money is valued as cash elsewhere. They spend only with GM,
   so the card reads 3% everywhere and ties or beats every flat card; `gm` is its own
-  currency so Settings can mark it down, and the caution says where points go.
+  currency so Settings can mark it down, and the caution says where points go. Kept
+  at a cent on 2026-09-29: GM's terms (L.iii) send point values to
+  experience.gm.com/rewards/redeem, which states one, $0.01 a point for every
+  redemption through GM, a GM Financial balance included. No GM or Barclays page
+  offers cash or states a lower figure, so a markdown would rest on no source.
 - **GM's 7X ranks only on GM's own web stores.** Vehicles and service are bought at
   dealers; OnStar, SiriusXM, GM Energy and GM Insurance are services with no clean
   category. The brand sites themselves, chevrolet.com and the rest, are not
@@ -692,8 +695,8 @@ engine change.
   5X is the base rate, which carries no cap, so the $100,000 is in the caution, as
   Blue Business Plus's $50,000 is.
 - **World of Hyatt Business's 2X goes to the top three of eight categories each
-  quarter**, which no page shows, so it is a caution and ranks 1X -- the same call as
-  Business Gold's 4X.
+  quarter**, which no page shows, so it is a caution and ranks 1X -- the call
+  Business Gold's 4X started with, before it took a picker (section 10).
 - **The airline cards' headline totals include member miles**, as on the personal
   cards: United's 8x is 6 MileagePlus miles plus the card's 2.
 - **Southwest Performance Business's offer details still list categories that ended
@@ -846,8 +849,6 @@ on another).
   publish and Bilt's unread terms may hold. That makes it a modelling call for David.
 
 **Open questions, each a call for David or a statement to settle it:**
-- Wyndham Earner: its own page says 2X in one place and 3X in another on dining,
-  grocery and gas. The data follows the Reward Rules (3X).
 - Citi Strata Premier's "Air Travel and Other Hotel Purchases" has no published
   definition; booking sites and Airbnb get 3X today.
 - Altitude Connect excludes booking sites from its 4X travel and the Emirates cards
