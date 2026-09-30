@@ -40,13 +40,15 @@ eq('no picks: no currency earns a cents-per-point field', cur([]), []);
 // Twelve the same day: World of Hyatt Business asks which three of eight earn its 2X.
 // Fifteen later that day: BofA's three business cards ask for the Preferred Rewards
 // for Business tier, and Customized Cash for its 3% category too.
-eq('exactly fifteen cards in the catalogue ask the user something',
+// Seventeen since 2026-09-30: Business Essentials Plus asks for its 5% category, and
+// the Amazon Prime Business card for its three 2% categories.
+eq('exactly seventeen cards in the catalogue ask the user something',
    tunableCards(Object.keys(products).filter(k => !k.startsWith('_')), products),
    ['bofa-customized-cash', 'usbank-cash-plus', 'bofa-unlimited-cash', 'bofa-travel-rewards',
     'citi-macys', 'column-bilt-obsidian', 'amex-business-gold', 'td-nordstrom-card',
     'td-nordstrom-visa', 'bofa-premium-rewards', 'bofa-premium-rewards-elite',
-    'chase-hyatt-business', 'bofa-business-unlimited-cash', 'bofa-business-customized-cash',
-    'bofa-business-travel-rewards']);
+    'chase-hyatt-business', 'usbank-amazon-prime-business', 'bofa-business-unlimited-cash',
+    'bofa-business-customized-cash', 'bofa-business-travel-rewards', 'usbank-business-essentials-plus']);
 eq('a tier-only card earns the fine-tune step with no category to choose',
    ids(['bofa-unlimited-cash']), ['intro', 'cards', 'tune', 'mode']);
 

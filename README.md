@@ -95,12 +95,13 @@ a Bilt card ranks on what it earns itself.
   paid, so it ranks the 1% and the 3% at Apple, which needs no Apple Pay, and says the
   rest in the card's caution. PayPal Cashback's 3% with PayPal checkout and Venmo's 3%
   for paying with Venmo are left out on the same grounds.
-- **Amex Business Gold and World of Hyatt Business ask for their top categories.** Amex
-  pays Business Gold's 4X on whichever two of six categories a business spent most on
-  that cycle, and Chase pays Hyatt Business's 2X on its top three of eight each quarter.
-  Caddy cannot see either, so the cardholder picks the ones they usually hit, as on
-  Cash+. Caddy then sends those purchases to the card, which keeps them on top. With
-  nothing picked, both rank 1X there.
+- **Four business cards ask for their top categories.** Amex pays Business Gold's 4X on
+  whichever two of six categories a business spent most on that cycle, and Chase pays
+  Hyatt Business's 2X on its top three of eight each quarter; U.S. Bank pays Business
+  Essentials Plus's 5% on the month's top category and the Amazon Prime Business card's
+  2% on its top three outside Amazon. Caddy cannot see any of them, so the cardholder
+  picks the ones they usually hit, as on Cash+. Caddy then sends those purchases to the
+  card, which keeps them on top. With nothing picked, each ranks its base rate there.
 - **BofA's relationship bonus is BofA Rewards now.** It replaced Preferred Rewards on
   2026-05-26 with a new 10% Member tier and new names and thresholds for the rest. All
   five personal BofA cards offer the same five-step tier picker. The three business cards

@@ -6461,8 +6461,32 @@
     "verified": true,
     "last_verified": "2026-09-29",
     "source_url": "https://www.usbank.com/business-banking/business-credit-cards/amazon-business-credit-cards.html",
-    "caution": "Business card. Without Prime every 5% here is 3%, and the 2% in your top three categories outside Amazon is not ranked.",
-    "note": "Issued by U.S. Bank as the Prime Business World Elite Mastercard, with an eligible Prime membership, and the Amazon Business World Elite Mastercard, without one: one program whose rates follow the business owner's Prime membership. Read off the product page and the Rewards Summary in its Terms and Conditions (onboarding.usbank.com/access/terms-HD8W35MF2E55E4S) on 2026-09-29. One record at the Prime rate, per the Prime Visa convention, with the 3% in the caution. 5% on the first $150,000 a calendar year at Amazon-covered Sites -- Amazon.com, Amazon Business, AWS and Whole Foods Market -- then 1%. The terms exclude pharmacy.amazon.com, advertising.amazon.com, shipping.amazon.com, pay.amazon.com and Amazon's non-U.S. sites, but those hosts resolve to the amazon.com row here, so Caddy ranks them at 5% too. 5% on prepaid travel booked in the U.S. Bank Travel Center. 2% on the first $150,000 a year in whichever three categories the business spends most on outside Amazon each billing cycle, from fifteen -- advertising, computer and software services, office supply stores, airlines, hotels, utilities, accounting and tax, cell phone providers, drugstores, gas and EV charging, postal and shipping, car rental, dining, entertainment and grocery stores -- which no page shows, so it is the caution, as the recipe has it; Business Gold and World of Hyatt Business took pickers for the same kind of rate on 2026-09-29. 1% elsewhere. A purchase put on an ExtendPay plan at an Amazon checkout earns nothing, and Amazon Day Delivery's extra 1% is a shipping choice; neither is ranked. Rewards are stated as percentages back, so currency is 'cash'. No annual fee, per the terms.",
+    "caution": "Business card. Without Prime every 5% here is 3%. The 2% goes to your three biggest categories outside Amazon, so pick the three you usually hit.",
+    "note": "Issued by U.S. Bank as the Prime Business World Elite Mastercard, with an eligible Prime membership, and the Amazon Business World Elite Mastercard, without one: one program whose rates follow the business owner's Prime membership. Read off the product page and the Rewards Summary in its Terms and Conditions (onboarding.usbank.com/access/terms-HD8W35MF2E55E4S) on 2026-09-29. One record at the Prime rate, per the Prime Visa convention, with the 3% in the caution. 5% on the first $150,000 a calendar year at Amazon-covered Sites -- Amazon.com, Amazon Business, AWS and Whole Foods Market -- then 1%. The terms exclude pharmacy.amazon.com, advertising.amazon.com, shipping.amazon.com, pay.amazon.com and Amazon's non-U.S. sites, but those hosts resolve to the amazon.com row here, so Caddy ranks them at 5% too. 5% on prepaid travel booked in the U.S. Bank Travel Center. 2% on the first $150,000 a year in whichever three categories the business spends most on outside Amazon each billing cycle, from fifteen -- advertising, computer and software services, office supply stores, airlines, hotels, utilities, accounting and tax, cell phone providers, drugstores, gas and EV charging, postal and shipping, car rental, dining, entertainment and grocery stores -- which U.S. Bank works out by merchant code from the whole account's spending and no page shows, so the card has a Cash+-style picker, as Business Gold and World of Hyatt Business do (David, 2026-09-30): the cardholder names the three they usually hit, and because Caddy then sends those purchases to this card, they are the three most likely to come out on top. With nothing picked it ranks 1% there. Computer and software services and accounting and tax have no category here and are not offered. Hotel is lodging booked direct, since booking sites code as travel agencies, so the hotel pick denylists them; gas and EV is one pick; entertainment is the page's own definition -- most cinemas, theme parks, concert venues, professional sports venues and qualifying ticket sellers -- which covers the ticket sites here. 1% elsewhere. A purchase put on an ExtendPay plan at an Amazon checkout earns nothing, and Amazon Day Delivery's extra 1% is a shipping choice; neither is ranked. Rewards are stated as percentages back, so currency is 'cash'. No annual fee, per the terms.",
+    "user_config": {
+      "selections": [
+        {
+          "key": "top",
+          "label": "Your three 2% categories",
+          "max": 3,
+          "options": {
+            "top_ads": "Advertising & direct marketing",
+            "top_office": "Office supply stores",
+            "top_air": "Airlines",
+            "top_hotel": "Hotels",
+            "top_utilities": "Utilities",
+            "top_phone": "Cell phone service",
+            "top_drug": "Drugstores & pharmacies",
+            "top_gas": "Gas & EV charging",
+            "top_shipping": "Postal & shipping",
+            "top_car": "Car rental",
+            "top_dining": "Dining",
+            "top_entertainment": "Entertainment",
+            "top_grocery": "Grocery stores"
+          }
+        }
+      ]
+    },
     "rules": [
       {
         "category": "online_retail",
@@ -6493,6 +6517,171 @@
         "rate": 5.0,
         "portal_only": true,
         "portal": "U.S. Bank Travel Center"
+      },
+      {
+        "category": "advertising",
+        "rate": 2.0,
+        "selection_group": "top_ads",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "All three picks share the cap."
+      },
+      {
+        "category": "office_supply",
+        "rate": 2.0,
+        "selection_group": "top_office",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "All three picks share the cap."
+      },
+      {
+        "category": "travel_air",
+        "rate": 2.0,
+        "selection_group": "top_air",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "All three picks share the cap."
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 2.0,
+        "selection_group": "top_hotel",
+        "merchant_denylist": [
+          "expedia.com",
+          "booking.com",
+          "airbnb.com",
+          "hotels.com",
+          "priceline.com",
+          "vrbo.com",
+          "kayak.com",
+          "orbitz.com",
+          "travelocity.com"
+        ],
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "All three picks share the cap."
+      },
+      {
+        "category": "utilities",
+        "rate": 2.0,
+        "selection_group": "top_utilities",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "All three picks share the cap."
+      },
+      {
+        "category": "phone",
+        "rate": 2.0,
+        "selection_group": "top_phone",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "All three picks share the cap."
+      },
+      {
+        "category": "drugstore",
+        "rate": 2.0,
+        "selection_group": "top_drug",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "All three picks share the cap."
+      },
+      {
+        "category": "gas",
+        "rate": 2.0,
+        "selection_group": "top_gas",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "All three picks share the cap."
+      },
+      {
+        "category": "ev_charging",
+        "rate": 2.0,
+        "selection_group": "top_gas",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "All three picks share the cap."
+      },
+      {
+        "category": "shipping",
+        "rate": 2.0,
+        "selection_group": "top_shipping",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "All three picks share the cap."
+      },
+      {
+        "category": "car_rental",
+        "rate": 2.0,
+        "selection_group": "top_car",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "All three picks share the cap."
+      },
+      {
+        "category": "dining",
+        "rate": 2.0,
+        "selection_group": "top_dining",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "All three picks share the cap."
+      },
+      {
+        "category": "entertainment",
+        "rate": 2.0,
+        "selection_group": "top_entertainment",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "All three picks share the cap."
+      },
+      {
+        "category": "groceries",
+        "rate": 2.0,
+        "selection_group": "top_grocery",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "All three picks share the cap."
       }
     ]
   },
@@ -7001,9 +7190,97 @@
     "verified": true,
     "last_verified": "2026-09-29",
     "source_url": "https://www.usbank.com/business-banking/business-credit-cards/business-essentials-plus-credit-card.html",
-    "caution": "Business card. 5% in your top category each month, and up to 3.5% with U.S. Bank business checking, are not ranked.",
-    "note": "Read off footnotes 1 to 4 of the product page and its FAQ on 2026-09-29: 2 points per $1 on every purchase and 10 on prepaid hotels and car rentals in the Travel Center. 5 on the month's top eligible spend category, to $200,000 a year from account opening, from eight: accounting and tax services, airlines, cell phone providers, dining, entertainment (bowling alleys, golf courses, entertainment parks), office supply stores, postal and shipping, and utilities. Which one is decided by the month's spending, which no page shows, so it is the caution, as the recipe has it; Business Gold and World of Hyatt Business took pickers for the same kind of rate on 2026-09-29. The Business Essentials Plus Earning Bonus adds 0.5, 1 or 1.5 points with $15,000, $75,000 or $150,000 averaged in a qualifying U.S. Bank business checking account, on $200,000 a year; it adds rather than multiplies, as on Business Essentials, so it is in the caution too. Points are cash back at a cent -- 100,000 points = $1,000 as a deposit or statement credit -- so currency is 'cash'. $295 annual fee. A Visa Signature.",
+    "caution": "Business card. U.S. Bank pays the 5% on your biggest of eight categories each month, so pick the one you usually hit. Its checking-balance bonus is not ranked.",
+    "note": "Read off footnotes 1 to 4 of the product page and its FAQ on 2026-09-29: 2 points per $1 on every purchase and 10 on prepaid hotels and car rentals in the Travel Center. 5 on the month's top eligible spend category, to $200,000 a year from account opening, from eight: accounting and tax services, airlines, cell phone providers, dining, entertainment (bowling alleys, golf courses, entertainment parks), office supply stores, postal and shipping, and utilities. U.S. Bank works the one out by merchant code from the month's spending on this card, which no page shows, so the card has a Cash+-style picker, as Business Gold and World of Hyatt Business do (David, 2026-09-30): the cardholder names the one they usually hit, and because Caddy then sends those purchases to this card, it is the most likely to come out on top. With nothing picked it ranks 2% there. Accounting and tax services have no category here and are not offered. Every travel_air row is an airline's own site. The page gives bowling alleys, golf courses and entertainment parks as entertainment; U.S. Bank's Amazon business cards define the same Top Category as cinemas, theme parks, concert venues, sports venues and ticket sellers, so entertainment covers the ticket sites here. The Business Essentials Plus Earning Bonus adds 0.5, 1 or 1.5 points with $15,000, $75,000 or $150,000 averaged in a qualifying U.S. Bank business checking account, on $200,000 a year; it adds rather than multiplies, as on Business Essentials, so it is in the caution. Points are cash back at a cent -- 100,000 points = $1,000 as a deposit or statement credit -- so currency is 'cash'. $295 annual fee. A Visa Signature.",
+    "user_config": {
+      "selections": [
+        {
+          "key": "top",
+          "label": "Your 5% category",
+          "max": 1,
+          "options": {
+            "top_air": "Airlines",
+            "top_phone": "Cell phone service",
+            "top_dining": "Dining",
+            "top_entertainment": "Entertainment",
+            "top_office": "Office supply stores",
+            "top_shipping": "Postal & shipping",
+            "top_utilities": "Utilities"
+          }
+        }
+      ]
+    },
     "rules": [
+      {
+        "category": "travel_air",
+        "rate": 5.0,
+        "selection_group": "top_air",
+        "cap": {
+          "amount": 200000,
+          "period": "year",
+          "then_rate": 2.0
+        }
+      },
+      {
+        "category": "phone",
+        "rate": 5.0,
+        "selection_group": "top_phone",
+        "cap": {
+          "amount": 200000,
+          "period": "year",
+          "then_rate": 2.0
+        }
+      },
+      {
+        "category": "dining",
+        "rate": 5.0,
+        "selection_group": "top_dining",
+        "cap": {
+          "amount": 200000,
+          "period": "year",
+          "then_rate": 2.0
+        }
+      },
+      {
+        "category": "entertainment",
+        "rate": 5.0,
+        "selection_group": "top_entertainment",
+        "cap": {
+          "amount": 200000,
+          "period": "year",
+          "then_rate": 2.0
+        }
+      },
+      {
+        "category": "office_supply",
+        "rate": 5.0,
+        "selection_group": "top_office",
+        "cap": {
+          "amount": 200000,
+          "period": "year",
+          "then_rate": 2.0
+        }
+      },
+      {
+        "category": "shipping",
+        "rate": 5.0,
+        "selection_group": "top_shipping",
+        "cap": {
+          "amount": 200000,
+          "period": "year",
+          "then_rate": 2.0
+        }
+      },
+      {
+        "category": "utilities",
+        "rate": 5.0,
+        "selection_group": "top_utilities",
+        "cap": {
+          "amount": 200000,
+          "period": "year",
+          "then_rate": 2.0
+        }
+      },
       {
         "category": "travel_hotel",
         "rate": 10.0,

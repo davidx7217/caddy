@@ -1843,9 +1843,23 @@ eq('Amazon Prime Business: 5% at amazon.com and Whole Foods, to $150,000 a year'
    [tier('usbank-amazon-prime-business', 'amazon.com')?.rate, tier('usbank-amazon-prime-business', 'wholefoodsmarket.com')?.rate,
     tier('usbank-amazon-prime-business', 'amazon.com')?.caveats[0]],
    [5, 5, 'Capped at $150,000 per year, then 1x']);
-eq('...1% elsewhere, its top-three 2% left to the caution, and 5% through the Travel Center as a note',
+eq('...1% elsewhere until you pick your three 2% categories, and 5% through the Travel Center as a note',
    [tier('usbank-amazon-prime-business', 'staples.com')?.rate, noteAt('usbank-amazon-prime-business', 'delta.com')],
    [1, 'Amazon Prime Business Mastercard: 5x (5.00%) if you book through U.S. Bank Travel Center instead']);
+eq('...2% on each of the thirteen once picked, gas and EV charging as one',
+   [['top_ads', 'ads.google.com'], ['top_office', 'staples.com'], ['top_air', 'delta.com'], ['top_hotel', 'marriott.com'],
+    ['top_utilities', 'coned.com'], ['top_phone', 'verizon.com'], ['top_drug', 'cvs.com'], ['top_gas', 'shell.us'],
+    ['top_gas', 'evgo.com'], ['top_shipping', 'ups.com'], ['top_car', 'hertz.com'], ['top_dining', 'doordash.com'],
+    ['top_entertainment', 'ticketmaster.com'], ['top_grocery', 'kroger.com']]
+     .map(([pick, h]) => picked('usbank-amazon-prime-business', h, [pick])?.rate), Array(14).fill(2));
+eq('...and only on the three picked, under one $150,000 yearly cap',
+   [...['doordash.com', 'staples.com', 'ups.com', 'delta.com']
+     .map(h => picked('usbank-amazon-prime-business', h, ['top_dining', 'top_office', 'top_shipping'])?.rate),
+    picked('usbank-amazon-prime-business', 'ups.com', ['top_shipping'])?.caveats],
+   [2, 2, 2, 1, ['Capped at $150,000 per year, then 1x', 'All three picks share the cap.']]);
+eq('...hotels booked direct, not through a booking site, and a grocery pick never undercuts Whole Foods\' 5%',
+   [picked('usbank-amazon-prime-business', 'hotels.com', ['top_hotel'])?.rate,
+    picked('usbank-amazon-prime-business', 'wholefoodsmarket.com', ['top_grocery'])?.rate], [1, 5]);
 eq('BofA Business Advantage Unlimited Cash: 1.5% everywhere, 2.625% at Platinum Honors',
    [tier('bofa-business-unlimited-cash', 'amazon.com')?.rate, bofaBiz('bofa-business-unlimited-cash', 'amazon.com', [], 1.75)?.rate],
    [1.5, 2.625]);
@@ -1899,9 +1913,21 @@ eq('...2x on dining, fast food included, and phone; 1x through an OTA, with 5x t
 eq('U.S. Bank Business Essentials: 2% everywhere, 6% on Travel Center hotels as a note',
    [tier('usbank-business-essentials', 'amazon.com')?.rate, noteAt('usbank-business-essentials', 'hilton.com')],
    [2, 'U.S. Bank Business Essentials: 6x (6.00%) if you book through U.S. Bank Travel Center instead']);
-eq('U.S. Bank Business Essentials Plus: 2% everywhere, its top-category 5% left to the caution, 10% on Travel Center car rentals',
+eq('U.S. Bank Business Essentials Plus: 2% everywhere until you pick your 5% category, 10% on Travel Center car rentals',
    [tier('usbank-business-essentials-plus', 'doordash.com')?.rate, noteAt('usbank-business-essentials-plus', 'hertz.com')],
    [2, 'U.S. Bank Business Essentials Plus: 10x (10.00%) if you book through U.S. Bank Travel Center instead']);
+eq('...5% on each of the seven once picked',
+   [['top_air', 'delta.com'], ['top_phone', 'verizon.com'], ['top_dining', 'doordash.com'],
+    ['top_entertainment', 'ticketmaster.com'], ['top_office', 'staples.com'], ['top_shipping', 'ups.com'],
+    ['top_utilities', 'coned.com']]
+     .map(([pick, h]) => picked('usbank-business-essentials-plus', h, [pick])?.rate), Array(7).fill(5));
+eq('...only on the one picked, to $200,000 a year, then its 2% base',
+   [picked('usbank-business-essentials-plus', 'doordash.com', ['top_air'])?.rate,
+    picked('usbank-business-essentials-plus', 'delta.com', ['top_air'])?.caveats[0]],
+   [2, 'Capped at $200,000 per year, then 2x']);
+eq('...one pick for Essentials Plus, three for the Amazon card',
+   ['usbank-business-essentials-plus', 'usbank-amazon-prime-business'].map(id => products[id].user_config.selections[0].max),
+   [1, 3]);
 eq('U.S. Bank points are worth a cent, U.S. Bank\'s own figure since 2026-09-29',
    tier('usbank-altitude-go', 'doordash.com')?.value, 4);
 

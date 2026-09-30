@@ -30,7 +30,7 @@ works and why; this file is only the state of play.
   Navy Federal Flagship Premier no longer earns 4X through booking sites.
 - **Freedom Flex carries Q4 2026 and Q1 2027**, dining 7X in Q4 (section 2). Rates
   switch at local midnight even in a tab left open.
-- **Tests green**: 623 engine + 36 setup + 54 lifecycle + 47 worker. `npm test`.
+- **Tests green**: 629 engine + 36 setup + 54 lifecycle + 47 worker. `npm test`.
 - **Two scheduled agents keep the data current** (section 15), and run without
   permission prompts. Rate changes they find wait on `rates-*` and `upkeep-*`
   branches for David's approval; only `last_verified` date bumps land on `main`
@@ -114,10 +114,6 @@ dated.
    - **U.S. Bank's checking-balance bonuses** -- Business Essentials' 2.5% and
      Essentials Plus's up to 3.5% -- are cautions: they add to the rate rather
      than multiply it, which the tier picker cannot express (section 17).
-   - **Business Essentials Plus's top-category 5% and the Amazon Prime Business
-     card's top-three 2%** are cautions, as the recipe says. Business Gold and
-     World of Hyatt Business took pickers for the same kind of rate the same day;
-     these two could follow, about 30 minutes each (section 17).
    - **Three airline-program portals may overstate their cards**, as Bilt Travel
      did: TrueBlue Travel, Renowned Hotels and AAdvantage Hotels and Cars. Unchecked
      until their terms are read (section 9).
@@ -126,7 +122,8 @@ dated.
    Business Gold and World of Hyatt Business have pickers for their top
    categories, and U.S. Bank's own calculators price an Altitude point at a cent
    (sections 10, 12, 13 and 14). Settled 2026-09-30: Bilt's terms are read, and
-   its member bonuses no longer rank (section 9).
+   its member bonuses no longer rank (section 9); Business Essentials Plus and the
+   Amazon Prime Business card have pickers too (section 17).
 
 ---
 
@@ -425,8 +422,11 @@ Card and TJX Rewards. Every one read off its issuer's or retailer's page that da
 2. **Map each category onto the 27 in `categories.json`**, reading the issuer's
    definition rather than its headline. Online retail at Amex and Online Shopping
    at BofA are channels, repeated across every store category -- see the README.
-   A rate that needs Apple Pay, PayPal checkout or a chosen top category cannot be
-   seen from a web page; put it in the `caution`, not in `rules`. A rate that needs
+   A rate that needs Apple Pay or PayPal checkout cannot be seen from a web page;
+   put it in the `caution`, not in `rules`. A rate paid on whichever categories a
+   card spends most in gets a Cash+-style picker instead, the cardholder naming the
+   ones they usually hit -- David's call on four business cards, 2026-09-29 and 30
+   (sections 10, 14 and 17). A rate that needs
    a membership (Prime, Walmart+, Sam's Club Plus) goes in at the member rate, with
    the other rate in the `caution` -- Prime Visa's convention. A store rate is what
    the card adds: leave out whatever the store's free program pays members with any
@@ -991,10 +991,15 @@ new category and no engine change; one shared search helper, `matchesSearch()`.
 - **U.S. Bank's checking-balance bonuses are cautions.** Business Essentials adds half
   a point on $10,000 a month with $10,000 in business checking; Essentials Plus up to
   1.5 points on $200,000 a year. They add to the rate rather than multiply it, so the
-  tier picker would also inflate the Travel Center rates. Essentials Plus's 5% on the
-  month's top category and the Amazon card's 2% on its top three are cautions too,
-  as the recipe says -- though Business Gold and World of Hyatt Business took
-  pickers for the same kind of rate that day (sections 10 and 14).
+  tier picker would also inflate the Travel Center rates.
+- **Essentials Plus and the Amazon card have top-category pickers (2026-09-30)**, as
+  Business Gold and World of Hyatt Business do (sections 10 and 14): one pick of
+  seven for Essentials Plus's 5%, to $200,000 a year and then its 2% base, and three
+  of thirteen for the Amazon card's 2%, which share $150,000 a year. Accounting and
+  tax, and computer and software services, have no category here and are not
+  offered. The Amazon card's hotel pick leaves out booking sites, which code as
+  travel agencies; entertainment is the ticket sites on both, by the definition on
+  U.S. Bank's Amazon card page. Nothing picked, the base rate.
 - **Triple Cash's 3% on restaurants leaves out fast food.** U.S. Bank names fast food
   where it means it -- the Altitude cards pay on "restaurant, fast-food restaurant or
   bar" -- and its Cash+ Restaurants choice excludes most of it, so the rule denylists
