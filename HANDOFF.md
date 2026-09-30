@@ -1,6 +1,6 @@
 # Handoff
 
-Where Caddy stands as of **29 September 2026**, and what is left.
+Where Caddy stands as of **30 September 2026**, and what is left.
 
 Written to be picked up cold. The README is the reference for how the extension
 works and why; this file is only the state of play.
@@ -49,14 +49,13 @@ works and why; this file is only the state of play.
 
 ## Start here
 
-In order. The first waits on David and on second sources, the second on David;
-the third is dated.
+In order. The first waits on second sources, the second on David; the third is
+dated.
 
 1. **The merchant-code changes, reviewed 2026-09-29 against a two-source bar**
    (section 16). A rate change needs two real sources and David's yes. Applied:
-   Autograph's 3X at xfinity.com and spectrum.com. Waiting:
-   - Autograph's 3X at cox.com: the second search found a second source, a
-     cardholder datapoint. Waits on David's yes; about 10 minutes.
+   Autograph's 3X at xfinity.com and spectrum.com, and at cox.com on 2026-09-30.
+   Waiting:
    - Autograph's 3X at optimum.com and audible.com, and the Gap Encore
      Mastercard's 3X without tjmaxx.tjx.com, marshalls.com and nike.com: still
      short of two sources after a second search. About 10 minutes each once a
@@ -840,13 +839,16 @@ on another).
   Warner Cable as cable and satellite TV providers. No Autograph cardholder report
   for a cable bill was found either way; the one on myFICO (2022) is Xfinity Mobile
   earning 3X as a phone plan.
-- **Two sources since the second search, waiting on David's yes**: cox.com.
-  AwardWallet's own "Cable" label (none of the 17 Cox and Optimum variants shows
-  an issuer coding), and a myFICO cardholder (2021-08-24) whose Cox Internet bill
-  earned SavorOne's 3% streaming rate, labelled "Phone/Cable" -- Capital One's
-  label for Comcast and Spectrum. Another (2022-07-31) pays 4899 bills, Dish and
-  fixed-wireless internet, with Savor for its streaming rate. A streaming rate on an
-  internet bill points to the pay-TV code, not an internet-only one.
+- **Applied 2026-09-30, on David's yes**: Autograph's 3X at cox.com, on thinner
+  evidence than Xfinity and Spectrum. AwardWallet's own "Cable" label (none of the
+  17 Cox and Optimum variants shows an issuer coding), and a myFICO cardholder
+  (2021-08-24) whose Cox Internet bill earned SavorOne's 3% streaming rate,
+  labelled "Phone/Cable" -- Capital One's label for Comcast and Spectrum. Another
+  (2022-07-31) pays 4899 bills, Dish and fixed-wireless internet, with Savor for its
+  streaming rate. A streaming rate on an internet bill points to the pay-TV code,
+  not an internet-only one, but no source names Cox's code. Reverse it on a
+  statement showing a code Autograph does not pay 3X on, or an Autograph holder
+  getting 1X on a Cox bill.
 - **Held, one source and a partial one**: optimum.com. Two myFICO cardholders
   earned U.S. Bank's "TV, Internet & Streaming" 5% on Optimum bills (Elan Max Cash
   Preferred 2021-12-30, Cash+ 2024-04-13); a third got 1% on an Optimum Online
