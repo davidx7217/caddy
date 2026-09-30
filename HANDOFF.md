@@ -19,8 +19,8 @@ works and why; this file is only the state of play.
   issuer's own pages -- fourteen of them only in the in-app browser -- and every
   card ranked on every merchant row. The fixes it found are merged. The one soft
   spot left: the three Bilt cards' category definitions (section 9).
-- **28 merchant rows record how they actually code** (`mcc`, `mcc_source`); the
-  other 135 are still unverified seed data (section 16).
+- **44 merchant rows record how they actually code** (`mcc`, `mcc_source`); the
+  other 119 are still unverified seed data (section 16).
 - **Freedom Flex carries Q4 2026 and Q1 2027**, dining 7X in Q4 (section 2). Rates
   switch at local midnight even in a tab left open.
 - **Tests green**: 581 engine + 31 setup + 54 lifecycle + 47 worker. `npm test`.
@@ -49,17 +49,18 @@ works and why; this file is only the state of play.
 
 ## Start here
 
-In order. The first waits on a second source, the second on David; the third is
-dated.
+In order. The first waits on David and on second sources, the second on David;
+the third is dated.
 
 1. **The merchant-code changes, reviewed 2026-09-29 against a two-source bar**
-   (section 16). David approved whatever two real sources back. Applied:
-   Autograph's 3X at xfinity.com and spectrum.com. Held, each for want of a
-   second source:
-   - Autograph's 3X at cox.com, optimum.com and audible.com. About 10 minutes
-     once a second source turns up.
-   - The Gap Encore Mastercard's 3X without tjmaxx.tjx.com, marshalls.com and
-     nike.com. About 10 minutes, same condition.
+   (section 16). A rate change needs two real sources and David's yes. Applied:
+   Autograph's 3X at xfinity.com and spectrum.com. Waiting:
+   - Autograph's 3X at cox.com: the second search found a second source, a
+     cardholder datapoint. Waits on David's yes; about 10 minutes.
+   - Autograph's 3X at optimum.com and audible.com, and the Gap Encore
+     Mastercard's 3X without tjmaxx.tjx.com, marshalls.com and nike.com: still
+     short of two sources after a second search. About 10 minutes each once a
+     source turns up.
    - A `travel_agency` category: not approved as stated, because booking sites
      are not always the merchant. A call for David, then one to two hours.
 2. **Submit to the Chrome Web Store** -- unblocked 2026-09-29. The repo is public
@@ -783,11 +784,14 @@ calls itself UNVERIFIED SEED DATA and no agent checks how a merchant codes):
 - Visa's Merchant Data Standards Manual and Mastercard's Quick Reference Booklet
   define what each code covers, not which merchant uses which.
 
-**Recorded so far** (2026-09-29): 28 rows carry `mcc_source`, 20 of them an `mcc` --
+**Recorded so far** (2026-09-29): 44 rows carry `mcc_source`, 35 of them an `mcc` --
 the booking sites, the cable and phone companies, the off-price stores, Nike,
 Wayfair, HomeGoods, StubHub, Audible, YouTube, Starbucks, and the rows the Cash+
-recheck leaned on. The engine does not read either field; a test keeps every `mcc`
-four digits with a source beside it. Next: the other 135 rows, a batch at a time.
+recheck leaned on; then a second batch: the four delivery apps, Instacart, Costco,
+Sam's Club, Amazon, Best Buy, Netflix, Spotify, Hulu, Uber, Lyft, CVS and
+Walgreens. The engine does not read either field; a test keeps every `mcc` four
+digits with a source beside it, and every card ranked the same on all 163 rows
+before and after the second batch. Next: the other 119 rows, a batch at a time.
 
 **How to continue it** -- what worked on 2026-09-29:
 - In the in-app browser, open awardwallet.com/merchants, find the "Merchant Name"
@@ -798,6 +802,13 @@ four digits with a source beside it. Next: the other 135 rows, a batch at a time
   description ("Discount stores" is 5310). Leave the cookie banner unaccepted.
   Never call those endpoints outside the page -- a plain request is refused, and
   it would be scraping.
+- The box's first request for a name often hangs. Delete the last letter and
+  type it again a second later, and it answers. Search the billing form of the
+  name -- "Samsclub", "Bestbuy.com" -- because "Sams Club" finds nothing and a
+  site's own descriptor can fall outside the ten variants listed.
+- Cardholder datapoints: myFICO threads read fine in the in-app browser. U.S.
+  Bank's transaction export puts the MCC in its Memo column, so Cash+ posters
+  often quote exact codes.
 - Write the rows with a short script: `data/merchants.json` round-trips exactly
   through `json.dumps(d, indent=2, ensure_ascii=False)` plus a newline, so the
   diff stays to the new fields.
@@ -829,19 +840,32 @@ on another).
   Warner Cable as cable and satellite TV providers. No Autograph cardholder report
   for a cable bill was found either way; the one on myFICO (2022) is Xfinity Mobile
   earning 3X as a phone plan.
-- **Held, one source each**: cox.com and optimum.com (AwardWallet's own "Cable" and
-  "Select Streaming Services" labels; none of the 17 variants carrying them shows
-  an issuer coding) and
-  audible.com (AwardWallet's Chase and Citi codings as continuity/subscription).
+- **Two sources since the second search, waiting on David's yes**: cox.com.
+  AwardWallet's own "Cable" label (none of the 17 Cox and Optimum variants shows
+  an issuer coding), and a myFICO cardholder (2021-08-24) whose Cox Internet bill
+  earned SavorOne's 3% streaming rate, labelled "Phone/Cable" -- Capital One's
+  label for Comcast and Spectrum. Another (2022-07-31) pays 4899 bills, Dish and
+  fixed-wireless internet, with Savor for its streaming rate. A streaming rate on an
+  internet bill points to the pay-TV code, not an internet-only one.
+- **Held, one source and a partial one**: optimum.com. Two myFICO cardholders
+  earned U.S. Bank's "TV, Internet & Streaming" 5% on Optimum bills (Elan Max Cash
+  Preferred 2021-12-30, Cash+ 2024-04-13); a third got 1% on an Optimum Online
+  bill and a gas bill alike. That category pays internet codes too, so it does not
+  show pay TV: Autograph pays on 4899, and on 4814 as a phone plan, but not on 4816.
+- **Held, one source**: audible.com (AwardWallet's Chase and Citi codings as
+  continuity/subscription). The second search found nothing more: Chase's
+  streaming list and U.S. Bank's Cash+ list do not name Audible, and no cardholder
+  datapoint gives its code.
 - **Held, one source and a contrary one**: dropping T.J.Maxx and Marshalls from the
   Gap Encore Mastercard's 3X. Barclays' terms (tc47922) and Gap's Encore FAQ define
   it as Mastercard "clothing store" merchant codes, excluding wholesale clubs, Amazon,
-  Target and Walmart. Chase codes both stores as discount stores; Amex files them as
-  clothing stores; nothing shows the code on Mastercard.
+  Target and Walmart, and name no codes. Chase codes both stores as discount stores;
+  Amex files them as clothing stores; nothing shows the code on Mastercard, and the
+  second search found no Encore Mastercard datapoint.
 - **Held, no source**: dropping nike.com. AwardWallet shows only its own "Internet"
-  and "U.S. Online Retailers" labels for it, no issuer coding. Its row used to call
-  that "online-order codes, not a clothing or shoe store code"; it now says the
-  code is unknown.
+  and "U.S. Online Retailers" labels for it, no issuer coding, and the second search
+  found none. Its row used to call that "online-order codes, not a clothing or shoe
+  store code"; it now says the code is unknown.
 - **Not approved as stated**: a `travel_agency` category. Booking sites code as
   travel agencies when they take the payment (Expedia at Chase; Airbnb at Chase, Amex
   and Capital One), but on a pay-at-property booking the property charges the card
@@ -860,6 +884,9 @@ on another).
 - Sapphire Preferred's 3X "vacation homes at top brands" is not modelled.
 - Venture X's portal note says 10X on vrbo.com and airbnb.com; vacation rentals
   through Capital One Travel earn 5X.
+- Instacart's Amex override (`other`): its main descriptor is Amex "Merchandise &
+  Supplies - Groceries" on AwardWallet, but another shows "U.S. Supermarkets". One
+  source, mixed, so the override stands.
 - Merchant rows that are not really checkouts: kayak.com (search only), opentable.com
   (meals are paid at the table), riteaid.com (no longer a drugstore storefront),
   traderjoes.com, wholefoodsmarket.com.
