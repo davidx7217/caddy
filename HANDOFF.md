@@ -114,16 +114,14 @@ dated.
    - **U.S. Bank's checking-balance bonuses** -- Business Essentials' 2.5% and
      Essentials Plus's up to 3.5% -- are cautions: they add to the rate rather
      than multiply it, which the tier picker cannot express (section 17).
-   - **Three airline-program portals may overstate their cards**, as Bilt Travel
-     did: TrueBlue Travel, Renowned Hotels and AAdvantage Hotels and Cars. Unchecked
-     until their terms are read (section 9).
 
    Settled 2026-09-29: Wyndham Earner's 3X stands, `gm` stays at a cent,
    Business Gold and World of Hyatt Business have pickers for their top
    categories, and U.S. Bank's own calculators price an Altitude point at a cent
-   (sections 10, 12, 13 and 14). Settled 2026-09-30: Bilt's terms are read, and
-   its member bonuses no longer rank (section 9); Business Essentials Plus and the
-   Amazon Prime Business card have pickers too (section 17).
+   (sections 10, 12, 13 and 14). Settled 2026-09-30: Bilt's terms are read, its
+   member bonuses no longer rank, and the three airline-program portals pay the
+   card's own rate (section 9); Business Essentials Plus and the Amazon Prime
+   Business card have pickers too (section 17).
 
 ---
 
@@ -502,7 +500,7 @@ the Bilt Card Offer Terms, last updated 2026-09-18. The file stays out of the re
   lines and car rental agencies. Transit and rideshare stay at 1X, as modelled.
   Booking sites code as travel agencies, so Obsidian's hotel rule now carries the
   same booking-site denylist as Sapphire Reserve's, and pays 1X there. Cruise
-  lines have no category here (section 13).
+  lines booked direct earn the 2X too, since they got a category (section 18).
 - **Everything else matched**: 1X, 1X and 2X base; Obsidian's dining (eating
   places, drinking places, bakeries, fast food) and grocery (grocery stores and
   supermarkets, $25,000 a calendar year across the account, then 1X); fees of $0,
@@ -526,13 +524,25 @@ the Bilt Card Offer Terms, last updated 2026-09-18. The file stays out of the re
   4% on everyday spend under the Flexible Bilt Cash Option, is card-only and stays
   unranked: its worth depends mostly on the holder's rent or mortgage.
 
-Left open, for you:
+**The airline-program portals, checked 2026-09-30.** None overstates its card the
+way Bilt Travel did. Each portal rate is the issuer's own card earn, stated in the
+card's terms; the program's member earn comes on top whatever card pays, and is
+not counted.
 
-- **Three airline-program portals may have the same flaw**: TrueBlue Travel (four
-  JetBlue cards), Renowned Hotels and Resorts (three United cards) and AAdvantage
-  Hotels and Cars (two Citi cards). If a program pays members whatever card they
-  use, its portal notes overstate the card. Read each program's terms first; about
-  an hour.
+- **TrueBlue Travel** (four JetBlue cards): Barclays' Reward Rules pay 3X on the
+  JetBlue Card and 6X on Plus, Premier and Business for TrueBlue Travel purchases
+  booked at truebluetravel.com. TrueBlue Travel's own terms (August 2026) pay
+  members 1 point a dollar on hotels and 100 a day on car rentals besides.
+- **Renowned Hotels and Resorts** (three United cards): Chase's offer details make
+  the 5X card miles -- 3 on top of the 2X travel rate on Quest and Club, 3.5 on top
+  of the 1.5X base on Club Business -- and only select Chase cards can book it,
+  paying with the card through Chase Travel.
+- **AAdvantage Hotels and Cars** (two Citi cards): Citi's terms make Executive's
+  12X one base and 11 bonus card miles, and Globe's 6X one base and five bonus. The
+  platform also advertises up to five times the miles for AAdvantage credit
+  cardmembers; neither its terms nor its FAQ say whether that needs paying with the
+  card. If it does, Caddy understates the two Citi cards there; it cannot overstate
+  them.
 
 ---
 
