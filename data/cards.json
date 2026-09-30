@@ -3981,11 +3981,94 @@
     "annual_fee": 375,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-09-28",
+    "last_verified": "2026-09-29",
     "source_url": "https://www.americanexpress.com/us/credit-cards/business/business-credit-cards/american-express-business-gold-card-amex/",
-    "caution": "Business card. 4X on whichever two of six categories -- ads, electronics and software, restaurants, gas, transit, wireless -- you spend most on each cycle, to $150,000 a year. Caddy cannot see which two, so it ranks 1X.",
-    "note": "Rates read off the product page on 2026-09-28. The 4X goes to the two categories where the business spent most in each billing cycle, from six: U.S. advertising in select media, U.S. electronic goods retailers and software and cloud providers, U.S. restaurants including takeout and delivery, U.S. gas stations, transit, and U.S. wireless phone service; $150,000 combined a calendar year, then 1X. Which two is decided by the whole cycle's spending, which no page shows, so per the recipe it is a caution and not rules -- the same call as a top-category card. The alternative, if wanted, is a Cash+-style picker for the two the cardholder usually hits.",
+    "caution": "Business card. Amex pays the 4X on your two biggest of six categories each billing cycle, so pick the two you usually hit.",
+    "note": "Rates read off the product page on 2026-09-28 and again on 2026-09-29. The 4X goes to the two categories where the business spent most in each billing cycle, from six: U.S. advertising in select media (online, TV, radio), U.S. electronic goods retailers and software and cloud system providers, U.S. restaurants including takeout and delivery, U.S. gas stations, transit (trains, taxis, rideshare, ferries, tolls, parking, buses and subways), and monthly wireless phone service bought directly from a U.S. carrier; $150,000 combined a calendar year, then 1X. Amex picks the two from the cycle's spending on this card, which no page shows, so the card has a Cash+-style picker (David, 2026-09-29): the cardholder names the two they usually hit, and because Caddy then sends those purchases to this card, they are the two most likely to come out on top. With nothing picked it ranks 1X, as it did before. Definitions from americanexpress.com/us/rewards-info/business.html: electronics leaves out online marketplaces such as Amazon and eBay, superstores and the wireless carriers; wireless leaves out resellers, hardware, bundled TV and internet, VoIP and Google Fi. Software and cloud providers have no category here, so only the electronics stores rank; gas does not include EV charging, as on the Blue Cash Preferred; dining includes the delivery apps, as on the consumer Gold.",
+    "user_config": {
+      "selections": [
+        {
+          "key": "four",
+          "label": "Your two 4X categories",
+          "max": 2,
+          "options": {
+            "four_ads": "Advertising (online, TV, radio)",
+            "four_electronics": "Electronics, software & cloud",
+            "four_dining": "Restaurants",
+            "four_gas": "Gas stations",
+            "four_transit": "Transit",
+            "four_wireless": "Wireless phone service"
+          }
+        }
+      ]
+    },
     "rules": [
+      {
+        "category": "advertising",
+        "rate": 4.0,
+        "selection_group": "four_ads",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "Both picks share the cap."
+      },
+      {
+        "category": "electronics",
+        "rate": 4.0,
+        "selection_group": "four_electronics",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "Both picks share the cap."
+      },
+      {
+        "category": "dining",
+        "rate": 4.0,
+        "selection_group": "four_dining",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "Both picks share the cap."
+      },
+      {
+        "category": "gas",
+        "rate": 4.0,
+        "selection_group": "four_gas",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "Both picks share the cap."
+      },
+      {
+        "category": "travel_ground",
+        "rate": 4.0,
+        "selection_group": "four_transit",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "Both picks share the cap."
+      },
+      {
+        "category": "phone",
+        "rate": 4.0,
+        "selection_group": "four_wireless",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "Both picks share the cap."
+      },
       {
         "category": "travel_air",
         "rate": 3.0,

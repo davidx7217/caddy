@@ -1536,8 +1536,21 @@ eq('...and, unlike the consumer Platinum, 1x on a flight bought from the airline
    [tier('amex-business-platinum', 'delta.com').rate, tier('amex-platinum', 'delta.com').rate], [1, 5]);
 eq('...with its 5x as an Amex Travel note', noteAt('amex-business-platinum', 'delta.com'),
    'Amex Business Platinum Card: 5x (8.00%) if you book through Amex Travel instead');
-eq('Amex Business Gold: its top-two 4x is not ranked, so 1x at a restaurant',
+eq('Amex Business Gold: 1x at a restaurant until you pick your two 4x categories',
    tier('amex-business-gold', 'doordash.com').rate, 1);
+eq('...4x on each of the six once picked',
+   [['four_ads', 'ads.google.com'], ['four_electronics', 'bestbuy.com'], ['four_dining', 'doordash.com'],
+    ['four_gas', 'shell.us'], ['four_transit', 'uber.com'], ['four_wireless', 'verizon.com']]
+     .map(([pick, h]) => picked('amex-business-gold', h, [pick]).rate), [4, 4, 4, 4, 4, 4]);
+eq('...and only on the two picked',
+   ['doordash.com', 'shell.us', 'verizon.com', 'ads.google.com']
+     .map(h => picked('amex-business-gold', h, ['four_dining', 'four_gas']).rate), [4, 4, 1, 1]);
+eq('...not at Amazon, which Amex leaves out of electronics, nor at an EV charger',
+   [picked('amex-business-gold', 'amazon.com', ['four_electronics']).rate,
+    picked('amex-business-gold', 'evgo.com', ['four_gas']).rate], [1, 1]);
+eq('...under one $150,000 yearly cap the two picks share',
+   picked('amex-business-gold', 'doordash.com', ['four_dining']).caveats,
+   ['Capped at $150,000 per year, then 1x', 'Both picks share the cap.']);
 eq('...and 3x through Amex Travel is a note', noteAt('amex-business-gold', 'delta.com'),
    'Amex Business Gold Card: 3x (4.80%) if you book through Amex Travel instead');
 eq('Amex Blue Business Cash: 2% everywhere', tier('amex-blue-business-cash', 'amazon.com').rate, 2);
