@@ -54,7 +54,9 @@
   },
   "wholefoodsmarket.com": {
     "category": "groceries",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5411",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Whole Foods Market listed under 'Grocery stores and grocery delivery'. AwardWallet merchant lookup 2026-09-30 (Whole Foods): Chase 'Grocery stores and supermarkets', Amex 'Merchandise & Supplies - Groceries', Capital One 'Grocery'."
   },
   "kroger.com": {
     "category": "groceries",
@@ -64,16 +66,22 @@
   },
   "ralphs.com": {
     "category": "groceries",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5411",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Ralphs listed under 'Grocery stores and grocery delivery'. AwardWallet merchant lookup 2026-09-30 (Ralphs): Chase 'Grocery stores and supermarkets', Citi 'Merchandise - GROCERY STORE,SUPERMARKET', Capital One 'Grocery'."
   },
   "fredmeyer.com": {
     "category": "groceries",
     "confidence": "medium",
-    "note": "a Kroger banner that also sells general merchandise; filed as the supermarket it mostly is"
+    "note": "a Kroger banner that also sells general merchandise; filed as the supermarket it mostly is",
+    "mcc": "5411",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Fred Meyer listed under 'Grocery stores and grocery delivery'. AwardWallet merchant lookup 2026-09-30 (Fred Meyer): Chase 'Grocery stores and supermarkets', Citi 'Merchandise - GROCERY STORE,SUPERMARKET', Capital One 'Grocery'."
   },
   "kingsoopers.com": {
     "category": "groceries",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5411",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: King Soopers listed under 'Grocery stores and grocery delivery'. AwardWallet merchant lookup 2026-09-30 (King Soopers): Chase 'Grocery stores and supermarkets', Citi 'Merchandise - GROCERY STORE,SUPERMARKET', Capital One 'Grocery'."
   },
   "frysfood.com": {
     "category": "groceries",
@@ -93,7 +101,9 @@
   },
   "picknsave.com": {
     "category": "groceries",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5411",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Pick'n Save listed under 'Grocery stores and grocery delivery'. AwardWallet merchant lookup 2026-09-30: not found under 'Pick N Save', 'Picknsave' or \"Pick 'n Save\"."
   },
   "metromarket.net": {
     "category": "groceries",
@@ -145,7 +155,9 @@
   },
   "traderjoes.com": {
     "category": "groceries",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5411",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Trader Joe's listed under 'Grocery stores and grocery delivery'. AwardWallet merchant lookup 2026-09-30 (Trader Joe's): Chase 'Grocery stores and supermarkets', Citi 'Merchandise - GROCERY STORE,SUPERMARKET', Amex 'Merchandise & Supplies - Groceries', Capital One 'Grocery', Bilt 'Groceries'."
   },
   "target.com": {
     "category": "department_store",
@@ -428,7 +440,9 @@
   "chargepoint.com": {
     "category": "ev_charging",
     "confidence": "medium",
-    "note": "measured 2026-09-09: marketing home renders a price, so listing it mounts the dock there. Charging itself is paid at the charger; the web surface is account top-up"
+    "note": "measured 2026-09-09: marketing home renders a price, so listing it mounts the dock there. Charging itself is paid at the charger; the web surface is account top-up",
+    "mcc": "5552",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: ChargePoint Charging Station listed under Gas Stations and EV Charging Stations. AwardWallet merchant lookup 2026-09-30 (Chargepoint): Chase 'Electric vehicle charging', Citi 'Vehicle Services - ELECTRIC VEHICLE CHARGING'. Another Chargepoint descriptor has no Chase category, which AwardWallet reads as no Chase bonus seen there."
   },
   "electrifyamerica.com": {
     "category": "ev_charging",
@@ -438,7 +452,8 @@
   "evgo.com": {
     "category": "ev_charging",
     "confidence": "medium",
-    "note": "measured 2026-09-09: marketing home is signal-free. Web surface is plan signup"
+    "note": "measured 2026-09-09: marketing home is signal-free. Web surface is plan signup",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: EVgo Fast Charging Network listed under Gas Stations and EV Charging Stations. AwardWallet merchant lookup 2026-09-30: EVgo descriptors carry AwardWallet's own 'EV Charging Stations' and 'Gas Stations' labels, no per-issuer codings."
   },
   "t-mobile.com": {
     "category": "phone",
@@ -515,18 +530,21 @@
   },
   "shell.us": {
     "category": "gas",
-    "confidence": "medium"
+    "confidence": "medium",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Shell listed under Gas Stations and EV Charging Stations. AwardWallet merchant lookup 2026-09-30 (Shell Oil): Chase 'Automated fuel dispensers' and 'Service stations', Citi 'AUTOMATED GAS DISPENSER' and 'SERVICE STATION', Amex 'Transportation - U.S. GAS STATIONS', Capital One 'Gas/Automotive' -- 5542 at the pump, 5541 inside, so no single code."
   },
   "exxon.com": {
     "category": "gas",
     "confidence": "medium",
     "redirects_to": "exxonmobilfuels.com",
-    "note": "measured 2026-09-09: client-side redirect to exxonmobilfuels.com, so this row matches almost nothing now. Kept for stale links only"
+    "note": "measured 2026-09-09: client-side redirect to exxonmobilfuels.com, so this row matches almost nothing now. Kept for stale links only",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: ExxonMobil listed under Gas Stations and EV Charging Stations. AwardWallet merchant lookup 2026-09-30 (an ExxonMobil station): Amex 'Transportation - Fuel' and 'Transportation - U.S. GAS STATIONS'."
   },
   "exxonmobilfuels.com": {
     "category": "gas",
     "confidence": "medium",
-    "note": "measured 2026-09-09: the live Exxon/Mobil consumer site. Rewards, station finder and both brand pages sit under it, and the Rewards+ account is on rewards.exxonmobilfuels.com, which the suffix walk covers. Home is signal-free; /en/rewards renders a price"
+    "note": "measured 2026-09-09: the live Exxon/Mobil consumer site. Rewards, station finder and both brand pages sit under it, and the Rewards+ account is on rewards.exxonmobilfuels.com, which the suffix walk covers. Home is signal-free; /en/rewards renders a price",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: ExxonMobil listed under Gas Stations and EV Charging Stations. AwardWallet merchant lookup 2026-09-30 (an ExxonMobil station): Amex 'Transportation - Fuel' and 'Transportation - U.S. GAS STATIONS'."
   },
   "ihg.com": {
     "category": "travel_hotel",
@@ -678,35 +696,43 @@
   },
   "planetfitness.com": {
     "category": "fitness",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Planet Fitness listed under Gyms/Fitness Centers, which pays on membership fees. AwardWallet merchant lookup 2026-09-30: no per-issuer codings."
   },
   "lafitness.com": {
     "category": "fitness",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: LA Fitness listed under Gyms/Fitness Centers, which pays on membership fees. AwardWallet merchant lookup 2026-09-30 (La Fitness Monthly Membership): Amex 'Entertainment'."
   },
   "24hourfitness.com": {
     "category": "fitness",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: 24 Hour Fitness listed under Gyms/Fitness Centers, which pays on membership fees. AwardWallet merchant lookup 2026-09-30: no per-issuer codings."
   },
   "equinox.com": {
     "category": "fitness",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Equinox listed under Gyms/Fitness Centers, which pays on membership fees. AwardWallet merchant lookup 2026-09-30 (Equinox): Amex 'Entertainment'."
   },
   "crunch.com": {
     "category": "fitness",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Crunch Fitness listed under Gyms/Fitness Centers, which pays on membership fees. AwardWallet merchant lookup 2026-09-30: no per-issuer codings."
   },
   "orangetheory.com": {
     "category": "fitness",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Orangetheory Fitness listed under Gyms/Fitness Centers, which pays on membership fees. AwardWallet merchant lookup 2026-09-30: no per-issuer codings."
   },
   "lifetime.life": {
     "category": "fitness",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Life Time Fitness listed under Gyms/Fitness Centers, which pays on membership fees. AwardWallet merchant lookup 2026-09-30: no per-issuer codings for Life Time Athletic."
   },
   "anytimefitness.com": {
     "category": "fitness",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Anytime Fitness listed under Gyms/Fitness Centers, which pays on membership fees. AwardWallet merchant lookup 2026-09-30: no per-issuer codings."
   },
   "hertz.com": {
     "category": "car_rental",
@@ -835,19 +861,23 @@
   },
   "cricketwireless.com": {
     "category": "phone",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Cricket Wireless listed under Cell Phone Providers, which covers bills and phones bought from the provider. AwardWallet merchant lookup 2026-09-30: its descriptors carry AwardWallet's own 'Telecommunication Services' label, no per-issuer codings."
   },
   "metrobyt-mobile.com": {
     "category": "phone",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: MetroPCS Wireless listed under Cell Phone Providers, which covers bills and phones bought from the provider. AwardWallet merchant lookup 2026-09-30: its descriptors carry AwardWallet's own 'Telecommunication Services' label, no per-issuer codings."
   },
   "boostmobile.com": {
     "category": "phone",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Boost Mobile listed under Cell Phone Providers, which covers bills and phones bought from the provider. AwardWallet merchant lookup 2026-09-30: its descriptors carry AwardWallet's own 'Telecommunication Services' label, no per-issuer codings."
   },
   "consumercellular.com": {
     "category": "phone",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Consumer Cellular listed under Cell Phone Providers, which covers bills and phones bought from the provider. AwardWallet merchant lookup 2026-09-30: its descriptors carry AwardWallet's own 'Telecommunication Services' label, no per-issuer codings."
   },
   "cox.com": {
     "category": "internet_cable",
