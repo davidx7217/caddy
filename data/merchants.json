@@ -2,15 +2,21 @@
   "_comment": "Domain -> normalized category. issuer_overrides encode the known disputes (e.g. Amex does not treat Instacart as a US supermarket). confidence: high|medium|low, shown in the popup. mcc_source records how a row was checked against the way purchases actually code: an issuer's own merchant list or a lookup of real statement codings, with the date. mcc, where present, is the Visa merchant category code that evidence names (e.g. a Chase label that is the code's own description). Rows without mcc_source are still unverified seed data.",
   "doordash.com": {
     "category": "dining",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5812",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29 (Doordash.com): Chase 'Eating places and Restaurants'."
   },
   "ubereats.com": {
     "category": "dining",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5812",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Chase 'Eating places and Restaurants', Citi 'Restaurants - EATING PLACE,RESTAURANT', Amex 'Restaurant', Capital One and Bilt 'dining'."
   },
   "grubhub.com": {
     "category": "dining",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5812",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29 (Grubhub/Seamless): Chase 'Eating places and Restaurants', Citi 'Restaurants - EATING PLACE,RESTAURANT', Amex 'Restaurant', Capital One 'dining'."
   },
   "opentable.com": {
     "category": "dining",
@@ -31,7 +37,9 @@
   },
   "seamless.com": {
     "category": "dining",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5812",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29 (Grubhub/Seamless): Chase 'Eating places and Restaurants', Citi 'Restaurants - EATING PLACE,RESTAURANT', Amex 'Restaurant', Capital One 'dining'."
   },
   "instacart.com": {
     "category": "groceries",
@@ -40,7 +48,9 @@
       "amex": "other",
       "barclays": "other"
     },
-    "note": "third-party grocery delivery. Chase and Citi overrides removed 2026-09-28: both issuers count grocery delivery that codes as a grocery store or supermarket (chase.com rewards-category-faq; Citi Strata Premier terms), and Instacart charges are observed coding exactly that way on Chase ('Grocery stores and supermarkets') and Citi ('GROCERY STORE,SUPERMARKET') statements (awardwallet.com/merchants/Instacart_62245547, read 2026-09-28). amex kept: Amex's supermarket rate needs a merchant Amex classifies as a supermarket and its rewards-info pages do not say whether Instacart is one; Amex statements show it as 'Merchandise & Supplies - Groceries'. barclays: the JetBlue and other co-brand reward rules withhold bonus points from purchases made through third parties."
+    "note": "third-party grocery delivery. Chase and Citi overrides removed 2026-09-28: both issuers count grocery delivery that codes as a grocery store or supermarket (chase.com rewards-category-faq; Citi Strata Premier terms), and Instacart charges are observed coding exactly that way on Chase ('Grocery stores and supermarkets') and Citi ('GROCERY STORE,SUPERMARKET') statements (awardwallet.com/merchants/Instacart_62245547, read 2026-09-28). amex kept: Amex's supermarket rate needs a merchant Amex classifies as a supermarket and its rewards-info pages do not say whether Instacart is one; Amex statements show it as 'Merchandise & Supplies - Groceries'. barclays: the JetBlue and other co-brand reward rules withhold bonus points from purchases made through third parties.",
+    "mcc": "5411",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Chase 'Grocery stores and supermarkets', Citi 'Merchandise - GROCERY STORE,SUPERMARKET', Capital One 'Grocery', Bilt 'Groceries', Amex 'Merchandise & Supplies - Groceries'. Two other Instacart descriptors show Amex 'Merchandise & Supplies' and 'Merchandise & Supplies - U.S. Supermarkets'."
   },
   "wholefoodsmarket.com": {
     "category": "groceries",
@@ -48,11 +58,80 @@
   },
   "kroger.com": {
     "category": "groceries",
+    "confidence": "high",
+    "mcc": "5411",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Kroger listed under 'Grocery stores and grocery delivery'. AwardWallet merchant lookup 2026-09-30 (Kroger): Chase 'Grocery stores and supermarkets', Citi 'Merchandise - GROCERY STORE,SUPERMARKET', Amex 'Merchandise & Supplies - Groceries', Capital One 'Grocery'."
+  },
+  "ralphs.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "fredmeyer.com": {
+    "category": "groceries",
+    "confidence": "medium",
+    "note": "a Kroger banner that also sells general merchandise; filed as the supermarket it mostly is"
+  },
+  "kingsoopers.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "frysfood.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "smithsfoodanddrug.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "qfc.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "marianos.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "picknsave.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "metromarket.net": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "dillons.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "bakersplus.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "citymarket.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "gerbes.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "jaycfoods.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "pay-less.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "harristeeter.com": {
+    "category": "groceries",
     "confidence": "high"
   },
   "safeway.com": {
     "category": "groceries",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5411",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Safeway listed under 'Grocery stores and grocery delivery'. AwardWallet merchant lookup 2026-09-30 (Safeway): Chase 'Grocery stores and supermarkets', Citi 'Merchandise - GROCERY STORE,SUPERMARKET', Amex 'Merchandise & Supplies - Groceries', Capital One 'Grocery', Bilt 'Groceries'."
   },
   "freshdirect.com": {
     "category": "groceries",
@@ -60,7 +139,9 @@
   },
   "publix.com": {
     "category": "groceries",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5411",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Publix listed under 'Grocery stores and grocery delivery'. AwardWallet merchant lookup 2026-09-30 (Publix): Chase 'Grocery stores and supermarkets', Capital One 'Grocery', Bilt 'Groceries'."
   },
   "traderjoes.com": {
     "category": "groceries",
@@ -82,19 +163,26 @@
   },
   "macys.com": {
     "category": "department_store",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5311",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Macy's listed under Department Stores, where 'most online purchases from these merchants also qualify'. AwardWallet merchant lookup 2026-09-30 (Macys): Amex 'Merchandise & Supplies - Department Stores'; 'Macys .com' descriptors carry only AwardWallet's own labels."
   },
   "kohls.com": {
     "category": "department_store",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5311",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Kohl's listed under Department Stores, where 'most online purchases from these merchants also qualify'. AwardWallet merchant lookup 2026-09-30: Kohls.com and Kohls descriptors carry only AwardWallet's own 'Department Stores' label, no per-issuer codings."
   },
   "costco.com": {
     "category": "wholesale_club",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: 'E Commerce Costco' descriptors carry only AwardWallet's own 'Wholesale Clubs' and 'Merchandise' labels, no per-issuer codings; the warehouse descriptor 'Costco Whse' is Chase 'Wholesale Clubs'."
   },
   "samsclub.com": {
     "category": "wholesale_club",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5300",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29 (Samsclub.com): Chase 'Wholesale Clubs', Amex 'Merchandise & Supplies - Wholesale Stores'. Its fuel descriptor is Chase 'Automated fuel dispensers'."
   },
   "bjs.com": {
     "category": "wholesale_club",
@@ -111,7 +199,9 @@
   "amazon.com": {
     "category": "online_retail",
     "confidence": "high",
-    "note": "most cards have no online-retail bonus; expect the 2% catch-all to win"
+    "note": "most cards have no online-retail bonus; expect the 2% catch-all to win",
+    "mcc": "5942",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29 (Amazon.com): Chase 'BOOK STORES', Amex 'Merchandise & Supplies', Capital One 'Merchandise'; another Amazon.com descriptor shows Amex 'Merchandise & Supplies - Internet Purchase', Capital One 'Internet'."
   },
   "ebay.com": {
     "category": "online_retail",
@@ -123,7 +213,9 @@
   },
   "bestbuy.com": {
     "category": "electronics",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5732",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Bestbuy.com descriptors show Amex 'Merchandise & Supplies - U.S. Electronic Goods and Software' and 'Merchandise & Supplies - Internet Purchase'; a Best Buy store descriptor is Chase 'Electronics stores', Capital One 'Merchandise'. U.S. Bank Cash+ sample merchants 2026-09-30: Bestbuy.com listed under Electronics Stores by name."
   },
   "wayfair.com": {
     "category": "online_retail",
@@ -167,7 +259,9 @@
   },
   "newegg.com": {
     "category": "electronics",
-    "confidence": "medium"
+    "confidence": "medium",
+    "mcc": "5734",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-30 (Newegg Inc.): Chase 'Computer software stores', Capital One 'Merchandise'. U.S. Bank Cash+ sample merchants 2026-09-30: Newegg.com listed under Electronics Stores all the same."
   },
   "delta.com": {
     "category": "travel_air",
@@ -255,19 +349,27 @@
   },
   "uber.com": {
     "category": "travel_ground",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "4121",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Chase 'Taxicabs and limousines', Citi 'Other Travel - TAXICAB/LIMOUSINE', Amex 'Transportation - Taxis & Coach', Bilt 'RIDESHARE'."
   },
   "lyft.com": {
     "category": "travel_ground",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "4121",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Chase 'Taxicabs and limousines', Citi 'Other Travel - TAXICAB/LIMOUSINE', Amex 'Transportation - Taxis & Coach', Capital One 'Other Travel'."
   },
   "cvs.com": {
     "category": "drugstore",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5912",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29 (Www.cvs.com): Chase 'Drug stores and pharmacies'."
   },
   "walgreens.com": {
     "category": "drugstore",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5912",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29 (Walgreens): Chase 'Drug stores and pharmacies', Citi 'Health Care - DRUG STORES,PHARMACIES', Amex 'Merchandise & Supplies - Pharmacies'."
   },
   "riteaid.com": {
     "category": "drugstore",
@@ -277,18 +379,24 @@
     "category": "streaming",
     "confidence": "high",
     "content_site": true,
-    "note": "measured 2026-09-09: no JSON-LD and no og:type on any surface, so only real payment machinery can tell the browse grid from the payment step"
+    "note": "measured 2026-09-09: no JSON-LD and no og:type on any surface, so only real payment machinery can tell the browse grid from the payment step",
+    "mcc": "4899",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Chase 'Cable and other pay television (previously Cable Services)', Citi 'Services - CABLE,SATELLITE,PAY TV/RADIO SERVICES', Capital One 'Phone/Cable', Amex 'Communications - Cable & Internet Comm'. myFICO cardholder posts: U.S. Bank's transaction export gave 4899 (2021-12-30), and Discover statements showed 'Cable Satellite and Other Pay Television and Radio Services' (2023-01-05)."
   },
   "spotify.com": {
     "category": "streaming",
     "confidence": "high",
-    "note": "measured 2026-09-09 and deliberately NOT content_site: unlike netflix, spotify splits the surfaces. open.spotify.com (the player) carries no price and is already dark; spotify.com/us/premium/ is where you subscribe and should show. Flagging would suppress the second and gain nothing on the first. Latent risk: the player is dark only because price is false"
+    "note": "measured 2026-09-09 and deliberately NOT content_site: unlike netflix, spotify splits the surfaces. open.spotify.com (the player) carries no price and is already dark; spotify.com/us/premium/ is where you subscribe and should show. Flagging would suppress the second and gain nothing on the first. Latent risk: the player is dark only because price is false",
+    "mcc": "4899",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29 (Spotify Music Subs USD): Chase 'Cable and other pay television (previously Cable Services)', Citi 'Services - CABLE,SATELLITE,PAY TV/RADIO SERVICES', Capital One 'Phone/Cable', Amex 'Communications - Cable & Internet Comm'. Billed through Google, it shows only AwardWallet's own 'Internet' label."
   },
   "hulu.com": {
     "category": "streaming",
     "confidence": "high",
     "content_site": true,
-    "note": "measured 2026-09-09: same signal shape as netflix.com -- price only, nothing structural"
+    "note": "measured 2026-09-09: same signal shape as netflix.com -- price only, nothing structural",
+    "mcc": "4899",
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Chase 'Cable and other pay television (previously Cable Services)', Capital One 'Phone/Cable', Amex 'Communications - Cable & Internet Comm'. myFICO cardholder posts: U.S. Bank's transaction export gave 4899 (2021-12-30), and Discover statements showed 'Cable Satellite and Other Pay Television and Radio Services' (2023-01-05)."
   },
   "disneyplus.com": {
     "category": "streaming",
@@ -480,7 +588,9 @@
   "apple.com": {
     "category": "electronics",
     "confidence": "high",
-    "note": "Apple Card's 3% at Apple is merchant-scoped to this row, and the suffix walk carries it to every apple.com subdomain"
+    "note": "Apple Card's 3% at Apple is merchant-scoped to this row, and the suffix walk carries it to every apple.com subdomain",
+    "mcc": "5732",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: 'Apple Store' listed under Electronics Stores, which 'includes most online purchases from merchants like Bestbuy.com'. AwardWallet merchant lookup 2026-09-30: 'Apl Apple Online Store' descriptors show no per-issuer codings; App Store and iCloud billing ('Apple.com/bill') carries AwardWallet's own 'Digital goods: large merchant' label."
   },
   "bhphotovideo.com": {
     "category": "electronics",
@@ -539,23 +649,32 @@
   },
   "dickssportinggoods.com": {
     "category": "sporting_goods",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5941",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Dick's Sporting Goods listed under Sporting Goods Stores, which includes most online purchases but not, for example, Cabelas.com. AwardWallet merchant lookup 2026-09-30: 'Dickssportinggoods.com' shows no per-issuer codings."
   },
   "academy.com": {
     "category": "sporting_goods",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5941",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Academy Sports + Outdoors listed under Sporting Goods Stores, which includes most online purchases but not, for example, Cabelas.com."
   },
   "rei.com": {
     "category": "sporting_goods",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5941",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: REI listed under Sporting Goods Stores, which includes most online purchases but not, for example, Cabelas.com. AwardWallet merchant lookup 2026-09-30 (Rei.com): Chase 'SPORTING GOODS STORES', Capital One 'Merchandise'."
   },
   "basspro.com": {
     "category": "sporting_goods",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Bass Pro Shops listed under Sporting Goods Stores, which includes most online purchases but not, for example, Cabelas.com. Cabela's is Bass Pro's sister chain, so basspro.com orders may code differently too; no statement coding checked."
   },
   "scheels.com": {
     "category": "sporting_goods",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5941",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Scheels listed under Sporting Goods Stores, which includes most online purchases but not, for example, Cabelas.com."
   },
   "planetfitness.com": {
     "category": "fitness",
@@ -734,13 +853,13 @@
     "category": "internet_cable",
     "confidence": "high",
     "mcc": "4899",
-    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Cox descriptors show 'Cable' and 'Select Streaming Services'; no per-issuer codings."
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Cox descriptors show 'Cable' and 'Select Streaming Services'; no per-issuer codings. myFICO cardholder datapoint 2021-08-24: a Cox Internet bill earned Capital One SavorOne's 3% streaming rate, labelled 'Phone/Cable' -- Capital One's label for Comcast and Spectrum."
   },
   "optimum.com": {
     "category": "internet_cable",
     "confidence": "high",
     "mcc": "4899",
-    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Optimum descriptors show 'Cable'; Optimum Mobile shows 'Telecommunication Services'."
+    "mcc_source": "AwardWallet merchant lookup 2026-09-29: Optimum descriptors show 'Cable'; Optimum Mobile shows 'Telecommunication Services'. myFICO cardholder datapoints: Optimum bills earned U.S. Bank's 'TV, Internet & Streaming' 5% on an Elan Max Cash Preferred (2021-12-30) and a Cash+ (2024-04-13), a category that also pays internet-only codes; another poster got 1% on both an 'Optimum Online' bill and a gas bill (2024-04-13)."
   },
   "directv.com": {
     "category": "internet_cable",
@@ -791,17 +910,23 @@
   "nordstrom.com": {
     "category": "department_store",
     "confidence": "high",
-    "note": "Added 2026-09-28 for the Nordstrom cards."
+    "note": "Added 2026-09-28 for the Nordstrom cards.",
+    "mcc": "5311",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Nordstrom listed under Department Stores, where 'most online purchases from these merchants also qualify'. AwardWallet merchant lookup 2026-09-30 (Nordstrom): Amex 'Merchandise & Supplies - Department Stores'; its online descriptor shows no per-issuer codings."
   },
   "nordstromrack.com": {
     "category": "department_store",
     "confidence": "medium",
-    "note": "Nordstrom's off-price chain, filed with its parent as a department store. Added 2026-09-28: the Nordstrom credit cards take 5% off here and earn no points."
+    "note": "Nordstrom's off-price chain, filed with its parent as a department store. Added 2026-09-28: the Nordstrom credit cards take 5% off here and earn no points.",
+    "mcc": "5311",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Nordstrom Rack listed under Department Stores, where 'most online purchases from these merchants also qualify'. AwardWallet merchant lookup 2026-09-30: Nordstrom Rack descriptors carry only AwardWallet's own labels, no per-issuer codings."
   },
   "jcpenney.com": {
     "category": "department_store",
     "confidence": "high",
-    "note": "Added 2026-09-28 for the JCPenney cards."
+    "note": "Added 2026-09-28 for the JCPenney cards.",
+    "mcc": "5311",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: JCPenney listed under Department Stores, where 'most online purchases from these merchants also qualify'. AwardWallet merchant lookup 2026-09-30 (Jcpenney): Chase 'Department stores', Capital One 'Merchandise'."
   },
   "ulta.com": {
     "category": "other",

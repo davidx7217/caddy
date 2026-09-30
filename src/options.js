@@ -1,5 +1,5 @@
 import { pruneInstances, fontFaceCss, fontStack } from './engine.js';
-import { CURRENCY, ISSUER, KIND_LABEL, kindOf, mark, money } from './issuers.js';
+import { CURRENCY, ISSUER, KIND_LABEL, kindOf, mark, matchesSearch, money } from './issuers.js';
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c =>
@@ -262,7 +262,7 @@ function blockPager(shown, matched, pages) {
 function matchesFilters(id) {
   const p = products[id];
   const q = f.q.trim().toLowerCase();
-  if (q && !`${p.name} ${ISSUER[p.issuer] || p.issuer}`.toLowerCase().includes(q)) return false;
+  if (q && !matchesSearch(p, q)) return false;
   if (f.kind && kindOf(p.currency) !== f.kind) return false;
   if (f.scope && (f.scope === 'business') !== !!p.business) return false;
   if (f.fee === 'none' && p.annual_fee) return false;

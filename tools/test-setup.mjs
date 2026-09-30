@@ -8,6 +8,7 @@
 // node cannot do without an HTML parser this project has no dependency for.
 import { readFileSync } from 'node:fs';
 import { tunableCards, liveCurrencies, steps, toInstances, resumeAt } from '../src/setup.js';
+import { matchesSearch } from '../src/issuers.js';
 
 const load = n => JSON.parse(readFileSync(new URL(`../data/${n}.json`, import.meta.url), 'utf8'));
 const products = load('cards'), baseVals = load('valuations');
@@ -35,11 +36,17 @@ eq('no picks: no currency earns a cents-per-point field', cur([]), []);
 // Six later that day: Bilt Obsidian asks which of dining or grocery earns its 3X.
 // Eight after the store cards: both Nordstrom cards ask for the Nordy Club status.
 // Ten after the missing tiers: both Premium Rewards cards ask for the BofA Rewards tier.
-eq('exactly ten cards in the catalogue ask the user something',
+// Eleven since 2026-09-29: Amex Business Gold asks which two of six categories earn its 4X.
+// Twelve the same day: World of Hyatt Business asks which three of eight earn its 2X.
+// Fifteen later that day: BofA's three business cards ask for the Preferred Rewards
+// for Business tier, and Customized Cash for its 3% category too.
+eq('exactly fifteen cards in the catalogue ask the user something',
    tunableCards(Object.keys(products).filter(k => !k.startsWith('_')), products),
    ['bofa-customized-cash', 'usbank-cash-plus', 'bofa-unlimited-cash', 'bofa-travel-rewards',
-    'citi-macys', 'column-bilt-obsidian', 'td-nordstrom-card', 'td-nordstrom-visa',
-    'bofa-premium-rewards', 'bofa-premium-rewards-elite']);
+    'citi-macys', 'column-bilt-obsidian', 'amex-business-gold', 'td-nordstrom-card',
+    'td-nordstrom-visa', 'bofa-premium-rewards', 'bofa-premium-rewards-elite',
+    'chase-hyatt-business', 'bofa-business-unlimited-cash', 'bofa-business-customized-cash',
+    'bofa-business-travel-rewards']);
 eq('a tier-only card earns the fine-tune step with no category to choose',
    ids(['bofa-unlimited-cash']), ['intro', 'cards', 'tune', 'mode']);
 
@@ -119,6 +126,23 @@ eq('a wallet earns only what its own cards pay in, whatever else the file lists'
 eq('...and the whole catalogue earns every currency in the file except cash',
    cur(Object.keys(products).filter(k => !k.startsWith('_'))),
    Object.keys(baseVals).filter(k => !k.startsWith('_') && k !== 'cash'));
+
+// ---------- the catalogue search, setup's and Settings' both ----------
+// Added 2026-09-29 for the Kroger card, sold as sixteen banners' cards and shown
+// under one name: the other fifteen are `aliases`, searched but never displayed.
+const find = q => Object.keys(products).filter(k => !k.startsWith('_') && matchesSearch(products[k], q));
+eq('the Kroger card is found by any of its sixteen banners',
+   ['kroger', 'ralphs', 'fred meyer', 'king soopers', 'qfc', 'pick \'n save', 'smith\'s rewards']
+     .map(q => find(q).includes('firstbanktrust-kroger')), Array(7).fill(true));
+eq('...while the name it shows carries only Kroger\'s',
+   products['firstbanktrust-kroger'].name, 'Kroger Rewards World Elite Mastercard');
+eq('apostrophes do not matter, curly ones included: "frys" finds Fry\'s, "kohls" Kohl\'s',
+   [find('frys').includes('firstbanktrust-kroger'),
+    ...['kohls', 'kohl\'s', 'kohl\u2019s'].map(q => find(q).includes('capitalone-kohls'))], [true, true, true, true]);
+eq('name and issuer still match as before',
+   [find('Sapphire Reserve').includes('chase-sapphire-reserve'), find('goldman sachs').includes('goldman-apple-card')],
+   [true, true]);
+eq('...and a search that names nothing finds nothing', find('nothing like this'), []);
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

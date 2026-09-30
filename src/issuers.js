@@ -19,14 +19,14 @@ const CHIP = {
   citi: '#0a4a86', capitalone: '#c0392b', discover: '#e8620c',
   wellsfargo: '#b3232c', usbank: '#1b4a7a', goldman: '#6f8fb5',
   td: '#2e8540', synchrony: '#c99a00', barclays: '#00aeef', usaa: '#3d6fa8',
-  navyfederal: '#004b8d', column: '#8a8580', comenity: '#7b4fa0'
+  navyfederal: '#004b8d', column: '#8a8580', comenity: '#7b4fa0', firstbanktrust: '#2a8c9c'
 };
 const MONOGRAM = {
   chase: 'CH', robinhood: 'RH', bofa: 'BA', amex: 'AX',
   citi: 'CT', capitalone: 'C1', discover: 'DS',
   wellsfargo: 'WF', usbank: 'US', goldman: 'GS',
   td: 'TD', synchrony: 'SY', barclays: 'BC', usaa: 'UA',
-  navyfederal: 'NF', column: 'CN', comenity: 'CM'
+  navyfederal: 'NF', column: 'CN', comenity: 'CM', firstbanktrust: 'FB'
 };
 
 /** Full issuer names, for anywhere the two-letter mark is not enough on its own. */
@@ -36,7 +36,7 @@ export const ISSUER = {
   discover: 'Discover', wellsfargo: 'Wells Fargo', usbank: 'U.S. Bank',
   goldman: 'Goldman Sachs', td: 'TD Bank', synchrony: 'Synchrony',
   barclays: 'Barclays', usaa: 'USAA', navyfederal: 'Navy Federal', column: 'Column N.A.',
-  comenity: 'Comenity Capital Bank'
+  comenity: 'Comenity Capital Bank', firstbanktrust: 'First Bank & Trust'
 };
 
 export const CURRENCY = {
@@ -49,10 +49,18 @@ export const CURRENCY = {
   usaa: 'USAA points', bilt: 'Bilt points', ulta: 'Ulta points', usbank: 'U.S. Bank points',
   wyndham: 'Wyndham points', emirates: 'Skywards Miles', frontier: 'Frontier Miles',
   milesandmore: 'Miles & More miles', carnival: 'Carnival Rewards points', gm: 'GM Rewards points',
-  breeze: 'BreezePoints', gmbusiness: 'GM Business Card points'
+  breeze: 'BreezePoints', gmbusiness: 'GM Business Card points', kroger: 'Kroger Points'
 };
 
 export const money = c => c ? `$${c}/yr` : 'no annual fee';
+
+// The catalogue search, for setup's card step and Settings alike: name, issuer,
+// and `aliases`, the other names one card is sold under -- the Kroger card is
+// sold as sixteen banners' cards. Searched, never shown. Apostrophes drop out on
+// both sides, curly ones too, so "frys" finds Fry's and "kohls" Kohl's.
+const plain = s => s.toLowerCase().replace(/['\u2019]/g, '');
+export const matchesSearch = (p, q) =>
+  plain([p.name, ISSUER[p.issuer] || p.issuer, ...(p.aliases || [])].join(' ')).includes(plain(q.trim()));
 
 // What a card pays you in, for filtering. Split on the CURRENCY, not on how the
 // issuer advertises the card, because the currency is what `valuations.json`
@@ -70,7 +78,8 @@ const KIND = {
   southwest: 'points', aa: 'points', marriott: 'points', hilton: 'points',
   hyatt: 'points', ihg: 'points', jetblue: 'points', usaa: 'points', bilt: 'points',
   ulta: 'points', usbank: 'points', wyndham: 'points', emirates: 'points', frontier: 'points',
-  milesandmore: 'points', carnival: 'points', gm: 'points', breeze: 'points', gmbusiness: 'points'
+  milesandmore: 'points', carnival: 'points', gm: 'points', breeze: 'points', gmbusiness: 'points',
+  kroger: 'points'
 };
 
 export const kindOf = currency => KIND[currency] || 'points';

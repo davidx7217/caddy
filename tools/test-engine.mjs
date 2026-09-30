@@ -1096,7 +1096,7 @@ eq('...and its 5x hotels rate stays a portal note, never a ranking',
      cards.filter(p => !ISSUER[p.issuer] || !CURRENCY[p.currency]).map(p => p.id), []);
   eq('every card is ranked, 1 to the catalogue size, with no gaps and no repeats',
      cards.map(p => p.common).sort((a, b) => a - b), Array.from({ length: cards.length }, (_, i) => i + 1));
-  eq('...and there are 140 of them', cards.length, 140);
+  eq('...and there are 152 of them', cards.length, 152);
   // A store card that names a domain nothing resolves to could never rank at all.
   eq('every store a store card works at is in merchants.json',
      cards.flatMap(p => (p.only_at || []).filter(d => !merchants[d]).map(d => `${p.id}:${d}`)), []);
@@ -1301,10 +1301,10 @@ eq('Cash+ select clothing stores: only the named ones',
    ['gap.com', 'jcrew.com', 'ae.com', 'hm.com', 'nike.com', 'tjmaxx.tjx.com']
      .map(h => on('usbank-cash-plus', h, plus(['five_clothing'])).rate), [5, 5, 5, 1, 1, 1]);
 // Wells Fargo defines Autograph's streaming by type, and pay TV is one of them.
-// Comcast and Charter code as pay TV by two sources; Cox and Optimum by one.
-eq('Autograph: 3x at directv.com, dish.com, xfinity.com and spectrum.com, still 1x at cox.com and optimum.com',
+// Comcast, Charter and Cox code as pay TV by two sources; Optimum by one.
+eq('Autograph: 3x at directv.com, dish.com, xfinity.com, spectrum.com and cox.com, still 1x at optimum.com',
    ['directv.com', 'dish.com', 'xfinity.com', 'spectrum.com', 'cox.com', 'optimum.com']
-     .map(h => on('wellsfargo-autograph', h).rate), [3, 3, 3, 3, 1, 1]);
+     .map(h => on('wellsfargo-autograph', h).rate), [3, 3, 3, 3, 3, 1]);
 // The Freedom cards' 2% on Lyft, on the card pages 2026-09-29. Dated outside
 // Freedom Flex's Q3 transit quarter so its 5x there does not mask the rule.
 {
@@ -1501,14 +1501,10 @@ eq('Navy Federal GO REWARDS: 3x at restaurants, 2x on gas',
 
 eq('Bilt Blue: 1x everywhere, worth 1.25%',
    [tier('column-bilt-blue', 'amazon.com').rate, tier('column-bilt-blue', 'amazon.com').value], [1, 1.25]);
-eq('...3x on Lyft once the accounts are linked, and says so',
-   [tier('column-bilt-blue', 'lyft.com').rate, tier('column-bilt-blue', 'lyft.com').needsActivation], [3, true]);
-eq('...but not on Uber', tier('column-bilt-blue', 'uber.com').rate, 1);
-eq('...with Bilt Travel as a portal note, 3x on hotels and 2x on flights',
-   [store('hilton.com', 'column-bilt-blue').notes.map(n => n.text)[0],
-    store('delta.com', 'column-bilt-blue').notes.map(n => n.text)[0]],
-   ['Bilt Blue Card: 3x (3.75%) if you book through Bilt Travel instead',
-    'Bilt Blue Card: 2x (2.50%) if you book through Bilt Travel instead']);
+eq('...Lyft included: Bilt pays its 2x Lyft bonus to members whatever card pays',
+   tier('column-bilt-blue', 'lyft.com').rate, 1);
+eq('...so Double Cash beats it there, as it does whether or not Lyft is linked',
+   store('lyft.com', 'column-bilt-blue', 'citi-double-cash').winner.productId, 'citi-double-cash');
 eq('Bilt Obsidian: 3x on whichever of dining or grocery you pick, and only that one',
    [picked('column-bilt-obsidian', 'doordash.com', ['dining']).rate,
     picked('column-bilt-obsidian', 'kroger.com', ['dining']).rate,
@@ -1516,10 +1512,17 @@ eq('Bilt Obsidian: 3x on whichever of dining or grocery you pick, and only that 
     picked('column-bilt-obsidian', 'doordash.com', ['grocery']).rate], [3, 1, 3, 1]);
 eq('...grocery capped at $25,000 a year', picked('column-bilt-obsidian', 'kroger.com', ['grocery']).caveats[0],
    'Capped at $25,000 per year, then 1x');
-eq('...and 2x on other travel, booked anywhere',
-   ['delta.com', 'hotels.com', 'hertz.com'].map(h => tier('column-bilt-obsidian', h).rate), [2, 2, 2]);
-eq('Bilt Palladium: 2x everywhere, 4x on linked Lyft',
-   [tier('column-bilt-palladium', 'amazon.com').rate, tier('column-bilt-palladium', 'lyft.com').rate], [2, 4]);
+eq('...2x on travel booked direct with an airline, hotel or rental company',
+   ['delta.com', 'hilton.com', 'hertz.com'].map(h => tier('column-bilt-obsidian', h).rate), [2, 2, 2]);
+eq('...but 1x through a booking site, which codes as a travel agency',
+   ['hotels.com', 'expedia.com', 'airbnb.com'].map(h => tier('column-bilt-obsidian', h).rate), [1, 1, 1]);
+eq('...and 1x on Uber and Lyft: to Bilt, rideshare is not travel',
+   ['uber.com', 'lyft.com'].map(h => tier('column-bilt-obsidian', h).rate), [1, 1]);
+eq('Bilt Palladium: 2x everywhere, Lyft included',
+   [tier('column-bilt-palladium', 'amazon.com').rate, tier('column-bilt-palladium', 'lyft.com').rate], [2, 2]);
+eq('No Bilt card carries a Bilt Travel note: Bilt pays that bonus on any linked card',
+   ['column-bilt-blue', 'column-bilt-obsidian', 'column-bilt-palladium']
+     .flatMap(id => ['hilton.com', 'delta.com'].map(h => store(h, id).notes.length)), [0, 0, 0, 0, 0, 0]);
 
 // --- business cards, 2026-09-28 ------------------------------------------------
 // Amex, Capital One, Chase and Barclays, each read off its issuer's page that day.
@@ -1536,8 +1539,21 @@ eq('...and, unlike the consumer Platinum, 1x on a flight bought from the airline
    [tier('amex-business-platinum', 'delta.com').rate, tier('amex-platinum', 'delta.com').rate], [1, 5]);
 eq('...with its 5x as an Amex Travel note', noteAt('amex-business-platinum', 'delta.com'),
    'Amex Business Platinum Card: 5x (8.00%) if you book through Amex Travel instead');
-eq('Amex Business Gold: its top-two 4x is not ranked, so 1x at a restaurant',
+eq('Amex Business Gold: 1x at a restaurant until you pick your two 4x categories',
    tier('amex-business-gold', 'doordash.com').rate, 1);
+eq('...4x on each of the six once picked',
+   [['four_ads', 'ads.google.com'], ['four_electronics', 'bestbuy.com'], ['four_dining', 'doordash.com'],
+    ['four_gas', 'shell.us'], ['four_transit', 'uber.com'], ['four_wireless', 'verizon.com']]
+     .map(([pick, h]) => picked('amex-business-gold', h, [pick]).rate), [4, 4, 4, 4, 4, 4]);
+eq('...and only on the two picked',
+   ['doordash.com', 'shell.us', 'verizon.com', 'ads.google.com']
+     .map(h => picked('amex-business-gold', h, ['four_dining', 'four_gas']).rate), [4, 4, 1, 1]);
+eq('...not at Amazon, which Amex leaves out of electronics, nor at an EV charger',
+   [picked('amex-business-gold', 'amazon.com', ['four_electronics']).rate,
+    picked('amex-business-gold', 'evgo.com', ['four_gas']).rate], [1, 1]);
+eq('...under one $150,000 yearly cap the two picks share',
+   picked('amex-business-gold', 'doordash.com', ['four_dining']).caveats,
+   ['Capped at $150,000 per year, then 1x', 'Both picks share the cap.']);
 eq('...and 3x through Amex Travel is a note', noteAt('amex-business-gold', 'delta.com'),
    'Amex Business Gold Card: 3x (4.80%) if you book through Amex Travel instead');
 eq('Amex Blue Business Cash: 2% everywhere', tier('amex-blue-business-cash', 'amazon.com').rate, 2);
@@ -1782,14 +1798,127 @@ eq('IHG Premier Business: 10x at IHG, 5x on travel, OTAs included, dining, ads, 
    ['ihg.com', 'marriott.com', 'hotels.com', 'hertz.com', 'uber.com', 'doordash.com', 'ads.google.com',
     'staples.com', 'shell.us', 'amazon.com'].map(h => tier('chase-ihg-business-premier', h)?.rate),
    [10, 5, 5, 5, 5, 5, 5, 5, 5, 3]);
-eq('World of Hyatt Business: 4x at Hyatt, 2x at gyms, its top-three 2x left to the caution',
+eq('World of Hyatt Business: 4x at Hyatt, 2x at gyms, 1x on dining until you pick your three 2x categories',
    ['hyatt.com', 'planetfitness.com', 'doordash.com', 'amazon.com'].map(h => tier('chase-hyatt-business', h)?.rate),
    [4, 2, 1, 1]);
+eq('...2x on each of the eight once picked, internet, cable and phone on both of its categories',
+   [['top_dining', 'doordash.com'], ['top_shipping', 'ups.com'], ['top_air', 'united.com'],
+    ['top_transit', 'uber.com'], ['top_ads', 'ads.google.com'], ['top_car', 'hertz.com'],
+    ['top_gas', 'shell.us'], ['top_telecom', 'verizon.com'], ['top_telecom', 'xfinity.com']]
+     .map(([pick, h]) => picked('chase-hyatt-business', h, [pick])?.rate), Array(9).fill(2));
+eq('...and only on the three picked',
+   ['doordash.com', 'shell.us', 'hertz.com', 'united.com', 'ups.com']
+     .map(h => picked('chase-hyatt-business', h, ['top_dining', 'top_gas', 'top_car'])?.rate), [2, 2, 2, 1, 1]);
+eq('...uncapped, so a pick carries no caveat',
+   picked('chase-hyatt-business', 'doordash.com', ['top_dining'])?.caveats, []);
+eq('...not at an EV charger, nor on streaming, which its internet and cable does not name',
+   [picked('chase-hyatt-business', 'evgo.com', ['top_gas'])?.rate,
+    picked('chase-hyatt-business', 'netflix.com', ['top_telecom'])?.rate], [1, 1]);
 eq('Wyndham Earner Business: 8x at Wyndham, 5x on gas, EV charging, ads, shipping and office supply',
    ['wyndhamhotels.com', 'shell.us', 'evgo.com', 'ads.google.com', 'ups.com', 'staples.com', 'doordash.com']
      .map(h => tier('barclays-wyndham-earner-business', h)?.rate), [8, 5, 5, 5, 5, 5, 1]);
 eq('GM Business: 7x at GM\'s own web stores, 3x everywhere else',
    ['accessories.gmc.com', 'amazon.com'].map(h => tier('barclays-gm-business', h)?.rate), [7, 3]);
+
+// --- business cards from BofA, U.S. Bank, Wells Fargo and Citi, 2026-09-29 ----
+// Each read off its issuer's page that day, collapsed terms and category
+// definitions included.
+const BIZ2 = ['citi-costco-anywhere-business', 'usbank-amazon-prime-business', 'bofa-business-unlimited-cash',
+  'bofa-business-customized-cash', 'wellsfargo-signify-business-cash', 'citi-aadvantage-business',
+  'usbank-triple-cash-business', 'bofa-business-travel-rewards', 'usbank-business-altitude-connect',
+  'usbank-business-essentials', 'usbank-business-essentials-plus'];
+eq('all eleven are marked as business cards', BIZ2.filter(id => !products[id]?.business), []);
+const bofaBiz = (id, h, selections, t) =>
+  run(h, [{ productId: id, config: { selections, tier_multiplier: t } }], { now: new Date('2026-09-29T12:00:00') }).all[0];
+
+eq('Costco Anywhere Visa Business: 4% on gas and EV charging to $7,000 a year',
+   [tier('citi-costco-anywhere-business', 'shell.us')?.rate, tier('citi-costco-anywhere-business', 'evgo.com')?.caveats[0]],
+   [4, 'Capped at $7,000 per year, then 1x']);
+eq('...3% on dining, airfare, hotels, OTAs included, and car rental; 2% at costco.com',
+   ['doordash.com', 'delta.com', 'hotels.com', 'hertz.com', 'costco.com']
+     .map(h => tier('citi-costco-anywhere-business', h)?.rate), [3, 3, 3, 3, 2]);
+eq('...and 1% on transit and at another warehouse club',
+   ['uber.com', 'samsclub.com'].map(h => tier('citi-costco-anywhere-business', h)?.rate), [1, 1]);
+eq('Amazon Prime Business: 5% at amazon.com and Whole Foods, to $150,000 a year',
+   [tier('usbank-amazon-prime-business', 'amazon.com')?.rate, tier('usbank-amazon-prime-business', 'wholefoodsmarket.com')?.rate,
+    tier('usbank-amazon-prime-business', 'amazon.com')?.caveats[0]],
+   [5, 5, 'Capped at $150,000 per year, then 1x']);
+eq('...1% elsewhere, its top-three 2% left to the caution, and 5% through the Travel Center as a note',
+   [tier('usbank-amazon-prime-business', 'staples.com')?.rate, noteAt('usbank-amazon-prime-business', 'delta.com')],
+   [1, 'Amazon Prime Business Mastercard: 5x (5.00%) if you book through U.S. Bank Travel Center instead']);
+eq('BofA Business Advantage Unlimited Cash: 1.5% everywhere, 2.625% at Platinum Honors',
+   [tier('bofa-business-unlimited-cash', 'amazon.com')?.rate, bofaBiz('bofa-business-unlimited-cash', 'amazon.com', [], 1.75)?.rate],
+   [1.5, 2.625]);
+eq('BofA Business Advantage Customized Cash: 2% on dining with no pick, capped with the 3% at $50,000',
+   [tier('bofa-business-customized-cash', 'doordash.com')?.rate, tier('bofa-business-customized-cash', 'doordash.com')?.caveats[0],
+    tier('bofa-business-customized-cash', 'shell.us')?.rate],
+   [2, 'Capped at $50,000 per year, then 1x', 1]);
+eq('...3% on gas and EV charging, office supply, or travel, OTAs and rideshare included, as picked',
+   [...['shell.us', 'evgo.com'].map(h => bofaBiz('bofa-business-customized-cash', h, ['gas_ev'])?.rate),
+    bofaBiz('bofa-business-customized-cash', 'staples.com', ['office'])?.rate,
+    ...['delta.com', 'hotels.com', 'hertz.com', 'uber.com'].map(h => bofaBiz('bofa-business-customized-cash', h, ['travel'])?.rate)],
+   [3, 3, 3, 3, 3, 3, 3]);
+eq('...TV, telecom and wireless: phone, cable, and the streaming services that code as pay TV, not Disney+',
+   ['t-mobile.com', 'xfinity.com', 'netflix.com', 'spotify.com', 'hulu.com', 'youtube.com', 'disneyplus.com']
+     .map(h => bofaBiz('bofa-business-customized-cash', h, ['telecom'])?.rate), [3, 3, 3, 3, 3, 3, 1]);
+eq('...times the Preferred Rewards for Business tier: 5.25% and 3.5% at Platinum Honors',
+   [bofaBiz('bofa-business-customized-cash', 'staples.com', ['office'], 1.75)?.rate,
+    bofaBiz('bofa-business-customized-cash', 'doordash.com', [], 1.75)?.rate], [5.25, 3.5]);
+eq('Wells Fargo Signify Business Cash: 2% everywhere',
+   ['amazon.com', 'delta.com'].map(h => tier('wellsfargo-signify-business-cash', h)?.rate), [2, 2]);
+eq('Citi AAdvantage Business: 2x at aa.com, worth 3.4%, 1x on another airline',
+   [tier('citi-aadvantage-business', 'aa.com')?.value, tier('citi-aadvantage-business', 'delta.com')?.rate], [3.4, 1]);
+eq('...2x on car rental, gas, phone, cable and satellite, and the streaming services that code as pay TV',
+   ['hertz.com', 'shell.us', 't-mobile.com', 'xfinity.com', 'netflix.com', 'spotify.com', 'hulu.com', 'youtube.com']
+     .map(h => tier('citi-aadvantage-business', h)?.rate), Array(8).fill(2));
+eq('...1x on EV charging, dining, and streaming whose code is not on record',
+   ['evgo.com', 'doordash.com', 'disneyplus.com'].map(h => tier('citi-aadvantage-business', h)?.rate), [1, 1, 1]);
+eq('U.S. Bank Triple Cash Business: 3% on restaurants, office supply, phone, gas and EV charging',
+   ['doordash.com', 'staples.com', 't-mobile.com', 'shell.us', 'evgo.com']
+     .map(h => tier('usbank-triple-cash-business', h)?.rate), [3, 3, 3, 3, 3]);
+eq('...1% at fast food, which U.S. Bank does not count as restaurants',
+   ['chipotle.com', 'starbucks.com'].map(h => tier('usbank-triple-cash-business', h)?.rate), [1, 1]);
+eq('...with 5% through the Travel Center as a note',
+   noteAt('usbank-triple-cash-business', 'hilton.com'),
+   'U.S. Bank Triple Cash Rewards Business: 5x (5.00%) if you book through U.S. Bank Travel Center instead');
+eq('BofA Business Advantage Travel Rewards: 1.5x everywhere, 3x through the Travel Center as a note',
+   [tier('bofa-business-travel-rewards', 'amazon.com')?.rate, noteAt('bofa-business-travel-rewards', 'delta.com')],
+   [1.5, 'BofA Business Advantage Travel Rewards: 3x (3.00%) if you book through Bank of America Travel Center instead']);
+eq('...times the tier, the Travel Center rate included',
+   run('delta.com', [{ productId: 'bofa-business-travel-rewards', config: { tier_multiplier: 1.75 } }],
+     { now: new Date('2026-09-29T12:00:00') }).notes.map(n => n.text)[0],
+   'BofA Business Advantage Travel Rewards: 5.25x (5.25%) if you book through Bank of America Travel Center instead');
+eq('U.S. Bank Business Altitude Connect: 4x on travel booked direct, rideshare, gas and EV, to $150,000 a year',
+   [...['delta.com', 'marriott.com', 'hertz.com', 'uber.com', 'shell.us', 'evgo.com']
+     .map(h => tier('usbank-business-altitude-connect', h)?.rate), tier('usbank-business-altitude-connect', 'shell.us')?.caveats[0]],
+   [4, 4, 4, 4, 4, 4, 'Capped at $150,000 per year, then 1x']);
+eq('...2x on dining, fast food included, and phone; 1x through an OTA, with 5x through the Travel Center as the note',
+   [...['doordash.com', 'chipotle.com', 't-mobile.com', 'hotels.com'].map(h => tier('usbank-business-altitude-connect', h)?.rate),
+    noteAt('usbank-business-altitude-connect', 'hotels.com')],
+   [2, 2, 2, 1, 'U.S. Bank Business Altitude Connect: 5x (5.00%) if you book through U.S. Bank Travel Center instead']);
+eq('U.S. Bank Business Essentials: 2% everywhere, 6% on Travel Center hotels as a note',
+   [tier('usbank-business-essentials', 'amazon.com')?.rate, noteAt('usbank-business-essentials', 'hilton.com')],
+   [2, 'U.S. Bank Business Essentials: 6x (6.00%) if you book through U.S. Bank Travel Center instead']);
+eq('U.S. Bank Business Essentials Plus: 2% everywhere, its top-category 5% left to the caution, 10% on Travel Center car rentals',
+   [tier('usbank-business-essentials-plus', 'doordash.com')?.rate, noteAt('usbank-business-essentials-plus', 'hertz.com')],
+   [2, 'U.S. Bank Business Essentials Plus: 10x (10.00%) if you book through U.S. Bank Travel Center instead']);
+eq('U.S. Bank points are worth a cent, U.S. Bank\'s own figure since 2026-09-29',
+   tier('usbank-altitude-go', 'doordash.com')?.value, 4);
+
+// --- the Kroger card, 2026-09-29 ----------------------------------------------
+// Rates are the Credit Card Points column of Imprint's rewards terms: what the
+// card adds over the Kroger Rewards and Boost points members earn anyway.
+eq('Kroger Rewards Mastercard: 3 points on orders at kroger.com and the other participating banners\' sites',
+   ['kroger.com', 'www.ralphs.com', 'fredmeyer.com', 'kingsoopers.com', 'frysfood.com', 'smithsfoodanddrug.com', 'qfc.com',
+    'marianos.com', 'picknsave.com', 'metromarket.net', 'dillons.com', 'bakersplus.com', 'citymarket.com', 'gerbes.com',
+    'jaycfoods.com', 'pay-less.com', 'harristeeter.com'].map(h => tier('firstbanktrust-kroger', h)?.rate), Array(17).fill(3));
+eq('...worth 3% at a cent a point, and 1x at another supermarket',
+   [tier('firstbanktrust-kroger', 'kroger.com')?.value, tier('firstbanktrust-kroger', 'safeway.com')?.rate], [3, 1]);
+eq('...2 on dining, utilities, flights, hotels and car rental; transit and everything else 1',
+   ['doordash.com', 'coned.com', 'delta.com', 'marriott.com', 'hertz.com', 'uber.com', 'amazon.com']
+     .map(h => tier('firstbanktrust-kroger', h)?.rate), [2, 2, 2, 2, 2, 1, 1]);
+eq('the sister banners are supermarkets for every card, not only Kroger\'s',
+   ['ralphs.com', 'pay-less.com'].map(h => tier('amex-gold', h)?.matchedCategory), ['groceries', 'groceries']);
 
 // --- booking sites and cruise lines, 2026-09-29 and 30 ---------------------------
 // Booking sites stay hotels, on purpose (David, 2026-09-29): a pay-at-property

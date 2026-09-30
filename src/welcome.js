@@ -14,7 +14,7 @@
 // first-run setup is unfinished and where it was left -- see background.js.
 
 import { fontFaceCss, fontStack } from './engine.js';
-import { CURRENCY, ISSUER, mark, money } from './issuers.js';
+import { CURRENCY, mark, matchesSearch, money } from './issuers.js';
 import * as setup from './setup.js';
 
 const $ = s => document.querySelector(s);
@@ -102,9 +102,7 @@ const PER_PAGE = 6;
 
 function paneCards() {
   const q = query.trim().toLowerCase();
-  const hits = productIds.filter(id => !q ||
-    `${products[id].name} ${ISSUER[products[id].issuer] || products[id].issuer}`
-      .toLowerCase().includes(q));
+  const hits = productIds.filter(id => !q || matchesSearch(products[id], q));
 
   // A search that shrinks the catalogue under the cursor can leave `page` past
   // the end. Clamp on read rather than resetting on every keystroke, so the

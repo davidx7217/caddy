@@ -1,9 +1,10 @@
 {
   "_note_field": "MAINTAINER-ONLY. `note` records why a card is modelled the way it is -- provenance, schema reasoning, what was deliberately not modelled. Never render it in the UI. `caution` is the user-facing field.",
-  "_business_note": "`business` marks a card issued on business underwriting rather than personal. Absent means personal -- only the field's presence is meaningful, so there is nothing to keep in sync on a hundred and nine records. It filters the catalogue and nothing else reads it: the ranker does not care whose name is on the account.",
-  "_common_note": "`common` is a POPULARITY RANK, 1 to 140, and it is EDITORIAL. There is no public card-level ranking of US cardholders -- Nilson publishes issuer volume, not how many people hold a Freedom Unlimited -- so this is judgement, not a sourced fact, and it is the only field here that is. It orders the setup picker so a new user meets mass-market cards first. 21 to 40 were added on 2026-09-27 as the next twenty after the first, 41 to 63 on 2026-09-28 -- store cards, then the remaining tiers of airline and hotel programs already present -- 64 to 82 later that day, the cards of issuers Caddy did not yet cover, 83 to 95 after those, business cards, 96 to 103, smaller store cards, 104 to 110, the missing tiers of covered programs, 111 to 126, Barclays' other co-branded cards, and 127 to 140, co-branded business cards, so each batch ranks below the one before by construction. Re-rank it freely; nothing computes from it.",
+  "_business_note": "`business` marks a card issued on business underwriting rather than personal. Absent means personal -- only the field's presence is meaningful, so there is nothing to keep in sync on a hundred and ten records. It filters the catalogue and nothing else reads it: the ranker does not care whose name is on the account.",
+  "_common_note": "`common` is a POPULARITY RANK, 1 to 152, and it is EDITORIAL. There is no public card-level ranking of US cardholders -- Nilson publishes issuer volume, not how many people hold a Freedom Unlimited -- so this is judgement, not a sourced fact, and it is the only field here that is. It orders the setup picker so a new user meets mass-market cards first. 21 to 40 were added on 2026-09-27 as the next twenty after the first, 41 to 63 on 2026-09-28 -- store cards, then the remaining tiers of airline and hotel programs already present -- 64 to 82 later that day, the cards of issuers Caddy did not yet cover, 83 to 95 after those, business cards, 96 to 103, smaller store cards, 104 to 110, the missing tiers of covered programs, 111 to 126, Barclays' other co-branded cards, 127 to 140, co-branded business cards, 141 to 151, the business cards of BofA, U.S. Bank, Wells Fargo and Citi, and 152, the Kroger card, so each batch ranks below the one before by construction. Re-rank it freely; nothing computes from it.",
+  "_aliases_note": "`aliases` lists the other names one card is sold under, so the setup and Settings searches find it by any of them: the Kroger card is sold as sixteen Kroger banners' cards, and is shown under Kroger's name only. Search reads it; nothing displays it, and the ranker never reads it.",
   "_only_at_note": "`only_at` marks a STORE CARD: the merchant domains where it works, and nowhere else. The ranker drops the card from consideration on any other domain rather than ranking it on its base rate, because recommending a card the till refuses is worse than not mentioning it. base_rate is then what the card adds at that store: where a store pays its free program's members something whatever card they use, that share is left out, because it cannot change which card to use. Store cards with no rewards at all -- Home Depot's, for one -- are deliberately left out: a card that earns nothing can never be the best card to use.",
-  "_comment": "All 140 records verified against issuer sources; 5 on 2026-08-29, 6 on 2026-09-09, 5 on 2026-09-10, 24 on 2026-09-27 -- the twenty added that day, plus Blue Cash Everyday, Amex Gold, BofA Customized Cash and U.S. Bank Cash+, re-read because their categories changed -- and 100 on 2026-09-28: the store cards and the remaining airline and hotel tiers, then nineteen cards from Synchrony's general-purpose line, Barclays, USAA, Navy Federal and Bilt, then thirteen business cards from Amex, Capital One, Chase and Barclays, then eight smaller store cards from Gap Inc., Nordstrom, Ulta and JCPenney, then seven missing tiers: Citi AAdvantage Executive and Globe, Wells Fargo Autograph Journey, BofA Premium Rewards and Premium Rewards Elite, and U.S. Bank Altitude Go and Connect, then sixteen more Barclays co-brands: three Wyndham Rewards Earner tiers, two AARP cards, Upromise, Frontier, two Emirates Skywards cards, Lufthansa Miles & More, GM Rewards, Carnival Rewards, Barnes & Noble, Breeze Easy, RCI Elite Rewards and Capital Vacations, then fourteen co-branded business cards: Amex's Delta SkyMiles Gold, Platinum and Reserve Business, Marriott Bonvoy Business, Hilton Honors Business and Business Green, Chase's United and United Club Business, Southwest Performance and Premier Business, IHG One Rewards Premier Business and World of Hyatt Business, and Barclays' Wyndham Earner Business and GM Business. The Bilt cards' offer terms could not be read (the link downloads a file), so their category definitions are unconfirmed; see their notes. Each carries its source_url. Chase Freedom Flex rotating categories are modelled through Q1 2027; re-read Chase's Q1 2027 release when it posts (around 2026-12-15) and add Q2 2027 as soon as Chase posts it, before 2027-03-31. Amex Platinum was absent until 2026-09-27 because no reachable americanexpress.com page stated its annual fee or base rate on 2026-09-10; the product page states both now.",
+  "_comment": "All 152 records verified against issuer sources; 5 on 2026-08-29, 6 on 2026-09-09, 5 on 2026-09-10, 24 on 2026-09-27 -- the twenty added that day, plus Blue Cash Everyday, Amex Gold, BofA Customized Cash and U.S. Bank Cash+, re-read because their categories changed -- and 100 on 2026-09-28: the store cards and the remaining airline and hotel tiers, then nineteen cards from Synchrony's general-purpose line, Barclays, USAA, Navy Federal and Bilt, then thirteen business cards from Amex, Capital One, Chase and Barclays, then eight smaller store cards from Gap Inc., Nordstrom, Ulta and JCPenney, then seven missing tiers: Citi AAdvantage Executive and Globe, Wells Fargo Autograph Journey, BofA Premium Rewards and Premium Rewards Elite, and U.S. Bank Altitude Go and Connect, then sixteen more Barclays co-brands: three Wyndham Rewards Earner tiers, two AARP cards, Upromise, Frontier, two Emirates Skywards cards, Lufthansa Miles & More, GM Rewards, Carnival Rewards, Barnes & Noble, Breeze Easy, RCI Elite Rewards and Capital Vacations, then fourteen co-branded business cards: Amex's Delta SkyMiles Gold, Platinum and Reserve Business, Marriott Bonvoy Business, Hilton Honors Business and Business Green, Chase's United and United Club Business, Southwest Performance and Premier Business, IHG One Rewards Premier Business and World of Hyatt Business, and Barclays' Wyndham Earner Business and GM Business. Then 12 on 2026-09-29: eleven business cards from BofA, U.S. Bank, Wells Fargo and Citi -- BofA's three Business Advantage cards, U.S. Bank's Business Essentials, Business Essentials Plus, Triple Cash Rewards, Business Altitude Connect and Amazon Prime Business Mastercard, Wells Fargo's Signify Business Cash, and Citi's AAdvantage Business and Costco Anywhere Visa Business -- and the Kroger Rewards World Elite Mastercard, read off Kroger's pages and Imprint's rewards terms and cardholder agreement; see its note. The Bilt cards' category definitions were read in Bilt's Card Offer Terms on 2026-09-29; see their notes. Each carries its source_url. Chase Freedom Flex rotating categories are modelled through Q1 2027; re-read Chase's Q1 2027 release when it posts (around 2026-12-15) and add Q2 2027 as soon as Chase posts it, before 2027-03-31. Amex Platinum was absent until 2026-09-27 because no reachable americanexpress.com page stated its annual fee or base rate on 2026-09-10; the product page states both now.",
   "chase-sapphire-reserve": {
     "id": "chase-sapphire-reserve",
     "issuer": "chase",
@@ -1743,7 +1744,7 @@
     "verified": true,
     "last_verified": "2026-09-29",
     "source_url": "https://creditcards.wellsfargo.com/autograph-visa-credit-card/",
-    "note": "Categories read off footnote 2 on the product page, which defines each by Visa merchant code. Travel includes car rental, cruise lines and travel agencies, so the hotel rule carries no OTA denylist. 'Phone plans' is landline and cell phone providers -- not internet or cable, which is why phone_internet was split into phone and internet_cable the day this card was added. Streaming, read again 2026-09-29, is defined by type, not by merchant: 'cable and other pay television, digital goods, books, movies, music, and continuity/subscription services' -- wellsfargo.com/autographstreaming names no merchants. So DirecTV and DISH earn 3X, and since 2026-09-29 so do Xfinity and Spectrum: Comcast and Charter bill as cable and other pay television, per AwardWallet's Chase codings and U.S. Bank's Cash+ list of cable and satellite TV providers, so their internet bills earn it too. Cox and Optimum carry only AwardWallet's own 'Cable' label, with no issuer coding behind it, and Audible's 5968 rests on AwardWallet alone; they stay at 1X until a second source shows how they code. The streaming page also warns that a subscription bundled with another product or billed by a third party may not earn the bonus. Currency 'wf': the same page prices a point at one cent, and the points also transfer to airline and hotel partners. Re-read 2026-09-30: footnote 2 names cruise lines under Travel, so cruises earn 3X.",
+    "note": "Categories read off footnote 2 on the product page, which defines each by Visa merchant code. Travel includes car rental, cruise lines and travel agencies, so the hotel rule carries no OTA denylist. 'Phone plans' is landline and cell phone providers -- not internet or cable, which is why phone_internet was split into phone and internet_cable the day this card was added. Streaming, read again 2026-09-29, is defined by type, not by merchant: 'cable and other pay television, digital goods, books, movies, music, and continuity/subscription services' -- wellsfargo.com/autographstreaming names no merchants. So DirecTV and DISH earn 3X, and since 2026-09-29 so do Xfinity and Spectrum: Comcast and Charter bill as cable and other pay television, per AwardWallet's Chase codings and U.S. Bank's Cash+ list of cable and satellite TV providers, so their internet bills earn it too. Cox earns it since 2026-09-30 on thinner evidence: AwardWallet's own 'Cable' label, with no issuer coding behind it, and a cardholder whose Cox internet bill earned Capital One SavorOne's streaming rate (myFICO, 2021-08-24). No source names Cox's code; a statement showing a code Autograph does not pay 3X on, or an Autograph holder getting 1X on a Cox bill, would reverse it. Optimum's cardholder reports show only U.S. Bank's TV-and-internet rate, which cannot tell pay TV from an internet-only code, and Audible's 5968 rests on AwardWallet alone; they stay at 1X until a second source shows how they code. The streaming page also warns that a subscription bundled with another product or billed by a third party may not earn the bonus. Currency 'wf': the same page prices a point at one cent, and the points also transfer to airline and hotel partners. Re-read 2026-09-30: footnote 2 names cruise lines under Travel, so cruises earn 3X.",
     "rules": [
       {
         "category": "dining",
@@ -1789,7 +1790,8 @@
           "directv.com",
           "dish.com",
           "xfinity.com",
-          "spectrum.com"
+          "spectrum.com",
+          "cox.com"
         ],
         "caveat": "Bills here code as pay TV, which Wells Fargo counts as streaming."
       },
@@ -3820,35 +3822,11 @@
     "annual_fee": 0,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-09-28",
+    "last_verified": "2026-09-29",
     "source_url": "https://www.bilt.com/card",
-    "caution": "Rent and mortgage points, Bilt Cash and partner-restaurant bonuses run through the Bilt app and are not ranked here.",
-    "note": "Issued by Column N.A. and serviced by Cardless, per bilt.com on 2026-09-28; issuer is keyed on the bank, as Apple Card's is. Rates read off bilt.com/card. The Bilt Card Offer Terms it links to download as a file rather than open as a page, so the category definitions behind these rates were NOT read -- re-read them before trusting anything beyond the headline rates. Portal rates need the Bilt Travel Portal and are modelled as a portal. The Lyft rate includes +2X that needs the Bilt and Lyft accounts linked, which is what requires_activation says. The bonus at 20,000 partner restaurants is a Bilt Neighborhood reward earned in person with a linked card, varies by restaurant and has no domain to rank on. Rent and mortgage points are paid through the Bilt app, and Bilt Cash is a separate currency spendable only with Bilt partners; neither is modelled. 'bilt' is valued at NerdWallet's baseline 1.25 cents, not its 1.8-cent transfer estimate.",
-    "rules": [
-      {
-        "category": "travel_ground",
-        "rate": 3.0,
-        "merchant_allowlist": [
-          "lyft.com"
-        ],
-        "requires_activation": true,
-        "caveat": "After linking your Bilt and Lyft accounts."
-      },
-      {
-        "category": "travel_hotel",
-        "rate": 3.0,
-        "portal_only": true,
-        "portal": "Bilt Travel",
-        "caveat": "Hotels booked on the Bilt Travel Portal."
-      },
-      {
-        "category": "travel_air",
-        "rate": 2.0,
-        "portal_only": true,
-        "portal": "Bilt Travel",
-        "caveat": "Flights booked on the Bilt Travel Portal."
-      }
-    ]
+    "caution": "Not ranked here: rent and mortgage points, Bilt Cash, and the Lyft, Bilt Travel and dining bonuses; members earn the bonuses with other cards too.",
+    "note": "Issued by Column N.A. and serviced by Cardless, per bilt.com on 2026-09-28; issuer is keyed on the bank, as Apple Card's is. Rates read off bilt.com/card; definitions read 2026-09-29 in the Bilt Card Offer Terms (last updated 2026-09-18), which bilt.com/card links as a PDF download. They give 1X on all Eligible Purchases, with no bonus categories of the card's own. Eligible Purchases exclude person-to-person payments, gift and prepaid cards, cash-like transactions, crypto, taxes and gambling. The terms file the Lyft and Bilt Travel bonuses under the Bilt Rewards member program, apart from the card's own rates, and the Bilt Rewards Points Earning Terms (bilt.com/terms/earn, last updated 2026-08-18) set them: +2X on Lyft rides booked in the Lyft app, with no card named, and +2X on accommodations and +1X on flights booked through the portal with any linked Visa, Mastercard or Amex. Neither is ranked, applying the store-rate rule (README) on 2026-09-30: a bonus that arrives whichever card pays cannot change which card to use. The bonus at 20,000 partner restaurants is a Bilt Neighborhood reward earned in person with a linked card, varies by restaurant and has no domain to rank on. Rent and mortgage points are paid through the Bilt app, and Bilt Cash -- 4% on everyday spend under the Flexible Bilt Cash Option rather than the default Housing-only Option -- is a separate currency spendable only with Bilt partners; neither is modelled. 'bilt' is valued at NerdWallet's baseline 1.25 cents, not its 1.8-cent transfer estimate.",
+    "rules": []
   },
   "column-bilt-obsidian": {
     "id": "column-bilt-obsidian",
@@ -3860,10 +3838,10 @@
     "annual_fee": 95,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-09-28",
+    "last_verified": "2026-09-29",
     "source_url": "https://www.bilt.com/card",
-    "caution": "Rent and mortgage points, Bilt Cash and partner-restaurant bonuses run through the Bilt app and are not ranked here.",
-    "note": "Issued by Column N.A. and serviced by Cardless, per bilt.com on 2026-09-28; issuer is keyed on the bank, as Apple Card's is. Rates read off bilt.com/card. The Bilt Card Offer Terms it links to download as a file rather than open as a page, so the category definitions behind these rates were NOT read -- re-read them before trusting anything beyond the headline rates. Portal rates need the Bilt Travel Portal and are modelled as a portal. The Lyft rate includes +2X that needs the Bilt and Lyft accounts linked, which is what requires_activation says. The bonus at 20,000 partner restaurants is a Bilt Neighborhood reward earned in person with a linked card, varies by restaurant and has no domain to rank on. Rent and mortgage points are paid through the Bilt app, and Bilt Cash is a separate currency spendable only with Bilt partners; neither is modelled. 'bilt' is valued at NerdWallet's baseline 1.25 cents, not its 1.8-cent transfer estimate. The 3X is on ONE of dining or grocery, the cardholder's choice, which is what selection_group is for. \"Other travel\" at 2X is modelled on flights, hotels and car rentals; whether transit counts was not readable, so travel_ground carries only the Lyft rule. No cruise rule: bilt.com/card/obsidian, read 2026-09-30, says '2X points on other travel' without defining it, and the terms were not reopened, so cruises earn 1X until they are read.",
+    "caution": "Not ranked here: rent and mortgage points, Bilt Cash, and the Lyft, Bilt Travel and dining bonuses; members earn the bonuses with other cards too.",
+    "note": "Issued by Column N.A. and serviced by Cardless, per bilt.com on 2026-09-28; issuer is keyed on the bank, as Apple Card's is. Rates read off bilt.com/card; definitions read 2026-09-29 in the Bilt Card Offer Terms (last updated 2026-09-18), which bilt.com/card links as a PDF download. Its bonus categories go by Mastercard merchant code: dining is eating places and restaurants, drinking places, bakeries and fast food restaurants; grocery is grocery stores and supermarkets, to $25,000 a calendar year across all cardholders on the account, then 1X; travel is purchases made directly with airlines, hotels, motels, resorts, cruise lines and car rental agencies, so a booking site, a travel agency by code, earns 1X, and transit and rideshare are not travel. Cruise lines have no category here. Everything else earns 1X; Eligible Purchases exclude person-to-person payments, gift and prepaid cards, cash-like transactions, crypto, taxes and gambling. The terms file the Lyft and Bilt Travel bonuses under the Bilt Rewards member program, apart from the card's own rates, and the Bilt Rewards Points Earning Terms (bilt.com/terms/earn, last updated 2026-08-18) set them: +2X on Lyft rides booked in the Lyft app, with no card named, and +2X on accommodations and +1X on flights booked through the portal with any linked Visa, Mastercard or Amex. Neither is ranked, applying the store-rate rule (README) on 2026-09-30: a bonus that arrives whichever card pays cannot change which card to use. The bonus at 20,000 partner restaurants is a Bilt Neighborhood reward earned in person with a linked card, varies by restaurant and has no domain to rank on. Rent and mortgage points are paid through the Bilt app, and Bilt Cash -- 4% on everyday spend under the Flexible Bilt Cash Option rather than the default Housing-only Option -- is a separate currency spendable only with Bilt partners; neither is modelled. 'bilt' is valued at NerdWallet's baseline 1.25 cents, not its 1.8-cent transfer estimate. The 3X is on ONE of dining or grocery, the cardholder's choice, which is what selection_group is for; Bilt defaults it to dining, changeable once in the first 30 days, and the picker has no default. Travel at 2X is modelled on flights, hotels and car rentals booked direct, with the booking sites denylisted; transit and rideshare, Lyft included, earn 1X.",
     "user_config": {
       "selections": [
         {
@@ -3898,40 +3876,28 @@
       {
         "category": "travel_air",
         "rate": 2.0,
-        "caveat": "Other travel, booked anywhere."
+        "caveat": "Flights booked direct."
       },
       {
         "category": "travel_hotel",
         "rate": 2.0,
-        "caveat": "Other travel, booked anywhere."
+        "merchant_denylist": [
+          "expedia.com",
+          "booking.com",
+          "airbnb.com",
+          "hotels.com",
+          "priceline.com",
+          "vrbo.com",
+          "kayak.com",
+          "orbitz.com",
+          "travelocity.com"
+        ],
+        "caveat": "Hotels booked direct."
       },
       {
         "category": "car_rental",
         "rate": 2.0,
-        "caveat": "Other travel, booked anywhere."
-      },
-      {
-        "category": "travel_ground",
-        "rate": 3.0,
-        "merchant_allowlist": [
-          "lyft.com"
-        ],
-        "requires_activation": true,
-        "caveat": "After linking your Bilt and Lyft accounts."
-      },
-      {
-        "category": "travel_hotel",
-        "rate": 4.0,
-        "portal_only": true,
-        "portal": "Bilt Travel",
-        "caveat": "Hotels booked on the Bilt Travel Portal."
-      },
-      {
-        "category": "travel_air",
-        "rate": 3.0,
-        "portal_only": true,
-        "portal": "Bilt Travel",
-        "caveat": "Flights booked on the Bilt Travel Portal."
+        "caveat": "Car rentals booked direct."
       }
     ]
   },
@@ -3945,35 +3911,11 @@
     "annual_fee": 495,
     "base_rate": 2.0,
     "verified": true,
-    "last_verified": "2026-09-28",
+    "last_verified": "2026-09-29",
     "source_url": "https://www.bilt.com/card",
-    "caution": "Rent and mortgage points, Bilt Cash and partner-restaurant bonuses run through the Bilt app and are not ranked here.",
-    "note": "Issued by Column N.A. and serviced by Cardless, per bilt.com on 2026-09-28; issuer is keyed on the bank, as Apple Card's is. Rates read off bilt.com/card. The Bilt Card Offer Terms it links to download as a file rather than open as a page, so the category definitions behind these rates were NOT read -- re-read them before trusting anything beyond the headline rates. Portal rates need the Bilt Travel Portal and are modelled as a portal. The Lyft rate includes +2X that needs the Bilt and Lyft accounts linked, which is what requires_activation says. The bonus at 20,000 partner restaurants is a Bilt Neighborhood reward earned in person with a linked card, varies by restaurant and has no domain to rank on. Rent and mortgage points are paid through the Bilt app, and Bilt Cash is a separate currency spendable only with Bilt partners; neither is modelled. 'bilt' is valued at NerdWallet's baseline 1.25 cents, not its 1.8-cent transfer estimate.",
-    "rules": [
-      {
-        "category": "travel_ground",
-        "rate": 4.0,
-        "merchant_allowlist": [
-          "lyft.com"
-        ],
-        "requires_activation": true,
-        "caveat": "After linking your Bilt and Lyft accounts."
-      },
-      {
-        "category": "travel_hotel",
-        "rate": 4.0,
-        "portal_only": true,
-        "portal": "Bilt Travel",
-        "caveat": "Hotels booked on the Bilt Travel Portal."
-      },
-      {
-        "category": "travel_air",
-        "rate": 3.0,
-        "portal_only": true,
-        "portal": "Bilt Travel",
-        "caveat": "Flights booked on the Bilt Travel Portal."
-      }
-    ]
+    "caution": "Not ranked here: rent and mortgage points, Bilt Cash, and the Lyft, Bilt Travel and dining bonuses; members earn the bonuses with other cards too.",
+    "note": "Issued by Column N.A. and serviced by Cardless, per bilt.com on 2026-09-28; issuer is keyed on the bank, as Apple Card's is. Rates read off bilt.com/card; definitions read 2026-09-29 in the Bilt Card Offer Terms (last updated 2026-09-18), which bilt.com/card links as a PDF download. They give 2X on all Eligible Purchases except rent and mortgage payments, with no bonus categories of the card's own. Eligible Purchases exclude person-to-person payments, gift and prepaid cards, cash-like transactions, crypto, taxes and gambling. The terms file the Lyft and Bilt Travel bonuses under the Bilt Rewards member program, apart from the card's own rates, and the Bilt Rewards Points Earning Terms (bilt.com/terms/earn, last updated 2026-08-18) set them: +2X on Lyft rides booked in the Lyft app, with no card named, and +2X on accommodations and +1X on flights booked through the portal with any linked Visa, Mastercard or Amex. Neither is ranked, applying the store-rate rule (README) on 2026-09-30: a bonus that arrives whichever card pays cannot change which card to use. The bonus at 20,000 partner restaurants is a Bilt Neighborhood reward earned in person with a linked card, varies by restaurant and has no domain to rank on. Rent and mortgage points are paid through the Bilt app, and Bilt Cash -- 4% on everyday spend under the Flexible Bilt Cash Option rather than the default Housing-only Option -- is a separate currency spendable only with Bilt partners; neither is modelled. 'bilt' is valued at NerdWallet's baseline 1.25 cents, not its 1.8-cent transfer estimate.",
+    "rules": []
   },
   "amex-business-platinum": {
     "id": "amex-business-platinum",
@@ -4052,11 +3994,94 @@
     "annual_fee": 375,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-09-28",
+    "last_verified": "2026-09-29",
     "source_url": "https://www.americanexpress.com/us/credit-cards/business/business-credit-cards/american-express-business-gold-card-amex/",
-    "caution": "Business card. 4X on whichever two of six categories -- ads, electronics and software, restaurants, gas, transit, wireless -- you spend most on each cycle, to $150,000 a year. Caddy cannot see which two, so it ranks 1X.",
-    "note": "Rates read off the product page on 2026-09-28. The 4X goes to the two categories where the business spent most in each billing cycle, from six: U.S. advertising in select media, U.S. electronic goods retailers and software and cloud providers, U.S. restaurants including takeout and delivery, U.S. gas stations, transit, and U.S. wireless phone service; $150,000 combined a calendar year, then 1X. Which two is decided by the whole cycle's spending, which no page shows, so per the recipe it is a caution and not rules -- the same call as a top-category card. The alternative, if wanted, is a Cash+-style picker for the two the cardholder usually hits.",
+    "caution": "Business card. Amex pays the 4X on your two biggest of six categories each billing cycle, so pick the two you usually hit.",
+    "note": "Rates read off the product page on 2026-09-28 and again on 2026-09-29. The 4X goes to the two categories where the business spent most in each billing cycle, from six: U.S. advertising in select media (online, TV, radio), U.S. electronic goods retailers and software and cloud system providers, U.S. restaurants including takeout and delivery, U.S. gas stations, transit (trains, taxis, rideshare, ferries, tolls, parking, buses and subways), and monthly wireless phone service bought directly from a U.S. carrier; $150,000 combined a calendar year, then 1X. Amex picks the two from the cycle's spending on this card, which no page shows, so the card has a Cash+-style picker (David, 2026-09-29): the cardholder names the two they usually hit, and because Caddy then sends those purchases to this card, they are the two most likely to come out on top. With nothing picked it ranks 1X, as it did before. Definitions from americanexpress.com/us/rewards-info/business.html: electronics leaves out online marketplaces such as Amazon and eBay, superstores and the wireless carriers; wireless leaves out resellers, hardware, bundled TV and internet, VoIP and Google Fi. Software and cloud providers have no category here, so only the electronics stores rank; gas does not include EV charging, as on the Blue Cash Preferred; dining includes the delivery apps, as on the consumer Gold.",
+    "user_config": {
+      "selections": [
+        {
+          "key": "four",
+          "label": "Your two 4X categories",
+          "max": 2,
+          "options": {
+            "four_ads": "Advertising (online, TV, radio)",
+            "four_electronics": "Electronics, software & cloud",
+            "four_dining": "Restaurants",
+            "four_gas": "Gas stations",
+            "four_transit": "Transit",
+            "four_wireless": "Wireless phone service"
+          }
+        }
+      ]
+    },
     "rules": [
+      {
+        "category": "advertising",
+        "rate": 4.0,
+        "selection_group": "four_ads",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "Both picks share the cap."
+      },
+      {
+        "category": "electronics",
+        "rate": 4.0,
+        "selection_group": "four_electronics",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "Both picks share the cap."
+      },
+      {
+        "category": "dining",
+        "rate": 4.0,
+        "selection_group": "four_dining",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "Both picks share the cap."
+      },
+      {
+        "category": "gas",
+        "rate": 4.0,
+        "selection_group": "four_gas",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "Both picks share the cap."
+      },
+      {
+        "category": "travel_ground",
+        "rate": 4.0,
+        "selection_group": "four_transit",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "Both picks share the cap."
+      },
+      {
+        "category": "phone",
+        "rate": 4.0,
+        "selection_group": "four_wireless",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "Both picks share the cap."
+      },
       {
         "category": "travel_air",
         "rate": 3.0,
@@ -4798,10 +4823,10 @@
     "annual_fee": 0,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-09-28",
+    "last_verified": "2026-09-29",
     "source_url": "https://www.usbank.com/credit-cards/altitude-go-visa-signature-credit-card.html",
-    "caution": "U.S. Bank publishes no point value; Caddy assumes a cent.",
-    "note": "Read off footnote 2 of the product page on 2026-09-28: 4 points on the first $2,000 a quarter at restaurants, fast food and bars, takeout and delivery included; 2 at grocery stores and supermarkets, gas stations and EV charging, and qualifying streaming; 1 elsewhere. Discount stores, supercenters and wholesale clubs earn 1 in the grocery and gas categories, which merchants.json already files elsewhere. Visa Signature. U.S. Bank's pages give no cents-per-point figure -- only that a deposit to a U.S. Bank account gets the maximum value -- so 'usbank' is valued at 1.0 as an assumption, not a published number, and the caution says so.",
+    "caution": "Points are worth a cent paid into a U.S. Bank account; other redemptions may pay less.",
+    "note": "Read off footnote 2 of the product page on 2026-09-28: 4 points on the first $2,000 a quarter at restaurants, fast food and bars, takeout and delivery included; 2 at grocery stores and supermarkets, gas stations and EV charging, and qualifying streaming; 1 elsewhere. Discount stores, supercenters and wholesale clubs earn 1 in the grocery and gas categories, which merchants.json already files elsewhere. Visa Signature. Re-read 2026-09-29, unchanged. The page's rewards calculator (cardrewards.usbank.com/GO_RecipeA/B/Go_5-4_A.html) prices points at a cent as a deposit to a U.S. Bank account -- 32,000 points = $320 -- which is where footnote 2 says the maximum value applies; travel, merchandise, gift cards and statement credit 'may be different'. So 'usbank' is 1.0 by U.S. Bank's own figure since 2026-09-29; before that it was an assumption.",
     "rules": [
       {
         "category": "dining",
@@ -4927,10 +4952,10 @@
     "annual_fee": 0,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-09-28",
+    "last_verified": "2026-09-29",
     "source_url": "https://www.usbank.com/credit-cards/altitude-connect-visa-signature-credit-card.html",
-    "caution": "U.S. Bank publishes no point value; Caddy assumes a cent.",
-    "note": "Read off footnote 2 of the product page on 2026-09-28: 5 points on prepaid hotels and car rentals in the Travel Center; 4 on travel \"such as purchases made directly with airlines, hotels, car rentals, taxicabs, limousines, passenger trains and cruise line companies\" -- \"directly\", so OTAs are denylisted on hotels; 4 on the first $1,000 a quarter at gas stations and EV charging; 2 at restaurants, grocery stores and on qualifying streaming; 1 elsewhere. No annual fee, per the page. Visa Signature. U.S. Bank's pages give no cents-per-point figure -- only that a deposit to a U.S. Bank account gets the maximum value -- so 'usbank' is valued at 1.0 as an assumption, not a published number, and the caution says so. Re-read 2026-09-30: footnote 2's 'directly with ... cruise line companies' puts a cruise line's own site at 4X.",
+    "caution": "Points are worth a cent on travel or paid into a U.S. Bank account; other redemptions may pay less.",
+    "note": "Read off footnote 2 of the product page on 2026-09-28: 5 points on prepaid hotels and car rentals in the Travel Center; 4 on travel \"such as purchases made directly with airlines, hotels, car rentals, taxicabs, limousines, passenger trains and cruise line companies\" -- \"directly\", so OTAs are denylisted on hotels; 4 on the first $1,000 a quarter at gas stations and EV charging; 2 at restaurants, grocery stores and on qualifying streaming; 1 elsewhere. No annual fee, per the page. Visa Signature. Re-read 2026-09-29, unchanged. The page's rewards calculator (cardrewards.usbank.com/CONNECT-5X_RecipeA/Connect_5X_A.html) states '1 point = $.01' in travel or as a deposit to an eligible U.S. Bank account, which is where the page's footnote says the maximum value applies; merchandise, gift cards and statement credit 'may be different'. So 'usbank' is 1.0 by U.S. Bank's own figure since 2026-09-29; before that it was an assumption. Re-read 2026-09-30: footnote 2's 'directly with ... cruise line companies' puts a cruise line's own site at 4X.",
     "rules": [
       {
         "category": "travel_hotel",
@@ -5106,10 +5131,10 @@
     "annual_fee": 0,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-09-28",
+    "last_verified": "2026-09-29",
     "source_url": "https://cards.barclaycardus.com/banking/cards/wyndham-rewards-earner-card/",
     "caution": "Bonus points may not post when you pay through a digital wallet, PayPal or another third party.",
-    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48413). A Visa. 5X at participating Hotels by Wyndham, which is wyndhamhotels.com; 3X on dining, grocery stores other than Target and Walmart, gas and EV charging; 1X elsewhere. The product page's summary of the 3X names only the vacation clubs, dining and groceries; the Reward Rules, which are the agreement, add gas and EV charging, so those are in. Wyndham's vacation clubs -- Club Wyndham, WorldMark, Margaritaville Vacation Club and Shell Vacations Club stays, maintenance fees and timeshare loan payments -- earn the same and are not ranked. The rules withhold bonus points from purchases made through third parties, so the delivery apps are denylisted on dining and instacart.com's barclays override applies.",
+    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48413). A Visa. 5X at participating Hotels by Wyndham, which is wyndhamhotels.com; 3X on dining, grocery stores other than Target and Walmart, gas and EV charging; 1X elsewhere. The product page's summary of the 3X names only the vacation clubs, dining and groceries; the Reward Rules, which are the agreement, add gas and EV charging, so those are in. The page's 2X on dining, grocery and gas is stale text in its compare panel, which stays hidden until you compare cards; the Plus, Premier and Business pages' panels match their pages, and this page's body and the Reward Rules (accurate as of 2026-08-31) both say 3X, so 3X stands (re-read 2026-09-29). Wyndham's vacation clubs -- Club Wyndham, WorldMark, Margaritaville Vacation Club and Shell Vacations Club stays, maintenance fees and timeshare loan payments -- earn the same and are not ranked. The rules withhold bonus points from purchases made through third parties, so the delivery apps are denylisted on dining and instacart.com's barclays override applies.",
     "rules": [
       {
         "category": "travel_hotel",
@@ -6198,10 +6223,29 @@
     "annual_fee": 199,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-09-28",
+    "last_verified": "2026-09-29",
     "source_url": "https://creditcards.chase.com/business-credit-cards/world-of-hyatt/hyatt-business-card",
-    "caution": "Business card. 2X in whichever three of eight categories you spend most on each quarter, which Caddy cannot see, so it ranks 1X.",
-    "note": "Rates read off the offer details on 2026-09-28. 4X at Hyatt hotels and on World of Hyatt Experiences; 2X at fitness clubs and gyms; 2X in the three of eight categories -- dining, shipping, airline tickets bought direct, local transit, social media and search engine ads, car rental, gas, and internet, cable and phone -- where the business spends most each calendar quarter; 1X elsewhere. Which three is decided by the whole quarter's spending, which no page shows, so per the recipe that 2X is a caution and not rules, as Business Gold's 4X is. Network read off the card art.",
+    "caution": "Business card. Chase pays the 2X on your three biggest of eight categories each quarter, so pick the three you usually hit.",
+    "note": "Rates read off the offer details on 2026-09-28 and again on 2026-09-29. 4X at Hyatt hotels and on World of Hyatt Experiences; 2X at fitness clubs and gyms; 2X in the three of eight categories -- dining, shipping, airline tickets bought directly from the airline, local transit and commuting, social media and search engine advertising, car rental agencies, gas stations, and internet, cable and phone services -- where the business spends most each calendar quarter, with no cap (chase.com/hyattbuscard2X); 1X elsewhere. Chase works out the three by merchant code from the quarter's spending on this card, which no page shows, so the card has a Cash+-style picker, as Business Gold does (David, 2026-09-29): the cardholder names the three they usually hit, and because Caddy then sends those purchases to this card, they are the three most likely to come out on top. With nothing picked it ranks 1X on them, as it did before. Internet, cable and phone maps onto phone and internet_cable, as on the Ink Business Cash; gas does not include EV charging. Every travel_air row is an airline's own site -- booking sites sit under travel_hotel -- so the airline category needs no denylist. Network read off the card art.",
+    "user_config": {
+      "selections": [
+        {
+          "key": "top",
+          "label": "Your three 2X categories",
+          "max": 3,
+          "options": {
+            "top_dining": "Dining",
+            "top_shipping": "Shipping",
+            "top_air": "Airline tickets bought direct",
+            "top_transit": "Local transit & commuting",
+            "top_ads": "Social media & search ads",
+            "top_car": "Car rental agencies",
+            "top_gas": "Gas stations",
+            "top_telecom": "Internet, cable & phone"
+          }
+        }
+      ]
+    },
     "rules": [
       {
         "category": "travel_hotel",
@@ -6213,6 +6257,51 @@
       {
         "category": "fitness",
         "rate": 2.0
+      },
+      {
+        "category": "dining",
+        "rate": 2.0,
+        "selection_group": "top_dining"
+      },
+      {
+        "category": "shipping",
+        "rate": 2.0,
+        "selection_group": "top_shipping"
+      },
+      {
+        "category": "travel_air",
+        "rate": 2.0,
+        "selection_group": "top_air"
+      },
+      {
+        "category": "travel_ground",
+        "rate": 2.0,
+        "selection_group": "top_transit"
+      },
+      {
+        "category": "advertising",
+        "rate": 2.0,
+        "selection_group": "top_ads"
+      },
+      {
+        "category": "car_rental",
+        "rate": 2.0,
+        "selection_group": "top_car"
+      },
+      {
+        "category": "gas",
+        "rate": 2.0,
+        "selection_group": "top_gas"
+      },
+      {
+        "category": "phone",
+        "rate": 2.0,
+        "selection_group": "top_telecom"
+      },
+      {
+        "category": "internet_cable",
+        "rate": 2.0,
+        "selection_group": "top_telecom"
       }
     ]
   },
@@ -6288,6 +6377,693 @@
           "gmparts.com",
           "gmcompanystore.com"
         ]
+      }
+    ]
+  },
+  "citi-costco-anywhere-business": {
+    "id": "citi-costco-anywhere-business",
+    "issuer": "citi",
+    "network": "visa",
+    "currency": "cash",
+    "name": "Costco Anywhere Visa Business",
+    "common": 141,
+    "business": true,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-29",
+    "source_url": "https://www.citi.com/credit-cards/costco-anywhere-visa-business-card",
+    "caution": "Business card. Needs a paid Costco membership, and cash back arrives once a year as a certificate redeemed at Costco.",
+    "note": "Read off the product page and its Additional Information (the Cash Back Rewards Program Terms) on 2026-09-29; the personal Costco Anywhere Visa's earning, on a Visa Business card. 5% on gas at Costco and 4% on other eligible gas and EV charging, on a combined $7,000 a year, then 1% -- gas or charging at superstores, supermarkets, convenience stores and other warehouse clubs earns 1%. 3% at restaurants, cafes, bars, lounges and fast food included, but not bakeries or restaurants inside department stores, grocery stores and warehouse clubs; and 3% on eligible travel: airfare, hotels, car rentals, travel agencies, cruise lines and Costco Travel, not timeshares, campgrounds, B&Bs or train and commuter travel, so the hotel rule carries no OTA denylist and travel_ground no rule. 2% on other Costco and Costco.com purchases; 1% elsewhere. annual_fee is 0: the page states $0 with an active Costco membership. The reward is an annual certificate redeemable for cash or merchandise at a U.S. Costco warehouse, so currency is 'cash'. Gas at Costco is paid at the pump and is not ranked.",
+    "rules": [
+      {
+        "category": "gas",
+        "rate": 4.0,
+        "cap": {
+          "amount": 7000,
+          "period": "year",
+          "then_rate": 1.0
+        }
+      },
+      {
+        "category": "ev_charging",
+        "rate": 4.0,
+        "cap": {
+          "amount": 7000,
+          "period": "year",
+          "then_rate": 1.0
+        }
+      },
+      {
+        "category": "dining",
+        "rate": 3.0
+      },
+      {
+        "category": "travel_air",
+        "rate": 3.0
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 3.0
+      },
+      {
+        "category": "car_rental",
+        "rate": 3.0
+      },
+      {
+        "category": "wholesale_club",
+        "rate": 2.0,
+        "merchant_allowlist": [
+          "costco.com"
+        ]
+      }
+    ]
+  },
+  "usbank-amazon-prime-business": {
+    "id": "usbank-amazon-prime-business",
+    "issuer": "usbank",
+    "network": "mastercard",
+    "currency": "cash",
+    "name": "Amazon Prime Business Mastercard",
+    "common": 142,
+    "business": true,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-29",
+    "source_url": "https://www.usbank.com/business-banking/business-credit-cards/amazon-business-credit-cards.html",
+    "caution": "Business card. Without Prime every 5% here is 3%, and the 2% in your top three categories outside Amazon is not ranked.",
+    "note": "Issued by U.S. Bank as the Prime Business World Elite Mastercard, with an eligible Prime membership, and the Amazon Business World Elite Mastercard, without one: one program whose rates follow the business owner's Prime membership. Read off the product page and the Rewards Summary in its Terms and Conditions (onboarding.usbank.com/access/terms-HD8W35MF2E55E4S) on 2026-09-29. One record at the Prime rate, per the Prime Visa convention, with the 3% in the caution. 5% on the first $150,000 a calendar year at Amazon-covered Sites -- Amazon.com, Amazon Business, AWS and Whole Foods Market -- then 1%. The terms exclude pharmacy.amazon.com, advertising.amazon.com, shipping.amazon.com, pay.amazon.com and Amazon's non-U.S. sites, but those hosts resolve to the amazon.com row here, so Caddy ranks them at 5% too. 5% on prepaid travel booked in the U.S. Bank Travel Center. 2% on the first $150,000 a year in whichever three categories the business spends most on outside Amazon each billing cycle, from fifteen -- advertising, computer and software services, office supply stores, airlines, hotels, utilities, accounting and tax, cell phone providers, drugstores, gas and EV charging, postal and shipping, car rental, dining, entertainment and grocery stores -- which no page shows, so it is the caution, as the recipe has it; Business Gold and World of Hyatt Business took pickers for the same kind of rate on 2026-09-29. 1% elsewhere. A purchase put on an ExtendPay plan at an Amazon checkout earns nothing, and Amazon Day Delivery's extra 1% is a shipping choice; neither is ranked. Rewards are stated as percentages back, so currency is 'cash'. No annual fee, per the terms.",
+    "rules": [
+      {
+        "category": "online_retail",
+        "rate": 5.0,
+        "merchant_allowlist": [
+          "amazon.com"
+        ],
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        }
+      },
+      {
+        "category": "groceries",
+        "rate": 5.0,
+        "merchant_allowlist": [
+          "wholefoodsmarket.com"
+        ],
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        }
+      },
+      {
+        "category": "travel_portal",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "U.S. Bank Travel Center"
+      }
+    ]
+  },
+  "bofa-business-unlimited-cash": {
+    "id": "bofa-business-unlimited-cash",
+    "issuer": "bofa",
+    "network": "mastercard",
+    "currency": "cash",
+    "name": "BofA Business Advantage Unlimited Cash Rewards",
+    "common": 143,
+    "business": true,
+    "annual_fee": 0,
+    "base_rate": 1.5,
+    "verified": true,
+    "last_verified": "2026-09-29",
+    "source_url": "https://business.bankofamerica.com/en/credit-cards/business-advantage-unlimited-cash-rewards",
+    "note": "Read off the product page and its Terms and Conditions (the Business Advantage Unlimited Cash Rewards Program Summary) on 2026-09-29: 1.5% on every purchase, uncapped, no annual fee, a Mastercard. No rules by design. tier_multiplier is Preferred Rewards for Business, which unlike the personal cards' BofA Rewards still has three tiers -- Gold 25%, Platinum 50% and Platinum Honors 75% more, for $20,000, $50,000 and $100,000 averaged over three months in business deposit and Merrill accounts, per the page's disclosures. It takes the 1.5% to 2.62%.",
+    "user_config": {
+      "tier_multiplier": {
+        "label": "Preferred Rewards for Business tier",
+        "options": {
+          "None": 1.0,
+          "Gold": 1.25,
+          "Platinum": 1.5,
+          "Platinum Honors": 1.75
+        }
+      }
+    },
+    "rules": []
+  },
+  "bofa-business-customized-cash": {
+    "id": "bofa-business-customized-cash",
+    "issuer": "bofa",
+    "network": "mastercard",
+    "currency": "cash",
+    "name": "BofA Business Advantage Customized Cash Rewards",
+    "common": 144,
+    "business": true,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-29",
+    "source_url": "https://business.bankofamerica.com/en/credit-cards/business-advantage-customized-cash-rewards",
+    "caution": "Business card. The 3% and 2% share one $50,000 cap a calendar year.",
+    "note": "Read off the product page, its Terms and Conditions (the Business Advantage Customized Cash Rewards Program Summary) and the category page bankofamerica.com/choosemycategory/business with every category's details opened, on 2026-09-29. 3% in one Choice Category the cardholder picks, changeable once a calendar month; 2% at dining merchants; 1% elsewhere. The 3% and 2% share the first $50,000 of purchases a calendar year, then 1%. Dining is caterers, restaurants and fast food, bars, taverns and lounges -- not bakeries, coffee shops, grocery stores or other food stores with a restaurant inside; Starbucks codes as fast food (5814), so it counts. Each choice is defined by merchant code. Gas and EV charging: fuel dispensers, service stations and EV charging, not marinas, heating-oil or propane dealers, or parking lots billing for charging. Office supply stores: stationery and office and school supply stores -- Staples, Office Depot, OfficeMax, Quill -- not variety, department, discount or drug stores. Travel: airlines, bus lines, car rental, cruise lines, travel arrangement sellers, hotels, parking, commuter transit and ferries, taxis and limousines, passenger rail, and travel agencies and tour operators, with Airbnb, Expedia, Hotels.com, Lyft and Uber rides named, so the hotel rule carries no OTA denylist. TV, telecom and wireless: cable, satellite and other pay TV and radio, and telecom equipment and services -- AT&T, Comcast, Cox, DIRECTV, Netflix, Sirius XM, Spectrum, T-Mobile and Verizon named -- so phone and internet_cable earn it, and so do the streaming rows on record as pay TV (4899) in merchants.json: netflix.com, which BofA names, spotify.com, hulu.com and youtube.com. How Disney+ and Max code is not on record, so they are not ranked. Computer services (Dell, GoDaddy, Intuit, Shopify, Squarespace, Adobe) and business consulting services (H&R Block, LegalZoom, The UPS Store) have no Caddy category or merchant rows, so the picker leaves them out; a cardholder who chose one earns the 2% and 1% here. tier_multiplier is Preferred Rewards for Business, as on the Unlimited Cash business card. No annual fee. A Mastercard.",
+    "user_config": {
+      "selections": [
+        {
+          "key": "three",
+          "label": "Your 3% category",
+          "max": 1,
+          "options": {
+            "gas_ev": "Gas & EV charging stations",
+            "office": "Office supply stores",
+            "travel": "Travel",
+            "telecom": "TV, telecom & wireless"
+          }
+        }
+      ],
+      "tier_multiplier": {
+        "label": "Preferred Rewards for Business tier",
+        "options": {
+          "None": 1.0,
+          "Gold": 1.25,
+          "Platinum": 1.5,
+          "Platinum Honors": 1.75
+        }
+      }
+    },
+    "rules": [
+      {
+        "category": "gas",
+        "rate": 3.0,
+        "selection_group": "gas_ev",
+        "cap": {
+          "amount": 50000,
+          "period": "year",
+          "then_rate": 1.0
+        }
+      },
+      {
+        "category": "ev_charging",
+        "rate": 3.0,
+        "selection_group": "gas_ev",
+        "cap": {
+          "amount": 50000,
+          "period": "year",
+          "then_rate": 1.0
+        }
+      },
+      {
+        "category": "office_supply",
+        "rate": 3.0,
+        "selection_group": "office",
+        "cap": {
+          "amount": 50000,
+          "period": "year",
+          "then_rate": 1.0
+        }
+      },
+      {
+        "category": "travel_air",
+        "rate": 3.0,
+        "selection_group": "travel",
+        "cap": {
+          "amount": 50000,
+          "period": "year",
+          "then_rate": 1.0
+        }
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 3.0,
+        "selection_group": "travel",
+        "cap": {
+          "amount": 50000,
+          "period": "year",
+          "then_rate": 1.0
+        }
+      },
+      {
+        "category": "car_rental",
+        "rate": 3.0,
+        "selection_group": "travel",
+        "cap": {
+          "amount": 50000,
+          "period": "year",
+          "then_rate": 1.0
+        }
+      },
+      {
+        "category": "travel_ground",
+        "rate": 3.0,
+        "selection_group": "travel",
+        "cap": {
+          "amount": 50000,
+          "period": "year",
+          "then_rate": 1.0
+        }
+      },
+      {
+        "category": "phone",
+        "rate": 3.0,
+        "selection_group": "telecom",
+        "cap": {
+          "amount": 50000,
+          "period": "year",
+          "then_rate": 1.0
+        }
+      },
+      {
+        "category": "internet_cable",
+        "rate": 3.0,
+        "selection_group": "telecom",
+        "cap": {
+          "amount": 50000,
+          "period": "year",
+          "then_rate": 1.0
+        }
+      },
+      {
+        "category": "streaming",
+        "rate": 3.0,
+        "selection_group": "telecom",
+        "merchant_allowlist": [
+          "netflix.com",
+          "spotify.com",
+          "hulu.com",
+          "youtube.com"
+        ],
+        "cap": {
+          "amount": 50000,
+          "period": "year",
+          "then_rate": 1.0
+        }
+      },
+      {
+        "category": "dining",
+        "rate": 2.0,
+        "cap": {
+          "amount": 50000,
+          "period": "year",
+          "then_rate": 1.0
+        }
+      }
+    ]
+  },
+  "wellsfargo-signify-business-cash": {
+    "id": "wellsfargo-signify-business-cash",
+    "issuer": "wellsfargo",
+    "network": "mastercard",
+    "currency": "cash",
+    "name": "Wells Fargo Signify Business Cash",
+    "common": 145,
+    "business": true,
+    "annual_fee": 0,
+    "base_rate": 2.0,
+    "verified": true,
+    "last_verified": "2026-09-29",
+    "source_url": "https://creditcards.wellsfargo.com/business-credit-cards/signify-business-cash-credit-card/",
+    "note": "Read off the product page and its footnotes on 2026-09-29: unlimited 2% cash rewards on business purchases, with no categories and no cap, and a $0 annual fee. A World Elite Mastercard, per the Guide to Benefits the page names. Wells Fargo's business card list shows it as the only business card. No rules by design, as for Active Cash.",
+    "rules": []
+  },
+  "citi-aadvantage-business": {
+    "id": "citi-aadvantage-business",
+    "issuer": "citi",
+    "network": "mastercard",
+    "currency": "aa",
+    "name": "Citi AAdvantage Business",
+    "common": 146,
+    "business": true,
+    "annual_fee": 99,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-29",
+    "source_url": "https://www.citi.com/credit-cards/citi-aadvantage-business-credit-card",
+    "caution": "Business card. $0 annual fee the first year, then $99.",
+    "note": "Read off the product page and its Additional Information on 2026-09-29. 2 AAdvantage miles per $1 on eligible American Airlines purchases -- items billed by American as the merchant of record, not its car rentals, hotels, status boosts or AA Cargo -- so aa.com only; 2 at car rental merchants, not RV rentals, travel agencies, online travel sites or Rocketmiles; 2 at gas stations, not warehouse clubs, discount, department or convenience stores; 2 at telecommunications merchants, phone equipment and local and long-distance service, which is phone; and 2 at cable and satellite providers, which Citi defines in the words of the pay-TV merchant code (4899): the connection and ongoing delivery of television, internet, telephone and radio programming by cable or satellite. Citi groups rewards by merchant code, so internet_cable earns it, and so do the streaming rows on record as pay TV (4899) -- netflix.com, spotify.com, hulu.com and youtube.com, whose Citi codings AwardWallet labels 'CABLE,SATELLITE,PAY TV' where it has them. How Disney+ and Max code is not on record, so they are not ranked. 1 elsewhere. The annual fee is $99, waived the first 12 months: the pricing block renders blank while the browser pane is hidden, so the figure was read from the page's own offer data ('$99 after the first year') and citi.com's card list. A World Elite Mastercard. Miles post to the business's AAdvantage Business account.",
+    "rules": [
+      {
+        "category": "travel_air",
+        "rate": 2.0,
+        "merchant_allowlist": [
+          "aa.com"
+        ]
+      },
+      {
+        "category": "car_rental",
+        "rate": 2.0
+      },
+      {
+        "category": "gas",
+        "rate": 2.0
+      },
+      {
+        "category": "phone",
+        "rate": 2.0
+      },
+      {
+        "category": "internet_cable",
+        "rate": 2.0
+      },
+      {
+        "category": "streaming",
+        "rate": 2.0,
+        "merchant_allowlist": [
+          "netflix.com",
+          "spotify.com",
+          "hulu.com",
+          "youtube.com"
+        ]
+      }
+    ]
+  },
+  "usbank-triple-cash-business": {
+    "id": "usbank-triple-cash-business",
+    "issuer": "usbank",
+    "network": "visa",
+    "currency": "cash",
+    "name": "U.S. Bank Triple Cash Rewards Business",
+    "common": 147,
+    "business": true,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-29",
+    "source_url": "https://www.usbank.com/business-banking/business-credit-cards/business-triple-cash-back-credit-card.html",
+    "caution": "Business card. Gas and EV charging over $200 a transaction earn 1%.",
+    "note": "Read off footnotes 2 and 5 of the product page on 2026-09-29: 3% at restaurants and restaurant delivery, office supply stores, cell phone service providers, and gas and EV charging stations, not wholesale clubs or discount stores and supercenters, with gas or charging over $200 a transaction earning 1%; 5% on prepaid hotels and car rentals in the Travel Center; 1% elsewhere, uncapped. U.S. Bank names fast food when it means it -- the Altitude cards pay on 'restaurant, fast-food restaurant or bar' -- and its Cash+ Restaurants choice 'excludes most fast food', so the dining rule denylists the fast-food rows, as Cash+'s does. The $100 software credit is not ranked. No annual fee, a Visa, and Cash Rewards redeem as a statement credit or U.S. Bank deposit, so currency is 'cash'.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "U.S. Bank Travel Center"
+      },
+      {
+        "category": "car_rental",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "U.S. Bank Travel Center"
+      },
+      {
+        "category": "dining",
+        "rate": 3.0,
+        "merchant_denylist": [
+          "chipotle.com",
+          "starbucks.com"
+        ]
+      },
+      {
+        "category": "office_supply",
+        "rate": 3.0
+      },
+      {
+        "category": "phone",
+        "rate": 3.0
+      },
+      {
+        "category": "gas",
+        "rate": 3.0
+      },
+      {
+        "category": "ev_charging",
+        "rate": 3.0
+      }
+    ]
+  },
+  "bofa-business-travel-rewards": {
+    "id": "bofa-business-travel-rewards",
+    "issuer": "bofa",
+    "network": "mastercard",
+    "currency": "bofa",
+    "name": "BofA Business Advantage Travel Rewards",
+    "common": 148,
+    "business": true,
+    "annual_fee": 0,
+    "base_rate": 1.5,
+    "verified": true,
+    "last_verified": "2026-09-29",
+    "source_url": "https://business.bankofamerica.com/en/credit-cards/business-advantage-travel-rewards",
+    "caution": "Business card. Points are worth a cent against travel or dining, 0.6 cents as cash.",
+    "note": "Read off the product page and its Terms and Conditions (the Business Advantage Travel Rewards World Mastercard Program Summary) on 2026-09-29: 1.5 points per $1 on everything and 3 on travel booked through the Bank of America Travel Center, both uncapped; no annual fee and no foreign transaction fee. A travel credit is a statement credit against travel or dining bought in the last 12 months -- airlines, hotels, timeshares, car rental, cruise lines, travel agencies, trains, buses, taxis, ferries, parking, tolls, attractions, restaurants, bars and fast food -- at $0.01 a point; cash is $0.006 a point. So currency is 'bofa' at 1.0, as for the personal Travel Rewards card. tier_multiplier is Preferred Rewards for Business, which the page applies to the Travel Center rate too: 3 becomes 5.25 at Platinum Honors.",
+    "user_config": {
+      "tier_multiplier": {
+        "label": "Preferred Rewards for Business tier",
+        "options": {
+          "None": 1.0,
+          "Gold": 1.25,
+          "Platinum": 1.5,
+          "Platinum Honors": 1.75
+        }
+      }
+    },
+    "rules": [
+      {
+        "category": "travel_portal",
+        "rate": 3.0,
+        "portal_only": true,
+        "portal": "Bank of America Travel Center"
+      }
+    ]
+  },
+  "usbank-business-altitude-connect": {
+    "id": "usbank-business-altitude-connect",
+    "issuer": "usbank",
+    "network": "visa",
+    "currency": "usbank",
+    "name": "U.S. Bank Business Altitude Connect",
+    "common": 149,
+    "business": true,
+    "annual_fee": 95,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-29",
+    "source_url": "https://www.usbank.com/business-banking/business-credit-cards/business-altitude-connect-credit-card.html",
+    "caution": "Business card. Points are worth a cent on travel or paid into a U.S. Bank account; other redemptions may pay less.",
+    "note": "Read off footnote 2 of the product page on 2026-09-29: 5 points on prepaid hotels and car rentals in the Travel Center; 4 on the first $150,000 a calendar year of combined purchases made directly with travel providers -- 'such as ... airlines, hotels, car rentals, taxicabs, limousines, passenger trains and cruise line companies', so OTAs are denylisted on hotels -- and at gas and EV charging stations, not wholesale clubs or discount stores and supercenters, then 1; 2 at restaurants, fast food and bars and cellphone providers, uncapped; 1 elsewhere. $0 annual fee the first year, then $95. A Visa Signature. The page's rewards calculator (cardrewards.usbank.com/Business/Altitude_Connect_Calc/A/) prices a point at a cent redeemed for travel or as a deposit to a U.S. Bank account -- '(1 point = $0.01)' -- and footnote 1 says other redemptions may be worth a different amount. Its points move to and from the personal Altitude cards, so it earns 'usbank'. The $25 rideshare credit is not ranked.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "U.S. Bank Travel Center"
+      },
+      {
+        "category": "car_rental",
+        "rate": 5.0,
+        "portal_only": true,
+        "portal": "U.S. Bank Travel Center"
+      },
+      {
+        "category": "travel_air",
+        "rate": 4.0,
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        }
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 4.0,
+        "merchant_denylist": [
+          "expedia.com",
+          "booking.com",
+          "airbnb.com",
+          "hotels.com",
+          "priceline.com",
+          "vrbo.com",
+          "kayak.com",
+          "orbitz.com",
+          "travelocity.com"
+        ],
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        }
+      },
+      {
+        "category": "car_rental",
+        "rate": 4.0,
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        }
+      },
+      {
+        "category": "travel_ground",
+        "rate": 4.0,
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        }
+      },
+      {
+        "category": "gas",
+        "rate": 4.0,
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        }
+      },
+      {
+        "category": "ev_charging",
+        "rate": 4.0,
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        }
+      },
+      {
+        "category": "dining",
+        "rate": 2.0
+      },
+      {
+        "category": "phone",
+        "rate": 2.0
+      }
+    ]
+  },
+  "usbank-business-essentials": {
+    "id": "usbank-business-essentials",
+    "issuer": "usbank",
+    "network": "visa",
+    "currency": "cash",
+    "name": "U.S. Bank Business Essentials",
+    "common": 150,
+    "business": true,
+    "annual_fee": 0,
+    "base_rate": 2.0,
+    "verified": true,
+    "last_verified": "2026-09-29",
+    "source_url": "https://www.usbank.com/business-banking/business-credit-cards/business-essentials-credit-card.html",
+    "caution": "Business card. 2.5% on the first $10,000 a month with $10,000 in U.S. Bank business checking, which is not ranked.",
+    "note": "Read off footnotes 1, 2 and 4 of the product page and its FAQ on 2026-09-29: 2 points per $1 on every purchase, uncapped, and 6 on prepaid hotels and car rentals in the Travel Center. The Business Essentials Earning Bonus adds half a point on the first $10,000 of purchases each billing cycle with a $10,000 average balance in a qualifying U.S. Bank business checking account, education, gift cards and tax excepted. It adds to the rate rather than multiplying it, so it is not a tier picker -- a multiplier would lift the Travel Center rate too -- and it is the caution. Points are cash back: the page prices 50,000 points at $500 redeemed as a deposit or statement credit, so currency is 'cash'. No annual fee. A Visa.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 6.0,
+        "portal_only": true,
+        "portal": "U.S. Bank Travel Center"
+      },
+      {
+        "category": "car_rental",
+        "rate": 6.0,
+        "portal_only": true,
+        "portal": "U.S. Bank Travel Center"
+      }
+    ]
+  },
+  "usbank-business-essentials-plus": {
+    "id": "usbank-business-essentials-plus",
+    "issuer": "usbank",
+    "network": "visa",
+    "currency": "cash",
+    "name": "U.S. Bank Business Essentials Plus",
+    "common": 151,
+    "business": true,
+    "annual_fee": 295,
+    "base_rate": 2.0,
+    "verified": true,
+    "last_verified": "2026-09-29",
+    "source_url": "https://www.usbank.com/business-banking/business-credit-cards/business-essentials-plus-credit-card.html",
+    "caution": "Business card. 5% in your top category each month, and up to 3.5% with U.S. Bank business checking, are not ranked.",
+    "note": "Read off footnotes 1 to 4 of the product page and its FAQ on 2026-09-29: 2 points per $1 on every purchase and 10 on prepaid hotels and car rentals in the Travel Center. 5 on the month's top eligible spend category, to $200,000 a year from account opening, from eight: accounting and tax services, airlines, cell phone providers, dining, entertainment (bowling alleys, golf courses, entertainment parks), office supply stores, postal and shipping, and utilities. Which one is decided by the month's spending, which no page shows, so it is the caution, as the recipe has it; Business Gold and World of Hyatt Business took pickers for the same kind of rate on 2026-09-29. The Business Essentials Plus Earning Bonus adds 0.5, 1 or 1.5 points with $15,000, $75,000 or $150,000 averaged in a qualifying U.S. Bank business checking account, on $200,000 a year; it adds rather than multiplies, as on Business Essentials, so it is in the caution too. Points are cash back at a cent -- 100,000 points = $1,000 as a deposit or statement credit -- so currency is 'cash'. $295 annual fee. A Visa Signature.",
+    "rules": [
+      {
+        "category": "travel_hotel",
+        "rate": 10.0,
+        "portal_only": true,
+        "portal": "U.S. Bank Travel Center"
+      },
+      {
+        "category": "car_rental",
+        "rate": 10.0,
+        "portal_only": true,
+        "portal": "U.S. Bank Travel Center"
+      }
+    ]
+  },
+  "firstbanktrust-kroger": {
+    "id": "firstbanktrust-kroger",
+    "issuer": "firstbanktrust",
+    "network": "mastercard",
+    "currency": "kroger",
+    "name": "Kroger Rewards World Elite Mastercard",
+    "aliases": [
+      "Baker's Rewards World Elite Mastercard",
+      "City Market Rewards World Elite Mastercard",
+      "Dillons Rewards World Elite Mastercard",
+      "Fred Meyer Rewards World Elite Mastercard",
+      "Fry's Rewards World Elite Mastercard",
+      "Gerbes Rewards World Elite Mastercard",
+      "Jay C Rewards World Elite Mastercard",
+      "King Soopers Rewards World Elite Mastercard",
+      "Mariano's Rewards World Elite Mastercard",
+      "Metro Market Rewards World Elite Mastercard",
+      "Pay Less Rewards World Elite Mastercard",
+      "Pick 'n Save Rewards World Elite Mastercard",
+      "QFC Rewards World Elite Mastercard",
+      "Ralphs Rewards World Elite Mastercard",
+      "Smith's Rewards World Elite Mastercard"
+    ],
+    "common": 152,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-29",
+    "source_url": "https://www.kroger.com/pr/rewards-mastercard",
+    "caution": "Kroger members also earn a point per $1 there with any card, two with Boost.",
+    "note": "Launched 2026-09-24. Issued by First Bank & Trust of Brookings, South Dakota, and operated by Imprint: so say the card page, section 4 of the Kroger Rewards Program Terms (kroger.com/i/terms/rewards-program), and Imprint's Rewards Program Terms and Cardholder Agreement, all read 2026-09-29. Imprint's own program list (imprint.co/programs) names First Electronic Bank; the card's own documents outrank it. Imprint's two documents download as PDFs rather than open; David approved downloading them on 2026-09-29, and they were read with pdftotext, the earning table, an image, by rendering its page. One card sold under sixteen Kroger banners -- Baker's, City Market, Dillons, Fred Meyer, Fry's, Gerbes, Jay C, King Soopers, Kroger, Mariano's, Metro Market, Pay Less, Pick 'n Save, QFC, Ralphs and Smith's -- with the same rewards, so one record stands for all, named for Kroger, with the other fifteen card names in aliases for search. Rates are the Credit Card Points column of the rewards terms' table, which is what the card adds: 3 points per $1 in Kroger Digital Channels, which the terms define as Kroger.com and the websites and apps of the participating banners -- the sixteen above plus Harris Teeter, which has no card of its own; 4 at fuel pumps in Kroger stores; 1 in store otherwise; 2 on 'dining, travel and utilities' transactions 'as identified by MCC'; 1 everywhere else, uncapped. Members also earn a Kroger Rewards point per $1, and Boost members one more, whatever card pays -- the table's totals of 5 and 3, and the page's 'up to 5x' and 'up to 3x'. The card includes Boost Essential free, but a cardholder keeps those points with any card, so they are left out, per the store-rate rule. Only the digital rate ranks, on the seventeen banners' own sites; fuel and in-store earning happen at a till. The terms name exactly three bonus categories and decide them by merchant code, but publish no code list: dining and utilities are ranked as named, and travel on flights, hotels and car rentals, with transit left out. Points are Kroger Points: 100 = $1 off groceries (kroger.com/pr/points-program), or 10 cents off a gallon at a Kroger fuel center on up to 35 gallons, which is worth more on a large fill-up; 'kroger' is 1.0, the grocery figure. Card points do not expire while the account is active. $0 annual fee and no foreign transaction fee, per the page's pricing table. A World Elite Mastercard.",
+    "rules": [
+      {
+        "category": "groceries",
+        "rate": 3.0,
+        "merchant_allowlist": [
+          "kroger.com",
+          "ralphs.com",
+          "fredmeyer.com",
+          "kingsoopers.com",
+          "frysfood.com",
+          "smithsfoodanddrug.com",
+          "qfc.com",
+          "marianos.com",
+          "picknsave.com",
+          "metromarket.net",
+          "dillons.com",
+          "bakersplus.com",
+          "citymarket.com",
+          "gerbes.com",
+          "jaycfoods.com",
+          "pay-less.com",
+          "harristeeter.com"
+        ]
+      },
+      {
+        "category": "dining",
+        "rate": 2.0
+      },
+      {
+        "category": "utilities",
+        "rate": 2.0
+      },
+      {
+        "category": "travel_air",
+        "rate": 2.0
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 2.0
+      },
+      {
+        "category": "car_rental",
+        "rate": 2.0
       }
     ]
   }
