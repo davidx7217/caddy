@@ -23,7 +23,7 @@ works and why; this file is only the state of play.
   other 135 are still unverified seed data (section 16).
 - **Freedom Flex carries Q4 2026 and Q1 2027**, dining 7X in Q4 (section 2). Rates
   switch at local midnight even in a tab left open.
-- **Tests green**: 577 engine + 31 setup + 54 lifecycle + 47 worker. `npm test`.
+- **Tests green**: 581 engine + 31 setup + 54 lifecycle + 47 worker. `npm test`.
 - **Two scheduled agents keep the data current** (section 15), and run without
   permission prompts. Rate changes they find wait on `rates-*` and `upkeep-*`
   branches for David's approval; only `last_verified` date bumps land on `main`
@@ -108,7 +108,8 @@ dated.
      so Obsidian's "other travel" is unconfirmed (section 9).
 
    Settled 2026-09-29: Wyndham Earner's 3X stands, `gm` stays at a cent, and
-   Business Gold has a picker for its 4X (sections 10 and 13).
+   Business Gold and World of Hyatt Business have pickers for their top
+   categories (sections 10, 13 and 14).
 
 ---
 
@@ -694,9 +695,11 @@ engine change.
 - **Hilton Honors Business earns 5X on everything to $100,000 a year, then 3X.** The
   5X is the base rate, which carries no cap, so the $100,000 is in the caution, as
   Blue Business Plus's $50,000 is.
-- **World of Hyatt Business's 2X goes to the top three of eight categories each
-  quarter**, which no page shows, so it is a caution and ranks 1X -- the call
-  Business Gold's 4X started with, before it took a picker (section 10).
+- **World of Hyatt Business's 2X has a picker (2026-09-29).** It goes to the top three
+  of eight categories each calendar quarter, with no cap, which no page shows. It was
+  a caution ranking 1X until David chose the picker Business Gold took (section 10):
+  the cardholder names the three they usually hit. Internet, cable and phone covers
+  both phone and internet_cable; gas leaves out EV charging. Nothing picked, 1X.
 - **The airline cards' headline totals include member miles**, as on the personal
   cards: United's 8x is 6 MileagePlus miles plus the card's 2.
 - **Southwest Performance Business's offer details still list categories that ended
