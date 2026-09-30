@@ -1936,30 +1936,29 @@ eq('Carnival Rewards: 3x at carnival.com, worth 2.76%, the card\'s share of "up 
    [sail('barclays-carnival', 'carnival.com')?.rate, sail('barclays-carnival', 'carnival.com')?.value], [3, 2.76]);
 eq('...1x at another cruise line: the 3X is purchases billed by Carnival Cruise Line',
    sail('barclays-carnival')?.rate, 1);
+const CRUISE_RATES = [['chase-sapphire-preferred', 2], ['chase-aeroplan', 3], ['chase-ink-business-preferred', 3],
+  ['chase-ihg-premier', 5], ['chase-ihg-business-premier', 5], ['chase-united-quest', 2],
+  ['chase-united-club', 2], ['wellsfargo-autograph', 3], ['wellsfargo-autograph-journey', 3],
+  ['bofa-premium-rewards', 2], ['bofa-premium-rewards-elite', 2], ['usaa-eagle-adapt', 3],
+  ['usaa-eagle-navigator', 3], ['navyfederal-flagship-premier', 4], ['usbank-altitude-connect', 4],
+  ['usbank-business-altitude-connect', 4], ['barclays-rci', 2], ['barclays-capital-vacations', 2],
+  ['citi-costco-anywhere', 3], ['citi-costco-anywhere-business', 3], ['column-bilt-obsidian', 2]];
 eq('cruise lines earn the travel rate on every card whose definition names them',
-   [['chase-sapphire-preferred', 2], ['chase-aeroplan', 3], ['chase-ink-business-preferred', 3],
-    ['chase-ihg-premier', 5], ['chase-ihg-business-premier', 5], ['chase-united-quest', 2],
-    ['chase-united-club', 2], ['wellsfargo-autograph', 3], ['wellsfargo-autograph-journey', 3],
-    ['bofa-premium-rewards', 2], ['bofa-premium-rewards-elite', 2], ['usaa-eagle-adapt', 3],
-    ['usaa-eagle-navigator', 3], ['navyfederal-flagship-premier', 4], ['usbank-altitude-connect', 4],
-    ['barclays-rci', 2], ['barclays-capital-vacations', 2], ['citi-costco-anywhere', 3]]
-     .map(([id, rate]) => [id, sail(id)?.rate]),
-   [['chase-sapphire-preferred', 2], ['chase-aeroplan', 3], ['chase-ink-business-preferred', 3],
-    ['chase-ihg-premier', 5], ['chase-ihg-business-premier', 5], ['chase-united-quest', 2],
-    ['chase-united-club', 2], ['wellsfargo-autograph', 3], ['wellsfargo-autograph-journey', 3],
-    ['bofa-premium-rewards', 2], ['bofa-premium-rewards-elite', 2], ['usaa-eagle-adapt', 3],
-    ['usaa-eagle-navigator', 3], ['navyfederal-flagship-premier', 4], ['usbank-altitude-connect', 4],
-    ['barclays-rci', 2], ['barclays-capital-vacations', 2], ['citi-costco-anywhere', 3]]);
+   CRUISE_RATES.map(([id]) => [id, sail(id)?.rate]), CRUISE_RATES);
 eq('...under the same caps as the rest of their travel',
-   [sail('chase-ink-business-preferred')?.caveats[0], sail('usaa-eagle-adapt')?.caveats[0]],
-   ['Capped at $150,000 per year, then 1x', 'Capped at $3,000 per quarter, then 1x']);
-eq('...and on BofA Customized Cash only with travel picked, whose page names cruises',
-   [sail('bofa-customized-cash', 'royalcaribbean.com', { selections: ['travel'] })?.rate,
-    sail('bofa-customized-cash', 'royalcaribbean.com', { selections: ['online'] })?.rate], [3, 1]);
-eq('cruise lines earn 1x where the definition leaves them out, or went unread (Bilt)',
+   ['chase-ink-business-preferred', 'usaa-eagle-adapt', 'usbank-business-altitude-connect']
+     .map(id => sail(id)?.caveats[0]),
+   ['Capped at $150,000 per year, then 1x', 'Capped at $3,000 per quarter, then 1x',
+    'Capped at $150,000 per year, then 1x']);
+eq('...and on the BofA Customized Cash cards only with travel picked, whose pages name cruises',
+   ['bofa-customized-cash', 'bofa-business-customized-cash'].flatMap(id =>
+     [sail(id, 'royalcaribbean.com', { selections: ['travel'] })?.rate,
+      sail(id, 'royalcaribbean.com', { selections: ['gas_ev'] })?.rate]), [3, 1, 3, 1]);
+eq('cruise lines earn 1x where the definition leaves them out, or names no codes (Kroger)',
    ['chase-sapphire-reserve', 'chase-sapphire-reserve-business', 'chase-united-explorer', 'citi-strata-premier',
     'barclays-aarp-travel-rewards', 'barclays-emirates-rewards', 'barclays-wyndham-earner-plus',
-    'column-bilt-obsidian', 'amex-platinum'].map(id => sail(id)?.rate), Array(9).fill(1));
+    'amex-platinum', 'citi-aadvantage-business', 'firstbanktrust-kroger'].map(id => sail(id)?.rate),
+   Array(10).fill(1));
 eq('no portal note on a cruise line: only Chase Travel sells cruises at its portal rate, and that is not modelled',
    run('carnival.com', own('chase-sapphire-reserve', 'capitalone-venture-x'),
      { now: new Date('2026-09-30T12:00:00') }).notes, []);

@@ -701,8 +701,8 @@ markup, so without a row the dock would still appear, on a guessed hotel categor
 **Cruise lines are a category; timeshares are not.** `cruise` holds the cruise lines'
 own sites, and every card whose issuer definition names cruise lines carries a cruise
 rule at its travel rate, each definition read and recorded in the card's note on
-2026-09-29 or 30. A card whose definition leaves them out, or went unread (Bilt), earns
-its base rate there. Timeshare charges stay unranked: they are owners' fees, nobody has
+2026-09-29 or 30. A card whose definition leaves them out, or names travel without
+saying which codes count (Kroger), earns its base rate there. Timeshare charges stay unranked: they are owners' fees, nobody has
 checked how they code, and RCI's own terms pay 2X on timeshares but 1X on maintenance
 fees. Chase Travel sells cruises at its portal rate, but no portal note appears on a
 cruise line, because `PORTAL_BOOKABLE` covers flights, hotels and car rentals only.
