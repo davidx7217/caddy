@@ -1,6 +1,6 @@
 # Handoff
 
-Where Caddy stands as of **29 September 2026**, and what is left.
+Where Caddy stands as of **30 September 2026**, and what is left.
 
 Written to be picked up cold. The README is the reference for how the extension
 works and why; this file is only the state of play.
@@ -9,7 +9,7 @@ works and why; this file is only the state of play.
 
 ## State
 
-- **v1.0.0**, 140 cards across 17 issuers, 163 merchant rows, 27 categories.
+- **v1.0.0**, 140 cards across 17 issuers, 171 merchant rows, 28 categories.
   The second twenty cards landed 2026-09-27; store cards plus the remaining
   airline and hotel tiers, nineteen cards from five issuers Caddy lacked,
   thirteen business cards, eight smaller store cards, seven missing tiers,
@@ -19,11 +19,15 @@ works and why; this file is only the state of play.
   issuer's own pages -- fourteen of them only in the in-app browser -- and every
   card ranked on every merchant row. The fixes it found are merged. The one soft
   spot left: the three Bilt cards' category definitions (section 9).
-- **28 merchant rows record how they actually code** (`mcc`, `mcc_source`); the
-  other 135 are still unverified seed data (section 16).
+- **30 merchant rows record how they actually code** (`mcc`, `mcc_source`); the
+  other 141 are still unverified seed data (section 16).
+- **Booking sites stay hotels; cruise lines are a category** (section 17), both
+  David's calls of 2026-09-29. Eight cruise-line rows, and a cruise rule on the
+  nineteen cards whose issuer definitions name cruise lines, plus Carnival's 3X.
+  Navy Federal Flagship Premier no longer earns 4X through booking sites.
 - **Freedom Flex carries Q4 2026 and Q1 2027**, dining 7X in Q4 (section 2). Rates
   switch at local midnight even in a tab left open.
-- **Tests green**: 572 engine + 31 setup + 54 lifecycle + 47 worker. `npm test`.
+- **Tests green**: 584 engine + 31 setup + 54 lifecycle + 47 worker. `npm test`.
 - **Two scheduled agents keep the data current** (section 15), and run without
   permission prompts. Rate changes they find wait on `rates-*` and `upkeep-*`
   branches for David's approval; only `last_verified` date bumps land on `main`
@@ -66,8 +70,6 @@ dated.
      once a second source turns up.
    - The Gap Encore Mastercard's 3X without tjmaxx.tjx.com, marshalls.com and
      nike.com. About 10 minutes, same condition.
-   - A `travel_agency` category: not approved as stated, because booking sites
-     are not always the merchant. A call for David, then one to two hours.
 2. **Submit to the Chrome Web Store** -- unblocked 2026-09-29. The repo is public
    as github.com/davidx7217/caddy (renamed from card-picker; old URLs redirect),
    and the listing's privacy-policy URL now names it and returns 200. Section 1
@@ -101,9 +103,10 @@ dated.
    business cards are in now (sections 9 to 14). The next gaps:
    - **Business cards from the issuers section 10 did not cover** -- BofA, U.S.
      Bank, Wells Fargo and Citi -- not yet looked for.
-   - **Cruise and timeshare categories**, if you want them: without them
-     Carnival's 3X and the RCI and Capital Vacations 5X go unranked, and adding
-     either means a rule on every card whose travel covers it (section 13).
+   - **Cruise co-brands** -- Royal Caribbean, Celebrity, Norwegian, Princess,
+     Holland America -- can rank now that cruise lines have a category (section 17).
+   - **A timeshare category**, if wanted: without one, RCI's and Capital
+     Vacations' 5X and Wyndham's vacation-club rates stay unranked (section 17).
    - **The Kroger Rewards World Elite Mastercard** (First Bank & Trust, launched
      2026-09-24), which the monthly scout logged.
 
@@ -115,7 +118,8 @@ dated.
    - **U.S. Bank Altitude points** are assumed to be worth a cent; no U.S. Bank
      page states a figure (section 12).
    - **Bilt's offer terms** were never readable -- the link downloads a file --
-     so Obsidian's "other travel" is unconfirmed (section 9).
+     so Obsidian's "other travel" is unconfirmed, and it earns 1X on cruises until
+     they are read (sections 9 and 17).
    - **Amex Business Gold's 4X** is a caution, not rules, because it follows the
      business's top two categories. A Cash+-style picker is the alternative if
      David wants it (section 10).
@@ -649,13 +653,12 @@ Rewards and Capital Vacations. Three new currencies -- `gm`, `carnival`, `breeze
 there), the accessories hosts of Chevrolet, Buick, GMC and Cadillac, gmparts.com and
 gmcompanystore.com, each confirmed by the HTTP sweep.
 
-- **Cruise lines and timeshares have no category, so three headline rates are
-  unranked**: Carnival's 3X at Carnival, RCI's 5X at RCI, Capital Vacations' 5X on
-  its own charges. Filing carnival.com or rci.com under an existing category would
-  misrank every card whose travel includes cruise lines or timeshares -- Chase's,
-  Autograph Journey, BofA Premium Rewards, USAA, Navy Federal -- so those sites are
-  not in merchants.json. A `cruise` or `timeshare` category would rank them, at
-  the cost of a rule on each of those cards.
+- **Timeshares have no category, so two headline rates are unranked**: RCI's 5X at
+  RCI and Capital Vacations' 5X on its own charges. Filing rci.com under an existing
+  category would misrank every card whose travel includes timeshares -- Chase's,
+  Autograph Journey, BofA Premium Rewards, Navy Federal -- so it is not in
+  merchants.json. Carnival's 3X was the third until cruise lines got a category on
+  2026-09-30 (section 17).
 - **GM points are valued at a full cent**, GM's own figure for a point redeemed
   through GM, as store money is valued as cash elsewhere. They spend only with GM,
   so the card reads 3% everywhere and ties or beats every flat card; `gm` is its own
@@ -783,11 +786,13 @@ calls itself UNVERIFIED SEED DATA and no agent checks how a merchant codes):
 - Visa's Merchant Data Standards Manual and Mastercard's Quick Reference Booklet
   define what each code covers, not which merchant uses which.
 
-**Recorded so far** (2026-09-29): 28 rows carry `mcc_source`, 20 of them an `mcc` --
+**Recorded so far** (2026-09-30): 30 rows carry `mcc_source`, 20 of them an `mcc` --
 the booking sites, the cable and phone companies, the off-price stores, Nike,
-Wayfair, HomeGoods, StubHub, Audible, YouTube, Starbucks, and the rows the Cash+
-recheck leaned on. The engine does not read either field; a test keeps every `mcc`
-four digits with a source beside it. Next: the other 135 rows, a batch at a time.
+Wayfair, HomeGoods, StubHub, Audible, YouTube, Starbucks, the rows the Cash+
+recheck leaned on, and Carnival and Royal Caribbean. The engine does not read either
+field; a test keeps every `mcc` four digits with a source beside it. Next: the other
+141 rows, a batch at a time. Cruise lines are a dead end on AwardWallet: their
+descriptors carry only its own labels, no issuer coding.
 
 **How to continue it** -- what worked on 2026-09-29:
 - In the in-app browser, open awardwallet.com/merchants, find the "Merchant Name"
@@ -848,23 +853,101 @@ on another).
   under its own code -- Booking.com's partner documentation says so, and
   AwardWallet's "Hotel at Booking.com" descriptors show Hotels. So no single category
   is right for booking.com, priceline.com, hotels.com or vrbo.com, and the change
-  also needs each travel card's definition, which Citi (Strata Premier) does not
-  publish and Bilt's unread terms may hold. That makes it a modelling call for David.
+  also needs each travel card's definition, which Bilt's unread terms may hold.
+  (This said Citi does not publish Strata Premier's; it does -- see section 17.)
+  David declined the category on 2026-09-29 (section 17).
 
 **Open questions, each a call for David or a statement to settle it:**
 - Wyndham Earner: its own page says 2X in one place and 3X in another on dining,
   grocery and gas. The data follows the Reward Rules (3X).
-- Citi Strata Premier's "Air Travel and Other Hotel Purchases" has no published
-  definition; booking sites and Airbnb get 3X today.
 - Altitude Connect excludes booking sites from its 4X travel and the Emirates cards
   from their 2X; RCI and Capital Vacations do not. The same question answered two
   ways.
 - Sapphire Preferred's 3X "vacation homes at top brands" is not modelled.
 - Venture X's portal note says 10X on vrbo.com and airbnb.com; vacation rentals
   through Capital One Travel earn 5X.
-- Merchant rows that are not really checkouts: kayak.com (search only), opentable.com
-  (meals are paid at the table), riteaid.com (no longer a drugstore storefront),
-  traderjoes.com, wholefoodsmarket.com.
+- Merchant rows that are not really checkouts: opentable.com (meals are paid at the
+  table), riteaid.com (no longer a drugstore storefront), traderjoes.com,
+  wholefoodsmarket.com. kayak.com, search only, stays: section 17.
+
+---
+
+## 17. Booking sites and cruise lines, 29-30 September 2026
+
+Two modelling calls David made on 2026-09-29, each from options with a
+recommendation. Every definition below was read on the issuer's own page that day or
+the next and is recorded in the card's note; `last_verified` was not bumped, because
+only the travel definitions were re-read.
+
+**Booking sites stay hotels: no `travel_agency` category.** A booking site codes as a
+travel agency when it takes the payment -- Expedia at Chase; Airbnb at Chase, Amex and
+Capital One (AwardWallet) -- but on a pay-at-property booking the property charges
+under its own code (Booking.com's partner page on Smart Pay-at-Property; AwardWallet's
+"Hotel at Booking.com" descriptors show Hotels). No single category fits booking.com,
+priceline.com, hotels.com or vrbo.com, and the category would have ranked every card
+exactly as the denylists do, for about three hours' work. The cost of keeping it this
+way: a new booking site means an edit to the twelve hotel-rule denylists. What the
+review turned up instead:
+- **Navy Federal Flagship Premier earned 4X through booking sites without support.**
+  Its product page says travel "is typically coded as airline, hotel, car rental, bus
+  lines, taxis, cruise lines, time shares, parking, rideshare, and transit" -- no
+  travel agencies -- so seven booking sites are now denylisted on its hotel rule.
+  The same page names vacation home rentals as eligible, so airbnb.com and vrbo.com
+  keep the 4X, although Airbnb codes as a travel agency elsewhere. That is the one
+  judgment call in this section; drop the two if a statement says otherwise.
+- **Citi does publish Strata Premier's definition**, contrary to section 16 as first
+  written: the card page's Additional Information says "Air Travel and Other Hotel
+  Purchases: Includes purchases at airlines, hotels (not booked through the Citi
+  Travel site...), and travel agencies". Its 3X on booking sites stands.
+- **BofA Customized Cash's travel choice** names travel agencies and cruises, with
+  Airbnb, Expedia and Royal Caribbean among BofA's own merchant examples. Its 3%
+  on booking sites stands; the note now says why.
+- **kayak.com keeps its row.** It only searches, but its hotel pages carry `Hotel`
+  and `AggregateOffer` markup (measured 2026-09-29), so without a row the dock would
+  still appear, on a guessed hotel category.
+
+**Cruise lines are the 28th category, `cruise`.** Eight rows: carnival.com,
+royalcaribbean.com, ncl.com, princess.com, celebritycruises.com, hollandamerica.com,
+msccruisesusa.com (msccruises.com redirects there for a US browser) and
+virginvoyages.com. The HTTP sweep cleared seven; msccruisesusa.com answered it with an
+error and was confirmed in the browser. A cruise rule at the card's travel rate, and
+under its travel cap, on every card whose definition names cruise lines:
+
+| Issuer | Cards | Where the definition says so |
+| --- | --- | --- |
+| Chase | Sapphire Preferred 2X, Aeroplan 3X, Ink Business Preferred 3X, IHG Premier and Premier Business 5X | offer details name "travel"; chase.com/RewardsCategoryFAQs' Travel names cruise lines, on-board goods and services excluded |
+| Chase | United Quest and United Club 2X | "all other travel including ... cruise lines" |
+| Wells Fargo | Autograph 3X, Autograph Journey 3X | footnotes, by Visa merchant code |
+| BofA | Premium Rewards and Elite 2X; Customized Cash 3% with the travel choice | each card's T&C; the category page |
+| USAA | Eagle Navigator 3X, Eagle Adapt 3% | each card's program terms |
+| Navy Federal | Flagship Premier 4X | product page footnote 1 |
+| U.S. Bank | Altitude Connect 4X | footnote 2: "directly with ... cruise line companies" |
+| Barclays | RCI and Capital Vacations 2X; Carnival 3X at carnival.com only | Reward Rules; Carnival's 3X is "items billed directly from Carnival Cruise Line" |
+| Citi | Costco Anywhere 3% | "eligible travel ... including ... cruise lines" |
+
+Read and left at 1X: both Sapphire Reserves (4X is flights and hotels booked direct,
+and Chase's definition of that excludes packages sold by cruise lines), United
+Explorer, World of Hyatt, Marriott Bold, Strata Premier, AARP Travel Rewards,
+Emirates and Wyndham Earner Plus. Bilt Obsidian's "other travel" is undefined on
+bilt.com and its terms were not reopened, so it earns 1X there too.
+
+Left out on purpose:
+- **Timeshares.** Owners' fees, codes unchecked, and RCI's own terms pay 2X on
+  timeshares but 1X on maintenance fees. RCI's and Capital Vacations' 5X and Wyndham's
+  vacation-club rates stay unranked.
+- **Portal notes on cruise lines.** Chase's FAQ lists cruises among Chase Travel
+  purchases, but `PORTAL_BOOKABLE` covers flights, hotels and car rentals only, and
+  adding cruise would put every `travel_portal` rule's note on cruise lines, whether
+  or not that portal sells them.
+- **How cruise lines code.** AwardWallet's Carnival and Royal Caribbean descriptors
+  carry only its own labels (Cruise Lines, Travel, one Hotels), no issuer coding; the
+  two rows record that. The rows rest on the issuers' wording above.
+- **Cruise co-brands** (Royal Caribbean, Celebrity, Norwegian, Princess, Holland
+  America) were not added; they can rank now.
+
+Pinned in `test-engine.mjs`'s "booking sites and cruise lines" section: every cruise
+rate and cap, the cards left at 1X, no portal note on a cruise line, Navy Federal on
+all nine booking sites, and BofA's travel choice on them.
 
 ---
 
