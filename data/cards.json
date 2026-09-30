@@ -5019,10 +5019,10 @@
     "annual_fee": 0,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-09-28",
+    "last_verified": "2026-09-29",
     "source_url": "https://cards.barclaycardus.com/banking/cards/wyndham-rewards-earner-card/",
     "caution": "Bonus points may not post when you pay through a digital wallet, PayPal or another third party.",
-    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48413). A Visa. 5X at participating Hotels by Wyndham, which is wyndhamhotels.com; 3X on dining, grocery stores other than Target and Walmart, gas and EV charging; 1X elsewhere. The product page's summary of the 3X names only the vacation clubs, dining and groceries; the Reward Rules, which are the agreement, add gas and EV charging, so those are in. Wyndham's vacation clubs -- Club Wyndham, WorldMark, Margaritaville Vacation Club and Shell Vacations Club stays, maintenance fees and timeshare loan payments -- earn the same and are not ranked. The rules withhold bonus points from purchases made through third parties, so the delivery apps are denylisted on dining and instacart.com's barclays override applies.",
+    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48413). A Visa. 5X at participating Hotels by Wyndham, which is wyndhamhotels.com; 3X on dining, grocery stores other than Target and Walmart, gas and EV charging; 1X elsewhere. The product page's summary of the 3X names only the vacation clubs, dining and groceries; the Reward Rules, which are the agreement, add gas and EV charging, so those are in. The page's 2X on dining, grocery and gas is stale text in its compare panel, which stays hidden until you compare cards; the Plus, Premier and Business pages' panels match their pages, and this page's body and the Reward Rules (accurate as of 2026-08-31) both say 3X, so 3X stands (re-read 2026-09-29). Wyndham's vacation clubs -- Club Wyndham, WorldMark, Margaritaville Vacation Club and Shell Vacations Club stays, maintenance fees and timeshare loan payments -- earn the same and are not ranked. The rules withhold bonus points from purchases made through third parties, so the delivery apps are denylisted on dining and instacart.com's barclays override applies.",
     "rules": [
       {
         "category": "travel_hotel",
