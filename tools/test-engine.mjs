@@ -1301,10 +1301,10 @@ eq('Cash+ select clothing stores: only the named ones',
    ['gap.com', 'jcrew.com', 'ae.com', 'hm.com', 'nike.com', 'tjmaxx.tjx.com']
      .map(h => on('usbank-cash-plus', h, plus(['five_clothing'])).rate), [5, 5, 5, 1, 1, 1]);
 // Wells Fargo defines Autograph's streaming by type, and pay TV is one of them.
-// Comcast and Charter code as pay TV by two sources; Cox and Optimum by one.
-eq('Autograph: 3x at directv.com, dish.com, xfinity.com and spectrum.com, still 1x at cox.com and optimum.com',
+// Comcast, Charter and Cox code as pay TV by two sources; Optimum by one.
+eq('Autograph: 3x at directv.com, dish.com, xfinity.com, spectrum.com and cox.com, still 1x at optimum.com',
    ['directv.com', 'dish.com', 'xfinity.com', 'spectrum.com', 'cox.com', 'optimum.com']
-     .map(h => on('wellsfargo-autograph', h).rate), [3, 3, 3, 3, 1, 1]);
+     .map(h => on('wellsfargo-autograph', h).rate), [3, 3, 3, 3, 3, 1]);
 // The Freedom cards' 2% on Lyft, on the card pages 2026-09-29. Dated outside
 // Freedom Flex's Q3 transit quarter so its 5x there does not mask the rule.
 {
