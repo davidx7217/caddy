@@ -22,8 +22,8 @@ works and why; this file is only the state of play.
   spot it left, the three Bilt cards' definitions, was read in Bilt's own terms
   the same day (section 9), and the twelve cards added later that day were read
   off their issuers' pages the same way (section 17).
-- **61 merchant rows record how they actually code** (`mcc`, `mcc_source`); the
-  other 126 are still unverified seed data (section 16).
+- **84 merchant rows record how they actually code** (`mcc`, `mcc_source`); the
+  other 103 are still unverified seed data (section 16).
 - **Booking sites stay hotels; cruise lines are a category** (section 18), both
   David's calls of 2026-09-29. Eight cruise-line rows, and a cruise rule on the
   twenty-three cards whose issuer definitions name cruise lines, plus Carnival's 3X.
@@ -834,21 +834,26 @@ calls itself UNVERIFIED SEED DATA and no agent checks how a merchant codes):
 - Visa's Merchant Data Standards Manual and Mastercard's Quick Reference Booklet
   define what each code covers, not which merchant uses which.
 
-**Recorded so far** (2026-09-30): 61 rows carry `mcc_source`, 49 of them an `mcc` --
+**Recorded so far** (2026-09-30): 84 rows carry `mcc_source`, 56 of them an `mcc` --
 the booking sites, the cable and phone companies, the off-price stores, Nike,
 Wayfair, HomeGoods, StubHub, Audible, YouTube, Starbucks, and the rows the Cash+
 recheck leaned on; then a second batch: the four delivery apps, Instacart, Costco,
 Sam's Club, Amazon, Best Buy, Netflix, Spotify, Hulu, Uber, Lyft, CVS and
 Walgreens; then a third, every row named on U.S. Bank's own lists: the five
 department stores, Kroger, Safeway, Publix, Apple, Newegg, REI, Dick's, Academy,
-Scheels and Bass Pro; and Carnival and Royal Caribbean, whose AwardWallet
-descriptors carry only its own labels, no issuer coding. The engine does not read either field; a test keeps every
-`mcc` four digits with a source beside it, and every card ranked the same on every
-row before and after the second and third batches. Next: the other 126 rows. U.S.
-Bank's lists name about twenty of them -- the eight gyms, Boost, Metro, Consumer
-Cellular, Cricket, EVgo, ChargePoint, Shell, ExxonMobil, and Ralphs, Fred Meyer,
-King Soopers, Pick'n Save, Trader Joe's and Whole Foods on the grocery list -- so
-they make a quick fourth batch.
+Scheels and Bass Pro; then a fourth, the rest of those lists: the eight gyms, Boost,
+Metro, Consumer Cellular, Cricket, EVgo, ChargePoint, Shell, both ExxonMobil rows,
+and Ralphs, Fred Meyer, King Soopers, Pick'n Save, Trader Joe's and Whole Foods; and
+Carnival and Royal Caribbean, whose AwardWallet descriptors carry only its own
+labels, no issuer coding. The gyms and carriers have no issuer coding on
+AwardWallet either, so they carry a source but no code. The engine does not read
+either field; a test keeps every `mcc` four digits with a source beside it, and
+every card ranked the same on every row before and after the second to fourth
+batches. Next: the other 103 rows -- 25 airlines and hotels, 13 grocers (most of
+them Kroger banners), 10 clothing stores, 9 online retailers, 9 car rentals, 6
+cruise lines, 6 ad platforms and a few more -- from AwardWallet. U.S. Bank's lists still name
+disneyplus.com, and gap.com, jcrew.com and ae.com on Select Clothing -- a list of
+merchants, not codes.
 
 **How to continue it** -- what worked on 2026-09-29:
 - In the in-app browser, open awardwallet.com/merchants, find the "Merchant Name"
@@ -866,8 +871,14 @@ they make a quick fourth batch.
 - Every keystroke in that box sends a request. On 2026-09-30 AwardWallet answered
   HTTP 429 after about thirty searches and was still refusing several minutes
   later, so type only as much of a name as picks it out, space lookups out, and
-  stop at the first 429. Clicking a suggestion changes the address to
-  `/merchants/<nameToUrl>` without redrawing the page; reload it to read.
+  stop at the first 429. Filling the box in one step (the browser's `form_input`)
+  sends a single request, and 23 lookups that way met no 429 later the same day.
+  Clicking a suggestion changes the address to `/merchants/<nameToUrl>` without
+  redrawing the page; reload it to read.
+- A missing Chase label is not a missing code. AwardWallet says, on a ChargePoint
+  page, that it only receives a Chase category when a user earned bonus points
+  there -- so Chase labels show up where some Chase card pays a bonus and are
+  missing elsewhere.
 - Cardholder datapoints: myFICO threads read fine in the in-app browser. U.S.
   Bank's transaction export puts the MCC in its Memo column, so Cash+ posters
   often quote exact codes.
