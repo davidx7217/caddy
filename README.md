@@ -24,8 +24,9 @@ Not financial advice. Verify any rate against your issuer before relying on it.
 
 ## Data status
 
-All 140 card records were verified against issuer sources -- 5 on **2026-08-29**, 6 on
-**2026-09-09**, 5 on **2026-09-10**, 24 on **2026-09-27** and 100 on **2026-09-28**. Each
+All 152 card records were verified against issuer sources -- 5 on **2026-08-29**, 6 on
+**2026-09-09**, 5 on **2026-09-10**, 24 on **2026-09-27**, 100 on **2026-09-28** and 12 on
+**2026-09-29**. Each
 carries `verified: true`, `last_verified`, and a `source_url`. The 2026-09-27 batch is
 the twenty cards added that day plus four whose categories changed with them; the
 2026-09-28 cards are seven store cards, the sixteen remaining tiers of the Delta,
@@ -38,17 +39,24 @@ and Globe, Wells Fargo Autograph Journey, BofA Premium Rewards and Premium Rewar
 and U.S. Bank Altitude Go and Connect; and sixteen more Barclays co-brands: three Wyndham
 Rewards Earner tiers, two AARP cards, Upromise, Frontier, two Emirates Skywards cards,
 Lufthansa Miles & More, GM, Carnival, Barnes & Noble, Breeze, RCI and Capital Vacations; and
-fourteen co-branded business cards from Amex, Chase and Barclays.
+fourteen co-branded business cards from Amex, Chase and Barclays. The 2026-09-29 cards are
+eleven business cards from BofA, U.S. Bank, Wells Fargo and Citi and the Kroger Rewards
+World Elite Mastercard.
 
 Each also carries `business: true` if it is issued on business underwriting -- absent
-means personal, so there is nothing to keep in sync on the other hundred and nine records.
+means personal, so there is nothing to keep in sync on the other hundred and ten records.
 It filters the catalogue and the ranker never reads it.
 
-Each also carries `common`, a 1-140 popularity rank that orders the setup picker. It is
+Each also carries `common`, a 1-152 popularity rank that orders the setup picker. It is
 the one **editorial** field in the file and is labelled as such in `_common_note`: there
 is no public card-level ranking of US cardholders, so it is judgement, not a sourced
 fact. 21-40 were added as the next twenty after the first, then 41-63, 64-82, 83-95,
-96-103, 104-110, 111-126 and 127-140, so each batch sits below the one before. Nothing computes from it; re-rank it freely.
+96-103, 104-110, 111-126, 127-140, 141-151 and 152, so each batch sits below the one before. Nothing computes from it; re-rank it freely.
+
+A card sold under several names carries `aliases`, which the setup and Settings searches
+match and nothing displays. The Kroger card is sold as sixteen Kroger banners' cards, from
+Baker's to Smith's, and shows under Kroger's name only. The search ignores apostrophes, so
+"frys" finds Fry's.
 
 A **store card** carries `only_at`, the merchant domains where it works. The ranker
 drops it from consideration anywhere else instead of ranking it on its base rate --
@@ -92,9 +100,12 @@ caution says what members earn anyway.
   on anything past the headline rates.
 - **BofA's relationship bonus is BofA Rewards now.** It replaced Preferred Rewards on
   2026-05-26 with a new 10% Member tier and new names and thresholds for the rest. All
-  five BofA cards offer the same five-step tier picker.
-- **U.S. Bank Altitude points are assumed to be worth a cent.** U.S. Bank's pages give no
-  figure. Override it in Settings if you know better.
+  five personal BofA cards offer the same five-step tier picker. The three business cards
+  keep Preferred Rewards for Business, whose three tiers pay 25, 50 and 75% more.
+- **U.S. Bank Altitude points are worth a cent, by U.S. Bank's own figure.** The rewards
+  calculators on the Altitude pages say 1 point = $.01 paid into a U.S. Bank account, and
+  on travel for the Connect cards; other redemptions may pay less. Until 2026-09-29 this
+  was an assumption.
 
 Re-verify any card whose `last_verified` is over 90 days old. The popup shows an
 "unverified data" banner while any owned card has `verified: false`.
@@ -124,7 +135,7 @@ Pin it to the toolbar.
 
 ## Use
 
-- Visit any of the 163 seeded merchants (e.g. `wholefoodsmarket.com`, `target.com`,
+- Visit any of the 179 seeded merchants (e.g. `wholefoodsmarket.com`, `target.com`,
   `amazon.com`, `delta.com`). A small green dock appears bottom-right.
 - Click the toolbar icon for the full ranking across every card you own.
 - The dock sits on the right rail. Click the icon to open the panel, `x` to close it,
@@ -170,8 +181,8 @@ clock, so the timing rules below are actually verified rather than reasoned abou
 ```
 data/
   categories.json   27 normalized categories, the pivot everything maps into
-  cards.json        140 card products, all verified with a source_url
-  merchants.json    163 domains -> category, plus per-issuer overrides
+  cards.json        152 card products, all verified with a source_url
+  merchants.json    179 domains -> category, plus per-issuer overrides
   valuations.json   cents per point. Opinions, not facts. User-overridable
 icons/            generated by tools/make-icons.mjs; commit both
 store/
@@ -251,7 +262,7 @@ content script for that one visit. That is also what finally gave the popup a
 hostname: with no host permission `tabs.query` returns no URL, so the popup used
 to send an EMPTY hostname and every uncached site read as "no merchant detected".
 
-**Do not narrow this to the merchant table instead.** Listing the 163 domains as
+**Do not narrow this to the merchant table instead.** Listing the 179 domains as
 static `content_scripts` matches looks like the tighter, more honest option and is
 a trap: host permissions declared in the manifest are re-prompted when they
 change, and Chrome DISABLES the extension until the user re-approves. The table is

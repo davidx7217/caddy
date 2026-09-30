@@ -50,6 +50,71 @@
     "category": "groceries",
     "confidence": "high"
   },
+  "ralphs.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "fredmeyer.com": {
+    "category": "groceries",
+    "confidence": "medium",
+    "note": "a Kroger banner that also sells general merchandise; filed as the supermarket it mostly is"
+  },
+  "kingsoopers.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "frysfood.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "smithsfoodanddrug.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "qfc.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "marianos.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "picknsave.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "metromarket.net": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "dillons.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "bakersplus.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "citymarket.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "gerbes.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "jaycfoods.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "pay-less.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
+  "harristeeter.com": {
+    "category": "groceries",
+    "confidence": "high"
+  },
   "safeway.com": {
     "category": "groceries",
     "confidence": "high"
