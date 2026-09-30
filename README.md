@@ -62,7 +62,9 @@ program pays members something whatever card they use -- JCPenney and Kohl's 5%,
 Nordstrom and Gap Inc. 1%, Ulta a point -- that share is left out, because it arrives
 whichever card pays and cannot change which card to use. So the JCPenney card ranks at
 2.5%, not 7.5%, and a 3% card beats it there, as it does at the till. Each such card's
-caution says what members earn anyway.
+caution says what members earn anyway. Bilt's Lyft, Bilt Travel and dining bonuses are
+left out on the same grounds: Bilt's terms pay them to members with other cards too, so
+a Bilt card ranks on what it earns itself.
 
 **Standing obligations:**
 

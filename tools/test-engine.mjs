@@ -1501,14 +1501,10 @@ eq('Navy Federal GO REWARDS: 3x at restaurants, 2x on gas',
 
 eq('Bilt Blue: 1x everywhere, worth 1.25%',
    [tier('column-bilt-blue', 'amazon.com').rate, tier('column-bilt-blue', 'amazon.com').value], [1, 1.25]);
-eq('...3x on Lyft once the accounts are linked, and says so',
-   [tier('column-bilt-blue', 'lyft.com').rate, tier('column-bilt-blue', 'lyft.com').needsActivation], [3, true]);
-eq('...but not on Uber', tier('column-bilt-blue', 'uber.com').rate, 1);
-eq('...with Bilt Travel as a portal note, 3x on hotels and 2x on flights',
-   [store('hilton.com', 'column-bilt-blue').notes.map(n => n.text)[0],
-    store('delta.com', 'column-bilt-blue').notes.map(n => n.text)[0]],
-   ['Bilt Blue Card: 3x (3.75%) if you book through Bilt Travel instead',
-    'Bilt Blue Card: 2x (2.50%) if you book through Bilt Travel instead']);
+eq('...Lyft included: Bilt pays its 2x Lyft bonus to members whatever card pays',
+   tier('column-bilt-blue', 'lyft.com').rate, 1);
+eq('...so Double Cash beats it there, as it does whether or not Lyft is linked',
+   store('lyft.com', 'column-bilt-blue', 'citi-double-cash').winner.productId, 'citi-double-cash');
 eq('Bilt Obsidian: 3x on whichever of dining or grocery you pick, and only that one',
    [picked('column-bilt-obsidian', 'doordash.com', ['dining']).rate,
     picked('column-bilt-obsidian', 'kroger.com', ['dining']).rate,
@@ -1520,10 +1516,13 @@ eq('...2x on travel booked direct with an airline, hotel or rental company',
    ['delta.com', 'hilton.com', 'hertz.com'].map(h => tier('column-bilt-obsidian', h).rate), [2, 2, 2]);
 eq('...but 1x through a booking site, which codes as a travel agency',
    ['hotels.com', 'expedia.com', 'airbnb.com'].map(h => tier('column-bilt-obsidian', h).rate), [1, 1, 1]);
-eq('...and 1x on Uber: to Bilt, transit and rideshare are not travel',
-   tier('column-bilt-obsidian', 'uber.com').rate, 1);
-eq('Bilt Palladium: 2x everywhere, 4x on linked Lyft',
-   [tier('column-bilt-palladium', 'amazon.com').rate, tier('column-bilt-palladium', 'lyft.com').rate], [2, 4]);
+eq('...and 1x on Uber and Lyft: to Bilt, rideshare is not travel',
+   ['uber.com', 'lyft.com'].map(h => tier('column-bilt-obsidian', h).rate), [1, 1]);
+eq('Bilt Palladium: 2x everywhere, Lyft included',
+   [tier('column-bilt-palladium', 'amazon.com').rate, tier('column-bilt-palladium', 'lyft.com').rate], [2, 2]);
+eq('No Bilt card carries a Bilt Travel note: Bilt pays that bonus on any linked card',
+   ['column-bilt-blue', 'column-bilt-obsidian', 'column-bilt-palladium']
+     .flatMap(id => ['hilton.com', 'delta.com'].map(h => store(h, id).notes.length)), [0, 0, 0, 0, 0, 0]);
 
 // --- business cards, 2026-09-28 ------------------------------------------------
 // Amex, Capital One, Chase and Barclays, each read off its issuer's page that day.
