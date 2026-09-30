@@ -85,10 +85,12 @@ caution says what members earn anyway.
   paid, so it ranks the 1% and the 3% at Apple, which needs no Apple Pay, and says the
   rest in the card's caution. PayPal Cashback's 3% with PayPal checkout and Venmo's 3%
   for paying with Venmo are left out on the same grounds.
-- **Amex Business Gold asks for its two 4X categories.** Amex pays the 4X on whichever
-  two of six categories a business spent most on that cycle, which Caddy cannot see, so
-  the cardholder picks the two they usually hit, as on Cash+. Caddy then sends those
-  purchases to the card, which keeps them on top. With nothing picked it ranks 1X.
+- **Amex Business Gold and World of Hyatt Business ask for their top categories.** Amex
+  pays Business Gold's 4X on whichever two of six categories a business spent most on
+  that cycle, and Chase pays Hyatt Business's 2X on its top three of eight each quarter.
+  Caddy cannot see either, so the cardholder picks the ones they usually hit, as on
+  Cash+. Caddy then sends those purchases to the card, which keeps them on top. With
+  nothing picked, both rank 1X there.
 - **The Bilt cards' category definitions are unread.** Their headline rates come from
   bilt.com/card; the Offer Terms it links to download as a file instead of opening, so
   what Bilt counts as "other travel" was not confirmed. Re-read the terms before relying

@@ -36,11 +36,13 @@ eq('no picks: no currency earns a cents-per-point field', cur([]), []);
 // Eight after the store cards: both Nordstrom cards ask for the Nordy Club status.
 // Ten after the missing tiers: both Premium Rewards cards ask for the BofA Rewards tier.
 // Eleven since 2026-09-29: Amex Business Gold asks which two of six categories earn its 4X.
-eq('exactly eleven cards in the catalogue ask the user something',
+// Twelve the same day: World of Hyatt Business asks which three of eight earn its 2X.
+eq('exactly twelve cards in the catalogue ask the user something',
    tunableCards(Object.keys(products).filter(k => !k.startsWith('_')), products),
    ['bofa-customized-cash', 'usbank-cash-plus', 'bofa-unlimited-cash', 'bofa-travel-rewards',
     'citi-macys', 'column-bilt-obsidian', 'amex-business-gold', 'td-nordstrom-card',
-    'td-nordstrom-visa', 'bofa-premium-rewards', 'bofa-premium-rewards-elite']);
+    'td-nordstrom-visa', 'bofa-premium-rewards', 'bofa-premium-rewards-elite',
+    'chase-hyatt-business']);
 eq('a tier-only card earns the fine-tune step with no category to choose',
    ids(['bofa-unlimited-cash']), ['intro', 'cards', 'tune', 'mode']);
 

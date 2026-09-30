@@ -1795,9 +1795,22 @@ eq('IHG Premier Business: 10x at IHG, 5x on travel, OTAs included, dining, ads, 
    ['ihg.com', 'marriott.com', 'hotels.com', 'hertz.com', 'uber.com', 'doordash.com', 'ads.google.com',
     'staples.com', 'shell.us', 'amazon.com'].map(h => tier('chase-ihg-business-premier', h)?.rate),
    [10, 5, 5, 5, 5, 5, 5, 5, 5, 3]);
-eq('World of Hyatt Business: 4x at Hyatt, 2x at gyms, its top-three 2x left to the caution',
+eq('World of Hyatt Business: 4x at Hyatt, 2x at gyms, 1x on dining until you pick your three 2x categories',
    ['hyatt.com', 'planetfitness.com', 'doordash.com', 'amazon.com'].map(h => tier('chase-hyatt-business', h)?.rate),
    [4, 2, 1, 1]);
+eq('...2x on each of the eight once picked, internet, cable and phone on both of its categories',
+   [['top_dining', 'doordash.com'], ['top_shipping', 'ups.com'], ['top_air', 'united.com'],
+    ['top_transit', 'uber.com'], ['top_ads', 'ads.google.com'], ['top_car', 'hertz.com'],
+    ['top_gas', 'shell.us'], ['top_telecom', 'verizon.com'], ['top_telecom', 'xfinity.com']]
+     .map(([pick, h]) => picked('chase-hyatt-business', h, [pick])?.rate), Array(9).fill(2));
+eq('...and only on the three picked',
+   ['doordash.com', 'shell.us', 'hertz.com', 'united.com', 'ups.com']
+     .map(h => picked('chase-hyatt-business', h, ['top_dining', 'top_gas', 'top_car'])?.rate), [2, 2, 2, 1, 1]);
+eq('...uncapped, so a pick carries no caveat',
+   picked('chase-hyatt-business', 'doordash.com', ['top_dining'])?.caveats, []);
+eq('...not at an EV charger, nor on streaming, which its internet and cable does not name',
+   [picked('chase-hyatt-business', 'evgo.com', ['top_gas'])?.rate,
+    picked('chase-hyatt-business', 'netflix.com', ['top_telecom'])?.rate], [1, 1]);
 eq('Wyndham Earner Business: 8x at Wyndham, 5x on gas, EV charging, ads, shipping and office supply',
    ['wyndhamhotels.com', 'shell.us', 'evgo.com', 'ads.google.com', 'ups.com', 'staples.com', 'doordash.com']
      .map(h => tier('barclays-wyndham-earner-business', h)?.rate), [8, 5, 5, 5, 5, 5, 1]);

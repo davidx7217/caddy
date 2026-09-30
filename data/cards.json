@@ -6175,10 +6175,29 @@
     "annual_fee": 199,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-09-28",
+    "last_verified": "2026-09-29",
     "source_url": "https://creditcards.chase.com/business-credit-cards/world-of-hyatt/hyatt-business-card",
-    "caution": "Business card. 2X in whichever three of eight categories you spend most on each quarter, which Caddy cannot see, so it ranks 1X.",
-    "note": "Rates read off the offer details on 2026-09-28. 4X at Hyatt hotels and on World of Hyatt Experiences; 2X at fitness clubs and gyms; 2X in the three of eight categories -- dining, shipping, airline tickets bought direct, local transit, social media and search engine ads, car rental, gas, and internet, cable and phone -- where the business spends most each calendar quarter; 1X elsewhere. Which three is decided by the whole quarter's spending, which no page shows, so per the recipe that 2X is a caution and not rules, as Business Gold's 4X is. Network read off the card art.",
+    "caution": "Business card. Chase pays the 2X on your three biggest of eight categories each quarter, so pick the three you usually hit.",
+    "note": "Rates read off the offer details on 2026-09-28 and again on 2026-09-29. 4X at Hyatt hotels and on World of Hyatt Experiences; 2X at fitness clubs and gyms; 2X in the three of eight categories -- dining, shipping, airline tickets bought directly from the airline, local transit and commuting, social media and search engine advertising, car rental agencies, gas stations, and internet, cable and phone services -- where the business spends most each calendar quarter, with no cap (chase.com/hyattbuscard2X); 1X elsewhere. Chase works out the three by merchant code from the quarter's spending on this card, which no page shows, so the card has a Cash+-style picker, as Business Gold does (David, 2026-09-29): the cardholder names the three they usually hit, and because Caddy then sends those purchases to this card, they are the three most likely to come out on top. With nothing picked it ranks 1X on them, as it did before. Internet, cable and phone maps onto phone and internet_cable, as on the Ink Business Cash; gas does not include EV charging. Every travel_air row is an airline's own site -- booking sites sit under travel_hotel -- so the airline category needs no denylist. Network read off the card art.",
+    "user_config": {
+      "selections": [
+        {
+          "key": "top",
+          "label": "Your three 2X categories",
+          "max": 3,
+          "options": {
+            "top_dining": "Dining",
+            "top_shipping": "Shipping",
+            "top_air": "Airline tickets bought direct",
+            "top_transit": "Local transit & commuting",
+            "top_ads": "Social media & search ads",
+            "top_car": "Car rental agencies",
+            "top_gas": "Gas stations",
+            "top_telecom": "Internet, cable & phone"
+          }
+        }
+      ]
+    },
     "rules": [
       {
         "category": "travel_hotel",
@@ -6190,6 +6209,51 @@
       {
         "category": "fitness",
         "rate": 2.0
+      },
+      {
+        "category": "dining",
+        "rate": 2.0,
+        "selection_group": "top_dining"
+      },
+      {
+        "category": "shipping",
+        "rate": 2.0,
+        "selection_group": "top_shipping"
+      },
+      {
+        "category": "travel_air",
+        "rate": 2.0,
+        "selection_group": "top_air"
+      },
+      {
+        "category": "travel_ground",
+        "rate": 2.0,
+        "selection_group": "top_transit"
+      },
+      {
+        "category": "advertising",
+        "rate": 2.0,
+        "selection_group": "top_ads"
+      },
+      {
+        "category": "car_rental",
+        "rate": 2.0,
+        "selection_group": "top_car"
+      },
+      {
+        "category": "gas",
+        "rate": 2.0,
+        "selection_group": "top_gas"
+      },
+      {
+        "category": "phone",
+        "rate": 2.0,
+        "selection_group": "top_telecom"
+      },
+      {
+        "category": "internet_cable",
+        "rate": 2.0,
+        "selection_group": "top_telecom"
       }
     ]
   },
