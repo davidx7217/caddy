@@ -9,21 +9,23 @@ works and why; this file is only the state of play.
 
 ## State
 
-- **v1.0.0**, 140 cards across 17 issuers, 163 merchant rows, 27 categories.
+- **v1.0.0**, 152 cards across 18 issuers, 179 merchant rows, 27 categories.
   The second twenty cards landed 2026-09-27; store cards plus the remaining
   airline and hotel tiers, nineteen cards from five issuers Caddy lacked,
   thirteen business cards, eight smaller store cards, seven missing tiers,
   sixteen more Barclays co-brands and fourteen co-branded business cards, on
-  2026-09-28. See sections 6, 7 and 9 to 14.
+  2026-09-28; eleven business cards from BofA, U.S. Bank, Wells Fargo and Citi,
+  and the Kroger card, on 2026-09-29. See sections 6, 7, 9 to 14 and 17.
 - **Every card audited 2026-09-29** (section 16): all 140 read against their
   issuer's own pages -- fourteen of them only in the in-app browser -- and every
-  card ranked on every merchant row. The fixes it found are merged. The one soft
+  card ranked on every merchant row. The fixes it found are merged. The twelve
+  cards added later that day were read the same way (section 17). The one soft
   spot left: the three Bilt cards' category definitions (section 9).
 - **28 merchant rows record how they actually code** (`mcc`, `mcc_source`); the
-  other 135 are still unverified seed data (section 16).
+  other 151 are still unverified seed data (section 16).
 - **Freedom Flex carries Q4 2026 and Q1 2027**, dining 7X in Q4 (section 2). Rates
   switch at local midnight even in a tab left open.
-- **Tests green**: 572 engine + 31 setup + 54 lifecycle + 47 worker. `npm test`.
+- **Tests green**: 602 engine + 36 setup + 54 lifecycle + 47 worker. `npm test`.
 - **Two scheduled agents keep the data current** (section 15), and run without
   permission prompts. Rate changes they find wait on `rates-*` and `upkeep-*`
   branches for David's approval; only `last_verified` date bumps land on `main`
@@ -97,28 +99,31 @@ dated.
    bank-by-bank judgment made before section 9's cards -- no public data exists
    per card -- Caddy covered about 55-60% of US rewards-card spending. The
    issuers it lacked, the general-purpose business cards, the smaller store
-   cards, the missing tiers, Barclays' other co-brands and the co-branded
-   business cards are in now (sections 9 to 14). The next gaps:
-   - **Business cards from the issuers section 10 did not cover** -- BofA, U.S.
-     Bank, Wells Fargo and Citi -- not yet looked for.
+   cards, the missing tiers, Barclays' other co-brands, the co-branded business
+   cards, the other big banks' business cards and the Kroger card are in now
+   (sections 9 to 14 and 17). The next gaps:
+   - **Airline programs Caddy has no cards for**: BofA's Atmos Rewards cards
+     (Alaska and Hawaiian) and U.S. Bank's SKYPASS cards (Korean Air), personal
+     and business. Each needs a currency and airline rows (section 17).
+   - **Citi's personal cards not yet in**: Strata Elite, Strata, AAdvantage MileUp
+     and AT&T Points Plus, all on citi.com's card list on 2026-09-29.
    - **Cruise and timeshare categories**, if you want them: without them
      Carnival's 3X and the RCI and Capital Vacations 5X go unranked, and adding
      either means a rule on every card whose travel covers it (section 13).
-   - **The Kroger Rewards World Elite Mastercard** (First Bank & Trust, launched
-     2026-09-24), which the monthly scout logged.
 
    Loose ends, each small, each explained in its section:
    - **Wyndham Earner's 3X** follows the Reward Rules; its own product page says
      2X in one place and 3X in another (sections 13 and 16).
    - **GM points are valued at a full cent**, GM's own figure, though they spend
      only with GM, so the GM card reads 3% everywhere (section 13).
-   - **U.S. Bank Altitude points** are assumed to be worth a cent; no U.S. Bank
-     page states a figure (section 12).
    - **Bilt's offer terms** were never readable -- the link downloads a file --
      so Obsidian's "other travel" is unconfirmed (section 9).
    - **Amex Business Gold's 4X** is a caution, not rules, because it follows the
      business's top two categories. A Cash+-style picker is the alternative if
      David wants it (section 10).
+   - **U.S. Bank's checking-balance bonuses** -- Business Essentials' 2.5% and
+     Essentials Plus's up to 3.5% -- are cautions: they add to the rate rather
+     than multiply it, which the tier picker cannot express (section 17).
 
 ---
 
@@ -407,8 +412,11 @@ Card and TJX Rewards. Every one read off its issuer's or retailer's page that da
    put exact definitions in collapsed "Offer Details"; read `#offerpop`'s
    `textContent` on Chase pages. A number the page does not state goes in the
    `note` as unconfirmed, never in the data as fact. A terms link that downloads
-   a file instead of opening (Bilt's does) is not to be retried; say in the
-   `note` that the definitions went unread.
+   a file instead of opening (Bilt's does) is not to be retried in the browser.
+   Ask David before fetching it with curl into the scratchpad -- `pdftotext` reads
+   it, `pdftoppm` renders a table that is an image, and the file is deleted after
+   -- and until he agrees, say in the `note` that the definitions went unread.
+   The Kroger card's terms were read that way on 2026-09-29.
 2. **Map each category onto the 27 in `categories.json`**, reading the issuer's
    definition rather than its headline. Online retail at Amex and Online Shopping
    at BofA are channels, repeated across every store category -- see the README.
@@ -592,16 +600,12 @@ merchant row.
   rule say between them.
 - **BofA Premium Rewards points are cash**: its terms price every point at $0.01.
   Both cards take the same BofA Rewards tier picker as the other BofA cards.
-- **U.S. Bank Altitude points are assumed to be worth a cent.** The pages say only
-  that a deposit to a U.S. Bank account gets the maximum value, never what it is.
-  `usbank` is 1.0 until a page states one, and each Altitude card's caution says so.
+- **U.S. Bank Altitude points are worth a cent**, by U.S. Bank's own figure since
+  2026-09-29: the rewards calculators embedded on the Altitude pages
+  (cardrewards.usbank.com) say 1 point = $.01 paid into a U.S. Bank account, and on
+  travel for the Connect cards. Until then `usbank` was an assumption at the same 1.0.
 - **Not added:** Altitude Reserve -- its page redirects to U.S. Bank's card list and it
   is gone from the site map -- and the Altitude Go Secured card.
-
-Left open, for you:
-
-- Confirm the U.S. Bank point value if you can find it stated; Settings takes an
-  override meanwhile.
 
 ---
 
@@ -787,7 +791,7 @@ calls itself UNVERIFIED SEED DATA and no agent checks how a merchant codes):
 the booking sites, the cable and phone companies, the off-price stores, Nike,
 Wayfair, HomeGoods, StubHub, Audible, YouTube, Starbucks, and the rows the Cash+
 recheck leaned on. The engine does not read either field; a test keeps every `mcc`
-four digits with a source beside it. Next: the other 135 rows, a batch at a time.
+four digits with a source beside it. Next: the other 151 rows, a batch at a time.
 
 **How to continue it** -- what worked on 2026-09-29:
 - In the in-app browser, open awardwallet.com/merchants, find the "Merchant Name"
@@ -865,6 +869,88 @@ on another).
 - Merchant rows that are not really checkouts: kayak.com (search only), opentable.com
   (meals are paid at the table), riteaid.com (no longer a drugstore storefront),
   traderjoes.com, wholefoodsmarket.com.
+
+---
+
+## 17. Business cards from BofA, U.S. Bank, Wells Fargo and Citi, and the Kroger card, 29 September 2026
+
+Twelve cards, ranks 141 to 152, each read off its issuer's page that day, collapsed
+terms and category definitions included; each note says which. Eleven are
+`business: true`: BofA's Business Advantage Unlimited Cash, Customized Cash and Travel
+Rewards; U.S. Bank's Business Essentials, Business Essentials Plus, Triple Cash
+Rewards, Business Altitude Connect and Amazon Prime Business Mastercard; Wells Fargo's
+Signify Business Cash, its only business card; and Citi's AAdvantage Business and
+Costco Anywhere Visa Business. The twelfth is the Kroger Rewards World Elite
+Mastercard. One new issuer, First Bank & Trust (`firstbanktrust`), one new currency,
+`kroger`, and sixteen merchant rows -- the sites of the Kroger card's other
+participating banners, Harris Teeter included, all confirmed by the HTTP sweep. No
+new category and no engine change; one shared search helper, `matchesSearch()`.
+
+- **U.S. Bank states its point value now.** The rewards calculators embedded on the
+  Altitude Go, Altitude Connect and Business Altitude Connect pages price a point at
+  $0.01 paid into a U.S. Bank account, and on travel for the Connect cards. `usbank`
+  stays 1.0, sourced now, and the Altitude cautions say how the cent is realised,
+  since other redemptions "may be different".
+- **BofA's business cards keep Preferred Rewards for Business**: Gold, Platinum and
+  Platinum Honors at 25, 50 and 75% more, a tier picker of its own. BofA Rewards
+  replaced the personal program in May; the business one did not change.
+- **Business Customized Cash offers four of its six choices.** Computer services and
+  business consulting have no Caddy category or merchants. TV, telecom and wireless is
+  defined by merchant code, so phone and cable earn it, and of the streaming rows only
+  netflix.com, which BofA names, and youtube.com, which codes as pay TV. Citi
+  AAdvantage Business's 2X on cable and satellite is read the same way.
+- **U.S. Bank's checking-balance bonuses are cautions.** Business Essentials adds half
+  a point on $10,000 a month with $10,000 in business checking; Essentials Plus up to
+  1.5 points on $200,000 a year. They add to the rate rather than multiply it, so the
+  tier picker would also inflate the Travel Center rates. Essentials Plus's 5% on the
+  month's top category is a caution like Business Gold's 4X, and so is the Amazon
+  card's 2% on its top three.
+- **Triple Cash's 3% on restaurants leaves out fast food.** U.S. Bank names fast food
+  where it means it -- the Altitude cards pay on "restaurant, fast-food restaurant or
+  bar" -- and its Cash+ Restaurants choice excludes most of it, so the rule denylists
+  chipotle.com and starbucks.com, as Cash+'s does. That is a reading, not a sentence
+  on the page.
+- **The Amazon business cards are one record at the Prime rate**, per the Prime Visa
+  convention: 5% at Amazon and Whole Foods to $150,000 a year, 3% without Prime. U.S.
+  Bank's terms exclude pharmacy.amazon.com and a few other Amazon hosts; they resolve
+  to amazon.com here, so Caddy ranks them at 5% too.
+- **The Kroger card ranks what it adds.** Its rates are the Credit Card Points column
+  of Imprint's Rewards Program Terms, which Kroger's own terms repeat
+  (kroger.com/i/terms/rewards-program, section 4): 3 points in Kroger Digital
+  Channels -- Kroger.com and the participating banners' sites and apps, Harris Teeter
+  included -- 4 at Kroger fuel pumps, 1 in store, 2 on "dining, travel and utilities"
+  transactions "as identified by MCC", 1 elsewhere. The page's "up to 5x" adds the
+  Kroger Rewards and Boost points members earn with any card, so per the store-rate
+  rule the card ranks 3 on the seventeen banners' sites. Points are a cent off
+  groceries, Kroger's own figure. The terms decide the three categories by merchant
+  code but publish no code list, so dining and utilities are ranked as named, and
+  travel as flights, hotels and car rentals, transit left out, as for Bilt.
+- **Imprint's two documents are PDF downloads.** David approved fetching them on
+  2026-09-29; `pdftotext` read them and `pdftoppm` rendered the earning table, which
+  is an image. Both name the issuer First Bank & Trust of Brookings, South Dakota, as
+  the card page and Kroger's terms do. Imprint's own program list says First
+  Electronic Bank, and is outranked.
+- **One record stands for the sixteen Kroger banners' cards.** It is named for Kroger,
+  and the other fifteen card names are `aliases` (David's choice, 2026-09-29, over a
+  sixteen-name title): the setup and Settings searches match them and nothing shows
+  them. Both searches now go through `matchesSearch()` in `issuers.js`, which also
+  ignores apostrophes, so "frys" finds Fry's and "kohls" Kohl's -- a change for every
+  card, checked in the browser on both surfaces. The banners' sites are merchant rows
+  now, so every grocery card ranks on them too.
+
+Not added:
+
+- **U.S. Bank Business Shield**: it earns only through the Travel Center, so it can
+  never rank on a merchant page.
+- **BofA's Atmos Rewards Visa Signature Business and U.S. Bank's SKYPASS Visa Signature
+  Business**: airline programs Caddy has no cards, currency or airline rows for. Their
+  personal cards should come with them.
+- **BofA's secured business card**, as the personal secured cards are left out.
+
+Left open, for you:
+
+- An additive picker for U.S. Bank's checking bonuses would need an engine change;
+  say if you want one.
 
 ---
 
