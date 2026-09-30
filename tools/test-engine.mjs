@@ -1516,8 +1516,12 @@ eq('Bilt Obsidian: 3x on whichever of dining or grocery you pick, and only that 
     picked('column-bilt-obsidian', 'doordash.com', ['grocery']).rate], [3, 1, 3, 1]);
 eq('...grocery capped at $25,000 a year', picked('column-bilt-obsidian', 'kroger.com', ['grocery']).caveats[0],
    'Capped at $25,000 per year, then 1x');
-eq('...and 2x on other travel, booked anywhere',
-   ['delta.com', 'hotels.com', 'hertz.com'].map(h => tier('column-bilt-obsidian', h).rate), [2, 2, 2]);
+eq('...2x on travel booked direct with an airline, hotel or rental company',
+   ['delta.com', 'hilton.com', 'hertz.com'].map(h => tier('column-bilt-obsidian', h).rate), [2, 2, 2]);
+eq('...but 1x through a booking site, which codes as a travel agency',
+   ['hotels.com', 'expedia.com', 'airbnb.com'].map(h => tier('column-bilt-obsidian', h).rate), [1, 1, 1]);
+eq('...and 1x on Uber: to Bilt, transit and rideshare are not travel',
+   tier('column-bilt-obsidian', 'uber.com').rate, 1);
 eq('Bilt Palladium: 2x everywhere, 4x on linked Lyft',
    [tier('column-bilt-palladium', 'amazon.com').rate, tier('column-bilt-palladium', 'lyft.com').rate], [2, 4]);
 

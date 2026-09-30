@@ -91,10 +91,6 @@ caution says what members earn anyway.
   Caddy cannot see either, so the cardholder picks the ones they usually hit, as on
   Cash+. Caddy then sends those purchases to the card, which keeps them on top. With
   nothing picked, both rank 1X there.
-- **The Bilt cards' category definitions are unread.** Their headline rates come from
-  bilt.com/card; the Offer Terms it links to download as a file instead of opening, so
-  what Bilt counts as "other travel" was not confirmed. Re-read the terms before relying
-  on anything past the headline rates.
 - **BofA's relationship bonus is BofA Rewards now.** It replaced Preferred Rewards on
   2026-05-26 with a new 10% Member tier and new names and thresholds for the rest. All
   five BofA cards offer the same five-step tier picker.
