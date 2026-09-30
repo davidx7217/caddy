@@ -36,14 +36,17 @@ eq('no picks: no currency earns a cents-per-point field', cur([]), []);
 // Six later that day: Bilt Obsidian asks which of dining or grocery earns its 3X.
 // Eight after the store cards: both Nordstrom cards ask for the Nordy Club status.
 // Ten after the missing tiers: both Premium Rewards cards ask for the BofA Rewards tier.
-// Thirteen since 2026-09-29: BofA's three business cards ask for the Preferred
-// Rewards for Business tier, and Customized Cash for its 3% category too.
-eq('exactly thirteen cards in the catalogue ask the user something',
+// Eleven since 2026-09-29: Amex Business Gold asks which two of six categories earn its 4X.
+// Twelve the same day: World of Hyatt Business asks which three of eight earn its 2X.
+// Fifteen later that day: BofA's three business cards ask for the Preferred Rewards
+// for Business tier, and Customized Cash for its 3% category too.
+eq('exactly fifteen cards in the catalogue ask the user something',
    tunableCards(Object.keys(products).filter(k => !k.startsWith('_')), products),
    ['bofa-customized-cash', 'usbank-cash-plus', 'bofa-unlimited-cash', 'bofa-travel-rewards',
-    'citi-macys', 'column-bilt-obsidian', 'td-nordstrom-card', 'td-nordstrom-visa',
-    'bofa-premium-rewards', 'bofa-premium-rewards-elite', 'bofa-business-unlimited-cash',
-    'bofa-business-customized-cash', 'bofa-business-travel-rewards']);
+    'citi-macys', 'column-bilt-obsidian', 'amex-business-gold', 'td-nordstrom-card',
+    'td-nordstrom-visa', 'bofa-premium-rewards', 'bofa-premium-rewards-elite',
+    'chase-hyatt-business', 'bofa-business-unlimited-cash', 'bofa-business-customized-cash',
+    'bofa-business-travel-rewards']);
 eq('a tier-only card earns the fine-tune step with no category to choose',
    ids(['bofa-unlimited-cash']), ['intro', 'cards', 'tune', 'mode']);
 

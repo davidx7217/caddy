@@ -1,6 +1,6 @@
 # Handoff
 
-Where Caddy stands as of **29 September 2026**, and what is left.
+Where Caddy stands as of **30 September 2026**, and what is left.
 
 Written to be picked up cold. The README is the reference for how the extension
 works and why; this file is only the state of play.
@@ -21,11 +21,11 @@ works and why; this file is only the state of play.
   card ranked on every merchant row. The fixes it found are merged. The twelve
   cards added later that day were read the same way (section 17). The one soft
   spot left: the three Bilt cards' category definitions (section 9).
-- **28 merchant rows record how they actually code** (`mcc`, `mcc_source`); the
-  other 151 are still unverified seed data (section 16).
+- **44 merchant rows record how they actually code** (`mcc`, `mcc_source`); the
+  other 135 are still unverified seed data (section 16).
 - **Freedom Flex carries Q4 2026 and Q1 2027**, dining 7X in Q4 (section 2). Rates
   switch at local midnight even in a tab left open.
-- **Tests green**: 602 engine + 36 setup + 54 lifecycle + 47 worker. `npm test`.
+- **Tests green**: 610 engine + 36 setup + 54 lifecycle + 47 worker. `npm test`.
 - **Two scheduled agents keep the data current** (section 15), and run without
   permission prompts. Rate changes they find wait on `rates-*` and `upkeep-*`
   branches for David's approval; only `last_verified` date bumps land on `main`
@@ -34,10 +34,6 @@ works and why; this file is only the state of play.
   screenshots are still current -- the new cards rank after the ones they show.
 - **`caddy-1.0.0.zip` sits in the repo root**, rebuilt on every commit. See the
   packaging note below.
-- **`caddy-1.0.0/` in the root is untracked and STALE**: an unzip of the build
-  made 2026-09-27 21:24, before any of this week's work -- 20 cards, no setup
-  resume, no store cards. If Chrome has that folder loaded, it is running old
-  code. Load the repo root instead, or delete the folder and unzip a fresh one.
 - **Rules David decided 2026-09-28.** A store rate is what the card adds over
   whatever the store's free program pays members with any card (section 11). Keep
   extension text minimal: one-line cautions, and rule caveats short or absent,
@@ -50,24 +46,22 @@ works and why; this file is only the state of play.
   private vulnerability reporting, switched on 2026-09-29 (a repository setting,
   not a file). Nothing in the tree or its history is secret, but every commit
   carries David's Gmail address as author.
-- **One stray branch**: `second-twenty-cards`, merged long ago, still exists
-  locally and on GitHub. Safe to delete.
 
 ---
 
 ## Start here
 
-In order. The first waits on a second source, the second on David; the third is
+In order. The first waits on second sources, the second on David; the third is
 dated.
 
 1. **The merchant-code changes, reviewed 2026-09-29 against a two-source bar**
-   (section 16). David approved whatever two real sources back. Applied:
-   Autograph's 3X at xfinity.com and spectrum.com. Held, each for want of a
-   second source:
-   - Autograph's 3X at cox.com, optimum.com and audible.com. About 10 minutes
-     once a second source turns up.
-   - The Gap Encore Mastercard's 3X without tjmaxx.tjx.com, marshalls.com and
-     nike.com. About 10 minutes, same condition.
+   (section 16). A rate change needs two real sources and David's yes. Applied:
+   Autograph's 3X at xfinity.com and spectrum.com, and at cox.com on 2026-09-30.
+   Waiting:
+   - Autograph's 3X at optimum.com and audible.com, and the Gap Encore
+     Mastercard's 3X without tjmaxx.tjx.com, marshalls.com and nike.com: still
+     short of two sources after a second search. About 10 minutes each once a
+     source turns up.
    - A `travel_agency` category: not approved as stated, because booking sites
      are not always the merchant. A call for David, then one to two hours.
 2. **Submit to the Chrome Web Store** -- unblocked 2026-09-29. The repo is public
@@ -112,18 +106,20 @@ dated.
      either means a rule on every card whose travel covers it (section 13).
 
    Loose ends, each small, each explained in its section:
-   - **Wyndham Earner's 3X** follows the Reward Rules; its own product page says
-     2X in one place and 3X in another (sections 13 and 16).
-   - **GM points are valued at a full cent**, GM's own figure, though they spend
-     only with GM, so the GM card reads 3% everywhere (section 13).
    - **Bilt's offer terms** were never readable -- the link downloads a file --
      so Obsidian's "other travel" is unconfirmed (section 9).
-   - **Amex Business Gold's 4X** is a caution, not rules, because it follows the
-     business's top two categories. A Cash+-style picker is the alternative if
-     David wants it (section 10).
    - **U.S. Bank's checking-balance bonuses** -- Business Essentials' 2.5% and
      Essentials Plus's up to 3.5% -- are cautions: they add to the rate rather
      than multiply it, which the tier picker cannot express (section 17).
+   - **Business Essentials Plus's top-category 5% and the Amazon Prime Business
+     card's top-three 2%** are cautions, as the recipe says. Business Gold and
+     World of Hyatt Business took pickers for the same kind of rate the same day;
+     these two could follow, about 30 minutes each (section 17).
+
+   Settled 2026-09-29: Wyndham Earner's 3X stands, `gm` stays at a cent,
+   Business Gold and World of Hyatt Business have pickers for their top
+   categories, and U.S. Bank's own calculators price an Altitude point at a cent
+   (sections 10, 12, 13 and 14).
 
 ---
 
@@ -514,11 +510,13 @@ Card. No new issuer, currency, category or merchant row, and no engine change.
 - **Business Platinum's 5X is portal-only.** Unlike the consumer Platinum, a flight
   bought from the airline earns 1X; the 5X is for flights and prepaid hotels booked
   through Amex Travel.
-- **Business Gold's 4X is a caution, not rules**, per the recipe: it goes to
-  whichever two of six categories a business spent most on each cycle, which no page
-  shows. So it ranks 1X outside Amex Travel. If that undersells it for you, the
-  alternative is a Cash+-style picker for the two categories you usually hit -- a
-  data change, no engine work.
+- **Business Gold's 4X has a picker (2026-09-29).** It goes to whichever two of six
+  categories a business spent most on each cycle, which no page shows, so it was a
+  caution at first and ranked 1X. David chose a Cash+-style picker instead: the
+  cardholder names the two they usually hit. Amex works the two out from spending on
+  this card and Caddy decides what goes on it, so following Caddy keeps them on top.
+  The six map onto advertising, electronics, dining, gas, transit and phone, each 4X
+  under the $150,000 yearly cap; with nothing picked it still ranks 1X. Data only.
 - **Graphite Business Cash Unlimited is new** in Amex's lineup (2%, 5% through Amex
   Travel, $295) and went in alongside Blue Business Cash, whose old URL now 404s; the
   live page is americanexpress.com/en-us/business/credit-cards/blue-business-cash/.
@@ -622,8 +620,9 @@ the five it met with a 403 confirmed in the browser.
 
 - **Wyndham Earner's 3X follows the Reward Rules, not the page.** The product page
   sums the 3X up as vacation clubs, dining and groceries; the Reward Rules, which are
-  the agreement, add gas and EV charging. The data has all four. If you would rather
-  go by the page, drop the card's gas and EV rules.
+  the agreement, add gas and EV charging. The data has all four, confirmed by David
+  2026-09-29. The page's 2X is stale text in its compare panel, hidden until you
+  compare cards; the Plus, Premier and Business panels match their pages.
 - **Wyndham Plus and Premier define travel without hotels**: airfare, car rental,
   rideshare, gas, EV charging, tolls and trains at 4X. Another chain's hotel earns 1X.
   The Earner cards are Visas, unlike Barclays' other cards here.
@@ -663,7 +662,11 @@ gmcompanystore.com, each confirmed by the HTTP sweep.
 - **GM points are valued at a full cent**, GM's own figure for a point redeemed
   through GM, as store money is valued as cash elsewhere. They spend only with GM,
   so the card reads 3% everywhere and ties or beats every flat card; `gm` is its own
-  currency so Settings can mark it down, and the caution says where points go.
+  currency so Settings can mark it down, and the caution says where points go. Kept
+  at a cent on 2026-09-29: GM's terms (L.iii) send point values to
+  experience.gm.com/rewards/redeem, which states one, $0.01 a point for every
+  redemption through GM, a GM Financial balance included. No GM or Barclays page
+  offers cash or states a lower figure, so a markdown would rest on no source.
 - **GM's 7X ranks only on GM's own web stores.** Vehicles and service are bought at
   dealers; OnStar, SiriusXM, GM Energy and GM Insurance are services with no clean
   category. The brand sites themselves, chevrolet.com and the rest, are not
@@ -701,9 +704,11 @@ engine change.
 - **Hilton Honors Business earns 5X on everything to $100,000 a year, then 3X.** The
   5X is the base rate, which carries no cap, so the $100,000 is in the caution, as
   Blue Business Plus's $50,000 is.
-- **World of Hyatt Business's 2X goes to the top three of eight categories each
-  quarter**, which no page shows, so it is a caution and ranks 1X -- the same call as
-  Business Gold's 4X.
+- **World of Hyatt Business's 2X has a picker (2026-09-29).** It goes to the top three
+  of eight categories each calendar quarter, with no cap, which no page shows. It was
+  a caution ranking 1X until David chose the picker Business Gold took (section 10):
+  the cardholder names the three they usually hit. Internet, cable and phone covers
+  both phone and internet_cable; gas leaves out EV charging. Nothing picked, 1X.
 - **The airline cards' headline totals include member miles**, as on the personal
   cards: United's 8x is 6 MileagePlus miles plus the card's 2.
 - **Southwest Performance Business's offer details still list categories that ended
@@ -787,11 +792,14 @@ calls itself UNVERIFIED SEED DATA and no agent checks how a merchant codes):
 - Visa's Merchant Data Standards Manual and Mastercard's Quick Reference Booklet
   define what each code covers, not which merchant uses which.
 
-**Recorded so far** (2026-09-29): 28 rows carry `mcc_source`, 20 of them an `mcc` --
+**Recorded so far** (2026-09-29): 44 rows carry `mcc_source`, 35 of them an `mcc` --
 the booking sites, the cable and phone companies, the off-price stores, Nike,
 Wayfair, HomeGoods, StubHub, Audible, YouTube, Starbucks, and the rows the Cash+
-recheck leaned on. The engine does not read either field; a test keeps every `mcc`
-four digits with a source beside it. Next: the other 151 rows, a batch at a time.
+recheck leaned on; then a second batch: the four delivery apps, Instacart, Costco,
+Sam's Club, Amazon, Best Buy, Netflix, Spotify, Hulu, Uber, Lyft, CVS and
+Walgreens. The engine does not read either field; a test keeps every `mcc` four
+digits with a source beside it, and every card ranked the same on all 163 rows
+before and after the second batch. Next: the other 135 rows, a batch at a time.
 
 **How to continue it** -- what worked on 2026-09-29:
 - In the in-app browser, open awardwallet.com/merchants, find the "Merchant Name"
@@ -802,6 +810,13 @@ four digits with a source beside it. Next: the other 151 rows, a batch at a time
   description ("Discount stores" is 5310). Leave the cookie banner unaccepted.
   Never call those endpoints outside the page -- a plain request is refused, and
   it would be scraping.
+- The box's first request for a name often hangs. Delete the last letter and
+  type it again a second later, and it answers. Search the billing form of the
+  name -- "Samsclub", "Bestbuy.com" -- because "Sams Club" finds nothing and a
+  site's own descriptor can fall outside the ten variants listed.
+- Cardholder datapoints: myFICO threads read fine in the in-app browser. U.S.
+  Bank's transaction export puts the MCC in its Memo column, so Cash+ posters
+  often quote exact codes.
 - Write the rows with a short script: `data/merchants.json` round-trips exactly
   through `json.dumps(d, indent=2, ensure_ascii=False)` plus a newline, so the
   diff stays to the new fields.
@@ -833,19 +848,35 @@ on another).
   Warner Cable as cable and satellite TV providers. No Autograph cardholder report
   for a cable bill was found either way; the one on myFICO (2022) is Xfinity Mobile
   earning 3X as a phone plan.
-- **Held, one source each**: cox.com and optimum.com (AwardWallet's own "Cable" and
-  "Select Streaming Services" labels; none of the 17 variants carrying them shows
-  an issuer coding) and
-  audible.com (AwardWallet's Chase and Citi codings as continuity/subscription).
+- **Applied 2026-09-30, on David's yes**: Autograph's 3X at cox.com, on thinner
+  evidence than Xfinity and Spectrum. AwardWallet's own "Cable" label (none of the
+  17 Cox and Optimum variants shows an issuer coding), and a myFICO cardholder
+  (2021-08-24) whose Cox Internet bill earned SavorOne's 3% streaming rate,
+  labelled "Phone/Cable" -- Capital One's label for Comcast and Spectrum. Another
+  (2022-07-31) pays 4899 bills, Dish and fixed-wireless internet, with Savor for its
+  streaming rate. A streaming rate on an internet bill points to the pay-TV code,
+  not an internet-only one, but no source names Cox's code. Reverse it on a
+  statement showing a code Autograph does not pay 3X on, or an Autograph holder
+  getting 1X on a Cox bill.
+- **Held, one source and a partial one**: optimum.com. Two myFICO cardholders
+  earned U.S. Bank's "TV, Internet & Streaming" 5% on Optimum bills (Elan Max Cash
+  Preferred 2021-12-30, Cash+ 2024-04-13); a third got 1% on an Optimum Online
+  bill and a gas bill alike. That category pays internet codes too, so it does not
+  show pay TV: Autograph pays on 4899, and on 4814 as a phone plan, but not on 4816.
+- **Held, one source**: audible.com (AwardWallet's Chase and Citi codings as
+  continuity/subscription). The second search found nothing more: Chase's
+  streaming list and U.S. Bank's Cash+ list do not name Audible, and no cardholder
+  datapoint gives its code.
 - **Held, one source and a contrary one**: dropping T.J.Maxx and Marshalls from the
   Gap Encore Mastercard's 3X. Barclays' terms (tc47922) and Gap's Encore FAQ define
   it as Mastercard "clothing store" merchant codes, excluding wholesale clubs, Amazon,
-  Target and Walmart. Chase codes both stores as discount stores; Amex files them as
-  clothing stores; nothing shows the code on Mastercard.
+  Target and Walmart, and name no codes. Chase codes both stores as discount stores;
+  Amex files them as clothing stores; nothing shows the code on Mastercard, and the
+  second search found no Encore Mastercard datapoint.
 - **Held, no source**: dropping nike.com. AwardWallet shows only its own "Internet"
-  and "U.S. Online Retailers" labels for it, no issuer coding. Its row used to call
-  that "online-order codes, not a clothing or shoe store code"; it now says the
-  code is unknown.
+  and "U.S. Online Retailers" labels for it, no issuer coding, and the second search
+  found none. Its row used to call that "online-order codes, not a clothing or shoe
+  store code"; it now says the code is unknown.
 - **Not approved as stated**: a `travel_agency` category. Booking sites code as
   travel agencies when they take the payment (Expedia at Chase; Airbnb at Chase, Amex
   and Capital One), but on a pay-at-property booking the property charges the card
@@ -856,8 +887,6 @@ on another).
   publish and Bilt's unread terms may hold. That makes it a modelling call for David.
 
 **Open questions, each a call for David or a statement to settle it:**
-- Wyndham Earner: its own page says 2X in one place and 3X in another on dining,
-  grocery and gas. The data follows the Reward Rules (3X).
 - Citi Strata Premier's "Air Travel and Other Hotel Purchases" has no published
   definition; booking sites and Airbnb get 3X today.
 - Altitude Connect excludes booking sites from its 4X travel and the Emirates cards
@@ -866,6 +895,9 @@ on another).
 - Sapphire Preferred's 3X "vacation homes at top brands" is not modelled.
 - Venture X's portal note says 10X on vrbo.com and airbnb.com; vacation rentals
   through Capital One Travel earn 5X.
+- Instacart's Amex override (`other`): its main descriptor is Amex "Merchandise &
+  Supplies - Groceries" on AwardWallet, but another shows "U.S. Supermarkets". One
+  source, mixed, so the override stands.
 - Merchant rows that are not really checkouts: kayak.com (search only), opentable.com
   (meals are paid at the table), riteaid.com (no longer a drugstore storefront),
   traderjoes.com, wholefoodsmarket.com.
@@ -896,15 +928,17 @@ new category and no engine change; one shared search helper, `matchesSearch()`.
   replaced the personal program in May; the business one did not change.
 - **Business Customized Cash offers four of its six choices.** Computer services and
   business consulting have no Caddy category or merchants. TV, telecom and wireless is
-  defined by merchant code, so phone and cable earn it, and of the streaming rows only
-  netflix.com, which BofA names, and youtube.com, which codes as pay TV. Citi
-  AAdvantage Business's 2X on cable and satellite is read the same way.
+  defined by merchant code, so phone and cable earn it, and so do the streaming rows
+  on record as pay TV (4899): Netflix, which BofA names, Spotify, Hulu and YouTube.
+  Disney+ and Max are not on record and are not ranked. Citi AAdvantage Business's 2X
+  on cable and satellite is read the same way.
 - **U.S. Bank's checking-balance bonuses are cautions.** Business Essentials adds half
   a point on $10,000 a month with $10,000 in business checking; Essentials Plus up to
   1.5 points on $200,000 a year. They add to the rate rather than multiply it, so the
   tier picker would also inflate the Travel Center rates. Essentials Plus's 5% on the
-  month's top category is a caution like Business Gold's 4X, and so is the Amazon
-  card's 2% on its top three.
+  month's top category and the Amazon card's 2% on its top three are cautions too,
+  as the recipe says -- though Business Gold and World of Hyatt Business took
+  pickers for the same kind of rate that day (sections 10 and 14).
 - **Triple Cash's 3% on restaurants leaves out fast food.** U.S. Bank names fast food
   where it means it -- the Altitude cards pay on "restaurant, fast-food restaurant or
   bar" -- and its Cash+ Restaurants choice excludes most of it, so the rule denylists

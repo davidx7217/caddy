@@ -1729,7 +1729,7 @@
     "verified": true,
     "last_verified": "2026-09-29",
     "source_url": "https://creditcards.wellsfargo.com/autograph-visa-credit-card/",
-    "note": "Categories read off footnote 2 on the product page, which defines each by Visa merchant code. Travel includes car rental, cruise lines and travel agencies, so the hotel rule carries no OTA denylist. 'Phone plans' is landline and cell phone providers -- not internet or cable, which is why phone_internet was split into phone and internet_cable the day this card was added. Streaming, read again 2026-09-29, is defined by type, not by merchant: 'cable and other pay television, digital goods, books, movies, music, and continuity/subscription services' -- wellsfargo.com/autographstreaming names no merchants. So DirecTV and DISH earn 3X, and since 2026-09-29 so do Xfinity and Spectrum: Comcast and Charter bill as cable and other pay television, per AwardWallet's Chase codings and U.S. Bank's Cash+ list of cable and satellite TV providers, so their internet bills earn it too. Cox and Optimum carry only AwardWallet's own 'Cable' label, with no issuer coding behind it, and Audible's 5968 rests on AwardWallet alone; they stay at 1X until a second source shows how they code. The streaming page also warns that a subscription bundled with another product or billed by a third party may not earn the bonus. Currency 'wf': the same page prices a point at one cent, and the points also transfer to airline and hotel partners.",
+    "note": "Categories read off footnote 2 on the product page, which defines each by Visa merchant code. Travel includes car rental, cruise lines and travel agencies, so the hotel rule carries no OTA denylist. 'Phone plans' is landline and cell phone providers -- not internet or cable, which is why phone_internet was split into phone and internet_cable the day this card was added. Streaming, read again 2026-09-29, is defined by type, not by merchant: 'cable and other pay television, digital goods, books, movies, music, and continuity/subscription services' -- wellsfargo.com/autographstreaming names no merchants. So DirecTV and DISH earn 3X, and since 2026-09-29 so do Xfinity and Spectrum: Comcast and Charter bill as cable and other pay television, per AwardWallet's Chase codings and U.S. Bank's Cash+ list of cable and satellite TV providers, so their internet bills earn it too. Cox earns it since 2026-09-30 on thinner evidence: AwardWallet's own 'Cable' label, with no issuer coding behind it, and a cardholder whose Cox internet bill earned Capital One SavorOne's streaming rate (myFICO, 2021-08-24). No source names Cox's code; a statement showing a code Autograph does not pay 3X on, or an Autograph holder getting 1X on a Cox bill, would reverse it. Optimum's cardholder reports show only U.S. Bank's TV-and-internet rate, which cannot tell pay TV from an internet-only code, and Audible's 5968 rests on AwardWallet alone; they stay at 1X until a second source shows how they code. The streaming page also warns that a subscription bundled with another product or billed by a third party may not earn the bonus. Currency 'wf': the same page prices a point at one cent, and the points also transfer to airline and hotel partners.",
     "rules": [
       {
         "category": "dining",
@@ -1771,7 +1771,8 @@
           "directv.com",
           "dish.com",
           "xfinity.com",
-          "spectrum.com"
+          "spectrum.com",
+          "cox.com"
         ],
         "caveat": "Bills here code as pay TV, which Wells Fargo counts as streaming."
       },
@@ -3982,11 +3983,94 @@
     "annual_fee": 375,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-09-28",
+    "last_verified": "2026-09-29",
     "source_url": "https://www.americanexpress.com/us/credit-cards/business/business-credit-cards/american-express-business-gold-card-amex/",
-    "caution": "Business card. 4X on whichever two of six categories -- ads, electronics and software, restaurants, gas, transit, wireless -- you spend most on each cycle, to $150,000 a year. Caddy cannot see which two, so it ranks 1X.",
-    "note": "Rates read off the product page on 2026-09-28. The 4X goes to the two categories where the business spent most in each billing cycle, from six: U.S. advertising in select media, U.S. electronic goods retailers and software and cloud providers, U.S. restaurants including takeout and delivery, U.S. gas stations, transit, and U.S. wireless phone service; $150,000 combined a calendar year, then 1X. Which two is decided by the whole cycle's spending, which no page shows, so per the recipe it is a caution and not rules -- the same call as a top-category card. The alternative, if wanted, is a Cash+-style picker for the two the cardholder usually hits.",
+    "caution": "Business card. Amex pays the 4X on your two biggest of six categories each billing cycle, so pick the two you usually hit.",
+    "note": "Rates read off the product page on 2026-09-28 and again on 2026-09-29. The 4X goes to the two categories where the business spent most in each billing cycle, from six: U.S. advertising in select media (online, TV, radio), U.S. electronic goods retailers and software and cloud system providers, U.S. restaurants including takeout and delivery, U.S. gas stations, transit (trains, taxis, rideshare, ferries, tolls, parking, buses and subways), and monthly wireless phone service bought directly from a U.S. carrier; $150,000 combined a calendar year, then 1X. Amex picks the two from the cycle's spending on this card, which no page shows, so the card has a Cash+-style picker (David, 2026-09-29): the cardholder names the two they usually hit, and because Caddy then sends those purchases to this card, they are the two most likely to come out on top. With nothing picked it ranks 1X, as it did before. Definitions from americanexpress.com/us/rewards-info/business.html: electronics leaves out online marketplaces such as Amazon and eBay, superstores and the wireless carriers; wireless leaves out resellers, hardware, bundled TV and internet, VoIP and Google Fi. Software and cloud providers have no category here, so only the electronics stores rank; gas does not include EV charging, as on the Blue Cash Preferred; dining includes the delivery apps, as on the consumer Gold.",
+    "user_config": {
+      "selections": [
+        {
+          "key": "four",
+          "label": "Your two 4X categories",
+          "max": 2,
+          "options": {
+            "four_ads": "Advertising (online, TV, radio)",
+            "four_electronics": "Electronics, software & cloud",
+            "four_dining": "Restaurants",
+            "four_gas": "Gas stations",
+            "four_transit": "Transit",
+            "four_wireless": "Wireless phone service"
+          }
+        }
+      ]
+    },
     "rules": [
+      {
+        "category": "advertising",
+        "rate": 4.0,
+        "selection_group": "four_ads",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "Both picks share the cap."
+      },
+      {
+        "category": "electronics",
+        "rate": 4.0,
+        "selection_group": "four_electronics",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "Both picks share the cap."
+      },
+      {
+        "category": "dining",
+        "rate": 4.0,
+        "selection_group": "four_dining",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "Both picks share the cap."
+      },
+      {
+        "category": "gas",
+        "rate": 4.0,
+        "selection_group": "four_gas",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "Both picks share the cap."
+      },
+      {
+        "category": "travel_ground",
+        "rate": 4.0,
+        "selection_group": "four_transit",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "Both picks share the cap."
+      },
+      {
+        "category": "phone",
+        "rate": 4.0,
+        "selection_group": "four_wireless",
+        "cap": {
+          "amount": 150000,
+          "period": "year",
+          "then_rate": 1.0
+        },
+        "caveat": "Both picks share the cap."
+      },
       {
         "category": "travel_air",
         "rate": 3.0,
@@ -5020,10 +5104,10 @@
     "annual_fee": 0,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-09-28",
+    "last_verified": "2026-09-29",
     "source_url": "https://cards.barclaycardus.com/banking/cards/wyndham-rewards-earner-card/",
     "caution": "Bonus points may not post when you pay through a digital wallet, PayPal or another third party.",
-    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48413). A Visa. 5X at participating Hotels by Wyndham, which is wyndhamhotels.com; 3X on dining, grocery stores other than Target and Walmart, gas and EV charging; 1X elsewhere. The product page's summary of the 3X names only the vacation clubs, dining and groceries; the Reward Rules, which are the agreement, add gas and EV charging, so those are in. Wyndham's vacation clubs -- Club Wyndham, WorldMark, Margaritaville Vacation Club and Shell Vacations Club stays, maintenance fees and timeshare loan payments -- earn the same and are not ranked. The rules withhold bonus points from purchases made through third parties, so the delivery apps are denylisted on dining and instacart.com's barclays override applies.",
+    "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48413). A Visa. 5X at participating Hotels by Wyndham, which is wyndhamhotels.com; 3X on dining, grocery stores other than Target and Walmart, gas and EV charging; 1X elsewhere. The product page's summary of the 3X names only the vacation clubs, dining and groceries; the Reward Rules, which are the agreement, add gas and EV charging, so those are in. The page's 2X on dining, grocery and gas is stale text in its compare panel, which stays hidden until you compare cards; the Plus, Premier and Business pages' panels match their pages, and this page's body and the Reward Rules (accurate as of 2026-08-31) both say 3X, so 3X stands (re-read 2026-09-29). Wyndham's vacation clubs -- Club Wyndham, WorldMark, Margaritaville Vacation Club and Shell Vacations Club stays, maintenance fees and timeshare loan payments -- earn the same and are not ranked. The rules withhold bonus points from purchases made through third parties, so the delivery apps are denylisted on dining and instacart.com's barclays override applies.",
     "rules": [
       {
         "category": "travel_hotel",
@@ -6093,10 +6177,29 @@
     "annual_fee": 199,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-09-28",
+    "last_verified": "2026-09-29",
     "source_url": "https://creditcards.chase.com/business-credit-cards/world-of-hyatt/hyatt-business-card",
-    "caution": "Business card. 2X in whichever three of eight categories you spend most on each quarter, which Caddy cannot see, so it ranks 1X.",
-    "note": "Rates read off the offer details on 2026-09-28. 4X at Hyatt hotels and on World of Hyatt Experiences; 2X at fitness clubs and gyms; 2X in the three of eight categories -- dining, shipping, airline tickets bought direct, local transit, social media and search engine ads, car rental, gas, and internet, cable and phone -- where the business spends most each calendar quarter; 1X elsewhere. Which three is decided by the whole quarter's spending, which no page shows, so per the recipe that 2X is a caution and not rules, as Business Gold's 4X is. Network read off the card art.",
+    "caution": "Business card. Chase pays the 2X on your three biggest of eight categories each quarter, so pick the three you usually hit.",
+    "note": "Rates read off the offer details on 2026-09-28 and again on 2026-09-29. 4X at Hyatt hotels and on World of Hyatt Experiences; 2X at fitness clubs and gyms; 2X in the three of eight categories -- dining, shipping, airline tickets bought directly from the airline, local transit and commuting, social media and search engine advertising, car rental agencies, gas stations, and internet, cable and phone services -- where the business spends most each calendar quarter, with no cap (chase.com/hyattbuscard2X); 1X elsewhere. Chase works out the three by merchant code from the quarter's spending on this card, which no page shows, so the card has a Cash+-style picker, as Business Gold does (David, 2026-09-29): the cardholder names the three they usually hit, and because Caddy then sends those purchases to this card, they are the three most likely to come out on top. With nothing picked it ranks 1X on them, as it did before. Internet, cable and phone maps onto phone and internet_cable, as on the Ink Business Cash; gas does not include EV charging. Every travel_air row is an airline's own site -- booking sites sit under travel_hotel -- so the airline category needs no denylist. Network read off the card art.",
+    "user_config": {
+      "selections": [
+        {
+          "key": "top",
+          "label": "Your three 2X categories",
+          "max": 3,
+          "options": {
+            "top_dining": "Dining",
+            "top_shipping": "Shipping",
+            "top_air": "Airline tickets bought direct",
+            "top_transit": "Local transit & commuting",
+            "top_ads": "Social media & search ads",
+            "top_car": "Car rental agencies",
+            "top_gas": "Gas stations",
+            "top_telecom": "Internet, cable & phone"
+          }
+        }
+      ]
+    },
     "rules": [
       {
         "category": "travel_hotel",
@@ -6108,6 +6211,51 @@
       {
         "category": "fitness",
         "rate": 2.0
+      },
+      {
+        "category": "dining",
+        "rate": 2.0,
+        "selection_group": "top_dining"
+      },
+      {
+        "category": "shipping",
+        "rate": 2.0,
+        "selection_group": "top_shipping"
+      },
+      {
+        "category": "travel_air",
+        "rate": 2.0,
+        "selection_group": "top_air"
+      },
+      {
+        "category": "travel_ground",
+        "rate": 2.0,
+        "selection_group": "top_transit"
+      },
+      {
+        "category": "advertising",
+        "rate": 2.0,
+        "selection_group": "top_ads"
+      },
+      {
+        "category": "car_rental",
+        "rate": 2.0,
+        "selection_group": "top_car"
+      },
+      {
+        "category": "gas",
+        "rate": 2.0,
+        "selection_group": "top_gas"
+      },
+      {
+        "category": "phone",
+        "rate": 2.0,
+        "selection_group": "top_telecom"
+      },
+      {
+        "category": "internet_cable",
+        "rate": 2.0,
+        "selection_group": "top_telecom"
       }
     ]
   },
@@ -6259,7 +6407,7 @@
     "last_verified": "2026-09-29",
     "source_url": "https://www.usbank.com/business-banking/business-credit-cards/amazon-business-credit-cards.html",
     "caution": "Business card. Without Prime every 5% here is 3%, and the 2% in your top three categories outside Amazon is not ranked.",
-    "note": "Issued by U.S. Bank as the Prime Business World Elite Mastercard, with an eligible Prime membership, and the Amazon Business World Elite Mastercard, without one: one program whose rates follow the business owner's Prime membership. Read off the product page and the Rewards Summary in its Terms and Conditions (onboarding.usbank.com/access/terms-HD8W35MF2E55E4S) on 2026-09-29. One record at the Prime rate, per the Prime Visa convention, with the 3% in the caution. 5% on the first $150,000 a calendar year at Amazon-covered Sites -- Amazon.com, Amazon Business, AWS and Whole Foods Market -- then 1%. The terms exclude pharmacy.amazon.com, advertising.amazon.com, shipping.amazon.com, pay.amazon.com and Amazon's non-U.S. sites, but those hosts resolve to the amazon.com row here, so Caddy ranks them at 5% too. 5% on prepaid travel booked in the U.S. Bank Travel Center. 2% on the first $150,000 a year in whichever three categories the business spends most on outside Amazon each billing cycle, from fifteen -- advertising, computer and software services, office supply stores, airlines, hotels, utilities, accounting and tax, cell phone providers, drugstores, gas and EV charging, postal and shipping, car rental, dining, entertainment and grocery stores -- which no page shows, so it is the caution, as Business Gold's 4X is. 1% elsewhere. A purchase put on an ExtendPay plan at an Amazon checkout earns nothing, and Amazon Day Delivery's extra 1% is a shipping choice; neither is ranked. Rewards are stated as percentages back, so currency is 'cash'. No annual fee, per the terms.",
+    "note": "Issued by U.S. Bank as the Prime Business World Elite Mastercard, with an eligible Prime membership, and the Amazon Business World Elite Mastercard, without one: one program whose rates follow the business owner's Prime membership. Read off the product page and the Rewards Summary in its Terms and Conditions (onboarding.usbank.com/access/terms-HD8W35MF2E55E4S) on 2026-09-29. One record at the Prime rate, per the Prime Visa convention, with the 3% in the caution. 5% on the first $150,000 a calendar year at Amazon-covered Sites -- Amazon.com, Amazon Business, AWS and Whole Foods Market -- then 1%. The terms exclude pharmacy.amazon.com, advertising.amazon.com, shipping.amazon.com, pay.amazon.com and Amazon's non-U.S. sites, but those hosts resolve to the amazon.com row here, so Caddy ranks them at 5% too. 5% on prepaid travel booked in the U.S. Bank Travel Center. 2% on the first $150,000 a year in whichever three categories the business spends most on outside Amazon each billing cycle, from fifteen -- advertising, computer and software services, office supply stores, airlines, hotels, utilities, accounting and tax, cell phone providers, drugstores, gas and EV charging, postal and shipping, car rental, dining, entertainment and grocery stores -- which no page shows, so it is the caution, as the recipe has it; Business Gold and World of Hyatt Business took pickers for the same kind of rate on 2026-09-29. 1% elsewhere. A purchase put on an ExtendPay plan at an Amazon checkout earns nothing, and Amazon Day Delivery's extra 1% is a shipping choice; neither is ranked. Rewards are stated as percentages back, so currency is 'cash'. No annual fee, per the terms.",
     "rules": [
       {
         "category": "online_retail",
@@ -6334,7 +6482,7 @@
     "last_verified": "2026-09-29",
     "source_url": "https://business.bankofamerica.com/en/credit-cards/business-advantage-customized-cash-rewards",
     "caution": "Business card. The 3% and 2% share one $50,000 cap a calendar year.",
-    "note": "Read off the product page, its Terms and Conditions (the Business Advantage Customized Cash Rewards Program Summary) and the category page bankofamerica.com/choosemycategory/business with every category's details opened, on 2026-09-29. 3% in one Choice Category the cardholder picks, changeable once a calendar month; 2% at dining merchants; 1% elsewhere. The 3% and 2% share the first $50,000 of purchases a calendar year, then 1%. Dining is caterers, restaurants and fast food, bars, taverns and lounges -- not bakeries, coffee shops, grocery stores or other food stores with a restaurant inside; Starbucks codes as fast food (5814), so it counts. Each choice is defined by merchant code. Gas and EV charging: fuel dispensers, service stations and EV charging, not marinas, heating-oil or propane dealers, or parking lots billing for charging. Office supply stores: stationery and office and school supply stores -- Staples, Office Depot, OfficeMax, Quill -- not variety, department, discount or drug stores. Travel: airlines, bus lines, car rental, cruise lines, travel arrangement sellers, hotels, parking, commuter transit and ferries, taxis and limousines, passenger rail, and travel agencies and tour operators, with Airbnb, Expedia, Hotels.com, Lyft and Uber rides named, so the hotel rule carries no OTA denylist. TV, telecom and wireless: cable, satellite and other pay TV and radio, and telecom equipment and services -- AT&T, Comcast, Cox, DIRECTV, Netflix, Sirius XM, Spectrum, T-Mobile and Verizon named -- so phone and internet_cable earn it, and of the streaming rows netflix.com, which BofA names, and youtube.com, which codes as pay TV (4899); how the other streaming services code is not on record, so they are not ranked. Computer services (Dell, GoDaddy, Intuit, Shopify, Squarespace, Adobe) and business consulting services (H&R Block, LegalZoom, The UPS Store) have no Caddy category or merchant rows, so the picker leaves them out; a cardholder who chose one earns the 2% and 1% here. tier_multiplier is Preferred Rewards for Business, as on the Unlimited Cash business card. No annual fee. A Mastercard.",
+    "note": "Read off the product page, its Terms and Conditions (the Business Advantage Customized Cash Rewards Program Summary) and the category page bankofamerica.com/choosemycategory/business with every category's details opened, on 2026-09-29. 3% in one Choice Category the cardholder picks, changeable once a calendar month; 2% at dining merchants; 1% elsewhere. The 3% and 2% share the first $50,000 of purchases a calendar year, then 1%. Dining is caterers, restaurants and fast food, bars, taverns and lounges -- not bakeries, coffee shops, grocery stores or other food stores with a restaurant inside; Starbucks codes as fast food (5814), so it counts. Each choice is defined by merchant code. Gas and EV charging: fuel dispensers, service stations and EV charging, not marinas, heating-oil or propane dealers, or parking lots billing for charging. Office supply stores: stationery and office and school supply stores -- Staples, Office Depot, OfficeMax, Quill -- not variety, department, discount or drug stores. Travel: airlines, bus lines, car rental, cruise lines, travel arrangement sellers, hotels, parking, commuter transit and ferries, taxis and limousines, passenger rail, and travel agencies and tour operators, with Airbnb, Expedia, Hotels.com, Lyft and Uber rides named, so the hotel rule carries no OTA denylist. TV, telecom and wireless: cable, satellite and other pay TV and radio, and telecom equipment and services -- AT&T, Comcast, Cox, DIRECTV, Netflix, Sirius XM, Spectrum, T-Mobile and Verizon named -- so phone and internet_cable earn it, and so do the streaming rows on record as pay TV (4899) in merchants.json: netflix.com, which BofA names, spotify.com, hulu.com and youtube.com. How Disney+ and Max code is not on record, so they are not ranked. Computer services (Dell, GoDaddy, Intuit, Shopify, Squarespace, Adobe) and business consulting services (H&R Block, LegalZoom, The UPS Store) have no Caddy category or merchant rows, so the picker leaves them out; a cardholder who chose one earns the 2% and 1% here. tier_multiplier is Preferred Rewards for Business, as on the Unlimited Cash business card. No annual fee. A Mastercard.",
     "user_config": {
       "selections": [
         {
@@ -6456,6 +6604,8 @@
         "selection_group": "telecom",
         "merchant_allowlist": [
           "netflix.com",
+          "spotify.com",
+          "hulu.com",
           "youtube.com"
         ],
         "cap": {
@@ -6505,7 +6655,7 @@
     "last_verified": "2026-09-29",
     "source_url": "https://www.citi.com/credit-cards/citi-aadvantage-business-credit-card",
     "caution": "Business card. $0 annual fee the first year, then $99.",
-    "note": "Read off the product page and its Additional Information on 2026-09-29. 2 AAdvantage miles per $1 on eligible American Airlines purchases -- items billed by American as the merchant of record, not its car rentals, hotels, status boosts or AA Cargo -- so aa.com only; 2 at car rental merchants, not RV rentals, travel agencies, online travel sites or Rocketmiles; 2 at gas stations, not warehouse clubs, discount, department or convenience stores; 2 at telecommunications merchants, phone equipment and local and long-distance service, which is phone; and 2 at cable and satellite providers, which Citi defines in the words of the pay-TV merchant code (4899): the connection and ongoing delivery of television, internet, telephone and radio programming by cable or satellite. Citi groups rewards by merchant code, so internet_cable earns it, and so does youtube.com, which codes as pay TV; how the other streaming services code is not on record, so they are not ranked. 1 elsewhere. The annual fee is $99, waived the first 12 months: the pricing block renders blank while the browser pane is hidden, so the figure was read from the page's own offer data ('$99 after the first year') and citi.com's card list. A World Elite Mastercard. Miles post to the business's AAdvantage Business account.",
+    "note": "Read off the product page and its Additional Information on 2026-09-29. 2 AAdvantage miles per $1 on eligible American Airlines purchases -- items billed by American as the merchant of record, not its car rentals, hotels, status boosts or AA Cargo -- so aa.com only; 2 at car rental merchants, not RV rentals, travel agencies, online travel sites or Rocketmiles; 2 at gas stations, not warehouse clubs, discount, department or convenience stores; 2 at telecommunications merchants, phone equipment and local and long-distance service, which is phone; and 2 at cable and satellite providers, which Citi defines in the words of the pay-TV merchant code (4899): the connection and ongoing delivery of television, internet, telephone and radio programming by cable or satellite. Citi groups rewards by merchant code, so internet_cable earns it, and so do the streaming rows on record as pay TV (4899) -- netflix.com, spotify.com, hulu.com and youtube.com, whose Citi codings AwardWallet labels 'CABLE,SATELLITE,PAY TV' where it has them. How Disney+ and Max code is not on record, so they are not ranked. 1 elsewhere. The annual fee is $99, waived the first 12 months: the pricing block renders blank while the browser pane is hidden, so the figure was read from the page's own offer data ('$99 after the first year') and citi.com's card list. A World Elite Mastercard. Miles post to the business's AAdvantage Business account.",
     "rules": [
       {
         "category": "travel_air",
@@ -6534,6 +6684,9 @@
         "category": "streaming",
         "rate": 2.0,
         "merchant_allowlist": [
+          "netflix.com",
+          "spotify.com",
+          "hulu.com",
           "youtube.com"
         ]
       }
@@ -6775,7 +6928,7 @@
     "last_verified": "2026-09-29",
     "source_url": "https://www.usbank.com/business-banking/business-credit-cards/business-essentials-plus-credit-card.html",
     "caution": "Business card. 5% in your top category each month, and up to 3.5% with U.S. Bank business checking, are not ranked.",
-    "note": "Read off footnotes 1 to 4 of the product page and its FAQ on 2026-09-29: 2 points per $1 on every purchase and 10 on prepaid hotels and car rentals in the Travel Center. 5 on the month's top eligible spend category, to $200,000 a year from account opening, from eight: accounting and tax services, airlines, cell phone providers, dining, entertainment (bowling alleys, golf courses, entertainment parks), office supply stores, postal and shipping, and utilities. Which one is decided by the month's spending, which no page shows, so it is the caution, as Business Gold's 4X is. The Business Essentials Plus Earning Bonus adds 0.5, 1 or 1.5 points with $15,000, $75,000 or $150,000 averaged in a qualifying U.S. Bank business checking account, on $200,000 a year; it adds rather than multiplies, as on Business Essentials, so it is in the caution too. Points are cash back at a cent -- 100,000 points = $1,000 as a deposit or statement credit -- so currency is 'cash'. $295 annual fee. A Visa Signature.",
+    "note": "Read off footnotes 1 to 4 of the product page and its FAQ on 2026-09-29: 2 points per $1 on every purchase and 10 on prepaid hotels and car rentals in the Travel Center. 5 on the month's top eligible spend category, to $200,000 a year from account opening, from eight: accounting and tax services, airlines, cell phone providers, dining, entertainment (bowling alleys, golf courses, entertainment parks), office supply stores, postal and shipping, and utilities. Which one is decided by the month's spending, which no page shows, so it is the caution, as the recipe has it; Business Gold and World of Hyatt Business took pickers for the same kind of rate on 2026-09-29. The Business Essentials Plus Earning Bonus adds 0.5, 1 or 1.5 points with $15,000, $75,000 or $150,000 averaged in a qualifying U.S. Bank business checking account, on $200,000 a year; it adds rather than multiplies, as on Business Essentials, so it is in the caution too. Points are cash back at a cent -- 100,000 points = $1,000 as a deposit or statement credit -- so currency is 'cash'. $295 annual fee. A Visa Signature.",
     "rules": [
       {
         "category": "travel_hotel",
