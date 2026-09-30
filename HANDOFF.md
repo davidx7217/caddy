@@ -18,12 +18,13 @@ works and why; this file is only the state of play.
 - **Every card audited 2026-09-29** (section 16): all 140 read against their
   issuer's own pages -- fourteen of them only in the in-app browser -- and every
   card ranked on every merchant row. The fixes it found are merged. The one soft
-  spot left: the three Bilt cards' category definitions (section 9).
+  spot it left, the three Bilt cards' definitions, was read in Bilt's own terms
+  the same day (section 9).
 - **44 merchant rows record how they actually code** (`mcc`, `mcc_source`); the
   other 119 are still unverified seed data (section 16).
 - **Freedom Flex carries Q4 2026 and Q1 2027**, dining 7X in Q4 (section 2). Rates
   switch at local midnight even in a tab left open.
-- **Tests green**: 581 engine + 31 setup + 54 lifecycle + 47 worker. `npm test`.
+- **Tests green**: 583 engine + 31 setup + 54 lifecycle + 47 worker. `npm test`.
 - **Two scheduled agents keep the data current** (section 15), and run without
   permission prompts. Rate changes they find wait on `rates-*` and `upkeep-*`
   branches for David's approval; only `last_verified` date bumps land on `main`
@@ -33,7 +34,8 @@ works and why; this file is only the state of play.
 - **`caddy-1.0.0.zip` sits in the repo root**, rebuilt on every commit. See the
   packaging note below.
 - **Rules David decided 2026-09-28.** A store rate is what the card adds over
-  whatever the store's free program pays members with any card (section 11). Keep
+  whatever the store's free program pays members with any card (section 11); on
+  2026-09-30 he applied it to Bilt's partner bonuses too (section 9). Keep
   extension text minimal: one-line cautions, and rule caveats short or absent,
   because they print in the popup. The extension must never tell a user its
   rotating categories are out of date -- a quarter goes in the day the issuer
@@ -104,12 +106,14 @@ dated.
    Loose ends, each small, each explained in its section:
    - **U.S. Bank Altitude points** are assumed to be worth a cent; no U.S. Bank
      page states a figure (section 12).
-   - **Bilt's offer terms** were never readable -- the link downloads a file --
-     so Obsidian's "other travel" is unconfirmed (section 9).
+   - **Three airline-program portals may overstate their cards**, as Bilt Travel
+     did: TrueBlue Travel, Renowned Hotels and AAdvantage Hotels and Cars. Unchecked
+     until their terms are read (section 9).
 
    Settled 2026-09-29: Wyndham Earner's 3X stands, `gm` stays at a cent, and
    Business Gold and World of Hyatt Business have pickers for their top
-   categories (sections 10, 13 and 14).
+   categories (sections 10, 13 and 14). Settled 2026-09-30: Bilt's terms are
+   read, and its member bonuses no longer rank (section 9).
 
 ---
 
@@ -443,10 +447,8 @@ REWARDS and Flagship Premier; and the Bilt Blue, Obsidian and Palladium cards.
   figure) and `bilt` at 1.25 (NerdWallet's baseline, not its 1.8 transfer
   estimate). No engine change, no new category, no new merchant row.
 - **Bilt is filed under Column N.A.**, the bank that issues it, as Apple Card is
-  under Goldman Sachs. **Its terms were not read**: the Offer Terms link on
-  bilt.com downloads a file instead of opening, so only the headline rates on
-  bilt.com/card are in. What Obsidian's "other travel" covers is unconfirmed, and
-  transit is left out of it.
+  under Goldman Sachs. Its rates are bilt.com/card's headline figures; its
+  definitions were read on 2026-09-29, below.
 - **Rates that depend on how you pay are cautions, not rules**: PayPal Cashback's 3%
   with PayPal checkout, and Venmo's 3% for paying with Venmo and +1% for splitting
   a purchase -- the same call as Apple Pay.
@@ -473,10 +475,46 @@ REWARDS and Flagship Premier; and the Bilt Blue, Obsidian and Palladium cards.
   the in-app browser, with Settings served over a local server and a stubbed
   `chrome.*`.
 
+**Bilt's terms, read 2026-09-29.** The Offer Terms link on bilt.com/card downloads
+a PDF rather than opening a page, so David downloaded it and it was read in full:
+the Bilt Card Offer Terms, last updated 2026-09-18. The file stays out of the repo.
+
+- **Obsidian's travel is booked direct and leaves out transit**: 2X on purchases
+  made directly with merchants coded as airlines, hotels, motels, resorts, cruise
+  lines and car rental agencies. Transit and rideshare stay at 1X, as modelled.
+  Booking sites code as travel agencies, so Obsidian's hotel rule now carries the
+  same booking-site denylist as Sapphire Reserve's, and pays 1X there. Cruise
+  lines have no category here (section 13).
+- **Everything else matched**: 1X, 1X and 2X base; Obsidian's dining (eating
+  places, drinking places, bakeries, fast food) and grocery (grocery stores and
+  supermarkets, $25,000 a calendar year across the account, then 1X); fees of $0,
+  $95 and $495. Bilt defaults Obsidian's 3X to dining, but Caddy's picker starts
+  empty, so an Obsidian left unpicked earns 3X nowhere.
+- **The Lyft and Bilt Travel amounts are in a second document.** The Offer Terms
+  file both under the Bilt Rewards member program, apart from the cards' own
+  rates, and defer to the Bilt Rewards Points Earning Terms (bilt.com/terms/earn,
+  also a PDF, last updated 2026-08-18): +2X on Lyft rides booked in the Lyft app,
+  +2X on accommodations and +1X on flights through the portal.
+- **Decided 2026-09-30: those bonuses are not ranked.** The Earning Terms pay the
+  Lyft bonus to members who link Lyft, naming no card, and the portal bonus on any
+  linked Visa, Mastercard or Amex, so by the store-rate rule (section 11) they
+  arrive whichever card pays. Ranking with them picked the wrong card: on lyft.com
+  Caddy chose Bilt Blue (3.75%) over Citi Double Cash (2.8%), when Double Cash
+  earns more with Lyft linked (5.3% against 3.75%) or not (2.8% against 1.25%). The
+  Lyft and Bilt Travel rules are gone, Blue and Palladium rank as flat cards, and
+  the caution names the bonuses.
+- **Still imprecise**: a Discover card, or a card not linked in the Bilt app, gets
+  no Bilt Travel bonus, so a Bilt card's real edge there goes unshown. Bilt Cash,
+  4% on everyday spend under the Flexible Bilt Cash Option, is card-only and stays
+  unranked: its worth depends mostly on the holder's rent or mortgage.
+
 Left open, for you:
 
-- Re-read the Bilt Card Offer Terms in a browser that opens them, then confirm or
-  correct Obsidian's "other travel" and anything else they define.
+- **Three airline-program portals may have the same flaw**: TrueBlue Travel (four
+  JetBlue cards), Renowned Hotels and Resorts (three United cards) and AAdvantage
+  Hotels and Cars (two Citi cards). If a program pays members whatever card they
+  use, its portal notes overstate the card. Read each program's terms first; about
+  an hour.
 
 ---
 
@@ -875,7 +913,7 @@ on another).
   AwardWallet's "Hotel at Booking.com" descriptors show Hotels. So no single category
   is right for booking.com, priceline.com, hotels.com or vrbo.com, and the change
   also needs each travel card's definition, which Citi (Strata Premier) does not
-  publish and Bilt's unread terms may hold. That makes it a modelling call for David.
+  publish. That makes it a modelling call for David.
 
 **Open questions, each a call for David or a statement to settle it:**
 - Citi Strata Premier's "Air Travel and Other Hotel Purchases" has no published
