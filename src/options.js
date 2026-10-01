@@ -320,8 +320,8 @@ const day = d => d
   ? new Date(d + 'T00:00:00').toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })
   : '';
 
-/** One earn rule, with every qualifier the ranker actually reads. */
-function ruleLine(r) {
+/** Every qualifier the ranker actually reads, for one earn rule. */
+function ruleNotes(r) {
   const notes = [];
   if (r.portal_only) notes.push(`${r.portal || 'Issuer portal'} only`);
   if (r.cap) notes.push(`capped at $${r.cap.amount.toLocaleString()} per ${r.cap.period}, then ${r.cap.then_rate}x`);
@@ -331,11 +331,30 @@ function ruleLine(r) {
   if (r.merchant_denylist) notes.push(`not at ${r.merchant_denylist.slice(0, 3).join(', ')}` +
     (r.merchant_denylist.length > 3 ? ` and ${r.merchant_denylist.length - 3} more` : ''));
   if (r.caveat) notes.push(r.caveat);
+  return notes;
+}
+
+/** Rules that share a rate and every qualifier collapse into one cell, so a
+    picker's six choices with one caveat print the caveat once. */
+function ruleGroups(rules) {
+  const groups = new Map();
+  for (const r of rules) {
+    const notes = ruleNotes(r);
+    const key = r.rate + '|' + notes.join('|');
+    const g = groups.get(key) || { rate: r.rate, notes, cats: [] };
+    const label = catLabel(r.category);
+    if (!g.cats.includes(label)) g.cats.push(label);
+    groups.set(key, g);
+  }
+  return [...groups.values()];
+}
+
+function ruleCell(g) {
   return `<div class="rule">
-    <span class="rule-rate">${r.rate}x</span>
+    <span class="rule-rate">${g.rate}x</span>
     <span>
-      <span class="rule-cat">${esc(catLabel(r.category))}</span>
-      ${notes.length ? `<div class="rule-note">${notes.map(esc).join(' &middot; ')}</div>` : ''}
+      <span class="rule-cat">${g.cats.map(esc).join(', ')}</span>
+      ${g.notes.length ? `<div class="rule-note">${g.notes.map(esc).join(' &middot; ')}</div>` : ''}
     </span>
   </div>`;
 }
@@ -397,7 +416,7 @@ function renderDetail() {
       <div>
         <div class="sub-head" style="margin-top:0">Bonus categories</div>
         ${rules.length
-          ? `<div class="rules">${rules.map(ruleLine).join('')}</div>`
+          ? `<div class="rules">${ruleGroups(rules).map(ruleCell).join('')}</div>`
           : `<p class="rule-note" style="margin-top:12px">${p.only_at
               ? 'A store card: it earns its base rate at the store above and works nowhere else.'
               : 'No bonus categories. Everything earns the base rate.'}</p>`}
