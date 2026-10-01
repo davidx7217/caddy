@@ -168,15 +168,6 @@ function ratesDate() {
   return pool.map(p => p.last_verified).filter(Boolean).sort()[0] || '';
 }
 
-function counts() {
-  return {
-    cards: instances.length,
-    ranking: Object.entries(prefs.categoryDefaults).filter(([, id]) => products[id]).length,
-    runs: blocked.length,
-    data: activity.length
-  };
-}
-
 function liveCurrencies() {
   const live = new Set(ownedProducts().map(p => p.currency));
   return Object.keys(baseVals).filter(k => !k.startsWith('_') && live.has(k));
@@ -581,11 +572,9 @@ function render() {
   else document.documentElement.dataset.theme = theme;
   $('#brandsub').textContent = `WHICH-CARD / v${VERSION}`;
 
-  const n = counts();
   $('#nav').innerHTML = SECTIONS.map(x => `
     <button data-section="${x.id}" ${x.id === section ? 'aria-current="page"' : ''}>
       <span class="label">${esc(x.label)}</span>
-      <span class="count">${n[x.id]}</span>
     </button>`).join('');
 
   document.querySelectorAll('.theme button').forEach(b =>
