@@ -313,7 +313,7 @@
     "annual_fee": 0,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-09-27",
+    "last_verified": "2026-10-01",
     "source_url": "https://www.americanexpress.com/us/credit-cards/card/blue-cash-everyday/",
     "note": "Online retail is a CHANNEL, not a store type. The offer terms (americanexpress.com/us/credit-cards/card-application/apply/prospect/terms/blue-cash-everyday-credit-card/25330-10-0, read 2026-09-27) define it as physical goods bought on a website or app from a U.S. retailer, and exclude restaurants, supermarkets, gas stations, auto dealers, travel, entertainment and services. Every purchase Caddy sees is made online, so the 3% is repeated on each category that sells physical goods -- until 2026-09-27 it sat on online_retail alone, and target.com or homedepot.com ranked this card on its 1% base. Wholesale clubs are left out on purpose: whether each club takes Amex at all was not checked, and recommending a card a till refuses is worse than under-ranking it.",
     "rules": [
@@ -447,7 +447,7 @@
     "annual_fee": 0,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-09-09",
+    "last_verified": "2026-10-01",
     "source_url": "https://creditcards.chase.com/business-credit-cards/ink/cash",
     "caution": "Business card. Both $25,000 caps run per ACCOUNT ANNIVERSARY year, not the calendar year, and each is shared across two categories.",
     "note": "Rates read off the product page 2026-09-09; the rewards agreement is a PDF download and was not opened. Modelled as currency 'ur' for the same reason Freedom Flex and Freedom Unlimited are: Chase markets all three as cash back, but they earn Ultimate Rewards. At the default 1.5 cpp that turns the 5% into 7.5% effective, which only holds if you hold a premium Chase card to transfer into -- override the valuation in Options if you do not. network is not confirmed: the source page lists Visa and MasterCard together in a generic acceptance line. It is metadata and no code reads it.",
@@ -773,7 +773,7 @@
     "annual_fee": 95,
     "base_rate": 2.0,
     "verified": true,
-    "last_verified": "2026-09-09",
+    "last_verified": "2026-10-01",
     "source_url": "https://www.capitalone.com/credit-cards/venture/",
     "note": "The card the 'c1' valuation was written for: Venture miles transfer to airline and hotel partners, which is what the default 1.4 cpp assumes. Redeemed as a straight travel statement credit they are worth 1.0 -- override in Options if that is how you use them. Also earns 5X on the Capital One Entertainment ticketing platform, not modelled for the same reason as Savor: it is one first-party storefront, not a category.",
     "rules": [
@@ -1005,7 +1005,7 @@
     "annual_fee": 95,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-09-10",
+    "last_verified": "2026-10-01",
     "source_url": "https://creditcards.chase.com/rewards-credit-cards/sapphire/preferred",
     "note": "3x on 'vacation homes at top brands', read 2026-10-01: the offer details point to chase.com/RewardsCategoryFAQs, which names the brands -- 'Only bookings made directly with the following merchants will qualify for this category: Airbnb, Vrbo, Plum Guide, HomeAway, Homestay.com, and Vacasa' -- and excludes secondary cleaning fees, merchants selling a variety of travel inventory, and Vrbo stays billed by the property manager rather than Vrbo. airbnb.com and vrbo.com are the brands with merchant rows. The 5x Peloton rate through 2027-12-31 is one first-party storefront rather than a category, left out for the same reason as Savor's Capital One Entertainment rate. car_rental earns the 2x other-travel rate because Chase's own travel definition names car rental agencies (chase.com/RewardsCategoryFAQs, read 2026-09-27); it had no category to sit in before then. Cruise lines, read 2026-09-29: the offer details pay 2X on 'purchases made in the travel category', which that FAQ defines to include cruise lines (on-board goods and services excluded), so cruises earn 2X.",
     "rules": [
@@ -1094,7 +1094,7 @@
     "annual_fee": 0,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-09-10",
+    "last_verified": "2026-10-01",
     "source_url": "https://creditcards.chase.com/cash-back-credit-cards/amazon-prime-rewards",
     "caution": "The 5% needs an eligible Prime membership. Without one, every 5% rate here is 3%.",
     "note": "currency is 'cash', NOT 'ur'. These points redeem against an Amazon order at one cent each and do not transfer to Ultimate Rewards partners, so valuing them at the 1.5 cpp 'ur' figure would overrank this card against every other Chase product in the set.",
@@ -1144,7 +1144,7 @@
     "annual_fee": 0,
     "base_rate": 2.0,
     "verified": true,
-    "last_verified": "2026-09-10",
+    "last_verified": "2026-10-01",
     "source_url": "https://creditcards.wellsfargo.com/active-cash-credit-card",
     "note": "No rules by design: the card is a flat 2% with, in Wells Fargo's own words, zero categories to track. An empty rules array is the correct model, exactly as for Robinhood Gold.",
     "rules": []
@@ -1159,7 +1159,7 @@
     "annual_fee": 0,
     "base_rate": 1.5,
     "verified": true,
-    "last_verified": "2026-09-10",
+    "last_verified": "2026-10-01",
     "source_url": "https://www.capitalone.com/credit-cards/cash-back/",
     "note": "Third-party sites report elevated rates on hotels and rental cars booked through Capital One Travel. No page on capitalone.com stated them on 2026-09-10, so they are NOT modelled -- the same call made for Robinhood's rumoured 5% travel portal rate. Add them if the issuer ever publishes them.",
     "rules": []
@@ -1174,7 +1174,7 @@
     "annual_fee": 0,
     "base_rate": 1.5,
     "verified": true,
-    "last_verified": "2026-09-10",
+    "last_verified": "2026-10-01",
     "source_url": "https://www.discover.com/credit-cards/travel/miles-card.html",
     "note": "Shares the 'disco' currency with Discover it Cash Back. Discover Miles redeem for a statement credit at one cent each, which is what that valuation already says, so a separate currency would be a second name for the same number. The first-year miles match is a sign-up bonus, not an earn rate, and is not modelled.",
     "rules": []
