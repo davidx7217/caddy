@@ -779,6 +779,10 @@
     "category": "cruise",
     "confidence": "high"
   },
+  "silversea.com": {
+    "category": "cruise",
+    "confidence": "high"
+  },
   "usps.com": {
     "category": "shipping",
     "confidence": "high"

@@ -1096,7 +1096,7 @@ eq('...and its 5x hotels rate stays a portal note, never a ranking',
      cards.filter(p => !ISSUER[p.issuer] || !CURRENCY[p.currency]).map(p => p.id), []);
   eq('every card is ranked, 1 to the catalogue size, with no gaps and no repeats',
      cards.map(p => p.common).sort((a, b) => a - b), Array.from({ length: cards.length }, (_, i) => i + 1));
-  eq('...and there are 152 of them', cards.length, 152);
+  eq('...and there are 157 of them', cards.length, 157);
   // A store card that names a domain nothing resolves to could never rank at all.
   eq('every store a store card works at is in merchants.json',
      cards.flatMap(p => (p.only_at || []).filter(d => !merchants[d]).map(d => `${p.id}:${d}`)), []);
@@ -1955,9 +1955,9 @@ eq('the sister banners are supermarkets for every card, not only Kroger\'s',
 const sail = (id, h = 'royalcaribbean.com', config = {}) =>
   run(h, [{ productId: id, config }], { now: new Date('2026-09-30T12:00:00') }).all[0];
 const CRUISE_ROWS = ['carnival.com', 'royalcaribbean.com', 'ncl.com', 'princess.com', 'celebritycruises.com',
-  'hollandamerica.com', 'msccruisesusa.com', 'virginvoyages.com'];
+  'hollandamerica.com', 'msccruisesusa.com', 'virginvoyages.com', 'silversea.com'];
 eq('every cruise line resolves to cruise, www. included',
-   CRUISE_ROWS.flatMap(h => [run(h).category, run('www.' + h).category]), Array(16).fill('cruise'));
+   CRUISE_ROWS.flatMap(h => [run(h).category, run('www.' + h).category]), Array(18).fill('cruise'));
 eq('Carnival Rewards: 3x at carnival.com, worth 2.76%, the card\'s share of "up to 6x"',
    [sail('barclays-carnival', 'carnival.com')?.rate, sail('barclays-carnival', 'carnival.com')?.value], [3, 2.76]);
 eq('...1x at another cruise line: the 3X is purchases billed by Carnival Cruise Line',
@@ -2002,6 +2002,32 @@ eq('...4x on vacation home rentals, which its page names, and on a hotel booked 
 eq('BofA Customized Cash travel choice: 3% on booking sites',
    ['expedia.com', 'airbnb.com', 'booking.com']
      .map(h => sail('bofa-customized-cash', h, { selections: ['travel'] })?.rate), [3, 3, 3]);
+
+// --- the cruise lines' co-branded cards, 2026-09-30 ------------------------------
+// Bank of America's Royal ONE pair and Norwegian card and Barclays' Princess and
+// Holland America cards, each read off its issuer's terms that day. Every point
+// is worth a cent by the issuer's own figure, toward the line's own cruises.
+eq('Royal ONE: 3x at Royal Caribbean, Celebrity and Silversea, 2x on groceries, gas and EV charging',
+   ['royalcaribbean.com', 'celebritycruises.com', 'silversea.com', 'kroger.com', 'shell.us', 'evgo.com']
+     .map(h => sail('bofa-royal-one', h)?.rate), [3, 3, 3, 2, 2, 2]);
+eq('...1x at another cruise line, on airfare and at a restaurant',
+   ['ncl.com', 'delta.com', 'chipotle.com'].map(h => sail('bofa-royal-one', h)?.rate), [1, 1, 1]);
+eq('Royal ONE Plus: 4x at the three lines, 2x on airfare, a hotel booked direct, dining, groceries, gas and EV',
+   ['royalcaribbean.com', 'silversea.com', 'delta.com', 'marriott.com', 'chipotle.com', 'kroger.com', 'shell.us',
+    'evgo.com'].map(h => sail('bofa-royal-one-plus', h)?.rate), [4, 4, 2, 2, 2, 2, 2, 2]);
+eq('...1x through a booking site, which codes as a travel agency',
+   ['expedia.com', 'airbnb.com'].map(h => sail('bofa-royal-one-plus', h)?.rate), [1, 1]);
+eq('Norwegian: 3x at ncl.com, 2x on airfare and a hotel booked direct, 1x through a booking site or another line',
+   ['ncl.com', 'delta.com', 'marriott.com', 'hotels.com', 'royalcaribbean.com', 'kroger.com']
+     .map(h => sail('bofa-norwegian', h)?.rate), [3, 2, 2, 1, 1, 1]);
+eq('Princess and Holland America: 2x at their own line only',
+   [['barclays-princess', 'princess.com'], ['barclays-princess', 'hollandamerica.com'],
+    ['barclays-holland-america', 'hollandamerica.com'], ['barclays-holland-america', 'princess.com']]
+     .map(([id, h]) => sail(id, h)?.rate), [2, 1, 2, 1]);
+eq('...every cruise co-brand point worth a cent, so a rate is its value',
+   [['bofa-royal-one', 'royalcaribbean.com'], ['bofa-royal-one-plus', 'royalcaribbean.com'], ['bofa-norwegian', 'ncl.com'],
+    ['barclays-princess', 'princess.com'], ['barclays-holland-america', 'hollandamerica.com']]
+     .map(([id, h]) => sail(id, h)?.value), [3, 4, 3, 2, 2]);
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
