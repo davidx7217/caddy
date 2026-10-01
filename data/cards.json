@@ -1,10 +1,10 @@
 {
   "_note_field": "MAINTAINER-ONLY. `note` records why a card is modelled the way it is -- provenance, schema reasoning, what was deliberately not modelled. Never render it in the UI. `caution` is the user-facing field.",
-  "_business_note": "`business` marks a card issued on business underwriting rather than personal. Absent means personal -- only the field's presence is meaningful, so there is nothing to keep in sync on a hundred and fifteen records. It filters the catalogue and nothing else reads it: the ranker does not care whose name is on the account.",
-  "_common_note": "`common` is a POPULARITY RANK, 1 to 159, and it is EDITORIAL. There is no public card-level ranking of US cardholders -- Nilson publishes issuer volume, not how many people hold a Freedom Unlimited -- so this is judgement, not a sourced fact, and it is the only field here that is. It orders the setup picker so a new user meets mass-market cards first. 21 to 40 were added on 2026-09-27 as the next twenty after the first, 41 to 63 on 2026-09-28 -- store cards, then the remaining tiers of airline and hotel programs already present -- 64 to 82 later that day, the cards of issuers Caddy did not yet cover, 83 to 95 after those, business cards, 96 to 103, smaller store cards, 104 to 110, the missing tiers of covered programs, 111 to 126, Barclays' other co-branded cards, 127 to 140, co-branded business cards, 141 to 151, the business cards of BofA, U.S. Bank, Wells Fargo and Citi, 152, the Kroger card, and 153 to 159, the Atmos and SKYPASS cards, so each batch ranks below the one before by construction. Re-rank it freely; nothing computes from it.",
+  "_business_note": "`business` marks a card issued on business underwriting rather than personal. Absent means personal -- only the field's presence is meaningful, so there is nothing to keep in sync on a hundred and twenty records. It filters the catalogue and nothing else reads it: the ranker does not care whose name is on the account.",
+  "_common_note": "`common` is a POPULARITY RANK, 1 to 164, and it is EDITORIAL. There is no public card-level ranking of US cardholders -- Nilson publishes issuer volume, not how many people hold a Freedom Unlimited -- so this is judgement, not a sourced fact, and it is the only field here that is. It orders the setup picker so a new user meets mass-market cards first. 21 to 40 were added on 2026-09-27 as the next twenty after the first, 41 to 63 on 2026-09-28 -- store cards, then the remaining tiers of airline and hotel programs already present -- 64 to 82 later that day, the cards of issuers Caddy did not yet cover, 83 to 95 after those, business cards, 96 to 103, smaller store cards, 104 to 110, the missing tiers of covered programs, 111 to 126, Barclays' other co-branded cards, 127 to 140, co-branded business cards, 141 to 151, the business cards of BofA, U.S. Bank, Wells Fargo and Citi, 152, the Kroger card, 153 to 157, the cruise lines' co-branded cards, and 158 to 164, the Atmos and SKYPASS cards, so each batch ranks below the one before by construction. Re-rank it freely; nothing computes from it.",
   "_aliases_note": "`aliases` lists the other names one card is sold under, so the setup and Settings searches find it by any of them: the Kroger card is sold as sixteen Kroger banners' cards and shown under Kroger's name only; BofA's pages sell the Atmos cards as Alaska Airlines cards. Search reads it; nothing displays it, and the ranker never reads it.",
   "_only_at_note": "`only_at` marks a STORE CARD: the merchant domains where it works, and nowhere else. The ranker drops the card from consideration on any other domain rather than ranking it on its base rate, because recommending a card the till refuses is worse than not mentioning it. base_rate is then what the card adds at that store: where a store pays its free program's members something whatever card they use, that share is left out, because it cannot change which card to use. Store cards with no rewards at all -- Home Depot's, for one -- are deliberately left out: a card that earns nothing can never be the best card to use.",
-  "_comment": "All 159 records verified against issuer sources; 5 on 2026-08-29, 6 on 2026-09-09, 5 on 2026-09-10, 24 on 2026-09-27 -- the twenty added that day, plus Blue Cash Everyday, Amex Gold, BofA Customized Cash and U.S. Bank Cash+, re-read because their categories changed -- and 100 on 2026-09-28: the store cards and the remaining airline and hotel tiers, then nineteen cards from Synchrony's general-purpose line, Barclays, USAA, Navy Federal and Bilt, then thirteen business cards from Amex, Capital One, Chase and Barclays, then eight smaller store cards from Gap Inc., Nordstrom, Ulta and JCPenney, then seven missing tiers: Citi AAdvantage Executive and Globe, Wells Fargo Autograph Journey, BofA Premium Rewards and Premium Rewards Elite, and U.S. Bank Altitude Go and Connect, then sixteen more Barclays co-brands: three Wyndham Rewards Earner tiers, two AARP cards, Upromise, Frontier, two Emirates Skywards cards, Lufthansa Miles & More, GM Rewards, Carnival Rewards, Barnes & Noble, Breeze Easy, RCI Elite Rewards and Capital Vacations, then fourteen co-branded business cards: Amex's Delta SkyMiles Gold, Platinum and Reserve Business, Marriott Bonvoy Business, Hilton Honors Business and Business Green, Chase's United and United Club Business, Southwest Performance and Premier Business, IHG One Rewards Premier Business and World of Hyatt Business, and Barclays' Wyndham Earner Business and GM Business. Then 12 on 2026-09-29: eleven business cards from BofA, U.S. Bank, Wells Fargo and Citi -- BofA's three Business Advantage cards, U.S. Bank's Business Essentials, Business Essentials Plus, Triple Cash Rewards, Business Altitude Connect and Amazon Prime Business Mastercard, Wells Fargo's Signify Business Cash, and Citi's AAdvantage Business and Costco Anywhere Visa Business -- and the Kroger Rewards World Elite Mastercard, read off Kroger's pages and Imprint's rewards terms and cardholder agreement; see its note. Then 7 on 2026-09-30: BofA's three Atmos Rewards cards, Ascent, Summit and Visa Signature Business, and U.S. Bank's four Korean Air SKYPASS cards, Visa Signature, SkyBlue, Select and Visa Signature Business, each read off its issuer's terms. The Bilt cards' category definitions were read in Bilt's Card Offer Terms on 2026-09-29; see their notes. Each carries its source_url. Chase Freedom Flex rotating categories are modelled through Q1 2027; re-read Chase's Q1 2027 release when it posts (around 2026-12-15) and add Q2 2027 as soon as Chase posts it, before 2027-03-31. Amex Platinum was absent until 2026-09-27 because no reachable americanexpress.com page stated its annual fee or base rate on 2026-09-10; the product page states both now.",
+  "_comment": "All 164 records verified against issuer sources; 5 on 2026-08-29, 6 on 2026-09-09, 5 on 2026-09-10, 24 on 2026-09-27 -- the twenty added that day, plus Blue Cash Everyday, Amex Gold, BofA Customized Cash and U.S. Bank Cash+, re-read because their categories changed -- and 100 on 2026-09-28: the store cards and the remaining airline and hotel tiers, then nineteen cards from Synchrony's general-purpose line, Barclays, USAA, Navy Federal and Bilt, then thirteen business cards from Amex, Capital One, Chase and Barclays, then eight smaller store cards from Gap Inc., Nordstrom, Ulta and JCPenney, then seven missing tiers: Citi AAdvantage Executive and Globe, Wells Fargo Autograph Journey, BofA Premium Rewards and Premium Rewards Elite, and U.S. Bank Altitude Go and Connect, then sixteen more Barclays co-brands: three Wyndham Rewards Earner tiers, two AARP cards, Upromise, Frontier, two Emirates Skywards cards, Lufthansa Miles & More, GM Rewards, Carnival Rewards, Barnes & Noble, Breeze Easy, RCI Elite Rewards and Capital Vacations, then fourteen co-branded business cards: Amex's Delta SkyMiles Gold, Platinum and Reserve Business, Marriott Bonvoy Business, Hilton Honors Business and Business Green, Chase's United and United Club Business, Southwest Performance and Premier Business, IHG One Rewards Premier Business and World of Hyatt Business, and Barclays' Wyndham Earner Business and GM Business. Then 12 on 2026-09-29: eleven business cards from BofA, U.S. Bank, Wells Fargo and Citi -- BofA's three Business Advantage cards, U.S. Bank's Business Essentials, Business Essentials Plus, Triple Cash Rewards, Business Altitude Connect and Amazon Prime Business Mastercard, Wells Fargo's Signify Business Cash, and Citi's AAdvantage Business and Costco Anywhere Visa Business -- and the Kroger Rewards World Elite Mastercard, read off Kroger's pages and Imprint's rewards terms and cardholder agreement; see its note. Then 5 on 2026-09-30, the cruise lines' co-branded cards: Bank of America's Royal ONE, Royal ONE Plus and Norwegian Cruise Line World Mastercard, and Barclays' Princess and Holland America Line Rewards Visas. Then 7 more on 2026-09-30: BofA's three Atmos Rewards cards, Ascent, Summit and Visa Signature Business, and U.S. Bank's four Korean Air SKYPASS cards, Visa Signature, SkyBlue, Select and Visa Signature Business, each read off its issuer's terms. The Bilt cards' category definitions were read in Bilt's Card Offer Terms on 2026-09-29; see their notes. Each carries its source_url. Chase Freedom Flex rotating categories are modelled through Q1 2027; re-read Chase's Q1 2027 release when it posts (around 2026-12-15) and add Q2 2027 as soon as Chase posts it, before 2027-03-31. Amex Platinum was absent until 2026-09-27 because no reachable americanexpress.com page stated its annual fee or base rate on 2026-09-10; the product page states both now.",
   "chase-sapphire-reserve": {
     "id": "chase-sapphire-reserve",
     "issuer": "chase",
@@ -7372,6 +7372,196 @@
       }
     ]
   },
+  "bofa-royal-one": {
+    "id": "bofa-royal-one",
+    "issuer": "bofa",
+    "network": "visa",
+    "currency": "royalone",
+    "name": "Royal ONE Visa Signature",
+    "common": 153,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-30",
+    "source_url": "https://www.bankofamerica.com/credit-cards/products/royal-one-credit-card/",
+    "caution": "Points are worth a cent only as Royal Caribbean, Celebrity or Silversea onboard credit or cruise discounts.",
+    "note": "Issued by Bank of America, N.A.; rates read off the product page and its Terms and Conditions on 2026-09-30, and the March 2026 launch release on newsroom.bankofamerica.com: the cruise industry's first tri-branded card, for Royal Caribbean, Celebrity Cruises and Silversea. BofA's old Royal Caribbean and Celebrity card pages redirect to its card list (2026-09-30), so neither is offered on its own any more. 3 points per $1 where a Royal Caribbean, Celebrity or Silversea ship or brand is the merchant on the statement, so the cruise rule is allowlisted to the three lines' own sites; 2 per $1 by merchant code on service stations, fuel dispensers, EV charging, marinas and fuel dealers, and on grocery stores and supermarkets, not superstores or drugstores that sell groceries; 1 elsewhere. Points move to Royal ONE Rewards, the cardholders' program, and redeem only as onboard credit or cruise discounts with the three lines; the page prices its bonus at a cent a point, so 'royalone' is a cent. The page's 3X is the card's own: unlike Carnival's 'up to 6x', it adds no member points that arrive with any card. Bonus points are withheld from purchases made through a third-party payment account or an unsupported digital wallet. The $100 anniversary cruise discount after $10,000 of purchases a year is not ranked. No annual fee; a Visa Signature.",
+    "rules": [
+      {
+        "category": "cruise",
+        "rate": 3.0,
+        "merchant_allowlist": [
+          "royalcaribbean.com",
+          "celebritycruises.com",
+          "silversea.com"
+        ]
+      },
+      {
+        "category": "groceries",
+        "rate": 2.0
+      },
+      {
+        "category": "gas",
+        "rate": 2.0
+      },
+      {
+        "category": "ev_charging",
+        "rate": 2.0
+      }
+    ]
+  },
+  "bofa-royal-one-plus": {
+    "id": "bofa-royal-one-plus",
+    "issuer": "bofa",
+    "network": "visa",
+    "currency": "royalone",
+    "name": "Royal ONE Plus Visa Signature",
+    "common": 154,
+    "annual_fee": 99,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-30",
+    "source_url": "https://www.bankofamerica.com/credit-cards/products/royal-one-plus-credit-card/",
+    "caution": "Points are worth a cent only as Royal Caribbean, Celebrity or Silversea onboard credit or cruise discounts.",
+    "note": "Issued by Bank of America, N.A.; rates read off the product page and its Terms and Conditions on 2026-09-30, and BofA's March 2026 launch release. 4 points per $1 where a Royal Caribbean, Celebrity or Silversea ship or brand is the merchant on the statement, so the cruise rule is allowlisted to the three lines' own sites; 2 per $1 by merchant code at airlines and air carriers, hotels, motels and resorts, restaurants, fast food and bars, and on gas, EV charging and grocery as the Royal ONE defines them; 1 elsewhere. A booking site codes as a travel agency, not a hotel, so the booking sites are denylisted on the hotel rule. Points move to Royal ONE Rewards, the cardholders' program, and redeem only as onboard credit or cruise discounts with the three lines; the page prices its bonus at a cent a point, so 'royalone' is a cent. The page's 3X is the card's own: unlike Carnival's 'up to 6x', it adds no member points that arrive with any card. Bonus points are withheld from purchases made through a third-party payment account or an unsupported digital wallet. The $200 anniversary cruise discount after $20,000 a year and the Global Entry or TSA PreCheck credit are not ranked. $99 annual fee; a Visa Signature.",
+    "rules": [
+      {
+        "category": "cruise",
+        "rate": 4.0,
+        "merchant_allowlist": [
+          "royalcaribbean.com",
+          "celebritycruises.com",
+          "silversea.com"
+        ]
+      },
+      {
+        "category": "travel_air",
+        "rate": 2.0
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 2.0,
+        "merchant_denylist": [
+          "expedia.com",
+          "booking.com",
+          "airbnb.com",
+          "hotels.com",
+          "priceline.com",
+          "vrbo.com",
+          "kayak.com",
+          "orbitz.com",
+          "travelocity.com"
+        ]
+      },
+      {
+        "category": "dining",
+        "rate": 2.0
+      },
+      {
+        "category": "groceries",
+        "rate": 2.0
+      },
+      {
+        "category": "gas",
+        "rate": 2.0
+      },
+      {
+        "category": "ev_charging",
+        "rate": 2.0
+      }
+    ]
+  },
+  "bofa-norwegian": {
+    "id": "bofa-norwegian",
+    "issuer": "bofa",
+    "network": "mastercard",
+    "currency": "ncl",
+    "name": "Norwegian Cruise Line World Mastercard",
+    "common": 155,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-30",
+    "source_url": "https://www.ncl.com/world-points",
+    "caution": "A point is worth a cent as Norwegian onboard credit or a cruise discount.",
+    "note": "Issued by Bank of America, N.A.: the application on ncl.com/world-points runs on bankofamerica.com, and BofA's Terms and Conditions for it set the rates, both read 2026-09-30. 3 points per $1 on purchases where 'Norwegian Cruise Line' or one of its ships appears on the statement, so the cruise rule is allowlisted to ncl.com; 2 per $1 at airlines, hotels, motels, inns and resorts -- 'individual major airline carriers and hotel/motel chains' -- so the booking sites, which code as travel agencies, are denylisted on the hotel rule; 1 elsewhere. Bonus points are withheld from purchases made through a third-party payment account or an unsupported digital wallet. WorldPoints redeem for onboard credit, upgrades, cruise discounts, travel, gift cards and cash; ncl.com's redemption table prices every onboard-credit and cruise-discount reward at a cent a point (10,000 = $100) and the terms give no cash rate, so 'ncl' is a cent. The page's 3x is the card's own, with no member points added. No annual fee; a World Mastercard.",
+    "rules": [
+      {
+        "category": "cruise",
+        "rate": 3.0,
+        "merchant_allowlist": [
+          "ncl.com"
+        ]
+      },
+      {
+        "category": "travel_air",
+        "rate": 2.0
+      },
+      {
+        "category": "travel_hotel",
+        "rate": 2.0,
+        "merchant_denylist": [
+          "expedia.com",
+          "booking.com",
+          "airbnb.com",
+          "hotels.com",
+          "priceline.com",
+          "vrbo.com",
+          "kayak.com",
+          "orbitz.com",
+          "travelocity.com"
+        ]
+      }
+    ]
+  },
+  "barclays-princess": {
+    "id": "barclays-princess",
+    "issuer": "barclays",
+    "network": "visa",
+    "currency": "princess",
+    "name": "Princess Rewards Visa",
+    "common": 156,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-30",
+    "source_url": "https://www.princess.com/faq/additional-faq/princess-visa-card",
+    "caution": "Points are worth a cent only against Princess, its sister cruise lines' or airline charges.",
+    "note": "Issued by Barclays Bank Delaware: princess.com's card page sends the application to barclaycardus.com; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc47367) on 2026-09-30. 2X on purchases from Princess, online and onboard, so princess.com; 1X elsewhere. The rules withhold bonus points from purchases made through third parties, marketplaces, third-party payment accounts and mobile wallets. Points redeem at 1% as a statement credit against Princess, the other World's Leading Cruise Lines brands -- Carnival, Costa, P&O, Holland America, AIDA, Cunard and Seabourn -- or airline charges of $50 or more, and for less as gift cards and merchandise (3,300 points for $25), so 'princess' is a cent. The page's 2x is the card's own, with no member points added. No annual fee; a Visa Signature.",
+    "rules": [
+      {
+        "category": "cruise",
+        "rate": 2.0,
+        "merchant_allowlist": [
+          "princess.com"
+        ]
+      }
+    ]
+  },
+  "barclays-holland-america": {
+    "id": "barclays-holland-america",
+    "issuer": "barclays",
+    "network": "visa",
+    "currency": "hal",
+    "name": "Holland America Line Rewards Visa",
+    "common": 157,
+    "annual_fee": 0,
+    "base_rate": 1.0,
+    "verified": true,
+    "last_verified": "2026-09-30",
+    "source_url": "https://www.hollandamerica.com/en/us/cruise-deals/visa-credit-card",
+    "caution": "Points are worth a cent only against Holland America, its sister cruise lines' or airline charges.",
+    "note": "Issued by Barclays Bank Delaware: hollandamerica.com's card page sends the application to barclaycardus.com; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48717) on 2026-09-30. 2X on Holland America purchases, online and onboard, so hollandamerica.com; 1X elsewhere. The rules withhold bonus points from purchases made through third parties, third-party payment accounts and mobile wallets. Points redeem at 1% as a statement credit against Holland America, the other World's Leading Cruise Lines brands or airline charges of $50 or more, so 'hal' is a cent. The page's 2X is the card's own, with no member points added. No annual fee; a Visa.",
+    "rules": [
+      {
+        "category": "cruise",
+        "rate": 2.0,
+        "merchant_allowlist": [
+          "hollandamerica.com"
+        ]
+      }
+    ]
+  },
   "bofa-atmos-ascent": {
     "id": "bofa-atmos-ascent",
     "issuer": "bofa",
@@ -7381,7 +7571,7 @@
     "aliases": [
       "Alaska Airlines Visa Signature Credit Card"
     ],
-    "common": 153,
+    "common": 158,
     "annual_fee": 95,
     "base_rate": 1.0,
     "verified": true,
@@ -7451,7 +7641,7 @@
     "aliases": [
       "Alaska Airlines Visa Infinite Credit Card"
     ],
-    "common": 154,
+    "common": 159,
     "annual_fee": 395,
     "base_rate": 1.0,
     "verified": true,
@@ -7492,7 +7682,7 @@
     "aliases": [
       "Alaska Airlines Business Credit Card"
     ],
-    "common": 155,
+    "common": 160,
     "business": true,
     "annual_fee": 95,
     "base_rate": 1.0,
@@ -7546,7 +7736,7 @@
     "network": "visa",
     "currency": "skypass",
     "name": "Korean Air SKYPASS Visa Signature",
-    "common": 156,
+    "common": 161,
     "annual_fee": 99,
     "base_rate": 1.0,
     "verified": true,
@@ -7588,7 +7778,7 @@
     "network": "visa",
     "currency": "skypass",
     "name": "Korean Air SKYPASS SkyBlue Visa",
-    "common": 157,
+    "common": 162,
     "annual_fee": 0,
     "base_rate": 1.0,
     "verified": true,
@@ -7612,7 +7802,7 @@
     "network": "visa",
     "currency": "skypass",
     "name": "Korean Air SKYPASS Select Visa Signature",
-    "common": 158,
+    "common": 163,
     "annual_fee": 450,
     "base_rate": 1.0,
     "verified": true,
@@ -7662,7 +7852,7 @@
     "network": "visa",
     "currency": "skypass",
     "name": "Korean Air SKYPASS Visa Signature Business",
-    "common": 159,
+    "common": 164,
     "business": true,
     "annual_fee": 99,
     "base_rate": 1.0,
