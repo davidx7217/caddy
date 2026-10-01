@@ -9,13 +9,14 @@ works and why; this file is only the state of play.
 
 ## State
 
-- **v1.0.0**, 152 cards across 18 issuers, 187 merchant rows, 28 categories.
+- **v1.0.0**, 157 cards across 18 issuers, 188 merchant rows, 28 categories.
   The second twenty cards landed 2026-09-27; store cards plus the remaining
   airline and hotel tiers, nineteen cards from five issuers Caddy lacked,
   thirteen business cards, eight smaller store cards, seven missing tiers,
   sixteen more Barclays co-brands and fourteen co-branded business cards, on
   2026-09-28; eleven business cards from BofA, U.S. Bank, Wells Fargo and Citi,
-  and the Kroger card, on 2026-09-29. See sections 6, 7, 9 to 14 and 17.
+  and the Kroger card, on 2026-09-29; the cruise lines' five co-branded cards on
+  2026-09-30. See sections 6, 7, 9 to 14, 17 and 19.
 - **Every card audited 2026-09-29** (section 16): all 140 read against their
   issuer's own pages -- fourteen of them only in the in-app browser -- and every
   card ranked on every merchant row. The fixes it found are merged. The one soft
@@ -23,14 +24,15 @@ works and why; this file is only the state of play.
   the same day (section 9), and the twelve cards added later that day were read
   off their issuers' pages the same way (section 17).
 - **61 merchant rows record how they actually code** (`mcc`, `mcc_source`); the
-  other 126 are still unverified seed data (section 16).
+  other 127 are still unverified seed data (section 16).
 - **Booking sites stay hotels; cruise lines are a category** (section 18), both
-  David's calls of 2026-09-29. Eight cruise-line rows, and a cruise rule on the
-  twenty-three cards whose issuer definitions name cruise lines, plus Carnival's 3X.
+  David's calls of 2026-09-29. Nine cruise-line rows, a cruise rule on the
+  twenty-three cards whose issuer definitions name cruise lines, and the cruise
+  lines' own co-branded cards (section 19).
   Navy Federal Flagship Premier no longer earns 4X through booking sites.
 - **Freedom Flex carries Q4 2026 and Q1 2027**, dining 7X in Q4 (section 2). Rates
   switch at local midnight even in a tab left open.
-- **Tests green**: 629 engine + 36 setup + 54 lifecycle + 47 worker. `npm test`.
+- **Tests green**: 636 engine + 36 setup + 54 lifecycle + 47 worker. `npm test`.
 - **Two scheduled agents keep the data current** (section 15), and run without
   permission prompts. Rate changes they find wait on `rates-*` and `upkeep-*`
   branches for David's approval; only `last_verified` date bumps land on `main`
@@ -105,8 +107,6 @@ dated.
      and business. Each needs a currency and airline rows (section 17).
    - **Citi's personal cards not yet in**: Strata Elite, Strata, AAdvantage MileUp
      and AT&T Points Plus, all on citi.com's card list on 2026-09-29.
-   - **Cruise co-brands** -- Royal Caribbean, Celebrity, Norwegian, Princess,
-     Holland America -- can rank now that cruise lines have a category (section 18).
    - **A timeshare category**, if wanted: without one, RCI's and Capital
      Vacations' 5X and Wyndham's vacation-club rates stay unranked (section 18).
 
@@ -1125,11 +1125,45 @@ Left out on purpose:
   carry only its own labels (Cruise Lines, Travel, one Hotels), no issuer coding; the
   two rows record that. The rows rest on the issuers' wording above.
 - **Cruise co-brands** (Royal Caribbean, Celebrity, Norwegian, Princess, Holland
-  America) were not added; they can rank now.
+  America) were added the next day: section 19.
 
 Pinned in `test-engine.mjs`'s "booking sites and cruise lines" section: every cruise
 rate and cap, the cards left at 1X, no portal note on a cruise line, Navy Federal on
 all nine booking sites, and BofA's travel choice on them.
+
+---
+
+## 19. The cruise lines' co-branded cards, 30 September 2026
+
+Five cards, ranks 153 to 157, each read off its issuer's terms that day, once cruise
+lines had a category (section 18). One new merchant row, silversea.com, cleared by
+the HTTP sweep, and four new currencies, each valued at the issuer's own cent.
+
+| Card | Issuer | Fee | Earns |
+| --- | --- | --- | --- |
+| Royal ONE Visa Signature | BofA | $0 | 3X at Royal Caribbean, Celebrity and Silversea; 2X on groceries, gas and EV charging |
+| Royal ONE Plus Visa Signature | BofA | $99 | 4X at the three lines; 2X on airfare, hotels booked direct, dining, groceries, gas and EV charging |
+| Norwegian Cruise Line World Mastercard | BofA | $0 | 3X at NCL; 2X on airfare and hotels booked direct |
+| Princess Rewards Visa | Barclays | $0 | 2X at Princess |
+| Holland America Line Rewards Visa | Barclays | $0 | 2X at Holland America |
+
+- **Royal ONE is one card for the three Royal Caribbean Group lines**, launched in
+  March 2026 (BofA's release), so its cruise rules are allowlisted to all three
+  sites. BofA's old Royal Caribbean and Celebrity card pages now redirect to its
+  card list, so neither is offered on its own.
+- **A point is worth a cent by each issuer's own figure, but only toward cruises**:
+  Royal ONE points redeem only as the three lines' onboard credit or cruise
+  discounts, Norwegian's as NCL's (they also redeem as cash, at a rate the terms do
+  not state), and Princess's and Holland America's as statement credits against the
+  line's own, its sister lines' or airline charges. Each caution says so.
+- **Nothing is netted out under the store-rate rule**: unlike Carnival's "up to
+  6x", none of these pages adds points that arrive with any card.
+- **The hotel 2X on Royal ONE Plus and Norwegian is by hotel merchant code**, so
+  the booking sites are denylisted on it, per section 18.
+- **Not ranked**: the anniversary cruise discounts, which need a year's spend, and
+  Royal ONE Plus's Global Entry credit.
+- royalcaribbean.com/royalone answered the in-app browser with a file download on
+  2026-09-30; BofA's pages, terms and release covered everything it would have.
 
 ---
 
