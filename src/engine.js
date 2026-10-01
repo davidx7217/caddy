@@ -308,6 +308,27 @@ function daysSince(dateStr, now) {
   return Math.floor((now.getTime() - Date.parse(dateStr + 'T00:00:00')) / DAY);
 }
 
+// The words the dock and the popup put after a rate: "5x on groceries". Short on
+// purpose (David, 2026-10-01) -- the long labels in categories.json are for
+// Settings, where there is room.
+const SHORT_LABEL = {
+  dining: 'dining', groceries: 'groceries', wholesale_club: 'wholesale clubs',
+  department_store: 'department stores', online_retail: 'online shopping',
+  electronics: 'electronics', clothing: 'clothing', sporting_goods: 'sporting goods',
+  home_improvement: 'home improvement', office_supply: 'office supplies',
+  drugstore: 'drugstores', gas: 'gas', ev_charging: 'EV charging', travel_air: 'flights',
+  travel_hotel: 'hotels', car_rental: 'car rentals', cruise: 'cruises',
+  travel_ground: 'transit', travel_portal: 'travel portal', streaming: 'streaming',
+  entertainment: 'entertainment', fitness: 'fitness', phone: 'phone plans',
+  internet_cable: 'internet & cable', utilities: 'utilities', shipping: 'shipping',
+  advertising: 'ads', other: 'everything else'
+};
+export const shortCategory = k => SHORT_LABEL[k] || String(k || 'other').replace(/_/g, ' ');
+
+// A tier multiplier makes rates like 1.1 * 3 = 3.3000000000000003. Two places at
+// most, trailing zeros dropped.
+const fmtRate = r => String(Math.round(r * 100) / 100);
+
 // Categories you can actually route through an issuer travel portal. Transit
 // and rideshare are travel_* but are not bookable, so a "book through the
 // portal instead" note there would be nonsense.
@@ -537,8 +558,8 @@ export function rank(input) {
       value,
       matchedCategory: best ? best.category : null,
       reason: best
-        ? `${rate}x on ${best.category.replace(/_/g, ' ')}`
-        : `${rate}x base rate`,
+        ? `${fmtRate(rate)}x on ${shortCategory(best.category)}`
+        : `${fmtRate(rate)}x base rate`,
       caveats: staleReason ? [...caveatsFor(best, p), staleReason] : caveatsFor(best, p),
       // Surfaced on its own as well as in caveats, for the same reason
       // needsActivation is: the overlay renders no caveat list, and this is the
@@ -561,7 +582,8 @@ export function rank(input) {
     // A wallet of store cards for other stores is not an empty wallet, and a
     // surface that said "no cards added" to someone holding three would be lying.
     const held = instances.some(i => products[i.productId]);
-    return { hostname, merchant, category: baseCategory, categorySource,
+    return { hostname, merchant, category: baseCategory,
+           categoryLabel: shortCategory(baseCategory), categorySource,
              all: [], winner: null, tied: [], resolvedBy: held ? 'none_usable' : 'no_cards', notes };
   }
 
@@ -584,7 +606,8 @@ export function rank(input) {
     }
   }
 
-  return { hostname, merchant, category: baseCategory, categorySource,
+  return { hostname, merchant, category: baseCategory,
+           categoryLabel: shortCategory(baseCategory), categorySource,
            all: entries, winner, tied, resolvedBy, tieBand, notes,
            // One flag so a surface can show a banner without walking the list.
            stale: entries.some(e => e.staleReason) };

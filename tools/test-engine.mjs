@@ -2082,5 +2082,27 @@ eq('the setup search finds the Atmos cards by the Alaska name BofA sells them un
    ['bofa-atmos-ascent', 'bofa-atmos-summit', 'bofa-atmos-business']
      .map(id => (products[id].aliases || []).some(a => /alaska airlines/i.test(a))), [true, true, true]);
 
+// --- the popup's words stay short, 2026-10-01 -------------------------------------
+// Every card, every picker option on and its best tier, ranked on every row: the
+// reason under each card is short, rounded, and uses a category word rather than
+// a key. The tier multiplier once printed "3.3000000000000003x on travel air".
+{
+  const all = Object.keys(products).filter(k => !k.startsWith('_')).map(id => {
+    const uc = products[id].user_config || {};
+    return { productId: id, config: {
+      selections: (uc.selections || []).flatMap(g => Object.keys(g.options)),
+      tier_multiplier: Math.max(1, ...Object.values((uc.tier_multiplier || {}).options || { x: 1 })) } };
+  });
+  const reasons = new Set(), labels = new Set();
+  for (const d of Object.keys(merchants).filter(k => !k.startsWith('_'))) {
+    const r = run(d, all);
+    labels.add(r.categoryLabel);
+    r.all.forEach(e => reasons.add(e.reason));
+  }
+  const long = [...reasons].filter(x => x.length > 28 || /\d\.\d{3}|_/.test(x));
+  eq('every reason the popup can show is short, rounded and in words', long, []);
+  eq('...and so is every category heading', [...labels].filter(x => !x || x.length > 18 || /_/.test(x)), []);
+}
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

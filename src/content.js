@@ -531,7 +531,7 @@
       <div class="wrap">
         <div class="panel" role="dialog" aria-label="Card recommendation">
           <div class="top">
-            <span class="eyebrow">${esc((res.category || 'other').replace(/_/g, ' '))}${res.categorySource === 'inferred' ? ' <span class="guess">&middot; guess</span>' : ''}</span>
+            <span class="eyebrow">${esc(res.categoryLabel || (res.category || 'other').replace(/_/g, ' '))}${res.categorySource === 'inferred' ? ' <span class="guess">&middot; guess</span>' : ''}</span>
             <span class="acts">
               <button class="gear" title="Settings" aria-label="Open Caddy settings">${GEAR}</button>
               <button class="x" title="Close" aria-label="Close">&times;</button>

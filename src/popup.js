@@ -103,32 +103,27 @@ $('#opts').addEventListener('click', () => chrome.runtime.openOptionsPage());
 
   if (!res || !res.all.length) {
     $('#sub').textContent = res && res.resolvedBy === 'none_usable'
-      ? 'None of your cards work here. Your store cards only work at their own store.'
+      ? 'None of your cards work here.'
       : 'No cards added yet.';
     return;
   }
 
-  const SOURCE = {
-    merchant: c => `verified merchant · confidence: ${c}`,
-    inferred: () => 'category guessed from this page\u2019s own markup',
-    default:  () => 'no category detected · everything-else ranking'
-  };
+  // Short, like everything else here (David, 2026-10-01): the category, and
+  // "guessed" only when it came from the page rather than the merchant table.
   $('#title').textContent = (res.hostname || '').replace(/^www\./, '') || 'No merchant detected';
-  const describe = SOURCE[res.categorySource] || SOURCE.default;
-  $('#sub').textContent = `${(res.category || 'other').replace(/_/g, ' ')} \u00b7 ` +
-    describe(res.merchant && res.merchant.confidence);
+  $('#sub').textContent = (res.categoryLabel || 'everything else') +
+    (res.categorySource === 'inferred' ? ' \u00b7 guessed' : '');
 
   const unverified = res.all.some(c => c.caveats.includes('Unverified data'));
 
   const WHY = {
     clear_winner:     'clear winner',
-    unresolved:       'tied \u2014 the overlay asks you to pick',
-    category_default: 'your saved choice for this category',
+    unresolved:       'tied',
+    category_default: 'your saved choice',
     no_cards:         'no cards added'
   };
   $('#why').textContent = `${res.all.length} card${res.all.length === 1 ? '' : 's'} \u00b7 ` +
-    (WHY[res.resolvedBy] || res.resolvedBy) +
-    (res.tied.length > 1 ? ` (${res.tied.length} within ${Math.round((res.tieBand ?? 0.10) * 100)}%)` : '');
+    (WHY[res.resolvedBy] || res.resolvedBy);
 
   // One short line per card: activation and the cap, the two that change what
   // you do at the till. The rule's own wording and the expiry notice stay in
@@ -148,10 +143,10 @@ $('#opts').addEventListener('click', () => chrome.runtime.openOptionsPage());
   const clear = res.resolvedBy === 'clear_winner';
 
   $('#list').innerHTML =
-    (unverified ? `<div class="banner">Seed data is unverified. Check rates against your issuer before trusting these numbers.</div>` : '') +
+    (unverified ? `<div class="banner">Unverified rates. Check with your issuer.</div>` : '') +
     // Separate from the unverified banner: that one means the data was never
     // checked, this one means it was checked and has since run out.
-    (res.stale ? `<div class="banner">Some rates below are expired or overdue for re-verification.</div>` : '') +
+    (res.stale ? `<div class="banner">Some rates may be out of date.</div>` : '') +
     `<h2>Ranked</h2>` +
     res.all.slice(0, TOP).map((c, i) => `
       <div class="row ${i === 0 && clear ? 'win' : ''}">
