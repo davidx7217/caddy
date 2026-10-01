@@ -42,7 +42,6 @@ function applyFont() {
   tag.textContent = fontFaceCss(chrome.runtime.getURL);
   document.documentElement.style.setProperty('--font', fontStack());
 }
-const money = v => `${v.toFixed(2)}%`;
 const esc = s => String(s).replace(/[&<>"']/g, c =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
@@ -153,9 +152,9 @@ $('#opts').addEventListener('click', () => chrome.runtime.openOptionsPage());
         <span class="rank">${i + 1}</span>
         <span class="grow">
           <div class="name">${esc(c.name)}</div>
-          <div class="sub">${esc(c.reason)}</div>
+          <div class="sub">${esc(c.sub)}</div>
           ${short(c) ? `<div class="cav">${esc(short(c))}</div>` : ''}
         </span>
-        <span class="val">${money(c.value)}</span>
+        <span class="val">${esc(c.big)}${c.tag ? `<span class="est">${esc(c.tag)}</span>` : ''}</span>
       </div>`).join('');
 })();

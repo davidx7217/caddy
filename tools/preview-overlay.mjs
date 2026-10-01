@@ -22,6 +22,7 @@
 //   node tools/preview-overlay.mjs --dark
 //   node tools/preview-overlay.mjs --closed        # dock only, panel shut
 //   node tools/preview-overlay.mjs --saved         # a saved choice, with `change`
+//   node tools/preview-overlay.mjs --mult          # the multiplier leads, not the percentage
 //
 // `checkout: true` is what makes the panel open by itself, which is the whole
 // reason this can be screenshotted without driving a click.
@@ -35,13 +36,21 @@ const args = process.argv.slice(2);
 const has = f => args.includes(f);
 const PORT = 8802;
 
-const card = (productId, name, value, reason = '3x base rate') =>
-  ({ productId, name, value, reason, caveats: [], needsActivation: false });
+// `est` is a points-based value: the dock shows "est." after it. --mult leads
+// with the multiplier instead of the percentage.
+const card = (productId, name, value, reason = '3x base rate', est = false) => {
+  const mult = reason.split(' ')[0];
+  const where = reason.slice(mult.length + 1);
+  return { productId, name, value, reason, est, caveats: [], needsActivation: false,
+    big: has('--mult') ? mult : value.toFixed(2) + '%',
+    tag: !has('--mult') && est ? 'est.' : '',
+    sub: has('--mult') ? where + (est ? ' \u00b7 ' + value.toFixed(2) + '% est.' : '') : reason };
+};
 
 // The worst realistic case for the winner block: the longest card name in the
 // catalogue against a six-character rate.
 const winner = has('--long')
-  ? card('chase-sapphire-reserve', 'Chase Sapphire Reserve', 12, '4x flights booked direct')
+  ? card('chase-sapphire-reserve', 'Chase Sapphire Reserve', 12, '4x flights booked direct', true)
   : card('robinhood-gold', 'Robinhood Gold Card', 3);
 
 const tied = has('--clear') || has('--long') ? [] : [

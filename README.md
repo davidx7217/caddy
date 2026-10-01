@@ -24,10 +24,10 @@ Not financial advice. Verify any rate against your issuer before relying on it.
 
 ## Data status
 
-All 164 card records were verified against issuer sources -- 5 on **2026-08-29**, 6 on
+All 164 card records were verified against issuer sources, first on these dates -- 5 on **2026-08-29**, 6 on
 **2026-09-09**, 5 on **2026-09-10**, 24 on **2026-09-27**, 100 on **2026-09-28**, 12 on
 **2026-09-29** and 12 on **2026-09-30**. Each
-carries `verified: true`, `last_verified`, and a `source_url`. The 2026-09-27 batch is
+carries `verified: true`, `last_verified` (its latest re-read), and a `source_url`. The 2026-09-27 batch is
 the twenty cards added that day plus four whose categories changed with them; the
 2026-09-28 cards are seven store cards, the sixteen remaining tiers of the Delta,
 Hilton, Marriott, United, Southwest, Hyatt and IHG cards, and nineteen from issuers

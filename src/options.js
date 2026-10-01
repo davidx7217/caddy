@@ -1,5 +1,5 @@
 import { pruneInstances, fontFaceCss, fontStack } from './engine.js';
-import { CURRENCY, ISSUER, KIND_LABEL, kindOf, mark, matchesSearch, money } from './issuers.js';
+import { CURRENCY, ISSUER, KIND_LABEL, kindOf, mark, matchesSearch, money, networkName } from './issuers.js';
 
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"']/g, c =>
@@ -9,7 +9,7 @@ const SECTIONS = [
   { id: 'cards',   label: 'Cards',         title: 'Cards',
     blurb: 'Every card Caddy ranks, with the fees, categories and caps it reasons over.' },
   { id: 'ranking', label: 'Ranking',       title: 'Ranking',
-    blurb: 'The two things you can change that decide which card wins a close call.' },
+    blurb: 'What decides a close call, and what the big number shows.' },
   { id: 'runs',    label: 'Where it runs', title: 'Where it runs',
     blurb: 'On by default. Turn it off and Caddy waits to be asked.' },
   { id: 'data',    label: 'Data',          title: 'Data',
@@ -193,7 +193,7 @@ function blockOwned() {
         ${mark(p.issuer)}
         <span class="grow">
           <span class="row-name">${esc(p.name)}</span>
-          <span class="row-meta">${esc(p.network)} &middot; ${money(p.annual_fee)} &middot; ${esc(CURRENCY[p.currency] || p.currency)}</span>
+          <span class="row-meta">${esc(networkName(p.network))} &middot; ${money(p.annual_fee)} &middot; ${esc(CURRENCY[p.currency] || p.currency)}</span>
         </span>
         ${p.caution ? '<span class="flag" title="Has a caution">!</span>' : ''}
         <span class="chev" aria-hidden="true">&rsaquo;</span>
@@ -395,7 +395,7 @@ function renderDetail() {
       ${p.caution ? `<div class="note">${esc(p.caution)}</div>` : ''}
       <div class="spec">
         <div><span>ISSUER</span><span>${esc(ISSUER[p.issuer] || p.issuer)}</span></div>
-        <div><span>NETWORK</span><span>${esc(p.network)}</span></div>
+        <div><span>NETWORK</span><span>${esc(networkName(p.network))}</span></div>
         <div><span>ANNUAL FEE</span><span>${money(p.annual_fee)}</span></div>
         <div><span>EARNS</span><span>${esc(CURRENCY[p.currency] || p.currency)}</span></div>
         <div><span>BASE RATE</span><span>${p.base_rate}x</span></div>
@@ -435,6 +435,20 @@ function blockTies() {
     </div>`).join('')}
     ${chosen.length > 1 ? `<div class="bar"><button class="btn" data-clearalldefaults="1">CLEAR ALL</button></div>` : ''}
   </div>`;
+}
+
+function blockLead() {
+  const lead = prefs.lead === 'multiplier' ? 'multiplier' : 'value';
+  const opts = [
+    { key: 'value', label: 'Value', desc: 'The percentage leads, e.g. 10.50% est. The multiplier sits beneath it.' },
+    { key: 'multiplier', label: 'Multiplier', desc: 'What the card earns leads, e.g. 7x. The estimated value sits beneath it.' }
+  ];
+  return `<div class="grid modes">${opts.map(o => `
+    <button class="mode${o.key === lead ? ' on' : ''}" data-lead="${o.key}" aria-pressed="${o.key === lead}">
+      <div class="mode-state">${o.key === lead ? '&#9632; SELECTED' : '&#9633; SELECT'}</div>
+      <div class="mode-label">${esc(o.label)}</div>
+      <div class="mode-desc">${esc(o.desc)}</div>
+    </button>`).join('')}</div>`;
 }
 
 function blockModes() {
@@ -494,7 +508,7 @@ function blockActivity() {
         <span class="act-merchant">${esc(r.host)}</span>
         <span class="act-cat">${esc(catLabel(r.category))}</span>
         <span>${esc(r.card)}</span>
-        <span class="act-rate">${r.value.toFixed(2)}%</span>
+        <span class="act-rate">${r.value.toFixed(2)}%${r.est ? ' est.' : ''}</span>
       </div>`).join('')
     : `<div class="empty">${on
         ? 'Nothing yet. Visit a shop and the recommendation lands here.'
@@ -521,7 +535,7 @@ function blockActivity() {
 function blockAbout() {
   const kb = Math.max(1, Math.round(bytes / 1024));
   return `<div class="about">
-    <p class="lede">Caddy reads the domain of the page you are on. Nothing else leaves your browser.</p>
+    <p class="lede">Caddy reads the page you are on, in your browser, to tell a shop from a checkout. Nothing leaves your browser.</p>
     <div class="spec">
       <div><span>VERSION</span><span>${esc(VERSION)}</span></div>
       <div><span>RATE DATA</span><span>${esc(ratesDate() || 'unknown')}</span></div>
@@ -550,7 +564,8 @@ const PANES = {
 
   ranking: () =>
     head('Tie-breakers', 'Saved by "Always use" at checkout. Clear one to be asked again.') + blockTies() +
-    head('Point values', 'Cents per point. These are opinions, and they decide which card wins.') + blockPoints(),
+    head('Point values', 'Cents per point. These are opinions, and they decide which card wins.') + blockPoints() +
+    head('Lead with', 'What the big number shows. Ranking always sorts by estimated value.') + blockLead(),
 
   runs: () =>
     head('Mode') + blockModes() +
@@ -570,7 +585,7 @@ function render() {
   // is open. Stamping a resolved colour here would freeze it at load.
   if (theme === 'system') delete document.documentElement.dataset.theme;
   else document.documentElement.dataset.theme = theme;
-  $('#brandsub').textContent = `WHICH-CARD / v${VERSION}`;
+  $('#brandsub').textContent = `v${VERSION}`;
 
   $('#nav').innerHTML = SECTIONS.map(x => `
     <button data-section="${x.id}" ${x.id === section ? 'aria-current="page"' : ''}>
@@ -589,7 +604,7 @@ function render() {
   const date = ratesDate();
   $('#headmeta').innerHTML =
     `<div${auto && !running ? ' class="warn"' : ''}>MODE: ${
-      auto ? (running ? 'ALWAYS ON' : 'NOT RUNNING') : 'ON REQUEST'}</div>` +
+      auto ? (running ? 'ON EVERY SHOP' : 'NOT RUNNING') : 'ONLY WHEN YOU ASK'}</div>` +
     (date ? `<div>RATES ${esc(date)}</div>` : '') +
     (unverified ? `<div class="warn">${unverified} CARD${unverified > 1 ? 'S' : ''} UNVERIFIED</div>` : '');
 
@@ -691,6 +706,7 @@ document.addEventListener('click', e => {
   if (d.clearalldefaults) { prefs.categoryDefaults = {}; commit('prefs'); }
   if (d.clearactivity) { activity = []; commit('activity'); }
   if (d.activitylog) { prefs.activityLog = d.activitylog === 'on'; commit('prefs'); }
+  if (d.lead) { prefs.lead = d.lead; commit('prefs'); }
   if (d.auto) { setAuto(d.auto === 'auto'); }
   if (d.retryauto) {
     readAuto().then(st => {

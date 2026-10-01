@@ -267,8 +267,10 @@ const page = (w, hostname) =>
   eq('switched on, it records the recommendation', rows.length, 1);
   eq('...and an SPA repeating the same answer collapses into the row already there',
      rows[0].host, 'doordash.com');
+  // `est` only says whether the rate rests on a cents-per-point estimate, so the
+  // Data pane can label it the way the dock does. It describes the card, not you.
   eq('...storing the domain and the card, never an amount or a card number',
-     Object.keys(rows[0]).sort(), ['at', 'card', 'category', 'host', 'value']);
+     Object.keys(rows[0]).sort(), ['at', 'card', 'category', 'est', 'host', 'value']);
 }
 {
   const w = await startWorker({

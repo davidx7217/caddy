@@ -98,6 +98,11 @@ function serve(port) {
 
 const shots = [];
 async function capture(cdp, sessionId, name, detail) {
+  // Park the pointer in the corner first. A page under the real cursor shows its
+  // :hover state, and the cursor is wherever the person running this left it --
+  // a row in shot 1 came out lit as if it were selected.
+  await cdp.send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 1279, y: 0 }, sessionId);
+  await sleep(200);
   const { data } = await cdp.send('Page.captureScreenshot',
     { format: 'png', captureBeyondViewport: false }, sessionId);
   await writeFile(new URL(`${name}.png`, OUT), Buffer.from(data, 'base64'));

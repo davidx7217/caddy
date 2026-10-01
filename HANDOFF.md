@@ -38,8 +38,9 @@ works and why; this file is only the state of play.
   permission prompts. Rate changes they find wait on `rates-*` and `upkeep-*`
   branches for David's approval; only `last_verified` date bumps land on `main`
   by themselves.
-- **Nothing unpushed.** `main` on GitHub is the whole tree. All three store
-  screenshots are still current -- the new cards rank after the ones they show.
+- **Store screenshots 1 and 2 were regenerated 2026-10-01; 3 is stale.** The dock
+  now has a gear and shows "est." on points values, so `3-dock-on-a-store.png`
+  needs a hand capture from an installed copy before submitting to the Web Store.
 - **`caddy-1.0.0.zip` sits in the repo root**, rebuilt on every commit. See the
   packaging note below.
 - **Rules David decided 2026-09-28.** A store rate is what the card adds over
@@ -139,7 +140,7 @@ Everything is written, checked and current. Nothing about it is blocked.
   the change.
 - Icons ship already, drawn by `tools/make-icons.mjs`.
 - The upload is `caddy-1.0.0.zip` in the repo root. It is already built.
-- **All three screenshots are current at 1280x800.** `1-settings-cards.png` and
+- **Screenshots are 1280x800; shot 3 is stale since 2026-10-01 (see State).** `1-settings-cards.png` and
   `2-setup-your-cards.png` were regenerated on 2026-09-13 by
   `node tools/make-screenshots.mjs`, after the setup rework made the old setup
   shot wrong. `3-dock-on-a-store.png` is the hand-captured one: hotels.com, panel

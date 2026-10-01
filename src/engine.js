@@ -6,6 +6,11 @@
 
 const DEFAULT_TIE_BAND = 0.10;
 
+// Currencies that ARE cash. Every other currency is points or miles, so a
+// percentage derived from it rests on a cents-per-point estimate and is shown
+// with "est." -- the multiplier is the only thing that is certain.
+const CASH_LIKE = new Set(['cash', 'disco']);
+
 // The one font, bundled as woff2 and never fetched from a CDN, because the whole
 // product claim is that the extension makes no network calls.
 //
@@ -476,6 +481,9 @@ export function rank(input) {
   const categorySource = merchant ? 'merchant' : (inferred ? 'inferred' : 'default');
   const tieBand = prefs.tieBand ?? DEFAULT_TIE_BAND;
   const categoryDefaults = prefs.categoryDefaults || {};
+  // Display only. Ranking always sorts by value: 5x Chase points and 2% cash can
+  // only be compared in one unit.
+  const lead = prefs.lead === 'multiplier' ? 'multiplier' : 'value';
 
   const entries = [];
   const notes = [];
@@ -530,6 +538,9 @@ export function rank(input) {
     const cpp = valuations[p.currency] ?? 1.0;
 
     const value = Math.round(rate * cpp * 1000) / 1000;
+    const est = !CASH_LIKE.has(p.currency);
+    const where = best ? `on ${shortCategory(best.category)}` : 'base rate';
+    const mult = `${fmtRate(rate)}${est ? 'x' : '%'}`;
     const staleReason = stalenessFor(p, best, expired, now);
 
     if (portal) {
@@ -542,7 +553,7 @@ export function rank(input) {
         notes.push({
           productId: p.id,
           value: portalValue,
-          text: `${p.name}: ${portalRate}x (${portalValue.toFixed(2)}%) if you book through ${portal.portal} instead`
+          text: `${p.name}: ${portalRate}x (${portalValue.toFixed(2)}%${est ? ' est.' : ''}) if you book through ${portal.portal} instead`
         });
       }
     }
@@ -557,9 +568,16 @@ export function rank(input) {
       cpp,
       value,
       matchedCategory: best ? best.category : null,
-      reason: best
-        ? `${fmtRate(rate)}x on ${shortCategory(best.category)}`
-        : `${fmtRate(rate)}x base rate`,
+      reason: `${fmtRate(rate)}x ${where}`,
+      // What a surface prints: the big number, a small tag beside it, and the
+      // line under the card name. `lead` picks which of multiplier and value is
+      // big; the other moves to the line beneath, so both are always on screen.
+      est,
+      big: lead === 'multiplier' ? mult : `${value.toFixed(2)}%`,
+      tag: lead === 'multiplier' ? '' : (est ? 'est.' : ''),
+      sub: lead === 'multiplier'
+        ? (est ? `${where} \u00b7 ${value.toFixed(2)}% est.` : where)
+        : `${fmtRate(rate)}x ${where}`,
       caveats: staleReason ? [...caveatsFor(best, p), staleReason] : caveatsFor(best, p),
       // Surfaced on its own as well as in caveats, for the same reason
       // needsActivation is: the overlay renders no caveat list, and this is the
@@ -608,7 +626,7 @@ export function rank(input) {
 
   return { hostname, merchant, category: baseCategory,
            categoryLabel: shortCategory(baseCategory), categorySource,
-           all: entries, winner, tied, resolvedBy, tieBand, notes,
+           all: entries, winner, tied, resolvedBy, tieBand, lead, notes,
            // One flag so a surface can show a banner without walking the list.
            stale: entries.some(e => e.staleReason) };
 }

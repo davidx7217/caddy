@@ -978,7 +978,7 @@ eq('...but its 5x hotels rate does NOT rank on hilton.com',
    only('amex-gold', 'hilton.com').all[0].rate, 1);
 eq('...it surfaces as a route note instead',
    only('amex-gold', 'hilton.com').notes[0].text,
-   'Amex Gold Card: 5x (8.00%) if you book through Amex Travel instead');
+   'Amex Gold Card: 5x (8.00% est.) if you book through Amex Travel instead');
 
 // Blue Cash Preferred closes the streaming category, which had seven merchants
 // and nothing bonusing them.
@@ -1059,7 +1059,7 @@ eq('...valued as transferable miles', only('capitalone-venture', 'amazon.com').a
 eq('...and its 5x hotels rate stays a portal note, never a ranking',
    [only('capitalone-venture', 'hilton.com').all[0].rate,
     only('capitalone-venture', 'hilton.com').notes[0].text],
-   [2, 'Capital One Venture Rewards: 5x (7.00%) if you book through Capital One Travel instead']);
+   [2, 'Capital One Venture Rewards: 5x (7.00% est.) if you book through Capital One Travel instead']);
 
 // --- the category audit, both directions -----------------------------------
 // Rules without merchants are dead; merchants without rules are inert. This was a
@@ -1109,26 +1109,26 @@ eq('...and its 5x hotels rate stays a portal note, never a ranking',
 // airline sites.
 eq('Venture X: 10x hotels through Capital One Travel is a note on hilton.com',
    only('capitalone-venture-x', 'hilton.com', '2026-09-27').notes.map(n => n.text)[0],
-   'Capital One Venture X: 10x (14.00%) if you book through Capital One Travel instead');
+   'Capital One Venture X: 10x (14.00% est.) if you book through Capital One Travel instead');
 eq('...but on delta.com the note is the 5x flights rate, not the 10x',
    only('capitalone-venture-x', 'delta.com', '2026-09-27').notes.map(n => n.text)[0],
-   'Capital One Venture X: 5x (7.00%) if you book through Capital One Travel instead');
+   'Capital One Venture X: 5x (7.00% est.) if you book through Capital One Travel instead');
 eq('...and rental cars are bookable now, at 10x',
    only('capitalone-venture-x', 'hertz.com', '2026-09-27').notes.map(n => n.text)[0],
-   'Capital One Venture X: 10x (14.00%) if you book through Capital One Travel instead');
+   'Capital One Venture X: 10x (14.00% est.) if you book through Capital One Travel instead');
 eq('Double Cash names hotels and car rentals, not flights, so delta.com gets no note',
    only('citi-double-cash', 'delta.com').notes, []);
 eq('...while hilton.com still does',
    only('citi-double-cash', 'hilton.com').notes.map(n => n.text)[0],
-   'Citi Double Cash: 5x (7.00%) if you book through Citi Travel instead');
+   'Citi Double Cash: 5x (7.00% est.) if you book through Citi Travel instead');
 eq('Amex Gold pays 5x on Amex Travel hotels, not flights, so delta.com gets no note',
    only('amex-gold', 'delta.com').notes, []);
 eq('...and 2x on its prepaid car rentals, which beats its 1x base',
    only('amex-gold', 'hertz.com').notes.map(n => n.text)[0],
-   'Amex Gold Card: 2x (3.20%) if you book through Amex Travel instead');
+   'Amex Gold Card: 2x (3.20% est.) if you book through Amex Travel instead');
 eq('a Chase Travel rate is filed under travel_portal and still covers car rentals',
    run('hertz.com').notes.map(n => n.text)[0],
-   'Chase Sapphire Reserve: 8x (12.00%) if you book through Chase Travel instead');
+   'Chase Sapphire Reserve: 8x (12.00% est.) if you book through Chase Travel instead');
 
 // --- the twenty added 2026-09-27, each verified on its issuer's page that day --
 const on = (id, h, config = {}) =>
@@ -1160,7 +1160,7 @@ eq('Venture X: 2x everywhere, valued as c1 miles',
 eq('VentureOne: 1.25x everywhere', on('capitalone-ventureone', 'amazon.com').rate, 1.25);
 eq('...with 5x hotels and rental cars as portal notes only',
    [on('capitalone-ventureone', 'hertz.com').rate, noteOn('capitalone-ventureone', 'hertz.com').map(n => n.text)[0]],
-   [1.25, 'Capital One VentureOne: 5x (7.00%) if you book through Capital One Travel instead']);
+   [1.25, 'Capital One VentureOne: 5x (7.00% est.) if you book through Capital One Travel instead']);
 
 // Amex Platinum. Its fee and base rate were unreadable on 2026-09-10; both are
 // on the product page now.
@@ -1171,7 +1171,7 @@ eq('...1x on a hotel\'s own site, where its 5x prepaid-hotel rate does not apply
    on('amex-platinum', 'hilton.com').rate, 1);
 eq('...which is surfaced as an Amex Travel note instead',
    noteOn('amex-platinum', 'hilton.com').map(n => n.text)[0],
-   'Amex Platinum Card: 5x (8.00%) if you book through Amex Travel instead');
+   'Amex Platinum Card: 5x (8.00% est.) if you book through Amex Travel instead');
 eq('...and 1x on an OTA flight, which is a third-party booking',
    on('amex-platinum', 'expedia.com').rate, 1);
 
@@ -1216,7 +1216,7 @@ eq('Strata Premier: 3x on air, hotels, dining, supermarkets, gas and EV charging
    ['delta.com', 'hotels.com', 'doordash.com', 'kroger.com', 'shell.us', 'evgo.com']
      .map(h => on('citi-strata-premier', h).rate), [3, 3, 3, 3, 3, 3]);
 eq('...10x on Citi Travel hotels, as a note', noteOn('citi-strata-premier', 'hilton.com').map(n => n.text)[0],
-   'Citi Strata Premier: 10x (14.00%) if you book through Citi Travel instead');
+   'Citi Strata Premier: 10x (14.00% est.) if you book through Citi Travel instead');
 eq('...and no Citi Travel note on flights, which that rate does not name',
    noteOn('citi-strata-premier', 'delta.com'), []);
 // Citi pays on grocery delivery that codes as a supermarket, and Instacart does
@@ -1240,7 +1240,7 @@ eq('...and 1.65% at the new 10% Member tier',
 eq('BofA Travel Rewards: 1.5x at a cent a point', on('bofa-travel-rewards', 'amazon.com').value, 1.5);
 eq('...with its Travel Center rate as a note, tier included',
    noteOn('bofa-travel-rewards', 'hilton.com', { tier_multiplier: 1.75 }).map(n => n.text)[0],
-   'BofA Travel Rewards: 5.25x (5.25%) if you book through Bank of America Travel Center instead');
+   'BofA Travel Rewards: 5.25x (5.25% est.) if you book through Bank of America Travel Center instead');
 
 // The business cards.
 eq('Ink Business Unlimited: 1.5x, and 5x total on Lyft',
@@ -1407,7 +1407,7 @@ eq('United Quest: 4x at united.com, 2x on other airlines, dining and streaming',
    ['united.com', 'delta.com', 'doordash.com', 'netflix.com'].map(h => tier('chase-united-quest', h).rate), [4, 2, 2, 2]);
 eq('...with Renowned Hotels as a portal note',
    store('hilton.com', 'chase-united-quest').notes.map(n => n.text)[0],
-   'United Quest: 5x (6.00%) if you book through Renowned Hotels and Resorts instead');
+   'United Quest: 5x (6.00% est.) if you book through Renowned Hotels and Resorts instead');
 eq('United Club: 5x at united.com', tier('chase-united-club', 'united.com').rate, 5);
 eq('Hilton Surpass: 12x at hilton.com, worth 4.8%',
    [tier('amex-hilton-surpass', 'hilton.com').rate, tier('amex-hilton-surpass', 'hilton.com').value], [12, 4.8]);
@@ -1463,7 +1463,7 @@ eq('...but 1x through a delivery app or Instacart, which are third parties',
    [tier('barclays-jetblue', 'doordash.com').rate, tier('barclays-jetblue', 'instacart.com').rate], [1, 1]);
 eq('...with TrueBlue Travel as a portal note on hotels',
    store('hotels.com', 'barclays-jetblue').notes.map(n => n.text)[0],
-   'JetBlue Card: 3x (4.20%) if you book through TrueBlue Travel instead');
+   'JetBlue Card: 3x (4.20% est.) if you book through TrueBlue Travel instead');
 eq('JetBlue Plus and Premier: 6x at jetblue.com, 2x at a supermarket',
    [tier('barclays-jetblue-plus', 'jetblue.com').rate, tier('barclays-jetblue-premier', 'jetblue.com').rate,
     tier('barclays-jetblue-plus', 'kroger.com').rate, tier('barclays-jetblue-premier', 'kroger.com').rate],
@@ -1538,7 +1538,7 @@ eq('...but 1x at a home furnishings store, which Amex excludes',
 eq('...and, unlike the consumer Platinum, 1x on a flight bought from the airline',
    [tier('amex-business-platinum', 'delta.com').rate, tier('amex-platinum', 'delta.com').rate], [1, 5]);
 eq('...with its 5x as an Amex Travel note', noteAt('amex-business-platinum', 'delta.com'),
-   'Amex Business Platinum Card: 5x (8.00%) if you book through Amex Travel instead');
+   'Amex Business Platinum Card: 5x (8.00% est.) if you book through Amex Travel instead');
 eq('Amex Business Gold: 1x at a restaurant until you pick your two 4x categories',
    tier('amex-business-gold', 'doordash.com').rate, 1);
 eq('...4x on each of the six once picked',
@@ -1555,7 +1555,7 @@ eq('...under one $150,000 yearly cap the two picks share',
    picked('amex-business-gold', 'doordash.com', ['four_dining']).caveats,
    ['Capped at $150,000 per year, then 1x', 'Both picks share the cap.']);
 eq('...and 3x through Amex Travel is a note', noteAt('amex-business-gold', 'delta.com'),
-   'Amex Business Gold Card: 3x (4.80%) if you book through Amex Travel instead');
+   'Amex Business Gold Card: 3x (4.80% est.) if you book through Amex Travel instead');
 eq('Amex Blue Business Cash: 2% everywhere', tier('amex-blue-business-cash', 'amazon.com').rate, 2);
 eq('Amex Graphite Business Cash: 2% everywhere, 5% through Amex Travel',
    [tier('amex-graphite-business-cash', 'amazon.com').rate, noteAt('amex-graphite-business-cash', 'delta.com')],
@@ -1566,8 +1566,8 @@ eq('Capital One Venture X Business: 2x everywhere, worth 2.8%',
    [2, 2.8]);
 eq('...10x on hotels and 5x on flights through Capital One Business Travel',
    [noteAt('capitalone-venture-x-business', 'hilton.com'), noteAt('capitalone-venture-x-business', 'delta.com')],
-   ['Capital One Venture X Business: 10x (14.00%) if you book through Capital One Business Travel instead',
-    'Capital One Venture X Business: 5x (7.00%) if you book through Capital One Business Travel instead']);
+   ['Capital One Venture X Business: 10x (14.00% est.) if you book through Capital One Business Travel instead',
+    'Capital One Venture X Business: 5x (7.00% est.) if you book through Capital One Business Travel instead']);
 eq('Spark Cash Plus 2%, Venture Business 2x, Spark Cash 2%, VentureOne Business 1.5x, Spark Cash Select 1.5%',
    ['capitalone-spark-cash-plus', 'capitalone-venture-business', 'capitalone-spark-cash',
     'capitalone-ventureone-business', 'capitalone-spark-cash-select'].map(id => tier(id, 'amazon.com').rate),
@@ -1586,7 +1586,7 @@ eq('Chase Sapphire Reserve for Business: 4x on flights booked direct, worth 6%',
    [4, 6]);
 eq('...1x through an OTA, where 8x through Chase Travel is the note',
    [tier('chase-sapphire-reserve-business', 'hotels.com').rate, noteAt('chase-sapphire-reserve-business', 'hotels.com')],
-   [1, 'Chase Sapphire Reserve for Business: 8x (12.00%) if you book through Chase Travel instead']);
+   [1, 'Chase Sapphire Reserve for Business: 8x (12.00% est.) if you book through Chase Travel instead']);
 eq('...3x on search and social ads, capped at $1 million a year',
    [tier('chase-sapphire-reserve-business', 'ads.google.com').rate,
     tier('chase-sapphire-reserve-business', 'ads.google.com').caveats[0]],
@@ -1657,12 +1657,12 @@ eq('Citi AAdvantage Executive: 4x at aa.com, worth 6.8%, 1x on another airline',
    [tier('citi-aadvantage-executive', 'aa.com')?.value, tier('citi-aadvantage-executive', 'delta.com')?.rate], [6.8, 1]);
 eq('...with AAdvantage Hotels and Cars as portal notes',
    [noteAt('citi-aadvantage-executive', 'hilton.com'), noteAt('citi-aadvantage-executive', 'hertz.com')],
-   ['Citi AAdvantage Executive: 12x (20.40%) if you book through AAdvantage Hotels instead',
-    'Citi AAdvantage Executive: 12x (20.40%) if you book through AAdvantage Cars instead']);
+   ['Citi AAdvantage Executive: 12x (20.40% est.) if you book through AAdvantage Hotels instead',
+    'Citi AAdvantage Executive: 12x (20.40% est.) if you book through AAdvantage Cars instead']);
 eq('Citi AAdvantage Globe: 3x at aa.com, 2x on dining and on taxis, rideshare and transit, 1x elsewhere',
    ['aa.com', 'doordash.com', 'uber.com', 'amazon.com'].map(h => tier('citi-aadvantage-globe', h)?.rate), [3, 2, 2, 1]);
 eq('...with 6x through AAdvantage Hotels as a note', noteAt('citi-aadvantage-globe', 'hilton.com'),
-   'Citi AAdvantage Globe: 6x (10.20%) if you book through AAdvantage Hotels instead');
+   'Citi AAdvantage Globe: 6x (10.20% est.) if you book through AAdvantage Hotels instead');
 eq('U.S. Bank Altitude Go: 4x on dining to $2,000 a quarter, 2x on groceries, gas, EV and streaming',
    [tier('usbank-altitude-go', 'doordash.com')?.rate, tier('usbank-altitude-go', 'doordash.com')?.caveats[0],
     ...['kroger.com', 'shell.us', 'evgo.com', 'netflix.com', 'amazon.com'].map(h => tier('usbank-altitude-go', h)?.rate)],
@@ -1672,7 +1672,7 @@ eq('U.S. Bank Altitude Connect: 4x on travel booked direct and transit, 1x throu
    [4, 4, 4, 4, 1]);
 eq('...where 5x through the Travel Center is the note',
    noteAt('usbank-altitude-connect', 'hotels.com'),
-   'U.S. Bank Altitude Connect: 5x (5.00%) if you book through U.S. Bank Travel Center instead');
+   'U.S. Bank Altitude Connect: 5x (5.00% est.) if you book through U.S. Bank Travel Center instead');
 eq('...4x on gas to $1,000 a quarter, 2x on dining, groceries and streaming',
    [tier('usbank-altitude-connect', 'shell.us')?.caveats[0],
     ...['doordash.com', 'kroger.com', 'netflix.com'].map(h => tier('usbank-altitude-connect', h)?.rate)],
@@ -1775,14 +1775,14 @@ eq('Hilton Honors Business: 12x at Hilton, 5x everywhere else, worth 2%',
     tier('amex-hilton-business', 'amazon.com')?.value], [12, 5, 2]);
 eq('Business Green: 1x on the airline\'s own site, 2x through Amex Travel as a note',
    [tier('amex-business-green', 'delta.com')?.rate, noteAt('amex-business-green', 'hilton.com')],
-   [1, 'Amex Business Green Rewards Card: 2x (3.20%) if you book through Amex Travel instead']);
+   [1, 'Amex Business Green Rewards Card: 2x (3.20% est.) if you book through Amex Travel instead']);
 eq('United Business: 2x at United, restaurants, gas, office supply and transit, 1x on another airline',
    ['united.com', 'doordash.com', 'shell.us', 'staples.com', 'uber.com', 'delta.com']
      .map(h => tier('chase-united-business', h)?.rate), [2, 2, 2, 2, 2, 1]);
 eq('United Club Business: 2x at United, 1.5x everywhere else, Renowned Hotels as a note',
    [tier('chase-united-club-business', 'united.com')?.rate, tier('chase-united-club-business', 'amazon.com')?.rate,
     noteAt('chase-united-club-business', 'hilton.com')],
-   [2, 1.5, 'United Club Business Card: 5x (6.00%) if you book through Renowned Hotels and Resorts instead']);
+   [2, 1.5, 'United Club Business Card: 5x (6.00% est.) if you book through Renowned Hotels and Resorts instead']);
 eq('Southwest Performance Business: 4x at Southwest, 2x on hotels booked direct, gas, dining and transit',
    ['southwest.com', 'marriott.com', 'shell.us', 'doordash.com', 'uber.com']
      .map(h => tier('chase-southwest-performance-business', h)?.rate), [4, 2, 2, 2, 2]);
@@ -1897,11 +1897,11 @@ eq('...with 5% through the Travel Center as a note',
    'U.S. Bank Triple Cash Rewards Business: 5x (5.00%) if you book through U.S. Bank Travel Center instead');
 eq('BofA Business Advantage Travel Rewards: 1.5x everywhere, 3x through the Travel Center as a note',
    [tier('bofa-business-travel-rewards', 'amazon.com')?.rate, noteAt('bofa-business-travel-rewards', 'delta.com')],
-   [1.5, 'BofA Business Advantage Travel Rewards: 3x (3.00%) if you book through Bank of America Travel Center instead']);
+   [1.5, 'BofA Business Advantage Travel Rewards: 3x (3.00% est.) if you book through Bank of America Travel Center instead']);
 eq('...times the tier, the Travel Center rate included',
    run('delta.com', [{ productId: 'bofa-business-travel-rewards', config: { tier_multiplier: 1.75 } }],
      { now: new Date('2026-09-29T12:00:00') }).notes.map(n => n.text)[0],
-   'BofA Business Advantage Travel Rewards: 5.25x (5.25%) if you book through Bank of America Travel Center instead');
+   'BofA Business Advantage Travel Rewards: 5.25x (5.25% est.) if you book through Bank of America Travel Center instead');
 eq('U.S. Bank Business Altitude Connect: 4x on travel booked direct, rideshare, gas and EV, to $150,000 a year',
    [...['delta.com', 'marriott.com', 'hertz.com', 'uber.com', 'shell.us', 'evgo.com']
      .map(h => tier('usbank-business-altitude-connect', h)?.rate), tier('usbank-business-altitude-connect', 'shell.us')?.caveats[0]],
@@ -1909,7 +1909,7 @@ eq('U.S. Bank Business Altitude Connect: 4x on travel booked direct, rideshare, 
 eq('...2x on dining, fast food included, and phone; 1x through an OTA, with 5x through the Travel Center as the note',
    [...['doordash.com', 'chipotle.com', 't-mobile.com', 'hotels.com'].map(h => tier('usbank-business-altitude-connect', h)?.rate),
     noteAt('usbank-business-altitude-connect', 'hotels.com')],
-   [2, 2, 2, 1, 'U.S. Bank Business Altitude Connect: 5x (5.00%) if you book through U.S. Bank Travel Center instead']);
+   [2, 2, 2, 1, 'U.S. Bank Business Altitude Connect: 5x (5.00% est.) if you book through U.S. Bank Travel Center instead']);
 eq('U.S. Bank Business Essentials: 2% everywhere, 6% on Travel Center hotels as a note',
    [tier('usbank-business-essentials', 'amazon.com')?.rate, noteAt('usbank-business-essentials', 'hilton.com')],
    [2, 'U.S. Bank Business Essentials: 6x (6.00%) if you book through U.S. Bank Travel Center instead']);
@@ -2102,6 +2102,30 @@ eq('the setup search finds the Atmos cards by the Alaska name BofA sells them un
   const long = [...reasons].filter(x => x.length > 28 || /\d\.\d{3}|_/.test(x));
   eq('every reason the popup can show is short, rounded and in words', long, []);
   eq('...and so is every category heading', [...labels].filter(x => !x || x.length > 18 || /_/.test(x)), []);
+}
+
+// --- what leads: value or multiplier ---------------------------------------
+// Points-based percentages rest on a cents-per-point estimate, so they carry
+// "est."; cash is exact and does not. The ranking is the same either way.
+{
+  const Q4 = new Date('2026-10-15T12:00:00');
+  const wallet = own('chase-freedom-flex', 'citi-double-cash', 'wellsfargo-active-cash');
+  const byValue = run('doordash.com', wallet, { now: Q4 });
+  const byMult = run('doordash.com', wallet, { now: Q4, prefs: { lead: 'multiplier' } });
+  const flex = res => card(res, 'chase-freedom-flex');
+  const cash = res => card(res, 'wellsfargo-active-cash');
+  eq('value leads by default', byValue.lead, 'value');
+  eq('...points show the percentage with est.',
+     [flex(byValue).big, flex(byValue).tag, flex(byValue).sub], ['10.50%', 'est.', '7x on dining']);
+  eq('...cash shows the percentage with no tag',
+     [cash(byValue).big, cash(byValue).tag], ['2.00%', '']);
+  eq('multiplier can lead instead', byMult.lead, 'multiplier');
+  eq('...points show the multiplier, with the estimate beneath',
+     [flex(byMult).big, flex(byMult).tag, flex(byMult).sub], ['7x', '', 'on dining \u00b7 10.50% est.']);
+  eq('...cash shows its percentage, and nothing beneath but where',
+     [cash(byMult).big, cash(byMult).sub], ['2%', 'base rate']);
+  eq('...and the ranking is the same either way',
+     byMult.all.map(c => c.productId), byValue.all.map(c => c.productId));
 }
 
 console.log(`\n${pass} passed, ${fail} failed`);

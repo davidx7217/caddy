@@ -4,7 +4,7 @@
   "_common_note": "`common` is a POPULARITY RANK, 1 to 164, and it is EDITORIAL. There is no public card-level ranking of US cardholders -- Nilson publishes issuer volume, not how many people hold a Freedom Unlimited -- so this is judgement, not a sourced fact, and it is the only field here that is. It orders the setup picker so a new user meets mass-market cards first. 21 to 40 were added on 2026-09-27 as the next twenty after the first, 41 to 63 on 2026-09-28 -- store cards, then the remaining tiers of airline and hotel programs already present -- 64 to 82 later that day, the cards of issuers Caddy did not yet cover, 83 to 95 after those, business cards, 96 to 103, smaller store cards, 104 to 110, the missing tiers of covered programs, 111 to 126, Barclays' other co-branded cards, 127 to 140, co-branded business cards, 141 to 151, the business cards of BofA, U.S. Bank, Wells Fargo and Citi, 152, the Kroger card, 153 to 157, the cruise lines' co-branded cards, and 158 to 164, the Atmos and SKYPASS cards, so each batch ranks below the one before by construction. Re-rank it freely; nothing computes from it.",
   "_aliases_note": "`aliases` lists the other names one card is sold under, so the setup and Settings searches find it by any of them: the Kroger card is sold as sixteen Kroger banners' cards and shown under Kroger's name only; BofA's pages sell the Atmos cards as Alaska Airlines cards. Search reads it; nothing displays it, and the ranker never reads it.",
   "_only_at_note": "`only_at` marks a STORE CARD: the merchant domains where it works, and nowhere else. The ranker drops the card from consideration on any other domain rather than ranking it on its base rate, because recommending a card the till refuses is worse than not mentioning it. base_rate is then what the card adds at that store: where a store pays its free program's members something whatever card they use, that share is left out, because it cannot change which card to use. Store cards with no rewards at all -- Home Depot's, for one -- are deliberately left out: a card that earns nothing can never be the best card to use.",
-  "_comment": "All 164 records verified against issuer sources; 5 on 2026-08-29, 6 on 2026-09-09, 5 on 2026-09-10, 24 on 2026-09-27 -- the twenty added that day, plus Blue Cash Everyday, Amex Gold, BofA Customized Cash and U.S. Bank Cash+, re-read because their categories changed -- and 100 on 2026-09-28: the store cards and the remaining airline and hotel tiers, then nineteen cards from Synchrony's general-purpose line, Barclays, USAA, Navy Federal and Bilt, then thirteen business cards from Amex, Capital One, Chase and Barclays, then eight smaller store cards from Gap Inc., Nordstrom, Ulta and JCPenney, then seven missing tiers: Citi AAdvantage Executive and Globe, Wells Fargo Autograph Journey, BofA Premium Rewards and Premium Rewards Elite, and U.S. Bank Altitude Go and Connect, then sixteen more Barclays co-brands: three Wyndham Rewards Earner tiers, two AARP cards, Upromise, Frontier, two Emirates Skywards cards, Lufthansa Miles & More, GM Rewards, Carnival Rewards, Barnes & Noble, Breeze Easy, RCI Elite Rewards and Capital Vacations, then fourteen co-branded business cards: Amex's Delta SkyMiles Gold, Platinum and Reserve Business, Marriott Bonvoy Business, Hilton Honors Business and Business Green, Chase's United and United Club Business, Southwest Performance and Premier Business, IHG One Rewards Premier Business and World of Hyatt Business, and Barclays' Wyndham Earner Business and GM Business. Then 12 on 2026-09-29: eleven business cards from BofA, U.S. Bank, Wells Fargo and Citi -- BofA's three Business Advantage cards, U.S. Bank's Business Essentials, Business Essentials Plus, Triple Cash Rewards, Business Altitude Connect and Amazon Prime Business Mastercard, Wells Fargo's Signify Business Cash, and Citi's AAdvantage Business and Costco Anywhere Visa Business -- and the Kroger Rewards World Elite Mastercard, read off Kroger's pages and Imprint's rewards terms and cardholder agreement; see its note. Then 5 on 2026-09-30, the cruise lines' co-branded cards: Bank of America's Royal ONE, Royal ONE Plus and Norwegian Cruise Line World Mastercard, and Barclays' Princess and Holland America Line Rewards Visas. Then 7 more on 2026-09-30: BofA's three Atmos Rewards cards, Ascent, Summit and Visa Signature Business, and U.S. Bank's four Korean Air SKYPASS cards, Visa Signature, SkyBlue, Select and Visa Signature Business, each read off its issuer's terms. The Bilt cards' category definitions were read in Bilt's Card Offer Terms on 2026-09-29; see their notes. Each carries its source_url. Chase Freedom Flex rotating categories are modelled through Q1 2027; re-read Chase's Q1 2027 release when it posts (around 2026-12-15) and add Q2 2027 as soon as Chase posts it, before 2027-03-31. Amex Platinum was absent until 2026-09-27 because no reachable americanexpress.com page stated its annual fee or base rate on 2026-09-10; the product page states both now.",
+  "_comment": "All 164 records verified against issuer sources, first on these dates (each card's last_verified is its latest re-read); 5 on 2026-08-29, 6 on 2026-09-09, 5 on 2026-09-10, 24 on 2026-09-27 -- the twenty added that day, plus Blue Cash Everyday, Amex Gold, BofA Customized Cash and U.S. Bank Cash+, re-read because their categories changed -- and 100 on 2026-09-28: the store cards and the remaining airline and hotel tiers, then nineteen cards from Synchrony's general-purpose line, Barclays, USAA, Navy Federal and Bilt, then thirteen business cards from Amex, Capital One, Chase and Barclays, then eight smaller store cards from Gap Inc., Nordstrom, Ulta and JCPenney, then seven missing tiers: Citi AAdvantage Executive and Globe, Wells Fargo Autograph Journey, BofA Premium Rewards and Premium Rewards Elite, and U.S. Bank Altitude Go and Connect, then sixteen more Barclays co-brands: three Wyndham Rewards Earner tiers, two AARP cards, Upromise, Frontier, two Emirates Skywards cards, Lufthansa Miles & More, GM Rewards, Carnival Rewards, Barnes & Noble, Breeze Easy, RCI Elite Rewards and Capital Vacations, then fourteen co-branded business cards: Amex's Delta SkyMiles Gold, Platinum and Reserve Business, Marriott Bonvoy Business, Hilton Honors Business and Business Green, Chase's United and United Club Business, Southwest Performance and Premier Business, IHG One Rewards Premier Business and World of Hyatt Business, and Barclays' Wyndham Earner Business and GM Business. Then 12 on 2026-09-29: eleven business cards from BofA, U.S. Bank, Wells Fargo and Citi -- BofA's three Business Advantage cards, U.S. Bank's Business Essentials, Business Essentials Plus, Triple Cash Rewards, Business Altitude Connect and Amazon Prime Business Mastercard, Wells Fargo's Signify Business Cash, and Citi's AAdvantage Business and Costco Anywhere Visa Business -- and the Kroger Rewards World Elite Mastercard, read off Kroger's pages and Imprint's rewards terms and cardholder agreement; see its note. Then 5 on 2026-09-30, the cruise lines' co-branded cards: Bank of America's Royal ONE, Royal ONE Plus and Norwegian Cruise Line World Mastercard, and Barclays' Princess and Holland America Line Rewards Visas. Then 7 more on 2026-09-30: BofA's three Atmos Rewards cards, Ascent, Summit and Visa Signature Business, and U.S. Bank's four Korean Air SKYPASS cards, Visa Signature, SkyBlue, Select and Visa Signature Business, each read off its issuer's terms. The Bilt cards' category definitions were read in Bilt's Card Offer Terms on 2026-09-29; see their notes. Each carries its source_url. Chase Freedom Flex rotating categories are modelled through Q1 2027; re-read Chase's Q1 2027 release when it posts (around 2026-12-15) and add Q2 2027 as soon as Chase posts it, before 2027-03-31. Amex Platinum was absent until 2026-09-27 because no reachable americanexpress.com page stated its annual fee or base rate on 2026-09-10; the product page states both now.",
   "chase-sapphire-reserve": {
     "id": "chase-sapphire-reserve",
     "issuer": "chase",
@@ -433,7 +433,7 @@
         "rate": 3.0
       }
     ],
-    "caution": "The extra 2X Air Canada pays Aeroplan 25K members on eligible flights comes from Air Canada, not the card, and is not counted.",
+    "caution": "The extra 2x Air Canada pays Aeroplan 25K members on eligible flights comes from Air Canada, not the card, and is not counted.",
     "note": "Refreshed 2026-09-10 for new and existing cardmembers (Chase release media.chase.com/news/the-chase-air-canada-aeroplan-credit-card-refresh, read 2026-09-28). Offer details on the source_url, read 2026-09-28: 3X on Air Canada purchases made directly and on travel; grocery and dining 3X on purchases posting by 2026-12-31, then 2X; 2X at gas stations; 1X otherwise. Annual fee $195. Chase's travel definition, read on chase.com/RewardsCategoryFAQs 2026-09-28: airlines, hotels, motels, timeshares, car rental agencies, cruise lines, travel agencies, discount travel sites, campgrounds and operators of passenger trains, buses, taxis, limousines, ferries, toll bridges and highways, and parking lots and garages. So the 3X covers travel_air, travel_hotel (OTAs included, since travel agencies and discount travel sites are named), car_rental and travel_ground. Rideshare is not named in that sentence, but it codes as taxis and limousines: Visa's Merchant Data Standards Manual (April 2026) says of MCC 4121 Taxicabs and Limousines 'This MCC includes ride-share Merchants', and Uber and Lyft charges are observed on Chase statements as 'Taxicabs and limousines' (awardwallet.com, read 2026-09-28). So uber.com and lyft.com earn the 3X. Airbnb is observed on Chase statements as 'Travel agencies and tour operators', a merchant type the definition names, so it earns the 3X too; Visa files short-term rentals under MCC 7011 lodging either way. Rates also confirmed in the Rewards Program Agreement RPA0538 (05/20/2026, asset.chase.com/content/dam/card/rulesregulations/en/RPA0538_Web.pdf, read 2026-09-28), which gives the 2027 schedule outright: from January 1, 2027, 3X Air Canada and travel, 2X gas, grocery and dining, 1X otherwise. Network is World Elite Mastercard per the release. The monthly 500-points-per-$2,000 bonus is no longer on the page. Cruise lines earn the 3X under the cruise category since 2026-09-29, when the offer details were re-read: they name 'travel' and point to that same FAQ."
   },
   "chase-ink-business-cash": {
@@ -527,7 +527,7 @@
     "verified": true,
     "last_verified": "2026-09-27",
     "source_url": "https://www.americanexpress.com/us/credit-cards/card/gold-card/",
-    "caution": "Both 4X caps run per CALENDAR year and are separate from each other, not shared.",
+    "caution": "Both 4x caps run per CALENDAR year and are separate from each other, not shared.",
     "rules": [
       {
         "category": "dining",
@@ -539,7 +539,7 @@
         "category": "groceries",
         "rate": 4.0,
         "cap": { "amount": 25000, "period": "year", "then_rate": 1.0 },
-        "caveat": "U.S. supermarkets only, which Amex reads narrowly -- see the issuer_overrides in merchants.json. Cap is per calendar year."
+        "caveat": "U.S. supermarkets only, which Amex reads narrowly: Instacart does not count. Cap is per calendar year."
       },
       {
         "category": "travel_air",
@@ -580,7 +580,7 @@
         "category": "groceries",
         "rate": 6.0,
         "cap": { "amount": 6000, "period": "year", "then_rate": 1.0 },
-        "caveat": "U.S. supermarkets only. The $6,000 cap is per year and is the tightest cap of any card here."
+        "caveat": "U.S. supermarkets only. The $6,000 cap is per year."
       },
       {
         "category": "streaming",
@@ -1064,7 +1064,7 @@
           "airbnb.com",
           "vrbo.com"
         ],
-        "caveat": "Only what Vrbo bills itself; a stay the property manager bills earns 2X."
+        "caveat": "Only what Vrbo bills itself; a stay the property manager bills earns 2x."
       },
       {
         "category": "travel_hotel",
@@ -1307,7 +1307,7 @@
         "selection_group": "five_furniture",
         "merchant_allowlist": [],
         "cap": { "amount": 2000, "period": "quarter", "then_rate": 1.0 },
-        "caveat": "Furniture stores only, like IKEA or Ashley; none are in Caddy's merchant table yet. The $2,000 quarterly cap is COMBINED across both 5% choices."
+        "caveat": "Furniture stores only, like IKEA or Ashley, which Caddy does not recognise yet. The $2,000 quarterly cap is COMBINED across both 5% choices."
       },
       {
         "category": "electronics",
@@ -1485,7 +1485,7 @@
           "vrbo.com"
         ],
         "portal": "Capital One Travel",
-        "caveat": "Hotels booked through Capital One Travel. Vacation rentals booked there earn 5X."
+        "caveat": "Hotels booked through Capital One Travel. Vacation rentals booked there earn 5x."
       },
       {
         "category": "car_rental",
@@ -1515,7 +1515,7 @@
     "verified": true,
     "last_verified": "2026-09-27",
     "source_url": "https://www.americanexpress.com/us/credit-cards/card/platinum/",
-    "caution": "Outside flights and Amex Travel hotels it earns 1X, so it rarely wins anywhere else.",
+    "caution": "Outside flights and Amex Travel hotels it earns 1x, so it rarely wins anywhere else.",
     "note": "Absent until 2026-09-27 because no reachable americanexpress.com page stated the fee or the base rate on 2026-09-10. The product page states both now: $895, and 1X on other purchases. The statement credits are not netted against the fee, for the reason the Sapphire Reserve's are not: the ranker compares what a purchase earns, and credits do not change that.",
     "rules": [
       {
@@ -1818,7 +1818,7 @@
           "spectrum.com",
           "cox.com"
         ],
-        "caveat": "Bills here code as pay TV, which Wells Fargo counts as streaming."
+        "caveat": "Wells Fargo counts these bills as streaming, because they come through as pay TV."
       },
       {
         "category": "phone",
@@ -1857,7 +1857,7 @@
           "period": "year",
           "then_rate": 2.0
         },
-        "caveat": "The $6,000 cap is combined across grocery stores, gas stations and dining, then 2X."
+        "caveat": "The $6,000 cap is combined across grocery stores, gas stations and dining, then 2x."
       },
       {
         "category": "gas",
@@ -1867,7 +1867,7 @@
           "period": "year",
           "then_rate": 2.0
         },
-        "caveat": "The $6,000 cap is combined across grocery stores, gas stations and dining, then 2X."
+        "caveat": "The $6,000 cap is combined across grocery stores, gas stations and dining, then 2x."
       },
       {
         "category": "dining",
@@ -1877,7 +1877,7 @@
           "period": "year",
           "then_rate": 2.0
         },
-        "caveat": "The $6,000 cap is combined across grocery stores, gas stations and dining, then 2X."
+        "caveat": "The $6,000 cap is combined across grocery stores, gas stations and dining, then 2x."
       }
     ]
   },
@@ -1893,7 +1893,7 @@
     "verified": true,
     "last_verified": "2026-09-27",
     "source_url": "https://www.americanexpress.com/us/credit-cards/card/hilton-honors/",
-    "caution": "Hilton points are worth well under a cent each, so 3X here is not 3% back.",
+    "caution": "Hilton points are worth well under a cent each, so 3x here is not 3% back.",
     "rules": [
       {
         "category": "travel_hotel",
@@ -2125,7 +2125,7 @@
     "verified": true,
     "last_verified": "2026-09-27",
     "source_url": "https://creditcards.chase.com/business-credit-cards/ink/business-preferred",
-    "caution": "Business card. The 3X stops at $150,000 of combined spend in its categories per account anniversary year.",
+    "caution": "Business card. The 3x stops at $150,000 of combined spend in its categories per account anniversary year.",
     "note": "Rates and the 3X list read off the offer details 2026-09-27; category definitions off chase.com/RewardsCategoryFAQs the same day. Chase's travel covers airlines, hotels, car rental agencies, cruise lines, travel agencies, rail, taxis, tolls and parking -- every travel category Caddy has, OTAs included, so no denylist. 'Internet, cable and phone services' spans both phone and internet_cable. Advertising counts only when bought directly from a social media site or search engine, and shipping means couriers, postal and freight services. Network read off the card art. Cruise lines, read 2026-09-29: the offer details' travel is the Travel category of chase.com/RewardsCategoryFAQs, which names cruise lines (on-board goods and services excluded), so cruises earn 3X, under the same combined cap.",
     "rules": [
       {
@@ -2136,7 +2136,7 @@
           "period": "year",
           "then_rate": 1.0
         },
-        "caveat": "The $150,000 cap is combined across every 3X category, and runs per account anniversary year."
+        "caveat": "The $150,000 cap is combined across every 3x category, and runs per account anniversary year."
       },
       {
         "category": "travel_hotel",
@@ -2146,7 +2146,7 @@
           "period": "year",
           "then_rate": 1.0
         },
-        "caveat": "The $150,000 cap is combined across every 3X category, and runs per account anniversary year."
+        "caveat": "The $150,000 cap is combined across every 3x category, and runs per account anniversary year."
       },
       {
         "category": "car_rental",
@@ -2156,7 +2156,7 @@
           "period": "year",
           "then_rate": 1.0
         },
-        "caveat": "The $150,000 cap is combined across every 3X category, and runs per account anniversary year."
+        "caveat": "The $150,000 cap is combined across every 3x category, and runs per account anniversary year."
       },
       {
         "category": "travel_ground",
@@ -2166,7 +2166,7 @@
           "period": "year",
           "then_rate": 1.0
         },
-        "caveat": "The $150,000 cap is combined across every 3X category, and runs per account anniversary year."
+        "caveat": "The $150,000 cap is combined across every 3x category, and runs per account anniversary year."
       },
       {
         "category": "cruise",
@@ -2176,7 +2176,7 @@
           "period": "year",
           "then_rate": 1.0
         },
-        "caveat": "The $150,000 cap is combined across every 3X category, and runs per account anniversary year."
+        "caveat": "The $150,000 cap is combined across every 3x category, and runs per account anniversary year."
       },
       {
         "category": "shipping",
@@ -2186,7 +2186,7 @@
           "period": "year",
           "then_rate": 1.0
         },
-        "caveat": "The $150,000 cap is combined across every 3X category, and runs per account anniversary year."
+        "caveat": "The $150,000 cap is combined across every 3x category, and runs per account anniversary year."
       },
       {
         "category": "advertising",
@@ -2196,7 +2196,7 @@
           "period": "year",
           "then_rate": 1.0
         },
-        "caveat": "The $150,000 cap is combined across every 3X category, and runs per account anniversary year."
+        "caveat": "The $150,000 cap is combined across every 3x category, and runs per account anniversary year."
       },
       {
         "category": "phone",
@@ -2206,7 +2206,7 @@
           "period": "year",
           "then_rate": 1.0
         },
-        "caveat": "The $150,000 cap is combined across every 3X category, and runs per account anniversary year."
+        "caveat": "The $150,000 cap is combined across every 3x category, and runs per account anniversary year."
       },
       {
         "category": "internet_cable",
@@ -2216,7 +2216,7 @@
           "period": "year",
           "then_rate": 1.0
         },
-        "caveat": "The $150,000 cap is combined across every 3X category, and runs per account anniversary year."
+        "caveat": "The $150,000 cap is combined across every 3x category, and runs per account anniversary year."
       },
       {
         "category": "travel_ground",
@@ -2227,7 +2227,7 @@
         "window": {
           "end": "2027-09-30"
         },
-        "caveat": "Lyft rides only, 5X total. Offer ends 2027-09-30."
+        "caveat": "Lyft rides only, 5x total. Offer ends 2027-09-30."
       }
     ]
   },
@@ -2244,7 +2244,7 @@
     "verified": true,
     "last_verified": "2026-09-27",
     "source_url": "https://www.americanexpress.com/us/credit-cards/business/business-credit-cards/american-express-blue-business-plus-credit-card-amex/",
-    "caution": "Business card. The 2X stops at $50,000 of purchases a calendar year; after that everything earns 1X.",
+    "caution": "Business card. The 2x stops at $50,000 of purchases a calendar year; after that everything earns 1x.",
     "note": "No rules by design: 2X is the card's rate on everything, so it is the base rate. The $50,000 calendar-year limit cannot sit on a base rate, which has no cap field, so it lives in the caution -- and Caddy tracks no spend, so it could not apply the cap anyway.",
     "rules": []
   },
@@ -2484,7 +2484,7 @@
     "verified": true,
     "last_verified": "2026-09-28",
     "source_url": "https://www.americanexpress.com/us/credit-cards/card/delta-skymiles-reserve-american-express-card/",
-    "caution": "$650 annual fee. Outside Delta it earns 1X on everything.",
+    "caution": "$650 annual fee. Outside Delta it earns 1x on everything.",
     "rules": [
       {
         "category": "travel_air",
@@ -3314,7 +3314,7 @@
           "grubhub.com",
           "seamless.com"
         ],
-        "caveat": "Restaurants, bars and fast food, bought from directly. Delivery apps are third parties and earn 1X."
+        "caveat": "Restaurants, bars and fast food, bought from directly. Delivery apps are third parties and earn 1x."
       },
       {
         "category": "groceries",
@@ -3369,7 +3369,7 @@
           "grubhub.com",
           "seamless.com"
         ],
-        "caveat": "Restaurants, bars and fast food, bought from directly. Delivery apps are third parties and earn 1X."
+        "caveat": "Restaurants, bars and fast food, bought from directly. Delivery apps are third parties and earn 1x."
       },
       {
         "category": "groceries",
@@ -3424,7 +3424,7 @@
           "grubhub.com",
           "seamless.com"
         ],
-        "caveat": "Restaurants, bars and fast food, bought from directly. Delivery apps are third parties and earn 1X."
+        "caveat": "Restaurants, bars and fast food, bought from directly. Delivery apps are third parties and earn 1x."
       },
       {
         "category": "groceries",
@@ -3740,7 +3740,7 @@
       {
         "category": "dining",
         "rate": 3.0,
-        "caveat": "Restaurants. One inside a hotel, casino or store may earn 1X."
+        "caveat": "Restaurants. One inside a hotel, casino or store may earn 1x."
       }
     ]
   },
@@ -3802,7 +3802,7 @@
       {
         "category": "gas",
         "rate": 3.0,
-        "caveat": "Gas bought at a superstore, supermarket or warehouse club may earn 1X."
+        "caveat": "Gas bought at a superstore, supermarket or warehouse club may earn 1x."
       },
       {
         "category": "travel_ground",
@@ -3828,12 +3828,12 @@
       {
         "category": "dining",
         "rate": 3.0,
-        "caveat": "Restaurants. One inside a hotel, casino or store may earn 1X."
+        "caveat": "Restaurants. One inside a hotel, casino or store may earn 1x."
       },
       {
         "category": "gas",
         "rate": 2.0,
-        "caveat": "Gas bought at a superstore, supermarket or warehouse club may earn 1X."
+        "caveat": "Gas bought at a superstore, supermarket or warehouse club may earn 1x."
       }
     ]
   },
@@ -3885,7 +3885,7 @@
         "category": "dining",
         "rate": 3.0,
         "selection_group": "dining",
-        "caveat": "If dining is the 3X category you picked."
+        "caveat": "If dining is the 3x category you picked."
       },
       {
         "category": "groceries",
@@ -3896,7 +3896,7 @@
           "period": "year",
           "then_rate": 1.0
         },
-        "caveat": "If grocery is the 3X category you picked."
+        "caveat": "If grocery is the 3x category you picked."
       },
       {
         "category": "travel_air",
@@ -3960,7 +3960,7 @@
     "verified": true,
     "last_verified": "2026-09-28",
     "source_url": "https://www.americanexpress.com/us/credit-cards/business/business-credit-cards/american-express-business-platinum-credit-card-amex/",
-    "caution": "Business card. Its 5X needs a booking through Amex Travel, and any single purchase of $5,000 or more earns 2X, which Caddy does not rank.",
+    "caution": "Business card. Its 5x needs a booking through Amex Travel, and any single purchase of $5,000 or more earns 2x, which Caddy does not rank.",
     "note": "Rates read off the product page and its Offer & Benefit Terms on 2026-09-28; category definitions off americanexpress.com/us/rewards-info/business.html the same day. Unlike the consumer Platinum, the 5X on flights is for flights booked online at AmexTravel.com only, not direct with the airline, so both 5X rules are portal rules. The 2X covers U.S. construction material and hardware suppliers (Lowe's is named; home furnishings are excluded, hence the homegoods and homesense denylist), electronic goods retailers and software and cloud providers, shipping providers, and any purchase of $5,000 or more -- the last is a size, not a merchant, and is left to the caution.",
     "rules": [
       {
@@ -3989,7 +3989,7 @@
           "period": "year",
           "then_rate": 1.0
         },
-        "caveat": "U.S. construction material and hardware suppliers, Lowe's among them. Home furnishings stores are excluded. The $2 million cap is combined across every 2X category and runs per calendar year."
+        "caveat": "U.S. construction material and hardware suppliers, Lowe's among them. Home furnishings stores are excluded. The $2,000,000 cap is combined across every 2x category and runs per calendar year."
       },
       {
         "category": "electronics",
@@ -3999,7 +3999,7 @@
           "period": "year",
           "then_rate": 1.0
         },
-        "caveat": "U.S. electronic goods retailers, plus software and cloud providers. The $2 million cap is combined across every 2X category and runs per calendar year."
+        "caveat": "U.S. electronic goods retailers, plus software and cloud providers. The $2,000,000 cap is combined across every 2x category and runs per calendar year."
       },
       {
         "category": "shipping",
@@ -4009,7 +4009,7 @@
           "period": "year",
           "then_rate": 1.0
         },
-        "caveat": "U.S. courier, postal and freight shippers. The $2 million cap is combined across every 2X category and runs per calendar year."
+        "caveat": "U.S. courier, postal and freight shippers. The $2,000,000 cap is combined across every 2x category and runs per calendar year."
       }
     ]
   },
@@ -4026,7 +4026,7 @@
     "verified": true,
     "last_verified": "2026-09-29",
     "source_url": "https://www.americanexpress.com/us/credit-cards/business/business-credit-cards/american-express-business-gold-card-amex/",
-    "caution": "Business card. Amex pays the 4X on your two biggest of six categories each billing cycle, so pick the two you usually hit.",
+    "caution": "Business card. Amex pays the 4x on your two biggest of six categories each billing cycle, so pick the two you usually hit.",
     "note": "Rates read off the product page on 2026-09-28 and again on 2026-09-29. The 4X goes to the two categories where the business spent most in each billing cycle, from six: U.S. advertising in select media (online, TV, radio), U.S. electronic goods retailers and software and cloud system providers, U.S. restaurants including takeout and delivery, U.S. gas stations, transit (trains, taxis, rideshare, ferries, tolls, parking, buses and subways), and monthly wireless phone service bought directly from a U.S. carrier; $150,000 combined a calendar year, then 1X. Amex picks the two from the cycle's spending on this card, which no page shows, so the card has a Cash+-style picker (David, 2026-09-29): the cardholder names the two they usually hit, and because Caddy then sends those purchases to this card, they are the two most likely to come out on top. With nothing picked it ranks 1X, as it did before. Definitions from americanexpress.com/us/rewards-info/business.html: electronics leaves out online marketplaces such as Amazon and eBay, superstores and the wireless carriers; wireless leaves out resellers, hardware, bundled TV and internet, VoIP and Google Fi. Software and cloud providers have no category here, so only the electronics stores rank; gas does not include EV charging, as on the Blue Cash Preferred; dining includes the delivery apps, as on the consumer Gold.",
     "user_config": {
       "selections": [
@@ -4200,7 +4200,7 @@
           "vrbo.com"
         ],
         "portal": "Capital One Business Travel",
-        "caveat": "Hotels booked through Capital One Business Travel. Vacation rentals booked there earn 5X."
+        "caveat": "Hotels booked through Capital One Business Travel. Vacation rentals booked there earn 5x."
       },
       {
         "category": "car_rental",
@@ -4555,7 +4555,7 @@
           "grubhub.com",
           "seamless.com"
         ],
-        "caveat": "Restaurants, bars and fast food, bought from directly. Delivery apps are third parties and earn 1X."
+        "caveat": "Restaurants, bars and fast food, bought from directly. Delivery apps are third parties and earn 1x."
       },
       {
         "category": "office_supply",
@@ -4972,7 +4972,7 @@
     "verified": true,
     "last_verified": "2026-09-28",
     "source_url": "https://www.citi.com/credit-cards/citi-aadvantage-executive-world-legend-mastercard",
-    "caution": "5X on American Airlines after $150,000 a year.",
+    "caution": "5x on American Airlines after $150,000 a year.",
     "note": "The Citi / AAdvantage Executive World Legend Mastercard, read off citi.com on 2026-09-28; the fee is from the pricing details, which rendered only after a wait. 4 miles on eligible American Airlines purchases (5 after $150,000 in a calendar year), 12 on eligible AAdvantage Hotels and AAdvantage Cars bookings -- AA's own booking sites, modelled as portals -- and 1 elsewhere.",
     "rules": [
       {
@@ -5697,7 +5697,7 @@
     "verified": true,
     "last_verified": "2026-09-28",
     "source_url": "https://cards.barclaycardus.com/banking/cards/breeze-airways/",
-    "caution": "At flybreeze.com: 5X on Nicer and Nicest bundles, 2X on Nice, 1X on No Flex fares.",
+    "caution": "At flybreeze.com: 5x on Nicer and Nicest bundles, 2x on Nice, 1x on No Flex fares.",
     "note": "Issued by Barclays Bank Delaware, per barclaycardus.com on 2026-09-28; rates and definitions read off the Reward Rules in the card's Terms and Conditions (TnCs.jsp?tc48620). A Visa Signature. Breeze purchases earn by fare bundle -- 5X on Nicer and Nicest bundles and their trip add-ons, 2X on Nice, 1X on No Flex fares -- which Caddy cannot see from the domain, so they are the caution, not rules, and flybreeze.com is not in merchants.json. The page's 'up to 10x' adds points Breeze itself awards once the trip is flown. 2X at restaurants, bars and fast food, Breeze's inflight food included, and at grocery stores other than Target and Walmart; 1X elsewhere. The rules withhold bonus points from purchases made through third parties, so the delivery apps are denylisted on dining. Barclays' page prices 30,000 BreezePoints at $300 of award travel, so breeze is 1.0.",
     "rules": [
       {
@@ -5866,7 +5866,7 @@
     "verified": true,
     "last_verified": "2026-09-28",
     "source_url": "https://www.americanexpress.com/en-us/business/credit-cards/delta-skymiles-platinum/",
-    "caution": "Business card. The 1.5X on transit and shipping shares one $100,000 yearly cap with purchases of $5,000 or more.",
+    "caution": "Business card. The 1.5x on transit and shipping shares one $100,000 yearly cap with purchases of $5,000 or more.",
     "note": "Rates read off the product page and its Offer & Benefit Terms on 2026-09-28. 3X on purchases made directly with Delta and with hotels -- a hotel prepaid through an OTA earns 1X, which the denylist says; 1.5X on transit (trains, taxis, rideshare, ferries, tolls, parking, buses and subways), on U.S. shipping and on any single purchase of $5,000 or more, the three sharing one $100,000 cap a calendar year; 1X elsewhere. The $5,000 rule is not ranked. No restaurant bonus, unlike the personal card.",
     "rules": [
       {
@@ -5924,7 +5924,7 @@
     "verified": true,
     "last_verified": "2026-09-28",
     "source_url": "https://www.americanexpress.com/en-us/business/credit-cards/delta-skymiles-reserve/",
-    "caution": "Business card. Everything earns 1.5X after $150,000 of purchases in a calendar year.",
+    "caution": "Business card. Everything earns 1.5x after $150,000 of purchases in a calendar year.",
     "note": "Rates read off the product page and its Offer & Benefit Terms on 2026-09-28. 3X on purchases made directly with Delta; 1.5X on U.S. shipping, on transit (trains, taxis, rideshare, ferries, tolls, parking, buses and subways) and at U.S. office supply stores; 1X elsewhere, and 1.5X on everything once a calendar year's purchases pass $150,000, which Caddy tracks no spend to apply.",
     "rules": [
       {
@@ -6001,7 +6001,7 @@
     "verified": true,
     "last_verified": "2026-09-28",
     "source_url": "https://www.americanexpress.com/us/credit-cards/business/business-credit-cards/hilton-honors/",
-    "caution": "Business card. The 5X on everyday purchases stops at $100,000 a calendar year; after that, 3X.",
+    "caution": "Business card. The 5x on everyday purchases stops at $100,000 a calendar year; after that, 3x.",
     "note": "Rates read off the product page and its Offer & Benefit Terms on 2026-09-28. 12X on bookings made directly with Hilton and on charges at a Hilton hotel; 5X on everything else for the first $100,000 a calendar year, then 3X. The 5X is the base rate, and a base rate carries no cap, so the $100,000 is in the caution, as Blue Business Plus's is.",
     "rules": [
       {
@@ -6176,7 +6176,7 @@
     "verified": true,
     "last_verified": "2026-09-28",
     "source_url": "https://creditcards.chase.com/business-credit-cards/southwest/premier-business",
-    "caution": "Business card. The 2X on gas and dining shares one $8,000 cap per account anniversary year.",
+    "caution": "Business card. The 2x on gas and dining shares one $8,000 cap per account anniversary year.",
     "note": "Rates read off the offer details on 2026-09-28. 3X on purchases made directly with Southwest; 2X at gas stations and restaurants on the first $8,000 a year of the two combined, per account anniversary year, then 1X; 1X elsewhere. Network read off the card art.",
     "rules": [
       {
@@ -6279,7 +6279,7 @@
     "verified": true,
     "last_verified": "2026-09-29",
     "source_url": "https://creditcards.chase.com/business-credit-cards/world-of-hyatt/hyatt-business-card",
-    "caution": "Business card. Chase pays the 2X on your three biggest of eight categories each quarter, so pick the three you usually hit.",
+    "caution": "Business card. Chase pays the 2x on your three biggest of eight categories each quarter, so pick the three you usually hit.",
     "note": "Rates read off the offer details on 2026-09-28 and again on 2026-09-29. 4X at Hyatt hotels and on World of Hyatt Experiences; 2X at fitness clubs and gyms; 2X in the three of eight categories -- dining, shipping, airline tickets bought directly from the airline, local transit and commuting, social media and search engine advertising, car rental agencies, gas stations, and internet, cable and phone services -- where the business spends most each calendar quarter, with no cap (chase.com/hyattbuscard2X); 1X elsewhere. Chase works out the three by merchant code from the quarter's spending on this card, which no page shows, so the card has a Cash+-style picker, as Business Gold does (David, 2026-09-29): the cardholder names the three they usually hit, and because Caddy then sends those purchases to this card, they are the three most likely to come out on top. With nothing picked it ranks 1X on them, as it did before. Internet, cable and phone maps onto phone and internet_cable, as on the Ink Business Cash; gas does not include EV charging. Every travel_air row is an airline's own site -- booking sites sit under travel_hotel -- so the airline category needs no denylist. Network read off the card art.",
     "user_config": {
       "selections": [

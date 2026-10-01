@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Caddy",
   "version": "1.0.0",
-  "description": "Shows the best credit card to use on the site you're on. No account, no bank linking, no network calls.",
+  "description": "Tells you which of your credit cards earns the most on the site you're on. No bank linking, no affiliate links, no card numbers.",
   "minimum_chrome_version": "102",
   "icons": {
     "16": "icons/icon16.png",

@@ -29,6 +29,10 @@ const MONOGRAM = {
   navyfederal: 'NF', column: 'CN', comenity: 'CM', firstbanktrust: 'FB'
 };
 
+const NETWORK = { visa: 'Visa', mastercard: 'Mastercard', amex: 'Amex', discover: 'Discover',
+  'store card': 'Store card', 'visa or mastercard': 'Visa or Mastercard' };
+export const networkName = n => NETWORK[n] || n;
+
 /** Full issuer names, for anywhere the two-letter mark is not enough on its own. */
 export const ISSUER = {
   chase: 'Chase', robinhood: 'Robinhood', bofa: 'Bank of America',

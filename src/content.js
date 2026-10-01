@@ -17,7 +17,8 @@
 
   const RAIL_RIGHT = 16, DOCK_H = 44, GAP = 10, EDGE = 8;
 
-  const money = v => `${v.toFixed(2)}%`;
+  // "est." rides beside a points-based percentage; see engine.js.
+  const val = c => esc(c.big) + (c.tag ? `<span class="est">${esc(c.tag)}</span>` : '');
 
   // Why this card won. Without it, "saved choice" and "genuinely the only
   // winner" look identical, which made a real bug impossible to diagnose.
@@ -502,6 +503,7 @@
            not on the ramp, which is how a type scale stops being one. */
         .win-val { flex: none; font-size: 22px; font-weight: 500; letter-spacing: -.02em;
                    line-height: 1; font-variant-numeric: tabular-nums; }
+        .est { font-size: 11px; font-weight: 400; letter-spacing: 0; color: var(--muted); margin-left: 4px; }
         .note { color: var(--muted); font-size: 10.5px; line-height: 1.45; margin-top: 6px; }
         /* Louder than .note on purpose: a note is extra information, this
            says the number above it may be wrong. */
@@ -540,9 +542,9 @@
           <div class="win">
             <div class="win-text">
               <div class="name">${esc(res.winner.name)}</div>
-              <div class="rate">${esc(res.winner.reason)}</div>
+              <div class="rate">${esc(res.winner.sub)}</div>
             </div>
-            <div class="win-val">${money(res.winner.value)}</div>
+            <div class="win-val">${val(res.winner)}</div>
           </div>
           ${res.resolvedBy === 'category_default'
             ? `<div class="why">${esc(WHY.category_default)} <button class="undo">change</button></div>`
@@ -560,13 +562,13 @@
               ${[res.winner, ...others].map(c => `
                 <div class="row">
                   <span class="alt-name">${esc(c.name)}</span>
-                  <span class="alt-val">${money(c.value)}</span>
+                  <span class="alt-val">${val(c)}</span>
                   <button class="pin" data-id="${esc(c.productId)}">Use</button>
                 </div>`).join('')}
             </div>` : ''}
         </div>
         <div class="dock">
-          <button class="icon" title="${esc(res.winner.name)} &mdash; ${money(res.winner.value)} back"
+          <button class="icon" title="${esc(res.winner.name)} &mdash; ${esc(res.winner.big)}${res.winner.tag ? ' ' + esc(res.winner.tag) : ''}"
                   aria-label="Show card recommendation" aria-expanded="false">${MARK}</button>
           <div class="grip" role="button" aria-label="Drag up or down to move" title="Drag up or down to move">${GRIP}</div>
         </div>

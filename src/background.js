@@ -120,7 +120,8 @@ function logActivity(result) {
       host: result.merchant ? result.merchant.domain : normalizeHost(result.hostname),
       category: result.category,
       card: result.winner.name,
-      value: result.winner.value
+      value: result.winner.value,
+      est: result.winner.est
     };
     // An SPA fires PAGE on every route change, so collapse a repeat of the same
     // answer on the same site into the row that is already there.
