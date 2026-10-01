@@ -327,6 +327,18 @@
     "category": "travel_air",
     "confidence": "high"
   },
+  "alaskaair.com": {
+    "category": "travel_air",
+    "confidence": "high"
+  },
+  "hawaiianairlines.com": {
+    "category": "travel_air",
+    "confidence": "high"
+  },
+  "koreanair.com": {
+    "category": "travel_air",
+    "confidence": "high"
+  },
   "marriott.com": {
     "category": "travel_hotel",
     "confidence": "high"

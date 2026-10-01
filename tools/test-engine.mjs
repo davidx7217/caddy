@@ -1096,7 +1096,7 @@ eq('...and its 5x hotels rate stays a portal note, never a ranking',
      cards.filter(p => !ISSUER[p.issuer] || !CURRENCY[p.currency]).map(p => p.id), []);
   eq('every card is ranked, 1 to the catalogue size, with no gaps and no repeats',
      cards.map(p => p.common).sort((a, b) => a - b), Array.from({ length: cards.length }, (_, i) => i + 1));
-  eq('...and there are 152 of them', cards.length, 152);
+  eq('...and there are 159 of them', cards.length, 159);
   // A store card that names a domain nothing resolves to could never rank at all.
   eq('every store a store card works at is in merchants.json',
      cards.flatMap(p => (p.only_at || []).filter(d => !merchants[d]).map(d => `${p.id}:${d}`)), []);
@@ -2002,6 +2002,48 @@ eq('...4x on vacation home rentals, which its page names, and on a hotel booked 
 eq('BofA Customized Cash travel choice: 3% on booking sites',
    ['expedia.com', 'airbnb.com', 'booking.com']
      .map(h => sail('bofa-customized-cash', h, { selections: ['travel'] })?.rate), [3, 3, 3]);
+
+// --- the Atmos and SKYPASS cards, 2026-09-30 ----------------------------------
+// BofA's three Atmos Rewards cards and U.S. Bank's four Korean Air SKYPASS cards,
+// each read off its issuer's terms that day.
+const air = (id, h, t) =>
+  run(h, [{ productId: id, config: t ? { tier_multiplier: t } : {} }], { now: new Date('2026-09-30T12:00:00') }).all[0];
+eq('Atmos Ascent: 3 points at Alaska and Hawaiian, worth 4.2% at 1.4 cents, 1 on another airline',
+   [air('bofa-atmos-ascent', 'alaskaair.com')?.rate, air('bofa-atmos-ascent', 'hawaiianairlines.com')?.value,
+    air('bofa-atmos-ascent', 'delta.com')?.rate], [3, 4.2, 1]);
+eq('...2 on gas, EV charging, rideshare, and the cable and streaming that code as pay TV',
+   ['shell.us', 'evgo.com', 'uber.com', 'xfinity.com', 'netflix.com']
+     .map(h => air('bofa-atmos-ascent', h)?.rate), [2, 2, 2, 2, 2]);
+eq('...but 1 where the code is not on record, and 1 on dining',
+   ['frontier.com', 'disneyplus.com', 'doordash.com'].map(h => air('bofa-atmos-ascent', h)?.rate), [1, 1, 1]);
+eq('...times the 10% BofA relationship bonus', air('bofa-atmos-ascent', 'alaskaair.com', 1.1)?.rate, 3.3);
+eq('Atmos Summit: 3 points at Alaska and Hawaiian and on dining, fast food included; 1 elsewhere',
+   ['alaskaair.com', 'hawaiianairlines.com', 'doordash.com', 'chipotle.com', 'shell.us']
+     .map(h => air('bofa-atmos-summit', h)?.rate), [3, 3, 3, 3, 1]);
+eq('Atmos Business: 3 at Alaska, 2 on gas, EV, couriers and rideshare, 1 at the Postal Service',
+   ['alaskaair.com', 'shell.us', 'evgo.com', 'ups.com', 'uber.com', 'usps.com']
+     .map(h => air('bofa-atmos-business', h)?.rate), [3, 2, 2, 2, 2, 1]);
+eq('...and only the business one is a business card, with its picker like the other two',
+   ['bofa-atmos-ascent', 'bofa-atmos-summit', 'bofa-atmos-business']
+     .map(id => [!!products[id].business, !!products[id].user_config?.tier_multiplier]),
+   [[false, true], [false, true], [true, true]]);
+eq('SKYPASS Visa Signature: 2 miles at koreanair.com, worth 2.6% at 1.3 cents, 1 on another airline',
+   [air('usbank-skypass-signature', 'koreanair.com')?.value, air('usbank-skypass-signature', 'delta.com')?.rate], [2.6, 1]);
+eq('...2 on a hotel booked direct and on dining, 1 through a booking site',
+   ['marriott.com', 'doordash.com', 'hotels.com'].map(h => air('usbank-skypass-signature', h)?.rate), [2, 2, 1]);
+eq('SKYPASS SkyBlue: 2 miles on rideshare and on every streaming service, nothing extra at Korean Air',
+   ['uber.com', 'lyft.com', 'netflix.com', 'disneyplus.com', 'koreanair.com']
+     .map(h => air('usbank-skypass-skyblue', h)?.rate), [2, 2, 2, 2, 1]);
+eq('SKYPASS Select: 3 miles at koreanair.com, 2 at other airlines, hotels booked direct, car rental and dining',
+   ['koreanair.com', 'delta.com', 'marriott.com', 'hertz.com', 'doordash.com']
+     .map(h => air('usbank-skypass-select', h)?.rate), [3, 2, 2, 2, 2]);
+eq('...1 through a booking site', air('usbank-skypass-select', 'hotels.com')?.rate, 1);
+eq('SKYPASS Business: 2 miles at Korean Air and on gas, EV charging, office supply, phone and dining',
+   ['koreanair.com', 'shell.us', 'evgo.com', 'staples.com', 'verizon.com', 'doordash.com', 'delta.com']
+     .map(h => air('usbank-skypass-business', h)?.rate), [2, 2, 2, 2, 2, 2, 1]);
+eq('the setup search finds the Atmos cards by the Alaska name BofA sells them under',
+   ['bofa-atmos-ascent', 'bofa-atmos-summit', 'bofa-atmos-business']
+     .map(id => (products[id].aliases || []).some(a => /alaska airlines/i.test(a))), [true, true, true]);
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
