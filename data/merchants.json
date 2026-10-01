@@ -277,55 +277,81 @@
   },
   "delta.com": {
     "category": "travel_air",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3058",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3058 'DELTA'; an airline with its own code must use it for all its core sales. AwardWallet merchant lookup 2026-09-30 (Delta Air Lines): Chase 'DELTA', Amex 'Travel - Delta' and 'Travel - AIRFARE', Capital One 'Airfare'."
   },
   "united.com": {
     "category": "travel_air",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3000",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3000 'UNITED AIRLINES'; an airline with its own code must use it for all its core sales. AwardWallet merchant lookup 2026-09-30 (United Airlines): Amex 'Travel - AIRFARE' and 'Travel - Airline'; no Chase coding shown."
   },
   "aa.com": {
     "category": "travel_air",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3001",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3001 'AMERICAN AIRLINES'; an airline with its own code must use it for all its core sales. AwardWallet merchant lookup 2026-09-30 (American Airlines): Chase 'AMERICAN AIRLINES', Amex 'Travel - AIRFARE', Capital One 'Airfare'."
   },
   "southwest.com": {
     "category": "travel_air",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3066",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3066 'SOUTHWEST'; an airline with its own code must use it for all its core sales. AwardWallet merchant lookup 2026-09-30 (Southwest Airlines): Chase 'SOUTHWEST', Amex 'Travel - AIRFARE', Capital One 'Airfare'."
   },
   "jetblue.com": {
     "category": "travel_air",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3174",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3174 'JETBLUE AIRWAYS'; an airline with its own code must use it for all its core sales. AwardWallet merchant lookup 2026-09-30 (Jetblue Airways): Chase 'JETBLUE AIRWAYS', Citi 'Air Travel - JETBLUE', Amex 'Travel - AIRFARE', Capital One 'Airfare'."
   },
   "aircanada.com": {
     "category": "travel_air",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3009",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3009 'AIR CANADA'; an airline with its own code must use it for all its core sales. AwardWallet merchant lookup 2026-09-30: no per-issuer codings."
   },
   "flyfrontier.com": {
     "category": "travel_air",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3132",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3132 'FRONTIER AIRLINES'; an airline with its own code must use it for all its core sales. AwardWallet merchant lookup 2026-09-30 (Frontier Airlines): Capital One 'Airfare'."
   },
   "emirates.com": {
     "category": "travel_air",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3026",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3026 'EMIRATES AIRLINES'; an airline with its own code must use it for all its core sales. AwardWallet merchant lookup 2026-09-30: no per-issuer codings."
   },
   "lufthansa.com": {
     "category": "travel_air",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3008",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3008 'LUFTHANSA'; an airline with its own code must use it for all its core sales. AwardWallet merchant lookup 2026-09-30: no per-issuer codings."
   },
   "swiss.com": {
     "category": "travel_air",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3015",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3015 'SWISS INTERNATIONAL AIRLINES'; an airline with its own code must use it for all its core sales. AwardWallet merchant lookup 2026-09-30: no per-issuer codings."
   },
   "austrian.com": {
     "category": "travel_air",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3051",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3051 'AUSTRIAN AIRLINES'; an airline with its own code must use it for all its core sales. AwardWallet merchant lookup 2026-09-30: no per-issuer codings."
   },
   "brusselsairlines.com": {
     "category": "travel_air",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3029",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3029 'SN BRUSSELS AIRLINES'; an airline with its own code must use it for all its core sales. AwardWallet merchant lookup 2026-09-30: no per-issuer codings."
   },
   "lot.com": {
     "category": "travel_air",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3182",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3182 'LOT (POLAND)'; an airline with its own code must use it for all its core sales. AwardWallet merchant lookup 2026-09-30: no per-issuer codings."
   },
   "alaskaair.com": {
     "category": "travel_air",
@@ -341,15 +367,21 @@
   },
   "marriott.com": {
     "category": "travel_hotel",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3509",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3509 'MARRIOTT', with other codes for its other brands -- Courtyard 3690, Residence Inns 3703, Fairfield Inn 3715, Sheraton 3503, Westin 3513, The Ritz-Carlton 3710 -- and a hotel with its own code must use it for its core business. AwardWallet merchant lookup 2026-09-30 (Marriott Hotels & Resorts): Chase 'MARRIOTT' and 'MARRIOTT HOTELS', Capital One 'Lodging'."
   },
   "hilton.com": {
     "category": "travel_hotel",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3504",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3504 'HILTON HOTELS', with other codes for its other brands -- Hilton Garden Inn 3604, Hampton Inns 3665, DoubleTree 3692, Embassy Suites 3695 -- and a hotel with its own code must use it for its core business. AwardWallet merchant lookup 2026-09-30 (Hilton): Chase 'HILTON HOTELS', Amex 'Travel - Hilton' and 'Travel - Lodging', Capital One 'Lodging'."
   },
   "hyatt.com": {
     "category": "travel_hotel",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3640",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3640 'HYATT HOTELS', Hyatt Place 3812, and a hotel with its own code must use it for its core business. AwardWallet merchant lookup 2026-09-30 (Hyatt Hotels): Chase 'HYATT HOTELS'."
   },
   "booking.com": {
     "category": "travel_hotel",
@@ -560,19 +592,24 @@
   },
   "ihg.com": {
     "category": "travel_hotel",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): IHG's brands have their own codes -- Holiday Inns 3501, Inter-Continental Hotels 3512, Crowne Plaza Hotels 3750 -- and a hotel with its own code must use it for its core business. AwardWallet merchant lookup 2026-09-30 (Holiday Inn Express): Chase 'HOLIDAY INNS'."
   },
   "choicehotels.com": {
     "category": "travel_hotel",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): Choice's brands have their own codes -- Quality Inns 3508, Comfort Inns 3562, Sleep Inn 3631, Econo Lodges 3644, Clarion Hotels 3687 -- and a hotel with its own code must use it for its core business. AwardWallet merchant lookup 2026-09-30: Comfort Inn descriptors show no per-issuer codings."
   },
   "wyndhamhotels.com": {
     "category": "travel_hotel",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): Wyndham's brands have their own codes -- Wyndham 3722, Days Inns 3510, Ramada Inns 3637 -- and a hotel with its own code must use it for its core business. AwardWallet merchant lookup 2026-09-30: Wyndham Garden descriptors show no per-issuer codings."
   },
   "bestwestern.com": {
     "category": "travel_hotel",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3502",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3502 'BEST WESTERN HOTELS', and a hotel with its own code must use it for its core business. AwardWallet merchant lookup 2026-09-30 (Best Western): no per-issuer codings."
   },
   "radissonhotels.com": {
     "category": "travel_hotel",
