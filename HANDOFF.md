@@ -33,7 +33,7 @@ works and why; this file is only the state of play.
   Navy Federal Flagship Premier no longer earns 4X through booking sites.
 - **Freedom Flex carries Q4 2026 and Q1 2027**, dining 7X in Q4 (section 2). Rates
   switch at local midnight even in a tab left open.
-- **Tests green**: 650 engine + 36 setup + 54 lifecycle + 47 worker. `npm test`.
+- **Tests green**: 652 engine + 36 setup + 54 lifecycle + 48 worker. `npm test`.
 - **Two scheduled agents keep the data current** (section 15), and run without
   permission prompts. Rate changes they find wait on `rates-*` and `upkeep-*`
   branches for David's approval; only `last_verified` date bumps land on `main`
@@ -69,8 +69,12 @@ dated.
    Waiting:
    - Autograph's 3X at optimum.com and audible.com, and the Gap Encore
      Mastercard's 3X without tjmaxx.tjx.com, marshalls.com and nike.com: still
-     short of two sources after a second search. About 10 minutes each once a
-     source turns up.
+     short of two sources after a third search on 2026-10-01 (myFICO, Doctor of
+     Credit, U.S. Bank's sample-merchant lists; Reddit is blocked in the in-app
+     browser, and MCC directory sites still count as none). Wells Fargo's
+     streaming page does name "continuity/subscription services", the label of
+     Audible's AwardWallet coding, but that is the definition, not a second
+     source for the code. About 10 minutes each once a source turns up.
 2. **Submit to the Chrome Web Store** -- unblocked 2026-09-29. The repo is public
    as github.com/davidx7217/caddy (renamed from card-picker; old URLs redirect),
    and the listing's privacy-policy URL now names it and returns 200. Section 1
@@ -107,11 +111,6 @@ dated.
      and AT&T Points Plus, all on citi.com's card list on 2026-09-29.
    - **A timeshare category**, if wanted: without one, RCI's and Capital
      Vacations' 5X and Wyndham's vacation-club rates stay unranked (section 18).
-
-   Loose ends, each small, each explained in its section:
-   - **U.S. Bank's checking-balance bonuses** -- Business Essentials' 2.5% and
-     Essentials Plus's up to 3.5% -- are cautions: they add to the rate rather
-     than multiply it, which the tier picker cannot express (section 17).
 
    Settled 2026-09-29: Wyndham Earner's 3X stands, `gm` stays at a cent,
    Business Gold and World of Hyatt Business have pickers for their top
@@ -971,22 +970,41 @@ on another).
   for Strata Premier; it does -- section 18.) David declined the category on
   2026-09-29 (section 18).
 
+**Settled 2026-10-01:**
+- Booking sites are treated differently on purpose, because the definitions
+  differ. RCI's and Capital Vacations' Reward Rules (tc48579, tc48558) name
+  "travel agencies, discount travel sites" as travel. Emirates' (tc48264, tc48635)
+  pay 2X only on "airfare, hotel and car rental purchases", and Altitude Connect's
+  footnote 2 says "directly with airlines, hotels, ...". All four Barclays cards
+  carry the same third-party clause; RCI's explicit naming of travel agencies is
+  what sets it apart. No change.
+- Sapphire Preferred earns 3X at airbnb.com and vrbo.com: chase.com/RewardsCategoryFAQs
+  names the brands (Airbnb, Vrbo, Plum Guide, HomeAway, Homestay.com, Vacasa). The
+  card's note used to say Chase published no list.
+- No Capital One portal note on airbnb.com or vrbo.com. Capital One Travel pays 5X
+  on vacation rentals, and they are its own Hopper-supplied inventory (Expedia ended
+  the Vrbo supply), so the 10X hotel note there was wrong twice over. Every Capital
+  One hotel portal rule denylists both, and the engine now honors a denylist on a
+  portal rule. Chase Travel's and the U.S. Bank Travel Center's notes still show on
+  both sites -- the same question, not yet asked of those portals.
+- Rows that are not checkouts (David): opentable.com, traderjoes.com and
+  wholefoodsmarket.com are `content_site`, so the dock shows only where a page asks
+  for a card -- an OpenTable deposit, say. Deleting them would have been worse: with
+  no row the dock guesses a category from markup. riteaid.com now sells online
+  blood tests through Private MD Labs, so it is `other`, not `drugstore`.
+- The dock has a gear that opens Settings (`OPEN_OPTIONS` to the worker), and the
+  card dialog groups rules that share a rate and every qualifier into one cell, two
+  columns, the rate at the 22px Numeral size (David).
+- U.S. Bank's checking-balance bonuses are out entirely: Caddy covers credit cards
+  only (David). Both cautions no longer mention them.
+
 **Open questions, each a call for David or a statement to settle it:**
-- Altitude Connect excludes booking sites from its 4X travel and the Emirates cards
-  from their 2X; RCI and Capital Vacations do not. The same question answered two
-  ways.
-- Sapphire Preferred's 3X "vacation homes at top brands" is not modelled.
-- Venture X's portal note says 10X on vrbo.com and airbnb.com; vacation rentals
-  through Capital One Travel earn 5X.
 - Cash+'s 5% sporting goods at basspro.com: U.S. Bank lists Bass Pro Shops but
   says Cabelas.com, its sister chain's site, does not qualify, and nothing shows
   how basspro.com orders code. One source against it, so the 5% stands.
 - Instacart's Amex override (`other`): its main descriptor is Amex "Merchandise &
   Supplies - Groceries" on AwardWallet, but another shows "U.S. Supermarkets". One
   source, mixed, so the override stands.
-- Merchant rows that are not really checkouts: opentable.com (meals are paid at the
-  table), riteaid.com (no longer a drugstore storefront), traderjoes.com,
-  wholefoodsmarket.com. kayak.com, search only, stays: section 18.
 
 ---
 
@@ -1074,8 +1092,8 @@ Not added:
 
 Left open, for you:
 
-- An additive picker for U.S. Bank's checking bonuses would need an engine change;
-  say if you want one.
+- U.S. Bank's checking bonuses: left out entirely, 2026-10-01 (David: credit
+  cards only).
 
 ---
 ## 18. Booking sites and cruise lines, 29-30 September 2026

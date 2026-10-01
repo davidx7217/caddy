@@ -2002,6 +2002,17 @@ eq('...4x on vacation home rentals, which its page names, and on a hotel booked 
 eq('BofA Customized Cash travel choice: 3% on booking sites',
    ['expedia.com', 'airbnb.com', 'booking.com']
      .map(h => sail('bofa-customized-cash', h, { selections: ['travel'] })?.rate), [3, 3, 3]);
+// chase.com/RewardsCategoryFAQs names the Sapphire Preferred's vacation-home brands:
+// Airbnb, Vrbo, Plum Guide, HomeAway, Homestay.com and Vacasa (read 2026-10-01).
+eq('Sapphire Preferred: 3x at Airbnb and Vrbo, still 2x at a booking site and a hotel',
+   ['airbnb.com', 'vrbo.com', 'expedia.com', 'marriott.com']
+     .map(h => sail('chase-sapphire-preferred', h)?.rate), [3, 3, 2, 2]);
+// Capital One Travel's vacation rentals are its own inventory at 5X; an Airbnb or
+// Vrbo listing cannot be booked there, so no portal note on either site.
+eq('no Capital One portal note on Airbnb or Vrbo, and the 10x note still on a hotel',
+   ['airbnb.com', 'vrbo.com', 'marriott.com'].map(h =>
+     run(h, own('capitalone-venture-x', 'capitalone-venture-x-business', 'capitalone-venture'),
+       { now: new Date('2026-09-30T12:00:00') }).notes.length), [0, 0, 3]);
 
 // --- the cruise lines' co-branded cards, 2026-09-30 ------------------------------
 // Bank of America's Royal ONE pair and Norwegian card and Barclays' Princess and

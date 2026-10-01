@@ -487,7 +487,10 @@ export function rank(input) {
     let expired = null;
     for (const rule of p.rules || []) {
       if (rule.portal_only) {
-        if (portalCovers(rule, category) && (!portal || rule.rate > portal.rate)) portal = rule;
+        // A denylisted domain sells what the portal cannot: Airbnb's listings are
+        // not in Capital One Travel, so no "book there instead" note on airbnb.com.
+        const denied = rule.merchant_denylist && rule.merchant_denylist.includes(ctx.domain);
+        if (!denied && portalCovers(rule, category) && (!portal || rule.rate > portal.rate)) portal = rule;
         continue;
       }
       if (!ruleMatchesContext(rule, ctx)) continue;
