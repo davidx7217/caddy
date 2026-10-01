@@ -23,8 +23,8 @@ works and why; this file is only the state of play.
   spot it left, the three Bilt cards' definitions, was read in Bilt's own terms
   the same day (section 9), and the twelve cards added later that day were read
   off their issuers' pages the same way (section 17).
-- **61 merchant rows record how they actually code** (`mcc`, `mcc_source`); the
-  other 127 are still unverified seed data (section 16).
+- **104 merchant rows record how they actually code** (`mcc`, `mcc_source`); the
+  other 84 are still unverified seed data (section 16).
 - **Booking sites stay hotels; cruise lines are a category** (section 18), both
   David's calls of 2026-09-29. Nine cruise-line rows, a cruise rule on the
   twenty-three cards whose issuer definitions name cruise lines, and the cruise
@@ -114,16 +114,14 @@ dated.
    - **U.S. Bank's checking-balance bonuses** -- Business Essentials' 2.5% and
      Essentials Plus's up to 3.5% -- are cautions: they add to the rate rather
      than multiply it, which the tier picker cannot express (section 17).
-   - **Three airline-program portals may overstate their cards**, as Bilt Travel
-     did: TrueBlue Travel, Renowned Hotels and AAdvantage Hotels and Cars. Unchecked
-     until their terms are read (section 9).
 
    Settled 2026-09-29: Wyndham Earner's 3X stands, `gm` stays at a cent,
    Business Gold and World of Hyatt Business have pickers for their top
    categories, and U.S. Bank's own calculators price an Altitude point at a cent
-   (sections 10, 12, 13 and 14). Settled 2026-09-30: Bilt's terms are read, and
-   its member bonuses no longer rank (section 9); Business Essentials Plus and the
-   Amazon Prime Business card have pickers too (section 17).
+   (sections 10, 12, 13 and 14). Settled 2026-09-30: Bilt's terms are read, its
+   member bonuses no longer rank, and the three airline-program portals pay the
+   card's own rate (section 9); Business Essentials Plus and the Amazon Prime
+   Business card have pickers too (section 17).
 
 ---
 
@@ -502,7 +500,7 @@ the Bilt Card Offer Terms, last updated 2026-09-18. The file stays out of the re
   lines and car rental agencies. Transit and rideshare stay at 1X, as modelled.
   Booking sites code as travel agencies, so Obsidian's hotel rule now carries the
   same booking-site denylist as Sapphire Reserve's, and pays 1X there. Cruise
-  lines have no category here (section 13).
+  lines booked direct earn the 2X too, since they got a category (section 18).
 - **Everything else matched**: 1X, 1X and 2X base; Obsidian's dining (eating
   places, drinking places, bakeries, fast food) and grocery (grocery stores and
   supermarkets, $25,000 a calendar year across the account, then 1X); fees of $0,
@@ -526,13 +524,25 @@ the Bilt Card Offer Terms, last updated 2026-09-18. The file stays out of the re
   4% on everyday spend under the Flexible Bilt Cash Option, is card-only and stays
   unranked: its worth depends mostly on the holder's rent or mortgage.
 
-Left open, for you:
+**The airline-program portals, checked 2026-09-30.** None overstates its card the
+way Bilt Travel did. Each portal rate is the issuer's own card earn, stated in the
+card's terms; the program's member earn comes on top whatever card pays, and is
+not counted.
 
-- **Three airline-program portals may have the same flaw**: TrueBlue Travel (four
-  JetBlue cards), Renowned Hotels and Resorts (three United cards) and AAdvantage
-  Hotels and Cars (two Citi cards). If a program pays members whatever card they
-  use, its portal notes overstate the card. Read each program's terms first; about
-  an hour.
+- **TrueBlue Travel** (four JetBlue cards): Barclays' Reward Rules pay 3X on the
+  JetBlue Card and 6X on Plus, Premier and Business for TrueBlue Travel purchases
+  booked at truebluetravel.com. TrueBlue Travel's own terms (August 2026) pay
+  members 1 point a dollar on hotels and 100 a day on car rentals besides.
+- **Renowned Hotels and Resorts** (three United cards): Chase's offer details make
+  the 5X card miles -- 3 on top of the 2X travel rate on Quest and Club, 3.5 on top
+  of the 1.5X base on Club Business -- and only select Chase cards can book it,
+  paying with the card through Chase Travel.
+- **AAdvantage Hotels and Cars** (two Citi cards): Citi's terms make Executive's
+  12X one base and 11 bonus card miles, and Globe's 6X one base and five bonus. The
+  platform also advertises up to five times the miles for AAdvantage credit
+  cardmembers; neither its terms nor its FAQ say whether that needs paying with the
+  card. If it does, Caddy understates the two Citi cards there; it cannot overstate
+  them.
 
 ---
 
@@ -832,23 +842,38 @@ calls itself UNVERIFIED SEED DATA and no agent checks how a merchant codes):
   T.J.Maxx "Discount stores" at Chase. It only works in a real browser, and some
   merchants (HomeGoods) have no codings yet. Look things up there; do not script it.
 - Visa's Merchant Data Standards Manual and Mastercard's Quick Reference Booklet
-  define what each code covers, not which merchant uses which.
+  define what each code covers, not which merchant uses which -- except in travel.
+  Visa gives individual airlines, car rental companies and hotel brands their own
+  codes (Delta is 3058, Marriott 3509), and says a merchant with one must use it
+  for its core business (page 19 of the April 2026 edition). That manual is a
+  2.2 MB PDF at usa.visa.com/content/dam/VCOM/download/merchants/visa-merchant-data-standards-manual.pdf:
+  WebFetch cannot read it but saves the file, and `pdftotext -layout` makes it
+  searchable. Mastercard's booklet refuses WebFetch (403).
 
-**Recorded so far** (2026-09-30): 61 rows carry `mcc_source`, 49 of them an `mcc` --
+**Recorded so far** (2026-09-30): 104 rows carry `mcc_source`, 73 of them an `mcc` --
 the booking sites, the cable and phone companies, the off-price stores, Nike,
 Wayfair, HomeGoods, StubHub, Audible, YouTube, Starbucks, and the rows the Cash+
 recheck leaned on; then a second batch: the four delivery apps, Instacart, Costco,
 Sam's Club, Amazon, Best Buy, Netflix, Spotify, Hulu, Uber, Lyft, CVS and
 Walgreens; then a third, every row named on U.S. Bank's own lists: the five
 department stores, Kroger, Safeway, Publix, Apple, Newegg, REI, Dick's, Academy,
-Scheels and Bass Pro; and Carnival and Royal Caribbean, whose AwardWallet
-descriptors carry only its own labels, no issuer coding. The engine does not read either field; a test keeps every
-`mcc` four digits with a source beside it, and every card ranked the same on every
-row before and after the second and third batches. Next: the other 126 rows. U.S.
-Bank's lists name about twenty of them -- the eight gyms, Boost, Metro, Consumer
-Cellular, Cricket, EVgo, ChargePoint, Shell, ExxonMobil, and Ralphs, Fred Meyer,
-King Soopers, Pick'n Save, Trader Joe's and Whole Foods on the grocery list -- so
-they make a quick fourth batch.
+Scheels and Bass Pro; then a fourth, the rest of those lists: the eight gyms, Boost,
+Metro, Consumer Cellular, Cricket, EVgo, ChargePoint, Shell, both ExxonMobil rows,
+and Ralphs, Fred Meyer, King Soopers, Pick'n Save, Trader Joe's and Whole Foods;
+then a fifth, the thirteen airlines and seven hotel chains, each airline and
+single-brand chain carrying the code Visa's manual assigns it, with AwardWallet's
+codings beside; and Carnival and Royal Caribbean, whose AwardWallet descriptors
+carry only its own labels, no issuer coding. The gyms and carriers have no issuer
+coding on AwardWallet either, so they carry a source but no code, as do IHG, Choice
+and Wyndham, whose brands use different codes. The engine does not read either
+field; a test keeps every `mcc` four digits with a source beside it, and every
+card ranked the same on every row before and after the second to fifth batches.
+Next: the other 84 rows -- 13 grocers (most of them Kroger banners), 10 clothing
+stores, 9 online retailers, 9 car rentals (Visa's manual codes those too), 7
+cruise lines, 6 ad platforms, Radisson, Accor and the three booking sites, and a
+few more -- mostly from AwardWallet. U.S. Bank's lists still name
+disneyplus.com, and gap.com, jcrew.com and ae.com on Select Clothing -- a list of
+merchants, not codes.
 
 **How to continue it** -- what worked on 2026-09-29:
 - In the in-app browser, open awardwallet.com/merchants, find the "Merchant Name"
@@ -866,8 +891,14 @@ they make a quick fourth batch.
 - Every keystroke in that box sends a request. On 2026-09-30 AwardWallet answered
   HTTP 429 after about thirty searches and was still refusing several minutes
   later, so type only as much of a name as picks it out, space lookups out, and
-  stop at the first 429. Clicking a suggestion changes the address to
-  `/merchants/<nameToUrl>` without redrawing the page; reload it to read.
+  stop at the first 429. Filling the box in one step (the browser's `form_input`)
+  sends a single request, and 23 lookups that way met no 429 later the same day.
+  Clicking a suggestion changes the address to `/merchants/<nameToUrl>` without
+  redrawing the page; reload it to read.
+- A missing Chase label is not a missing code. AwardWallet says, on a ChargePoint
+  page, that it only receives a Chase category when a user earned bonus points
+  there -- so Chase labels show up where some Chase card pays a bonus and are
+  missing elsewhere.
 - Cardholder datapoints: myFICO threads read fine in the in-app browser. U.S.
   Bank's transaction export puts the MCC in its Memo column, so Cash+ posters
   often quote exact codes.

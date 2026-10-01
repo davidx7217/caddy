@@ -54,7 +54,9 @@
   },
   "wholefoodsmarket.com": {
     "category": "groceries",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5411",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Whole Foods Market listed under 'Grocery stores and grocery delivery'. AwardWallet merchant lookup 2026-09-30 (Whole Foods): Chase 'Grocery stores and supermarkets', Amex 'Merchandise & Supplies - Groceries', Capital One 'Grocery'."
   },
   "kroger.com": {
     "category": "groceries",
@@ -64,16 +66,22 @@
   },
   "ralphs.com": {
     "category": "groceries",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5411",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Ralphs listed under 'Grocery stores and grocery delivery'. AwardWallet merchant lookup 2026-09-30 (Ralphs): Chase 'Grocery stores and supermarkets', Citi 'Merchandise - GROCERY STORE,SUPERMARKET', Capital One 'Grocery'."
   },
   "fredmeyer.com": {
     "category": "groceries",
     "confidence": "medium",
-    "note": "a Kroger banner that also sells general merchandise; filed as the supermarket it mostly is"
+    "note": "a Kroger banner that also sells general merchandise; filed as the supermarket it mostly is",
+    "mcc": "5411",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Fred Meyer listed under 'Grocery stores and grocery delivery'. AwardWallet merchant lookup 2026-09-30 (Fred Meyer): Chase 'Grocery stores and supermarkets', Citi 'Merchandise - GROCERY STORE,SUPERMARKET', Capital One 'Grocery'."
   },
   "kingsoopers.com": {
     "category": "groceries",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5411",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: King Soopers listed under 'Grocery stores and grocery delivery'. AwardWallet merchant lookup 2026-09-30 (King Soopers): Chase 'Grocery stores and supermarkets', Citi 'Merchandise - GROCERY STORE,SUPERMARKET', Capital One 'Grocery'."
   },
   "frysfood.com": {
     "category": "groceries",
@@ -93,7 +101,9 @@
   },
   "picknsave.com": {
     "category": "groceries",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5411",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Pick'n Save listed under 'Grocery stores and grocery delivery'. AwardWallet merchant lookup 2026-09-30: not found under 'Pick N Save', 'Picknsave' or \"Pick 'n Save\"."
   },
   "metromarket.net": {
     "category": "groceries",
@@ -145,7 +155,9 @@
   },
   "traderjoes.com": {
     "category": "groceries",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "5411",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Trader Joe's listed under 'Grocery stores and grocery delivery'. AwardWallet merchant lookup 2026-09-30 (Trader Joe's): Chase 'Grocery stores and supermarkets', Citi 'Merchandise - GROCERY STORE,SUPERMARKET', Amex 'Merchandise & Supplies - Groceries', Capital One 'Grocery', Bilt 'Groceries'."
   },
   "target.com": {
     "category": "department_store",
@@ -265,67 +277,99 @@
   },
   "delta.com": {
     "category": "travel_air",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3058",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3058 'DELTA'; an airline with its own code must use it for all its core sales. AwardWallet merchant lookup 2026-09-30 (Delta Air Lines): Chase 'DELTA', Amex 'Travel - Delta' and 'Travel - AIRFARE', Capital One 'Airfare'."
   },
   "united.com": {
     "category": "travel_air",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3000",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3000 'UNITED AIRLINES'; an airline with its own code must use it for all its core sales. AwardWallet merchant lookup 2026-09-30 (United Airlines): Amex 'Travel - AIRFARE' and 'Travel - Airline'; no Chase coding shown."
   },
   "aa.com": {
     "category": "travel_air",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3001",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3001 'AMERICAN AIRLINES'; an airline with its own code must use it for all its core sales. AwardWallet merchant lookup 2026-09-30 (American Airlines): Chase 'AMERICAN AIRLINES', Amex 'Travel - AIRFARE', Capital One 'Airfare'."
   },
   "southwest.com": {
     "category": "travel_air",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3066",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3066 'SOUTHWEST'; an airline with its own code must use it for all its core sales. AwardWallet merchant lookup 2026-09-30 (Southwest Airlines): Chase 'SOUTHWEST', Amex 'Travel - AIRFARE', Capital One 'Airfare'."
   },
   "jetblue.com": {
     "category": "travel_air",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3174",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3174 'JETBLUE AIRWAYS'; an airline with its own code must use it for all its core sales. AwardWallet merchant lookup 2026-09-30 (Jetblue Airways): Chase 'JETBLUE AIRWAYS', Citi 'Air Travel - JETBLUE', Amex 'Travel - AIRFARE', Capital One 'Airfare'."
   },
   "aircanada.com": {
     "category": "travel_air",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3009",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3009 'AIR CANADA'; an airline with its own code must use it for all its core sales. AwardWallet merchant lookup 2026-09-30: no per-issuer codings."
   },
   "flyfrontier.com": {
     "category": "travel_air",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3132",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3132 'FRONTIER AIRLINES'; an airline with its own code must use it for all its core sales. AwardWallet merchant lookup 2026-09-30 (Frontier Airlines): Capital One 'Airfare'."
   },
   "emirates.com": {
     "category": "travel_air",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3026",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3026 'EMIRATES AIRLINES'; an airline with its own code must use it for all its core sales. AwardWallet merchant lookup 2026-09-30: no per-issuer codings."
   },
   "lufthansa.com": {
     "category": "travel_air",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3008",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3008 'LUFTHANSA'; an airline with its own code must use it for all its core sales. AwardWallet merchant lookup 2026-09-30: no per-issuer codings."
   },
   "swiss.com": {
     "category": "travel_air",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3015",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3015 'SWISS INTERNATIONAL AIRLINES'; an airline with its own code must use it for all its core sales. AwardWallet merchant lookup 2026-09-30: no per-issuer codings."
   },
   "austrian.com": {
     "category": "travel_air",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3051",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3051 'AUSTRIAN AIRLINES'; an airline with its own code must use it for all its core sales. AwardWallet merchant lookup 2026-09-30: no per-issuer codings."
   },
   "brusselsairlines.com": {
     "category": "travel_air",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3029",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3029 'SN BRUSSELS AIRLINES'; an airline with its own code must use it for all its core sales. AwardWallet merchant lookup 2026-09-30: no per-issuer codings."
   },
   "lot.com": {
     "category": "travel_air",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3182",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3182 'LOT (POLAND)'; an airline with its own code must use it for all its core sales. AwardWallet merchant lookup 2026-09-30: no per-issuer codings."
   },
   "marriott.com": {
     "category": "travel_hotel",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3509",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3509 'MARRIOTT', with other codes for its other brands -- Courtyard 3690, Residence Inns 3703, Fairfield Inn 3715, Sheraton 3503, Westin 3513, The Ritz-Carlton 3710 -- and a hotel with its own code must use it for its core business. AwardWallet merchant lookup 2026-09-30 (Marriott Hotels & Resorts): Chase 'MARRIOTT' and 'MARRIOTT HOTELS', Capital One 'Lodging'."
   },
   "hilton.com": {
     "category": "travel_hotel",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3504",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3504 'HILTON HOTELS', with other codes for its other brands -- Hilton Garden Inn 3604, Hampton Inns 3665, DoubleTree 3692, Embassy Suites 3695 -- and a hotel with its own code must use it for its core business. AwardWallet merchant lookup 2026-09-30 (Hilton): Chase 'HILTON HOTELS', Amex 'Travel - Hilton' and 'Travel - Lodging', Capital One 'Lodging'."
   },
   "hyatt.com": {
     "category": "travel_hotel",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3640",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3640 'HYATT HOTELS', Hyatt Place 3812, and a hotel with its own code must use it for its core business. AwardWallet merchant lookup 2026-09-30 (Hyatt Hotels): Chase 'HYATT HOTELS'."
   },
   "booking.com": {
     "category": "travel_hotel",
@@ -428,7 +472,9 @@
   "chargepoint.com": {
     "category": "ev_charging",
     "confidence": "medium",
-    "note": "measured 2026-09-09: marketing home renders a price, so listing it mounts the dock there. Charging itself is paid at the charger; the web surface is account top-up"
+    "note": "measured 2026-09-09: marketing home renders a price, so listing it mounts the dock there. Charging itself is paid at the charger; the web surface is account top-up",
+    "mcc": "5552",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: ChargePoint Charging Station listed under Gas Stations and EV Charging Stations. AwardWallet merchant lookup 2026-09-30 (Chargepoint): Chase 'Electric vehicle charging', Citi 'Vehicle Services - ELECTRIC VEHICLE CHARGING'. Another Chargepoint descriptor has no Chase category, which AwardWallet reads as no Chase bonus seen there."
   },
   "electrifyamerica.com": {
     "category": "ev_charging",
@@ -438,7 +484,8 @@
   "evgo.com": {
     "category": "ev_charging",
     "confidence": "medium",
-    "note": "measured 2026-09-09: marketing home is signal-free. Web surface is plan signup"
+    "note": "measured 2026-09-09: marketing home is signal-free. Web surface is plan signup",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: EVgo Fast Charging Network listed under Gas Stations and EV Charging Stations. AwardWallet merchant lookup 2026-09-30: EVgo descriptors carry AwardWallet's own 'EV Charging Stations' and 'Gas Stations' labels, no per-issuer codings."
   },
   "t-mobile.com": {
     "category": "phone",
@@ -515,34 +562,42 @@
   },
   "shell.us": {
     "category": "gas",
-    "confidence": "medium"
+    "confidence": "medium",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Shell listed under Gas Stations and EV Charging Stations. AwardWallet merchant lookup 2026-09-30 (Shell Oil): Chase 'Automated fuel dispensers' and 'Service stations', Citi 'AUTOMATED GAS DISPENSER' and 'SERVICE STATION', Amex 'Transportation - U.S. GAS STATIONS', Capital One 'Gas/Automotive' -- 5542 at the pump, 5541 inside, so no single code."
   },
   "exxon.com": {
     "category": "gas",
     "confidence": "medium",
     "redirects_to": "exxonmobilfuels.com",
-    "note": "measured 2026-09-09: client-side redirect to exxonmobilfuels.com, so this row matches almost nothing now. Kept for stale links only"
+    "note": "measured 2026-09-09: client-side redirect to exxonmobilfuels.com, so this row matches almost nothing now. Kept for stale links only",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: ExxonMobil listed under Gas Stations and EV Charging Stations. AwardWallet merchant lookup 2026-09-30 (an ExxonMobil station): Amex 'Transportation - Fuel' and 'Transportation - U.S. GAS STATIONS'."
   },
   "exxonmobilfuels.com": {
     "category": "gas",
     "confidence": "medium",
-    "note": "measured 2026-09-09: the live Exxon/Mobil consumer site. Rewards, station finder and both brand pages sit under it, and the Rewards+ account is on rewards.exxonmobilfuels.com, which the suffix walk covers. Home is signal-free; /en/rewards renders a price"
+    "note": "measured 2026-09-09: the live Exxon/Mobil consumer site. Rewards, station finder and both brand pages sit under it, and the Rewards+ account is on rewards.exxonmobilfuels.com, which the suffix walk covers. Home is signal-free; /en/rewards renders a price",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: ExxonMobil listed under Gas Stations and EV Charging Stations. AwardWallet merchant lookup 2026-09-30 (an ExxonMobil station): Amex 'Transportation - Fuel' and 'Transportation - U.S. GAS STATIONS'."
   },
   "ihg.com": {
     "category": "travel_hotel",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): IHG's brands have their own codes -- Holiday Inns 3501, Inter-Continental Hotels 3512, Crowne Plaza Hotels 3750 -- and a hotel with its own code must use it for its core business. AwardWallet merchant lookup 2026-09-30 (Holiday Inn Express): Chase 'HOLIDAY INNS'."
   },
   "choicehotels.com": {
     "category": "travel_hotel",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): Choice's brands have their own codes -- Quality Inns 3508, Comfort Inns 3562, Sleep Inn 3631, Econo Lodges 3644, Clarion Hotels 3687 -- and a hotel with its own code must use it for its core business. AwardWallet merchant lookup 2026-09-30: Comfort Inn descriptors show no per-issuer codings."
   },
   "wyndhamhotels.com": {
     "category": "travel_hotel",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): Wyndham's brands have their own codes -- Wyndham 3722, Days Inns 3510, Ramada Inns 3637 -- and a hotel with its own code must use it for its core business. AwardWallet merchant lookup 2026-09-30: Wyndham Garden descriptors show no per-issuer codings."
   },
   "bestwestern.com": {
     "category": "travel_hotel",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc": "3502",
+    "mcc_source": "Visa Merchant Data Standards Manual (April 2026): 3502 'BEST WESTERN HOTELS', and a hotel with its own code must use it for its core business. AwardWallet merchant lookup 2026-09-30 (Best Western): no per-issuer codings."
   },
   "radissonhotels.com": {
     "category": "travel_hotel",
@@ -678,35 +733,43 @@
   },
   "planetfitness.com": {
     "category": "fitness",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Planet Fitness listed under Gyms/Fitness Centers, which pays on membership fees. AwardWallet merchant lookup 2026-09-30: no per-issuer codings."
   },
   "lafitness.com": {
     "category": "fitness",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: LA Fitness listed under Gyms/Fitness Centers, which pays on membership fees. AwardWallet merchant lookup 2026-09-30 (La Fitness Monthly Membership): Amex 'Entertainment'."
   },
   "24hourfitness.com": {
     "category": "fitness",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: 24 Hour Fitness listed under Gyms/Fitness Centers, which pays on membership fees. AwardWallet merchant lookup 2026-09-30: no per-issuer codings."
   },
   "equinox.com": {
     "category": "fitness",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Equinox listed under Gyms/Fitness Centers, which pays on membership fees. AwardWallet merchant lookup 2026-09-30 (Equinox): Amex 'Entertainment'."
   },
   "crunch.com": {
     "category": "fitness",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Crunch Fitness listed under Gyms/Fitness Centers, which pays on membership fees. AwardWallet merchant lookup 2026-09-30: no per-issuer codings."
   },
   "orangetheory.com": {
     "category": "fitness",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Orangetheory Fitness listed under Gyms/Fitness Centers, which pays on membership fees. AwardWallet merchant lookup 2026-09-30: no per-issuer codings."
   },
   "lifetime.life": {
     "category": "fitness",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Life Time Fitness listed under Gyms/Fitness Centers, which pays on membership fees. AwardWallet merchant lookup 2026-09-30: no per-issuer codings for Life Time Athletic."
   },
   "anytimefitness.com": {
     "category": "fitness",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Anytime Fitness listed under Gyms/Fitness Centers, which pays on membership fees. AwardWallet merchant lookup 2026-09-30: no per-issuer codings."
   },
   "hertz.com": {
     "category": "car_rental",
@@ -839,19 +902,23 @@
   },
   "cricketwireless.com": {
     "category": "phone",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Cricket Wireless listed under Cell Phone Providers, which covers bills and phones bought from the provider. AwardWallet merchant lookup 2026-09-30: its descriptors carry AwardWallet's own 'Telecommunication Services' label, no per-issuer codings."
   },
   "metrobyt-mobile.com": {
     "category": "phone",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: MetroPCS Wireless listed under Cell Phone Providers, which covers bills and phones bought from the provider. AwardWallet merchant lookup 2026-09-30: its descriptors carry AwardWallet's own 'Telecommunication Services' label, no per-issuer codings."
   },
   "boostmobile.com": {
     "category": "phone",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Boost Mobile listed under Cell Phone Providers, which covers bills and phones bought from the provider. AwardWallet merchant lookup 2026-09-30: its descriptors carry AwardWallet's own 'Telecommunication Services' label, no per-issuer codings."
   },
   "consumercellular.com": {
     "category": "phone",
-    "confidence": "high"
+    "confidence": "high",
+    "mcc_source": "U.S. Bank Cash+ sample merchants 2026-09-30: Consumer Cellular listed under Cell Phone Providers, which covers bills and phones bought from the provider. AwardWallet merchant lookup 2026-09-30: its descriptors carry AwardWallet's own 'Telecommunication Services' label, no per-issuer codings."
   },
   "cox.com": {
     "category": "internet_cable",
