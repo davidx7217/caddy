@@ -187,6 +187,13 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
     return true;
   }
 
+  // The dock's gear. Opens Settings, or brings an open Settings tab forward.
+  if (msg.type === 'OPEN_OPTIONS') {
+    chrome.runtime.openOptionsPage();
+    sendResponse({ ok: true });
+    return;
+  }
+
   if (msg.type === 'SET_POS') {
     chrome.storage.local.set({ overlayPos: msg.pos }).then(() => sendResponse({ ok: true }));
     return true;

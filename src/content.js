@@ -34,6 +34,12 @@
       <path d="M2.5 10h19" stroke="currentColor" stroke-width="2"/>
     </svg>`;
 
+  const GEAR = `<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none"
+      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>
+    </svg>`;
+
   const GRIP = `<svg viewBox="0 0 10 16" width="10" height="16" aria-hidden="true">
       ${[3, 8, 13].map(y => `<circle cx="3" cy="${y}" r="1.3"/><circle cx="7" cy="${y}" r="1.3"/>`).join('')}
     </svg>`;
@@ -438,7 +444,10 @@
         .icon { width: 44px; height: ${DOCK_H}px; border: 0; background: none; color: inherit;
                 cursor: pointer; display: grid; place-items: center; padding: 0; }
         .icon:hover { background: var(--hover); }
-        .icon:focus-visible { outline: 2px solid currentColor; outline-offset: -3px; }
+        .icon:focus-visible, .gear:focus-visible { outline: 2px solid currentColor; outline-offset: -3px; }
+        .gear { width: 34px; height: ${DOCK_H}px; border: 0; background: none; color: var(--muted);
+                cursor: pointer; display: grid; place-items: center; padding: 0; }
+        .gear:hover { background: var(--hover); color: var(--ink); }
         .grip { width: 30px; height: ${DOCK_H}px; border: 0; background: var(--grip); color: inherit;
                 display: grid; place-items: center; padding: 0; cursor: grab; touch-action: none;
                 fill: currentColor; opacity: .7; }
@@ -543,6 +552,7 @@
         <div class="dock">
           <button class="icon" title="${esc(res.winner.name)} &mdash; ${money(res.winner.value)} back"
                   aria-label="Show card recommendation" aria-expanded="false">${MARK}</button>
+          <button class="gear" title="Settings" aria-label="Open Caddy settings">${GEAR}</button>
           <div class="grip" role="button" aria-label="Drag up or down to move" title="Drag up or down to move">${GRIP}</div>
         </div>
       </div>`;
@@ -558,6 +568,9 @@
       icon.setAttribute('aria-expanded', String(open));
       reflow();
     });
+
+    // A content script cannot open the options page itself; the worker can.
+    root.querySelector('.gear').addEventListener('click', () => send({ type: 'OPEN_OPTIONS' }));
 
     // x collapses the panel only -- the dock is persistent.
     root.querySelector('.x').addEventListener('click', () => {

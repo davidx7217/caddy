@@ -192,6 +192,11 @@ const WALLET = [{ productId: 'chase-freedom-unlimited', config: {} },
   eq('SET_POS stores the dock position globally',
      w.localStore.read().overlayPos, { bottom: 240 });
 }
+{
+  const w = await startWorker({ local: { instances: WALLET } });
+  await w.send({ type: 'OPEN_OPTIONS' });
+  eq('the dock\'s gear opens Settings', w.log.options, 1);
+}
 
 // ---------- permissions are frozen ----------
 {
