@@ -22,8 +22,8 @@ works and why; this file is only the state of play.
   spot it left, the three Bilt cards' definitions, was read in Bilt's own terms
   the same day (section 9), and the twelve cards added later that day were read
   off their issuers' pages the same way (section 17).
-- **84 merchant rows record how they actually code** (`mcc`, `mcc_source`); the
-  other 103 are still unverified seed data (section 16).
+- **104 merchant rows record how they actually code** (`mcc`, `mcc_source`); the
+  other 83 are still unverified seed data (section 16).
 - **Booking sites stay hotels; cruise lines are a category** (section 18), both
   David's calls of 2026-09-29. Eight cruise-line rows, and a cruise rule on the
   twenty-three cards whose issuer definitions name cruise lines, plus Carnival's 3X.
@@ -842,9 +842,15 @@ calls itself UNVERIFIED SEED DATA and no agent checks how a merchant codes):
   T.J.Maxx "Discount stores" at Chase. It only works in a real browser, and some
   merchants (HomeGoods) have no codings yet. Look things up there; do not script it.
 - Visa's Merchant Data Standards Manual and Mastercard's Quick Reference Booklet
-  define what each code covers, not which merchant uses which.
+  define what each code covers, not which merchant uses which -- except in travel.
+  Visa gives individual airlines, car rental companies and hotel brands their own
+  codes (Delta is 3058, Marriott 3509), and says a merchant with one must use it
+  for its core business (page 19 of the April 2026 edition). That manual is a
+  2.2 MB PDF at usa.visa.com/content/dam/VCOM/download/merchants/visa-merchant-data-standards-manual.pdf:
+  WebFetch cannot read it but saves the file, and `pdftotext -layout` makes it
+  searchable. Mastercard's booklet refuses WebFetch (403).
 
-**Recorded so far** (2026-09-30): 84 rows carry `mcc_source`, 56 of them an `mcc` --
+**Recorded so far** (2026-09-30): 104 rows carry `mcc_source`, 73 of them an `mcc` --
 the booking sites, the cable and phone companies, the off-price stores, Nike,
 Wayfair, HomeGoods, StubHub, Audible, YouTube, Starbucks, and the rows the Cash+
 recheck leaned on; then a second batch: the four delivery apps, Instacart, Costco,
@@ -853,15 +859,19 @@ Walgreens; then a third, every row named on U.S. Bank's own lists: the five
 department stores, Kroger, Safeway, Publix, Apple, Newegg, REI, Dick's, Academy,
 Scheels and Bass Pro; then a fourth, the rest of those lists: the eight gyms, Boost,
 Metro, Consumer Cellular, Cricket, EVgo, ChargePoint, Shell, both ExxonMobil rows,
-and Ralphs, Fred Meyer, King Soopers, Pick'n Save, Trader Joe's and Whole Foods; and
-Carnival and Royal Caribbean, whose AwardWallet descriptors carry only its own
-labels, no issuer coding. The gyms and carriers have no issuer coding on
-AwardWallet either, so they carry a source but no code. The engine does not read
-either field; a test keeps every `mcc` four digits with a source beside it, and
-every card ranked the same on every row before and after the second to fourth
-batches. Next: the other 103 rows -- 25 airlines and hotels, 13 grocers (most of
-them Kroger banners), 10 clothing stores, 9 online retailers, 9 car rentals, 6
-cruise lines, 6 ad platforms and a few more -- from AwardWallet. U.S. Bank's lists still name
+and Ralphs, Fred Meyer, King Soopers, Pick'n Save, Trader Joe's and Whole Foods;
+then a fifth, the thirteen airlines and seven hotel chains, each airline and
+single-brand chain carrying the code Visa's manual assigns it, with AwardWallet's
+codings beside; and Carnival and Royal Caribbean, whose AwardWallet descriptors
+carry only its own labels, no issuer coding. The gyms and carriers have no issuer
+coding on AwardWallet either, so they carry a source but no code, as do IHG, Choice
+and Wyndham, whose brands use different codes. The engine does not read either
+field; a test keeps every `mcc` four digits with a source beside it, and every
+card ranked the same on every row before and after the second to fifth batches.
+Next: the other 83 rows -- 13 grocers (most of them Kroger banners), 10 clothing
+stores, 9 online retailers, 9 car rentals (Visa's manual codes those too), 6
+cruise lines, 6 ad platforms, Radisson, Accor and the three booking sites, and a
+few more -- mostly from AwardWallet. U.S. Bank's lists still name
 disneyplus.com, and gap.com, jcrew.com and ae.com on Select Clothing -- a list of
 merchants, not codes.
 
