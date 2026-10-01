@@ -34,7 +34,7 @@
       <path d="M2.5 10h19" stroke="currentColor" stroke-width="2"/>
     </svg>`;
 
-  const GEAR = `<svg viewBox="0 0 24 24" width="17" height="17" aria-hidden="true" fill="none"
+  const GEAR = `<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" fill="none"
       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <circle cx="12" cy="12" r="3"/>
       <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>
@@ -444,10 +444,7 @@
         .icon { width: 44px; height: ${DOCK_H}px; border: 0; background: none; color: inherit;
                 cursor: pointer; display: grid; place-items: center; padding: 0; }
         .icon:hover { background: var(--hover); }
-        .icon:focus-visible, .gear:focus-visible { outline: 2px solid currentColor; outline-offset: -3px; }
-        .gear { width: 34px; height: ${DOCK_H}px; border: 0; background: none; color: var(--muted);
-                cursor: pointer; display: grid; place-items: center; padding: 0; }
-        .gear:hover { background: var(--hover); color: var(--ink); }
+        .icon:focus-visible { outline: 2px solid currentColor; outline-offset: -3px; }
         .grip { width: 30px; height: ${DOCK_H}px; border: 0; background: var(--grip); color: inherit;
                 display: grid; place-items: center; padding: 0; cursor: grab; touch-action: none;
                 fill: currentColor; opacity: .7; }
@@ -472,6 +469,10 @@
         .guess { opacity: .6; }
         .x { cursor: pointer; border: 0; background: none; color: var(--muted); font-size: 16px; line-height: 1; padding: 0 2px; }
         .x:hover { color: var(--ink); }
+        .acts { display: flex; align-items: center; gap: 8px; }
+        .gear { cursor: pointer; border: 0; background: none; color: var(--muted); padding: 0 2px;
+                display: grid; place-items: center; }
+        .gear:hover { color: var(--ink); }
         /* The answer is a card AND a number, and the number was the smaller
            of the two. It moves to the right at display size, where the panel
            had empty space, so the thing being compared is the thing you see
@@ -519,7 +520,10 @@
         <div class="panel" role="dialog" aria-label="Card recommendation">
           <div class="top">
             <span class="eyebrow">${esc((res.category || 'other').replace(/_/g, ' '))}${res.categorySource === 'inferred' ? ' <span class="guess">&middot; guess</span>' : ''}</span>
-            <button class="x" title="Close" aria-label="Close">&times;</button>
+            <span class="acts">
+              <button class="gear" title="Settings" aria-label="Open Caddy settings">${GEAR}</button>
+              <button class="x" title="Close" aria-label="Close">&times;</button>
+            </span>
           </div>
           <div class="win">
             <div class="win-text">
@@ -552,7 +556,6 @@
         <div class="dock">
           <button class="icon" title="${esc(res.winner.name)} &mdash; ${money(res.winner.value)} back"
                   aria-label="Show card recommendation" aria-expanded="false">${MARK}</button>
-          <button class="gear" title="Settings" aria-label="Open Caddy settings">${GEAR}</button>
           <div class="grip" role="button" aria-label="Drag up or down to move" title="Drag up or down to move">${GRIP}</div>
         </div>
       </div>`;

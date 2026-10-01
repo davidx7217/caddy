@@ -992,7 +992,8 @@ on another).
   for a card -- an OpenTable deposit, say. Deleting them would have been worse: with
   no row the dock guesses a category from markup. riteaid.com now sells online
   blood tests through Private MD Labs, so it is `other`, not `drugstore`.
-- The dock has a gear that opens Settings (`OPEN_OPTIONS` to the worker), and the
+- The dock's panel has a gear beside its close button that opens Settings
+  (`OPEN_OPTIONS` to the worker); the dock itself stays icon and grip only, and the
   card dialog groups rules that share a rate and every qualifier into one cell, two
   columns, the rate at the 22px Numeral size (David).
 - U.S. Bank's checking-balance bonuses are out entirely: Caddy covers credit cards
