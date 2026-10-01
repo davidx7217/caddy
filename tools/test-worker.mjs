@@ -175,6 +175,13 @@ const WALLET = [{ productId: 'chase-freedom-unlimited', config: {} },
   await new Promise(r => setTimeout(r, 0));
   eq('closing the tab drops the cache', 'tab:42' in w.sessionStore.read(), false);
 }
+{
+  const w = await startWorker({ local: { instances: WALLET } });
+  await w.send({ type: 'PAGE', hostname: 'doordash.com', signals: { price: true } },
+                { tab: { id: 43 }, documentLifecycle: 'prerender' });
+  eq('a prerendered page does not write the popup\'s cache for the tab still showing',
+     'tab:43' in w.sessionStore.read(), false);
+}
 
 // ---------- tie-break defaults ----------
 {

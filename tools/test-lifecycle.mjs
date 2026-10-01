@@ -16,8 +16,11 @@ const SRC = readFileSync(new URL('../src/content.js', import.meta.url), 'utf8');
 const HOSTMATCH = readFileSync(new URL('../src/hostmatch.js', import.meta.url), 'utf8');
 
 function harness(initialRespond, blocked = [], startHref = 'https://shop.example/',
-                 clockStart = '2026-09-09T12:00:00') {
+                 clockStart = '2026-09-09T12:00:00', { prerendering = false } = {}) {
   const log = [];
+  // Page-level events content.js listens for: pageshow, prerenderingchange.
+  const listeners = [];
+  const listen = where => (type, fn) => listeners.push({ where, type, fn });
   let timers = [], now = 0, intervals = [];
   // content.js reads the wall clock to tell when the local day turns. Driven by
   // the same fake time as the timers, starting at clockStart (local time).
@@ -62,10 +65,12 @@ function harness(initialRespond, blocked = [], startHref = 'https://shop.example
     console,
     Date: FakeDate,
     window: {
-      addEventListener(){}, removeEventListener(){},
+      addEventListener: listen('window'), removeEventListener(){},
       get innerWidth(){return 1400}, get innerHeight(){return 900},
     },
     document: {
+      prerendering,
+      addEventListener: listen('document'),
       body: { textContent: '' },
       // The overlay puts its @font-face into the host page's head, because
       // Chrome ignores @font-face inside a shadow root.
@@ -130,6 +135,8 @@ function harness(initialRespond, blocked = [], startHref = 'https://shop.example
   };
   return { log, tick, nav: u => { href = u; }, setRespond: f => { respond = f; },
            pollingLive: () => intervals.some(i=>i.live),
+           fire: (where, type, e = {}) => listeners
+             .filter(l => l.where === where && l.type === type).forEach(l => l.fn(e)),
            // Simulates reloading the extension, which orphans this script.
            killContext: () => { delete sandbox.chrome.runtime.id; },
            makeSendThrow: () => { throwOnSend = true; },
@@ -164,6 +171,26 @@ const check = (name, got, want) => {
   // that price is visible in the diff when someone changes the ladder.
   check('...and stops evaluating well short of 12 routes',
         h.log.filter(x=>x==='evaluate').length, 23);
+}
+
+// 1a. The popup's copy comes from PAGE, so a page has to send it again when it
+// becomes the tab's page: a prerendered one on activation, a page restored by
+// Back or Forward on pageshow. Seen 2026-10-01: Smith's, prerendered by a Google
+// search, left the popup answering for google.com.
+{
+  const h = harness(() => ({ show: true }), [], 'https://shop.example/', undefined, { prerendering: true });
+  h.tick(5000);
+  const before = h.log.filter(x => x === 'evaluate').length;
+  h.fire('document', 'prerenderingchange');
+  check('a prerendered page sends PAGE again once it is activated',
+        h.log.filter(x => x === 'evaluate').length, before + 1);
+  h.fire('window', 'pageshow', { persisted: true });
+  check('...and a page restored from the back/forward cache does too',
+        h.log.filter(x => x === 'evaluate').length, before + 2);
+  h.fire('window', 'pageshow', { persisted: false });
+  check('...but not an ordinary load, which already did',
+        h.log.filter(x => x === 'evaluate').length, before + 2);
+  check('...and none of it mounts a second dock', h.log.filter(x => x === 'MOUNT').length, 1);
 }
 
 // 1b. Midnight. A tab left open from 30 September into 1 October must show the

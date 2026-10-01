@@ -134,6 +134,18 @@
     }
   }
 
+  // The popup reads this tab's ranking from a cache that only PAGE writes, and
+  // two kinds of page send PAGE before they are the tab's page. A prerendered one
+  // (Google prerenders search results; seen 2026-10-01 on Smith's) ranks while
+  // hidden, so the write misses the tab and the popup kept answering for
+  // google.com. A page restored by Back or Forward does not rerun this script at
+  // all. Say it again the moment either becomes the page you are looking at.
+  // evaluate() never mounts a second dock, so on a page with one this only
+  // refreshes the popup's copy.
+  const reannounce = () => { if (started) evaluate(null); };
+  if (document.prerendering) document.addEventListener('prerenderingchange', reannounce, { once: true });
+  window.addEventListener('pageshow', e => { if (e.persisted) reannounce(); });
+
   chrome.storage.local.get('blocked', ({ blocked = [] }) => {
     if (chrome.runtime.lastError) return;
     applyBlocklist(blocked);

@@ -136,7 +136,10 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.type === 'PAGE') {
     (async () => {
       const result = await recommend(msg.hostname, msg.signals || {}, !!msg.wantFont);
-      if (sender.tab && sender.tab.id != null) {
+      // A prerendered page is not the tab's page yet: writing its answer would
+      // put the next site's ranking in the popup of the one still showing. It
+      // sends PAGE again once it is activated (content.js).
+      if (sender.tab && sender.tab.id != null && sender.documentLifecycle !== 'prerender') {
         // storage.session survives the service worker being torn down, so the
         // popup can still read the result without any tabs/host permission.
         await chrome.storage.session.set({ [`tab:${sender.tab.id}`]: result });

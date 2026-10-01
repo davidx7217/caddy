@@ -33,7 +33,7 @@ works and why; this file is only the state of play.
   Navy Federal Flagship Premier no longer earns 4X through booking sites.
 - **Freedom Flex carries Q4 2026 and Q1 2027**, dining 7X in Q4 (section 2). Rates
   switch at local midnight even in a tab left open.
-- **Tests green**: 652 engine + 36 setup + 54 lifecycle + 48 worker. `npm test`.
+- **Tests green**: 652 engine + 36 setup + 58 lifecycle + 50 worker. `npm test`.
 - **Two scheduled agents keep the data current** (section 15), and run without
   permission prompts. Rate changes they find wait on `rates-*` and `upkeep-*`
   branches for David's approval; only `last_verified` date bumps land on `main`
