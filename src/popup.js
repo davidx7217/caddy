@@ -130,6 +130,15 @@ $('#opts').addEventListener('click', () => chrome.runtime.openOptionsPage());
     (WHY[res.resolvedBy] || res.resolvedBy) +
     (res.tied.length > 1 ? ` (${res.tied.length} within ${Math.round((res.tieBand ?? 0.10) * 100)}%)` : '');
 
+  // One short line per card: activation and the cap, the two that change what
+  // you do at the till. The rule's own wording and the expiry notice stay in
+  // the card's details and the banner above (David, 2026-10-01: too much text).
+  const short = c => c.caveats.flatMap(x => {
+    if (x === 'Must be activated with the issuer') return ['Activate first'];
+    const cap = x.match(/^Capped at (\$[\d,]+) per (.+), then/);
+    return cap ? [`${cap[1]}/${cap[2]} cap`] : [];
+  }).join(' \u00b7 ');
+
   // Three, never more. The whole popup has to fit without scrolling, and the
   // fourth-best card has never changed anyone's mind at the till. The full
   // ranking is a click away in Options.
@@ -150,8 +159,7 @@ $('#opts').addEventListener('click', () => chrome.runtime.openOptionsPage());
         <span class="grow">
           <div class="name">${esc(c.name)}</div>
           <div class="sub">${esc(c.reason)}</div>
-          ${c.caveats.filter(x => x !== 'Unverified data')
-             .map(x => `<div class="cav">! ${esc(x)}</div>`).join('')}
+          ${short(c) ? `<div class="cav">${esc(short(c))}</div>` : ''}
         </span>
         <span class="val">${money(c.value)}</span>
       </div>`).join('');
