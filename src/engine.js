@@ -487,6 +487,8 @@ export function rank(input) {
 
   const entries = [];
   const notes = [];
+  // What the merchant says about which cards it takes; shown beside the ranking.
+  const acceptsNote = (merchant && merchant.accepts_note) || '';
 
   instances.forEach((inst, idx) => {
     const p = products[inst.productId];
@@ -508,6 +510,12 @@ export function rank(input) {
     // not a candidate at all: ranking it on its base rate would recommend a card
     // the till refuses.
     if (p.only_at && !p.only_at.includes(ctx.domain)) return;
+
+    // Some merchants take only certain networks (Costco.com: Visa and Mastercard).
+    // A card on another network is not a candidate, for the same reason: the till
+    // refuses it. "visa or mastercard" cards count if either network is taken.
+    if (merchant && merchant.accepts && p.network &&
+        !p.network.split(' or ').some(n => merchant.accepts.includes(n))) return;
 
     // Portal rates never apply on the merchant's own site. Hold the best one
     // aside and decide after scoring whether it is worth mentioning.
@@ -602,7 +610,8 @@ export function rank(input) {
     const held = instances.some(i => products[i.productId]);
     return { hostname, merchant, category: baseCategory,
            categoryLabel: shortCategory(baseCategory), categorySource,
-             all: [], winner: null, tied: [], resolvedBy: held ? 'none_usable' : 'no_cards', notes };
+             all: [], winner: null, tied: [], resolvedBy: held ? 'none_usable' : 'no_cards', notes,
+             acceptsNote };
   }
 
   const top = entries[0].value;
@@ -626,7 +635,7 @@ export function rank(input) {
 
   return { hostname, merchant, category: baseCategory,
            categoryLabel: shortCategory(baseCategory), categorySource,
-           all: entries, winner, tied, resolvedBy, tieBand, lead, notes,
+           all: entries, winner, tied, resolvedBy, tieBand, lead, notes, acceptsNote,
            // One flag so a surface can show a banner without walking the list.
            stale: entries.some(e => e.staleReason) };
 }

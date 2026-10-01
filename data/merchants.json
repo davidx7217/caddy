@@ -1,5 +1,5 @@
 {
-  "_comment": "Domain -> normalized category. issuer_overrides encode the known disputes (e.g. Amex does not treat Instacart as a US supermarket). confidence: high|medium|low, shown in the popup. mcc_source records how a row was checked against the way purchases actually code: an issuer's own merchant list or a lookup of real statement codings, with the date. mcc, where present, is the Visa merchant category code that evidence names (e.g. a Chase label that is the code's own description). Rows without mcc_source are still unverified seed data.",
+  "_comment": "Domain -> normalized category. issuer_overrides encode the known disputes (e.g. Amex does not treat Instacart as a US supermarket). confidence: high|medium|low, shown in the popup. accepts, where present, lists the card networks the merchant takes (a card on any other network is not ranked there, as a store card is not ranked off its own store) and accepts_note is the one line shown beside the ranking; accepts_source says where it was read. mcc_source records how a row was checked against the way purchases actually code: an issuer's own merchant list or a lookup of real statement codings, with the date. mcc, where present, is the Visa merchant category code that evidence names (e.g. a Chase label that is the code's own description). Rows without mcc_source are still unverified seed data.",
   "doordash.com": {
     "category": "dining",
     "confidence": "high",
@@ -194,6 +194,9 @@
   "costco.com": {
     "category": "wholesale_club",
     "confidence": "high",
+    "accepts": ["visa", "mastercard"],
+    "accepts_note": "Costco.com takes Visa and Mastercard. Warehouses and gas stations take Visa only.",
+    "accepts_source": "costco.com/online-payment-methods.html, read 2026-10-01, lists Visa, the Costco Anywhere Visa, MasterCard and PIN debit cards for online orders and no other network. Citi's Costco acceptance page (citi.com, read 2026-10-01): warehouses and gas stations take Visa only, and Costco.com is the only place a non-Visa card works.",
     "mcc_source": "AwardWallet merchant lookup 2026-09-29: 'E Commerce Costco' descriptors carry only AwardWallet's own 'Wholesale Clubs' and 'Merchandise' labels, no per-issuer codings; the warehouse descriptor 'Costco Whse' is Chase 'Wholesale Clubs'."
   },
   "samsclub.com": {

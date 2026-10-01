@@ -2128,5 +2128,25 @@ eq('the setup search finds the Atmos cards by the Alaska name BofA sells them un
      byMult.all.map(c => c.productId), byValue.all.map(c => c.productId));
 }
 
+// --- which networks a merchant takes -----------------------------------------
+// Costco.com takes Visa and Mastercard (Costco's own payment page); its
+// warehouses and gas stations take Visa only. A card on another network is not
+// ranked there, and the merchant's own line comes back with the ranking.
+{
+  const wallet = own('citi-costco-anywhere', 'citi-double-cash', 'amex-gold', 'discover-it-cash-back');
+  const at = run('costco.com', wallet);
+  eq('Costco.com ranks Visa and Mastercard cards only', at.all.map(c => c.productId).sort(),
+     ['citi-costco-anywhere', 'citi-double-cash']);
+  eq('...and says what Costco takes, warehouses included',
+     at.acceptsNote, 'Costco.com takes Visa and Mastercard. Warehouses and gas stations take Visa only.');
+  eq('a merchant with no restriction ranks every network and says nothing',
+     [run('target.com', wallet).all.length, run('target.com', wallet).acceptsNote], [4, '']);
+  const none = run('costco.com', own('amex-gold'));
+  eq('a wallet with no Costco-accepted card is unusable, and the note says why',
+     [none.resolvedBy, none.acceptsNote.length > 0], ['none_usable', true]);
+  eq('"visa or mastercard" cards count when either network is taken',
+     run('costco.com', own('navyfederal-cashrewards')).all.length, 1);
+}
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

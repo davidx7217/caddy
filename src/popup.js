@@ -104,6 +104,7 @@ $('#opts').addEventListener('click', () => chrome.runtime.openOptionsPage());
     $('#sub').textContent = res && res.resolvedBy === 'none_usable'
       ? 'None of your cards work here.'
       : 'No cards added yet.';
+    if (res && res.acceptsNote) $('#list').innerHTML = `<div class="sub accepts">${esc(res.acceptsNote)}</div>`;
     return;
   }
 
@@ -156,5 +157,6 @@ $('#opts').addEventListener('click', () => chrome.runtime.openOptionsPage());
           ${short(c) ? `<div class="cav">${esc(short(c))}</div>` : ''}
         </span>
         <span class="val">${esc(c.big)}${c.tag ? `<span class="est">${esc(c.tag)}</span>` : ''}</span>
-      </div>`).join('');
+      </div>`).join('') +
+    (res.acceptsNote ? `<div class="sub accepts">${esc(res.acceptsNote)}</div>` : '');
 })();

@@ -551,6 +551,7 @@
             : ''}
           ${res.winner.needsActivation ? '<div class="note">Must be activated with the issuer to earn this rate.</div>' : ''}
           ${res.winner.staleReason ? `<div class="stale">${esc(res.winner.staleReason)}</div>` : ''}
+          ${res.acceptsNote ? `<div class="note">${esc(res.acceptsNote)}</div>` : ''}
           ${res.notes.slice(0, 1).map(n => `<div class="note">${esc(n.text)}</div>`).join('')}
           ${(unresolved && others.length) ? `
             <div class="alt">
