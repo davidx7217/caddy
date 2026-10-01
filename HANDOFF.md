@@ -9,13 +9,14 @@ works and why; this file is only the state of play.
 
 ## State
 
-- **v1.0.0**, 152 cards across 18 issuers, 187 merchant rows, 28 categories.
+- **v1.0.0**, 159 cards across 18 issuers, 190 merchant rows, 28 categories.
   The second twenty cards landed 2026-09-27; store cards plus the remaining
   airline and hotel tiers, nineteen cards from five issuers Caddy lacked,
   thirteen business cards, eight smaller store cards, seven missing tiers,
   sixteen more Barclays co-brands and fourteen co-branded business cards, on
   2026-09-28; eleven business cards from BofA, U.S. Bank, Wells Fargo and Citi,
-  and the Kroger card, on 2026-09-29. See sections 6, 7, 9 to 14 and 17.
+  and the Kroger card, on 2026-09-29; BofA's three Atmos cards and U.S. Bank's
+  four SKYPASS cards on 2026-09-30. See sections 6, 7, 9 to 14, 17 and 19.
 - **Every card audited 2026-09-29** (section 16): all 140 read against their
   issuer's own pages -- fourteen of them only in the in-app browser -- and every
   card ranked on every merchant row. The fixes it found are merged. The one soft
@@ -23,14 +24,14 @@ works and why; this file is only the state of play.
   the same day (section 9), and the twelve cards added later that day were read
   off their issuers' pages the same way (section 17).
 - **84 merchant rows record how they actually code** (`mcc`, `mcc_source`); the
-  other 103 are still unverified seed data (section 16).
+  other 106 are still unverified seed data (section 16).
 - **Booking sites stay hotels; cruise lines are a category** (section 18), both
   David's calls of 2026-09-29. Eight cruise-line rows, and a cruise rule on the
   twenty-three cards whose issuer definitions name cruise lines, plus Carnival's 3X.
   Navy Federal Flagship Premier no longer earns 4X through booking sites.
 - **Freedom Flex carries Q4 2026 and Q1 2027**, dining 7X in Q4 (section 2). Rates
   switch at local midnight even in a tab left open.
-- **Tests green**: 629 engine + 36 setup + 54 lifecycle + 47 worker. `npm test`.
+- **Tests green**: 643 engine + 36 setup + 54 lifecycle + 47 worker. `npm test`.
 - **Two scheduled agents keep the data current** (section 15), and run without
   permission prompts. Rate changes they find wait on `rates-*` and `upkeep-*`
   branches for David's approval; only `last_verified` date bumps land on `main`
@@ -100,9 +101,6 @@ dated.
    cards, the missing tiers, Barclays' other co-brands, the co-branded business
    cards, the other big banks' business cards and the Kroger card are in now
    (sections 9 to 14 and 17). The next gaps:
-   - **Airline programs Caddy has no cards for**: BofA's Atmos Rewards cards
-     (Alaska and Hawaiian) and U.S. Bank's SKYPASS cards (Korean Air), personal
-     and business. Each needs a currency and airline rows (section 17).
    - **Citi's personal cards not yet in**: Strata Elite, Strata, AAdvantage MileUp
      and AT&T Points Plus, all on citi.com's card list on 2026-09-29.
    - **Cruise co-brands** -- Royal Caribbean, Celebrity, Norwegian, Princess,
@@ -1049,8 +1047,8 @@ Not added:
 - **U.S. Bank Business Shield**: it earns only through the Travel Center, so it can
   never rank on a merchant page.
 - **BofA's Atmos Rewards Visa Signature Business and U.S. Bank's SKYPASS Visa Signature
-  Business**: airline programs Caddy has no cards, currency or airline rows for. Their
-  personal cards should come with them.
+  Business**: airline programs Caddy had no cards, currency or airline rows for. They
+  went in with their personal cards on 2026-09-30 (section 19).
 - **BofA's secured business card**, as the personal secured cards are left out.
 
 Left open, for you:
@@ -1141,6 +1139,47 @@ Left out on purpose:
 Pinned in `test-engine.mjs`'s "booking sites and cruise lines" section: every cruise
 rate and cap, the cards left at 1X, no portal note on a cruise line, Navy Federal on
 all nine booking sites, and BofA's travel choice on them.
+
+---
+
+## 19. The Atmos and SKYPASS cards, 30 September 2026
+
+Seven cards, ranks 153 to 159, each read off its issuer's terms that day: Bank of
+America's Atmos Rewards Ascent Visa Signature ($95), Summit Visa Infinite ($395) and
+Visa Signature Business ($70 for the company plus $25 per card), for Alaska and
+Hawaiian; and U.S. Bank's Korean Air SKYPASS Visa Signature ($99), SkyBlue Visa ($0),
+Select Visa Signature ($450) and Visa Signature Business ($99), read on
+skypassvisa.com, U.S. Bank's site for them. No new issuer or category; two new
+currencies and three merchant rows -- alaskaair.com, hawaiianairlines.com and
+koreanair.com, all confirmed by the HTTP sweep. Barclays no longer lists a Hawaiian
+card, so these are all of the Atmos cards.
+
+- **Point values come from the usual tables**, since neither program's terms state
+  one. `atmos` is NerdWallet's September 2026 figure, 1.4 cents, from its table
+  updated 2026-09-29; The Points Guy says 1.55, One Mile at a Time 1.5 and Upgraded
+  Points 1.6. NerdWallet and The Points Guy price no Korean Air miles, so `skypass` is the lowest
+  figure found, One Mile at a Time's 1.3 cents; Upgraded Points says 1.6, WalletHub 1.71.
+- **The airline bonus needs the airline as merchant of record, booked direct**, on all
+  seven, so each is allowlisted to the airline's own sites. Atmos counts Hawaiian too.
+- **The Atmos cards earn by merchant code, and BofA lists the codes.** Ascent's 2X
+  "cable and select streaming" is pay TV (4899) and digital media (5815): it ranks on
+  the cable and streaming rows on record as 4899, as BofA's other code-defined
+  categories do, so frontier.com, Disney+ and Max stay at 1X. Gas, EV charging and
+  transit earn whole. The business card's shipping is "motor freight carriers,
+  courier services", so usps.com is left out of it -- a reading, not a coding on record.
+  Summit's dining names fast food. Its 3X on foreign transactions is the caution.
+- **Each Atmos card has BofA's 10% Relationship Bonus as a tier picker**, for a BofA
+  checking, savings or CD account or a Merrill account; the business card's needs a
+  small business account.
+- **Atmos cards are found under Alaska.** BofA's pages and URLs sell them as Alaska
+  Airlines cards, so each carries that name in `aliases`.
+- **SKYPASS earns by how merchants classify themselves.** Hotels mean hotels booked
+  direct, so booking sites are denylisted; SkyBlue's rideshare and streaming come with
+  no code list and are ranked as named, every streaming row included.
+- **Not ranked**: Atmos Rewards Dining (Rewards Network, in person), the Companion Fares
+  and Global Companion Awards, Alaska's prepaid hotels booked on alaskaair.com, the
+  SKYPASS fare coupons, lounge vouchers, Select's $200 travel credit and its
+  spending-threshold miles.
 
 ---
 
