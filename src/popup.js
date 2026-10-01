@@ -66,8 +66,16 @@ $('#opts').addEventListener('click', () => chrome.runtime.openOptionsPage());
     if (u && (u.protocol === 'http:' || u.protocol === 'https:')) host = u.hostname;
   } catch (e) { /* opaque URLs */ }
 
-  const cached = async () =>
-    tab ? (await chrome.storage.session.get(`tab:${tab.id}`))[`tab:${tab.id}`] : null;
+  // The cache is per tab, and only a page's own content script replaces it. When
+  // that write never lands for the page now showing -- seen 2026-10-01 on Smith's,
+  // reached from a Google search, where the popup still answered for google.com
+  // while the dock had it right -- the entry belongs to the page before. An
+  // answer for another host is no answer.
+  const bare = h => (h || '').replace(/^www\./, '');
+  const cached = async () => {
+    const r = tab ? (await chrome.storage.session.get(`tab:${tab.id}`))[`tab:${tab.id}`] : null;
+    return r && (!host || bare(r.hostname) === bare(host)) ? r : null;
+  };
 
   let res = await cached();
   // Ranked on an earlier day -- the tab sat open past midnight, when a new

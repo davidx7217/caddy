@@ -224,6 +224,8 @@ const WALLET = [{ productId: 'chase-freedom-unlimited', config: {} },
   // EXISTS. A grep is a poor test of behaviour and the right test of reachability.
   const src = f => readFileSync(new URL(`../src/${f}`, import.meta.url), 'utf8');
   eq('the popup opens Settings', src('popup.js').includes('openOptionsPage'), true);
+  eq('...and ignores a cached answer for a different host than the tab shows',
+     /bare\(r\.hostname\) === bare\(host\)/.test(src('popup.js')), true);
   eq('...and the popup is what the toolbar icon shows',
      JSON.parse(readFileSync(new URL('../manifest.json', import.meta.url), 'utf8'))
        .action.default_popup, 'src/popup.html');
