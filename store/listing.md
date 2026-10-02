@@ -263,7 +263,7 @@ without the first one.
 
 | Asset | Spec | Status |
 | --- | --- | --- |
-| Screenshots | 1280x800, 1-5, at least 1 required | **1 and 2 current** -- regenerated 2026-10-01. **3 stale** -- made 2026-09-12, before the dock gained a gear and "est."; recapture it from an installed copy |
+| Screenshots | 1280x800, 1-5, at least 1 required | **2 current** -- regenerated 2026-10-01. **1 stale** -- shows the card-row "!" removed 2026-10-02; rerun `node tools/make-screenshots.mjs`. **3 stale** -- made 2026-09-12, before the dock gained a gear and "est."; recapture it from an installed copy (HANDOFF section 22) |
 | Small promo tile | 440x280 | Optional, not made |
 | Marquee promo tile | 1400x560 | Optional, not made |
 | Store icon | 128x128 | `icons/icon128.png` ships already |

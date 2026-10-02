@@ -37,14 +37,15 @@ works and why; this file is only the state of play.
   Navy Federal Flagship Premier no longer earns 4X through booking sites.
 - **Freedom Flex carries Q4 2026 and Q1 2027**, dining 7X in Q4 (section 2). Rates
   switch at local midnight even in a tab left open.
-- **Tests green**: 666 engine + 36 setup + 58 lifecycle + 50 worker. `npm test`.
+- **Tests green**: 666 engine + 36 setup + 67 lifecycle + 50 worker. `npm test`.
 - **Two scheduled agents keep the data current** (section 15), and run without
   permission prompts. Rate changes they find wait on `rates-*` and `upkeep-*`
   branches for David's approval; only `last_verified` date bumps land on `main`
   by themselves.
-- **Store screenshots 1 and 2 were regenerated 2026-10-01; 3 is stale.** The dock
-  now has a gear and shows "est." on points values, so `3-dock-on-a-store.png`
-  needs a hand capture from an installed copy before submitting to the Web Store.
+- **Store screenshot 2 is current; 1 and 3 are stale.** Shot 1 (Settings, Cards)
+  still shows the amber "!" on a card row, which went on 2026-10-02 (section 22):
+  rerun `node tools/make-screenshots.mjs`. Shot 3 (the dock) predates the gear and
+  "est." and needs a hand capture from an installed copy -- steps in section 22.
 - **`caddy-1.0.0.zip` sits in the repo root**, rebuilt on every commit. See the
   packaging note below.
 - **Rules David decided 2026-09-28.** A store rate is what the card adds over
@@ -144,7 +145,7 @@ Everything is written, checked and current. Nothing about it is blocked.
   the change.
 - Icons ship already, drawn by `tools/make-icons.mjs`.
 - The upload is `caddy-1.0.0.zip` in the repo root. It is already built.
-- **Screenshots are 1280x800; shot 3 is stale since 2026-10-01 (see State).** `1-settings-cards.png` and
+- **Screenshots are 1280x800; shots 1 and 3 are stale (see State).** `1-settings-cards.png` and
   `2-setup-your-cards.png` were regenerated on 2026-09-13 by
   `node tools/make-screenshots.mjs`, after the setup rework made the old setup
   shot wrong. `3-dock-on-a-store.png` is the hand-captured one: hotels.com, panel
@@ -1304,6 +1305,47 @@ the card's note.
   link on each business card page. Write `cards.json` by splicing only the changed
   cards: the file is hand-formatted, and a full `json.dumps` reflows dozens of
   compact rules.
+
+---
+
+## 22. Settings: live updates, confirmations, shorter wording, 2 October 2026
+
+All David's asks, each checked in the stubbed Settings page (the recipe under
+Working agreements) and pushed.
+
+- **Settings changes reach open pages live.** `content.js` re-ranks when
+  `instances`, `valuations` or `prefs` change -- Lead with, point values, cards,
+  saved choices -- repainting the dock with its panel state kept, and the PAGE it
+  sends refreshes the popup's cached answer. A page with no dock yet is evaluated
+  instead, so adding a card can bring one up; a rerank with no winner takes the
+  dock down. Blocked hosts stay silent and `activity` writes do not re-rank.
+  Lifecycle tests 10 cover each case.
+- **REMOVE asks first**, in `<dialog id="confirm">`, from both the row and the
+  card dialog.
+- **Point values are drafts until CONFIRM**; CANCEL drops them. Drafts live in
+  `draftVals`, apart from `valuations`, so a re-render caused by another surface
+  writing storage keeps what was typed.
+- **Cautions are not warnings any more.** No "!" on card rows, no amber box: the
+  caution prints under a DETAILS heading at the foot of Bonus categories. The
+  `.flag` and `.note` styles had no other users and are gone.
+- **The card dialog says each condition in as few words as it takes.** Ended rules
+  are hidden (the Q3 rows stay in the data for the tests pinned to them), and a
+  rule not started yet says "from <date>". Generated notes are short: "$1,500/qtr
+  cap", ", then Nx" only when that is not the base rate, "until <date>",
+  "activate", "not at expedia.com +8". All 182 distinct rule caveats and 96
+  cautions were rewritten so they no longer repeat those notes -- quarter names,
+  cap amounts, end dates, portal names -- and keep only what is particular
+  ("Shared cap.", "Booked direct.", "Not Walmart or Target."). Caveats print only
+  in this dialog; the popup takes just activation and the cap from the engine.
+  Parsed `cards.json` with `caveat` and `caution` removed is identical to before,
+  so no rate, cap or fee moved. Write new caveats in the same register.
+- **Store screenshots.** Shot 1 now shows a "!" that no longer exists: rerun
+  `node tools/make-screenshots.mjs` (it launches Chrome, so David runs it). Shot 3
+  needs Caddy loaded unpacked in Chrome: wallet Citi Double Cash and Sapphire
+  Reserve, automatic mode on, hotels.com at the payment step with the panel open
+  (Double Cash still wins at 2.80% est., checked 2026-10-02), then DevTools device
+  toolbar at Responsive 1280 x 800 and "Capture screenshot", saved over
+  `store/screenshots/3-dock-on-a-store.png`. Check nothing personal is in frame.
 
 ---
 
