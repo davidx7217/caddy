@@ -37,6 +37,10 @@ works and why; this file is only the state of play.
   Navy Federal Flagship Premier no longer earns 4X through booking sites.
 - **Freedom Flex carries Q4 2026 and Q1 2027**, dining 7X in Q4 (section 2). Rates
   switch at local midnight even in a tab left open.
+- **Settings changes reach open pages without a reload** (section 22): the dock
+  and the popup re-rank on any card, point-value or prefs change. Removing a card
+  asks first, point values wait on CONFIRM (with CANCEL and DEFAULTS), and the
+  card dialog's notes are short, with the caution under DETAILS.
 - **Tests green**: 666 engine + 36 setup + 67 lifecycle + 50 worker. `npm test`.
 - **Two scheduled agents keep the data current** (section 15), and run without
   permission prompts. Rate changes they find wait on `rates-*` and `upkeep-*`
