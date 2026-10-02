@@ -1,4 +1,4 @@
-import { pruneInstances, fontFaceCss, fontStack } from './engine.js';
+import { pruneInstances, fontFaceCss, fontStack, windowState } from './engine.js';
 import { CURRENCY, ISSUER, KIND_LABEL, kindOf, mark, matchesSearch, money, networkName } from './issuers.js';
 
 const $ = s => document.querySelector(s);
@@ -313,26 +313,32 @@ const day = d => d
   ? new Date(d + 'T00:00:00').toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })
   : '';
 
-/** Every qualifier the ranker actually reads, for one earn rule. */
-function ruleNotes(r) {
+/** Every qualifier the ranker actually reads, for one earn rule, as short as
+    it can be said (David, 2026-10-02: too much wording). */
+function ruleNotes(r, base) {
   const notes = [];
   if (r.portal_only) notes.push(`${r.portal || 'Issuer portal'} only`);
-  if (r.cap) notes.push(`capped at $${r.cap.amount.toLocaleString()} per ${r.cap.period}, then ${r.cap.then_rate}x`);
-  if (r.window && r.window.end) notes.push(`ends ${day(r.window.end)}`);
-  if (r.requires_activation) notes.push('needs activation with the issuer');
+  if (r.cap) {
+    const per = { quarter: 'qtr', year: 'yr', cycle: 'cycle' }[r.cap.period] || r.cap.period;
+    notes.push(`$${r.cap.amount.toLocaleString()}/${per} cap` +
+      (r.cap.then_rate !== base ? `, then ${r.cap.then_rate}x` : ''));
+  }
+  if (windowState(r.window, new Date()) === 'future') notes.push(`from ${day(r.window.start)}`);
+  if (r.window && r.window.end) notes.push(`until ${day(r.window.end)}`);
+  if (r.requires_activation) notes.push('activate');
   if (r.merchant_allowlist) notes.push(`only at ${r.merchant_allowlist.join(', ')}`);
-  if (r.merchant_denylist) notes.push(`not at ${r.merchant_denylist.slice(0, 3).join(', ')}` +
-    (r.merchant_denylist.length > 3 ? ` and ${r.merchant_denylist.length - 3} more` : ''));
+  if (r.merchant_denylist) notes.push(`not at ${r.merchant_denylist[0]}` +
+    (r.merchant_denylist.length > 1 ? ` +${r.merchant_denylist.length - 1}` : ''));
   if (r.caveat) notes.push(r.caveat);
   return notes;
 }
 
 /** Rules that share a rate and every qualifier collapse into one cell, so a
     picker's six choices with one caveat print the caveat once. */
-function ruleGroups(rules) {
+function ruleGroups(rules, base) {
   const groups = new Map();
   for (const r of rules) {
-    const notes = ruleNotes(r);
+    const notes = ruleNotes(r, base);
     const key = r.rate + '|' + notes.join('|');
     const g = groups.get(key) || { rate: r.rate, notes, cats: [] };
     const label = catLabel(r.category);
@@ -385,7 +391,10 @@ function renderDetail() {
       </select></label>`;
   }
 
-  const rules = (p.rules || []).slice().sort((a, b) => b.rate - a.rate);
+  // A rule whose window has closed earns nothing any more; it stays in the data
+  // only for tests pinned to its dates, so the dialog leaves it out.
+  const rules = (p.rules || []).filter(r => windowState(r.window, new Date()) !== 'expired')
+    .sort((a, b) => b.rate - a.rate);
 
   dlg.innerHTML = `
     <div class="dlg-head">
@@ -408,7 +417,7 @@ function renderDetail() {
       <div>
         <div class="sub-head" style="margin-top:0">Bonus categories</div>
         ${rules.length
-          ? `<div class="rules">${ruleGroups(rules).map(ruleCell).join('')}</div>`
+          ? `<div class="rules">${ruleGroups(rules, p.base_rate).map(ruleCell).join('')}</div>`
           : `<p class="rule-note" style="margin-top:12px">${p.only_at
               ? 'A store card: it earns its base rate at the store above and works nowhere else.'
               : 'No bonus categories. Everything earns the base rate.'}</p>`}

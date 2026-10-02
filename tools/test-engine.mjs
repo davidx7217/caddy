@@ -133,8 +133,8 @@ eq('unknown domain resolves to null', resolveMerchant('some-random-site.example'
      card(r, 'chase-freedom-flex').rate, 5);
   eq('activation caveat surfaced',
      card(r, 'chase-freedom-flex').caveats.includes('Must be activated with the issuer'), true);
-  eq('quarter is named in the caveat so a stale category is obvious',
-     card(r, 'chase-freedom-flex').caveats.some(c => c.includes('Q3 2026')), true);
+  eq('the shared quarterly cap is named in the caveat',
+     card(r, 'chase-freedom-flex').caveats.some(c => c.includes('Shared cap')), true);
   eq('7.5% rotating beats the 3% flat', r.winner.productId, 'chase-freedom-flex');
 }
 {
@@ -150,8 +150,8 @@ eq('unknown domain resolves to null', resolveMerchant('some-random-site.example'
 {
   const ff = (h, d) => run(h, own('chase-freedom-flex'), { now: new Date(d + 'T12:00:00') }).all[0];
   eq('Q4 2026 groceries pay 5x mid-quarter', ff('kroger.com', '2026-11-15').rate, 5);
-  eq('...named as Q4 2026 and needing activation',
-     [ff('kroger.com', '2026-11-15').caveats.some(c => c.includes('Q4 2026')),
+  eq('...excluding Walmart and Target, and needing activation',
+     [ff('kroger.com', '2026-11-15').caveats.some(c => c.includes('Not Walmart or Target')),
       ff('kroger.com', '2026-11-15').needsActivation], [true, true]);
   eq('...and Walmart, which Chase excludes, stays at 1x', ff('walmart.com', '2026-11-15').rate, 1);
   eq('...and Instacart, which codes as a grocery store at Chase, pays the 5x', ff('instacart.com', '2026-11-15').rate, 5);
@@ -278,8 +278,8 @@ eq('unknown domain resolves to null', resolveMerchant('some-random-site.example'
   const r = run('lyft.com');
   eq('CSR 5x Lyft applies inside the open-ended window', card(r, 'chase-sapphire-reserve').rate, 5);
   eq('and it wins rideshare at 7.5%', r.winner.productId, 'chase-sapphire-reserve');
-  eq('Lyft promo end date surfaced as a caveat',
-     card(r, 'chase-sapphire-reserve').caveats.some(c => c.includes('2027-09-30')), true);
+  eq('Lyft promo condition surfaced as a caveat',
+     card(r, 'chase-sapphire-reserve').caveats.some(c => c.includes('Lyft app')), true);
 }
 {
   const r = run('lyft.com', WALLET, { now: new Date('2027-10-01T12:00:00') });
@@ -291,8 +291,9 @@ eq('unknown domain resolves to null', resolveMerchant('some-random-site.example'
 }
 {
   const r = run('delta.com');
-  eq('travel credit condition surfaced on airfare',
-     card(r, 'chase-sapphire-reserve').caveats.some(c => c.includes('$300/yr')), true);
+  eq('travel credit condition carried by the card\'s details, booked-direct by the airfare rule',
+     [products['chase-sapphire-reserve'].caution.includes('$300/yr'),
+      card(r, 'chase-sapphire-reserve').caveats.includes('Booked direct.')], [true, true]);
 }
 
 {
@@ -952,8 +953,7 @@ eq('...and it lapses with its window',
 // categories, which is the kind of thing a user only discovers by overspending.
 eq('the 5% cap is surfaced, and says it is shared',
    inkAt('staples.com').all[0].caveats,
-   ['Capped at $25,000 per year, then 1x',
-    'The $25,000 cap is combined with internet, cable and phone, and runs per account anniversary year.']);
+   ['Capped at $25,000 per year, then 1x', 'Shared cap, per account year.']);
 
 // --- four cards verified on issuer sites 2026-09-09 ------------------------
 const only = (id, h, when = '2026-09-09') =>
@@ -1553,7 +1553,7 @@ eq('...not at Amazon, which Amex leaves out of electronics, nor at an EV charger
     picked('amex-business-gold', 'evgo.com', ['four_gas']).rate], [1, 1]);
 eq('...under one $150,000 yearly cap the two picks share',
    picked('amex-business-gold', 'doordash.com', ['four_dining']).caveats,
-   ['Capped at $150,000 per year, then 1x', 'Both picks share the cap.']);
+   ['Capped at $150,000 per year, then 1x', 'Shared cap.']);
 eq('...and 3x through Amex Travel is a note', noteAt('amex-business-gold', 'delta.com'),
    'Amex Business Gold Card: 3x (4.80% est.) if you book through Amex Travel instead');
 eq('Amex Blue Business Cash: 2% everywhere', tier('amex-blue-business-cash', 'amazon.com').rate, 2);
@@ -1856,7 +1856,7 @@ eq('...and only on the three picked, under one $150,000 yearly cap',
    [...['doordash.com', 'staples.com', 'ups.com', 'delta.com']
      .map(h => picked('usbank-amazon-prime-business', h, ['top_dining', 'top_office', 'top_shipping'])?.rate),
     picked('usbank-amazon-prime-business', 'ups.com', ['top_shipping'])?.caveats],
-   [2, 2, 2, 1, ['Capped at $150,000 per year, then 1x', 'All three picks share the cap.']]);
+   [2, 2, 2, 1, ['Capped at $150,000 per year, then 1x', 'Shared cap.']]);
 eq('...hotels booked direct, not through a booking site, and a grocery pick never undercuts Whole Foods\' 5%',
    [picked('usbank-amazon-prime-business', 'hotels.com', ['top_hotel'])?.rate,
     picked('usbank-amazon-prime-business', 'wholefoodsmarket.com', ['top_grocery'])?.rate], [1, 5]);
