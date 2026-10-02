@@ -1,6 +1,6 @@
 # Handoff
 
-Where Caddy stands as of **30 September 2026**, and what is left.
+Where Caddy stands as of **2 October 2026**, and what is left.
 
 Written to be picked up cold. The README is the reference for how the extension
 works and why; this file is only the state of play.
@@ -24,6 +24,10 @@ works and why; this file is only the state of play.
   spot it left, the three Bilt cards' definitions, was read in Bilt's own terms
   the same day (section 9), and the twelve cards added later that day were read
   off their issuers' pages the same way (section 17).
+- **Every card re-audited 2026-10-02** (section 21): all 164 against their issuer
+  pages, 24 of them in the in-app browser. It found two changes, both merged: Chase's
+  relaunch of the three IHG cards, and Amex Travel's 2X on prepaid car rentals and
+  cruises for five Membership Rewards cards.
 - **104 merchant rows record how they actually code** (`mcc`, `mcc_source`); the
   other 87 are still unverified seed data (section 16).
 - **Booking sites stay hotels; cruise lines are a category** (section 18), both
@@ -33,7 +37,7 @@ works and why; this file is only the state of play.
   Navy Federal Flagship Premier no longer earns 4X through booking sites.
 - **Freedom Flex carries Q4 2026 and Q1 2027**, dining 7X in Q4 (section 2). Rates
   switch at local midnight even in a tab left open.
-- **Tests green**: 654 engine + 36 setup + 58 lifecycle + 50 worker. `npm test`.
+- **Tests green**: 666 engine + 36 setup + 58 lifecycle + 50 worker. `npm test`.
 - **Two scheduled agents keep the data current** (section 15), and run without
   permission prompts. Rate changes they find wait on `rates-*` and `upkeep-*`
   branches for David's approval; only `last_verified` date bumps land on `main`
@@ -1141,7 +1145,7 @@ under its travel cap, on every card whose definition names cruise lines:
 
 | Issuer | Cards | Where the definition says so |
 | --- | --- | --- |
-| Chase | Sapphire Preferred 2X, Aeroplan 3X, Ink Business Preferred 3X, IHG Premier and Premier Business 5X | offer details name "travel"; chase.com/RewardsCategoryFAQs' Travel names cruise lines, on-board goods and services excluded |
+| Chase | Sapphire Preferred 2X, Aeroplan 3X, Ink Business Preferred 3X, IHG Premier and Premier Business 5X through 2026-12-31, then 3X | offer details name "travel"; chase.com/RewardsCategoryFAQs' Travel names cruise lines, on-board goods and services excluded |
 | Chase | United Quest and United Club 2X | "all other travel including ... cruise lines" |
 | Wells Fargo | Autograph 3X, Autograph Journey 3X | footnotes, by Visa merchant code |
 | BofA | Premium Rewards and Elite 2X; Customized Cash and Business Customized Cash 3% with the travel choice | each card's T&C; the category pages |
@@ -1255,6 +1259,50 @@ card, so these are all of the Atmos cards.
   and Global Companion Awards, Alaska's prepaid hotels booked on alaskaair.com, the
   SKYPASS fare coupons, lounge vouchers, Select's $200 travel credit and its
   spending-threshold miles.
+
+---
+
+## 21. Rates audit, 2 October 2026
+
+All 164 cards' multipliers, cash back rates and annual fees checked against their
+issuer pages: 140 fetched with curl and compared in a script, 24 that render in script
+read in the in-app browser -- BofA's consumer cards, the Citi AAdvantage cards, the
+Emirates cards, Hilton Business, USAA and the store cards. A lint pass over
+`cards.json` (caps against base rates, expired windows, picker groups with no rule,
+caveat numbers against rates) found nothing unintended: every flag is explained in
+the card's note.
+
+- **Chase relaunched the IHG cards** (offer details read 2026-10-02). Premier: 5X now
+  at grocery stores too; Traveler: 3X at grocery stores. Most travel (Premier and
+  Business), office supply stores (Business) and the Traveler's utilities, phone,
+  internet and streaming keep their bonus only on purchases posting by 2026-12-31,
+  then fall to the base rate. Airline tickets bought direct and car rentals keep 5X:
+  every `travel_air` row is an airline's own site, so those rules stay undated. The
+  dated rules carry `window.end` 2026-12-31, as Aeroplan's step-down does.
+- **Amex Travel pays 2X on prepaid car rentals and cruises** to every Membership
+  Rewards card, not combined with a higher bonus -- read in the Offer & Benefit Terms
+  of Business Gold, Business Platinum and Blue Business Plus; Platinum and Business
+  Platinum earn one extra point on cruises. Portal rules added to Gold (cruise),
+  Platinum, Business Platinum, Business Gold and Business Green (both). Consumer
+  Platinum's own terms were not read; the business terms name it in both clauses.
+- **Unchanged after a second look**: Wyndham Earner's 3X on gas and the Plus and
+  Premier's 4X on gas stand -- the pages' summaries now omit gas, but the Reward
+  Rules include it (section 13). Gap Encore's 500 points = $1 is already in the
+  rates. Quicksilver still shows no Capital One Travel bonus on capitalone.com.
+  BofA Travel Rewards' product page no longer mentions the 3X Travel Center rate,
+  which rests on the BofA Rewards bonus table, as its note says.
+- **JCPenney's page** (jcpenney.com/m/plcc-benefits) rendered nothing on the first
+  try; after an 8-second wait in the in-app browser it read in full and matched.
+- **Discover's calendar page** answered with an error, as on 2026-10-01. Q4 2026 rests
+  on the 2026-09-28 read; Q1 2027 is not posted yet.
+- **How to rerun it**: fetch each `source_url` with curl and a desktop browser
+  user agent, strip the HTML, and compare the set of rates on the page against the
+  record's base and rule rates; then read the flagged cards' earning lines by hand.
+  Most flags are member earnings (United, Marriott, Hilton), bonuses or redemption
+  figures. Read Amex terms through the `.../apply/terms/...?key=tncBody&rwdFlag=rwd`
+  link on each business card page. Write `cards.json` by splicing only the changed
+  cards: the file is hand-formatted, and a full `json.dumps` reflows dozens of
+  compact rules.
 
 ---
 
