@@ -36,6 +36,10 @@ const productIds = Object.keys(products).filter(k => !k.startsWith('_'))
 const VERSION = chrome.runtime.getManifest().version;
 
 let instances = [], valuations = {}, prefs = {}, blocked = [], activity = [], dropped = 0;
+// Point values typed but not yet confirmed, keyed by currency; '' means back to
+// the default. Held apart from `valuations` so a re-render -- another surface
+// writing storage -- keeps what was typed, and Cancel has something to drop.
+let draftVals = {};
 // `auto` is what the reader ASKED for, a stored pref that defaults to on.
 // `running` is whether a content script is actually registered, which is the
 // only thing that puts a dock on a page. They can disagree -- Chrome's own
@@ -408,7 +412,8 @@ function renderDetail() {
           : `<p class="rule-note" style="margin-top:12px">${p.only_at
               ? 'A store card: it earns its base rate at the store above and works nowhere else.'
               : 'No bonus categories. Everything earns the base rate.'}</p>`}
-        ${p.caution ? `<p class="rule-note" style="margin-top:16px">${esc(p.caution)}</p>` : ''}
+        ${p.caution ? `<div class="sub-head" style="margin-top:20px">Details</div>
+          <p class="rule-note">${esc(p.caution)}</p>` : ''}
       </div>
     </div>
     <div class="dlg-foot">
@@ -483,15 +488,20 @@ function blockBlocked() {
 function blockPoints() {
   const live = liveCurrencies();
   if (!live.length) return `<div class="empty">Add a card to set what its points are worth.</div>`;
+  const dirty = Object.keys(draftVals).length > 0;
   return `<div class="grid points">${live.map(k => `
     <div class="pt">
       <div class="pt-label">${esc(CURRENCY[k] || k)}</div>
       <div class="pt-in">
         <input type="number" step="0.05" min="0" inputmode="decimal"
-               data-val="${esc(k)}" value="${valuations[k] ?? baseVals[k]}">
+               data-val="${esc(k)}" value="${k in draftVals ? esc(draftVals[k]) : valuations[k] ?? baseVals[k]}">
         <span>c/pt</span>
       </div>
-    </div>`).join('')}</div>`;
+    </div>`).join('')}</div>
+    <div class="bar pts-bar">
+      <button class="btn" data-valcancel="1" ${dirty ? '' : 'disabled'}>CANCEL</button>
+      <button class="btn solid" data-valsave="1" ${dirty ? '' : 'disabled'}>CONFIRM</button>
+    </div>`;
 }
 
 function blockActivity() {
@@ -691,12 +701,29 @@ document.addEventListener('click', e => {
   if (d.close) { $('#detail').close(); return; }
   if (d.theme)   { theme = d.theme; commit('theme'); return; }
   if (d.add)  { instances.push({ productId: d.add, config: {} }); commit('instances'); }
-  // Closing first: the dialog is showing a card that is about to stop existing,
-  // and commit() re-renders from storage.
-  if (d.rm)   {
+  // Removing asks first: one stray click would otherwise drop a card and its
+  // picks with no way back but setting it up again.
+  if (d.rm) { askRemove(d.rm); return; }
+  if (d.rmno) { $('#confirm').close(); return; }
+  // Closing the detail dialog first: it shows a card that is about to stop
+  // existing, and commit() re-renders from storage.
+  if (d.rmyes) {
+    $('#confirm').close();
     $('#detail').close();
-    instances.splice(instances.findIndex(x => x.productId === d.rm), 1);
-    commit('instances');
+    const at = instances.findIndex(x => x.productId === d.rmyes);
+    if (at >= 0) { instances.splice(at, 1); commit('instances'); }
+    return;
+  }
+  if (d.valcancel) { draftVals = {}; render(); return; }
+  if (d.valsave) {
+    for (const [k, raw] of Object.entries(draftVals)) {
+      const v = parseFloat(raw);
+      if (Number.isFinite(v) && v >= 0) valuations[k] = v;
+      else delete valuations[k];
+    }
+    draftVals = {};
+    commit('valuations');
+    return;
   }
   if (d.clearfilters) { f = { q: '', kind: '', scope: '', fee: '', cat: '' }; page = 1; render(); return; }
   if (d.page) { page += d.page === 'next' ? 1 : -1; render(); return; }
@@ -720,13 +747,43 @@ document.addEventListener('click', e => {
   if (d.import) { $('#importfile').click(); }
 });
 
+function askRemove(id) {
+  const p = products[id];
+  if (!p) return;
+  const dlg = $('#confirm');
+  dlg.innerHTML = `
+    <div class="dlg-head">
+      <span class="dlg-title">Remove ${esc(p.name)}?</span>
+      <button class="icon-btn" data-rmno="1" aria-label="Close">&times;</button>
+    </div>
+    <div class="dlg-body">
+      <p class="hint" style="margin-top:0">Caddy stops ranking it${(instances.find(x => x.productId === id)?.config?.selections || []).length
+        ? ', and the categories you picked for it are cleared' : ''}. You can add it again from the catalogue.</p>
+    </div>
+    <div class="dlg-foot">
+      <button class="btn" data-rmno="1">CANCEL</button>
+      <button class="btn solid" data-rmyes="${esc(id)}">REMOVE</button>
+    </div>`;
+  dlg.showModal();
+}
+
 $('#detail').addEventListener('close', () => { detail = null; });
+$('#confirm').addEventListener('click', e => { if (e.target.id === 'confirm') e.target.close(); });
 // A native dialog's backdrop is part of the dialog element, so a click that
 // lands on the element itself rather than on its content is a backdrop click.
 $('#detail').addEventListener('click', e => { if (e.target.id === 'detail') e.target.close(); });
 
 // Filters are view state, not settings: they redraw the pane and write nothing.
 document.addEventListener('input', e => {
+  // A point value is only a draft until CONFIRM. Flip the buttons in place --
+  // a render() here would replace the field under the cursor.
+  if (e.target.dataset.val) {
+    const k = e.target.dataset.val, saved = String(valuations[k] ?? baseVals[k]);
+    if (e.target.value === saved) delete draftVals[k]; else draftVals[k] = e.target.value;
+    const dirty = Object.keys(draftVals).length > 0;
+    document.querySelectorAll('[data-valsave], [data-valcancel]').forEach(b => { b.disabled = !dirty; });
+    return;
+  }
   if (e.target.dataset.f !== 'q') return;
   f.q = e.target.value;
   page = 1;
@@ -759,12 +816,6 @@ document.addEventListener('change', e => {
   if (t.id === 'blocked') {
     blocked = t.value.split('\n').map(x => x.trim()).filter(Boolean);
     commit('blocked', { redraw: false });
-  }
-  if (d.val) {
-    const v = parseFloat(t.value);
-    if (Number.isFinite(v) && v >= 0) valuations[d.val] = v;
-    else delete valuations[d.val];
-    commit('valuations');
   }
   if (t.id === 'importfile' && t.files[0]) {
     importSettings(t.files[0]);

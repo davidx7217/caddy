@@ -143,6 +143,9 @@ function harness(initialRespond, blocked = [], startHref = 'https://shop.example
            isBlocked: (h, list) => sandbox.__cpIsBlockedHost(h, list),
            setBlocked: list => onChangedFns.forEach(fn =>
              fn({ blocked: { newValue: list } }, 'local')),
+           // A Settings write: any key, e.g. changeKey('prefs').
+           changeKey: key => onChangedFns.forEach(fn =>
+             fn({ [key]: { newValue: {} } }, 'local')),
  };
 }
 
@@ -429,6 +432,41 @@ const check = (name, got, want) => {
   h.tick(200);
   check('an unrelated blocklist change leaves the dock alone',
         h.log.includes('UNMOUNT'), false);
+}
+
+// 10. A Settings change -- cards, point values, Lead with -- re-ranks the page
+// it is open on, without a reload, and keeps an open panel open.
+for (const key of ['instances', 'valuations', 'prefs']) {
+  const h = harness(() => ({ show: true }), []);
+  h.tick(200);
+  const before = h.log.filter(x => x === 'evaluate').length;
+  h.changeKey(key);
+  check(`a ${key} change ranks the page again`,
+        h.log.filter(x => x === 'evaluate').length, before + 1);
+  check(`...and repaints the dock (${key})`, h.log.filter(x => x === 'MOUNT').length, 2);
+}
+{
+  const h = harness(() => ({ show: true }), []);
+  h.tick(200);
+  h.setRespond(() => ({ show: true, winner: null }));
+  h.changeKey('instances');
+  check('removing the last card that ranks here takes the dock down',
+        h.log.includes('UNMOUNT'), true);
+}
+{
+  const h = harness(() => ({ show: true }), ['shop.example']);
+  h.tick(200);
+  h.changeKey('prefs');
+  check('a blocked host stays silent on a Settings change',
+        h.log.filter(x => x === 'evaluate').length, 0);
+}
+{
+  const h = harness(() => ({ show: true }), []);
+  h.tick(200);
+  const before = h.log.filter(x => x === 'evaluate').length;
+  h.changeKey('activity');
+  check('an activity write does not re-rank',
+        h.log.filter(x => x === 'evaluate').length, before);
 }
 
 console.log(`\n${pass} passed, ${fail} failed`);

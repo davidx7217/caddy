@@ -164,6 +164,12 @@
     // Repaint in place rather than remount: switching theme in Options must not
     // close a panel the user has open.
     if (changes.theme && mounted) mounted.setTheme(changes.theme.newValue);
+    // Cards, point values and prefs (Lead with, saved choices) all change the
+    // ranking: rank again now, so the dock and the popup's copy follow a
+    // Settings change without a reload. PAGE rewrites the popup's cache.
+    if (started && (changes.instances || changes.valuations || changes.prefs)) {
+      if (mounted) rerank(); else evaluate(null);
+    }
   });
 
   /**
@@ -263,7 +269,9 @@
     rankedOn = today();
     send({ type: 'PAGE', hostname: location.hostname, signals: collectSignals(), wantFont: true },
       res => {
-        if (!res || !res.winner || !mounted) return;
+        if (!res || !mounted) return;
+        // The last card that ranked here was removed: take the dock down.
+        if (!res.winner) return unmount();
         const wasOpen = mounted.isOpen();
         mounted.destroy();
         mounted = render(res);
