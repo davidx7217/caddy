@@ -3042,9 +3042,9 @@
     "annual_fee": 99,
     "base_rate": 3.0,
     "verified": true,
-    "last_verified": "2026-09-28",
+    "last_verified": "2026-10-02",
     "source_url": "https://creditcards.chase.com/travel-credit-cards/ihg-rewards-club/premier",
-    "note": "A Mastercard, unlike Chase's other co-brands here: the page carries World and World Elite Mastercard terms. Rates read off the offer details. Cruise lines, read 2026-09-29: the offer details' travel is the Travel category of chase.com/RewardsCategoryFAQs, which names cruise lines (on-board goods and services excluded), so cruises earn 5X.",
+    "note": "A Mastercard, unlike Chase's other co-brands here: the page carries World and World Elite Mastercard terms. Rates read off the offer details. Cruise lines, read 2026-09-29: the offer details' travel is the Travel category of chase.com/RewardsCategoryFAQs, which names cruise lines (on-board goods and services excluded), so cruises earn 5X. Refreshed by Chase (launch offer), read on the source_url's offer details 2026-10-02: 5X now also at grocery stores; travel stays 5X only on purchases posting by 2026-12-31, after which 5X travel is limited to airline tickets bought directly from the airline and car rental agencies, and all other travel earns 3X. Every travel_air merchant row is an airline's own site, so travel_air and car_rental keep 5X undated, and hotels, ground transport and cruises carry the 2026-12-31 window.",
     "rules": [
       {
         "category": "travel_hotel",
@@ -3057,27 +3057,40 @@
       {
         "category": "travel_air",
         "rate": 5.0,
-        "caveat": "Chase's travel category: airlines, hotels, car rentals, cruises, travel agencies, rail, taxis, tolls and parking."
+        "caveat": "Airline tickets bought directly from the airline, and car rental agencies."
       },
       {
         "category": "travel_hotel",
         "rate": 5.0,
-        "caveat": "Chase's travel category: airlines, hotels, car rentals, cruises, travel agencies, rail, taxis, tolls and parking."
+        "window": {
+          "end": "2026-12-31"
+        },
+        "caveat": "5x on purchases that post by 2026-12-31, then 3x."
       },
       {
         "category": "car_rental",
         "rate": 5.0,
-        "caveat": "Chase's travel category: airlines, hotels, car rentals, cruises, travel agencies, rail, taxis, tolls and parking."
+        "caveat": "Car rental agencies."
       },
       {
         "category": "travel_ground",
         "rate": 5.0,
-        "caveat": "Chase's travel category: airlines, hotels, car rentals, cruises, travel agencies, rail, taxis, tolls and parking."
+        "window": {
+          "end": "2026-12-31"
+        },
+        "caveat": "5x on purchases that post by 2026-12-31, then 3x."
       },
       {
         "category": "cruise",
         "rate": 5.0,
-        "caveat": "Chase's travel category: airlines, hotels, car rentals, cruises, travel agencies, rail, taxis, tolls and parking."
+        "window": {
+          "end": "2026-12-31"
+        },
+        "caveat": "5x on purchases that post by 2026-12-31, then 3x."
+      },
+      {
+        "category": "groceries",
+        "rate": 5.0
       },
       {
         "category": "gas",
@@ -3100,9 +3113,9 @@
     "annual_fee": 0,
     "base_rate": 2.0,
     "verified": true,
-    "last_verified": "2026-09-28",
+    "last_verified": "2026-10-02",
     "source_url": "https://creditcards.chase.com/travel-credit-cards/ihg-rewards-club/traveler",
-    "note": "A Mastercard, per the page's World Mastercard terms. Rates read off the offer details.",
+    "note": "A Mastercard, per the page's World Mastercard terms. Rates read off the offer details. Refreshed by Chase (launch offer), read on the source_url's offer details 2026-10-02: 3X now also at grocery stores; utilities, internet, cable and phone, and select streaming earn 3X only on purchases posting by 2026-12-31, then 2X.",
     "rules": [
       {
         "category": "travel_hotel",
@@ -3114,20 +3127,35 @@
       },
       {
         "category": "utilities",
-        "rate": 3.0
+        "rate": 3.0,
+        "window": {
+          "end": "2026-12-31"
+        },
+        "caveat": "3x on purchases that post by 2026-12-31, then 2x."
       },
       {
         "category": "phone",
-        "rate": 3.0
+        "rate": 3.0,
+        "window": {
+          "end": "2026-12-31"
+        },
+        "caveat": "3x on purchases that post by 2026-12-31, then 2x."
       },
       {
         "category": "internet_cable",
-        "rate": 3.0
+        "rate": 3.0,
+        "window": {
+          "end": "2026-12-31"
+        },
+        "caveat": "3x on purchases that post by 2026-12-31, then 2x."
       },
       {
         "category": "streaming",
         "rate": 3.0,
-        "caveat": "Select streaming services only."
+        "window": {
+          "end": "2026-12-31"
+        },
+        "caveat": "Select streaming services only. 3x on purchases that post by 2026-12-31, then 2x."
       },
       {
         "category": "dining",
@@ -3136,6 +3164,10 @@
       },
       {
         "category": "gas",
+        "rate": 3.0
+      },
+      {
+        "category": "groceries",
         "rate": 3.0
       }
     ]
@@ -6217,9 +6249,9 @@
     "annual_fee": 99,
     "base_rate": 3.0,
     "verified": true,
-    "last_verified": "2026-09-28",
+    "last_verified": "2026-10-02",
     "source_url": "https://creditcards.chase.com/business-credit-cards/IHG/business-premier",
-    "note": "Rates read off the offer details on 2026-09-28. 10X at hotels participating in IHG One Rewards; 5X on travel, at restaurants including takeout and delivery, on social media and search engine advertising, at office supply stores and at gas stations; 3X elsewhere. Chase's travel covers airlines, hotels, car rental, cruise lines, travel agencies, rail, taxis, tolls and parking, so OTAs count and no denylist is needed. A Mastercard, per the page's World and World Elite Mastercard terms, as the personal IHG cards are. Cruise lines, read 2026-09-29: the offer details' travel is the Travel category of chase.com/RewardsCategoryFAQs, which names cruise lines (on-board goods and services excluded), so cruises earn 5X.",
+    "note": "Rates read off the offer details on 2026-09-28. 10X at hotels participating in IHG One Rewards; 5X on travel, at restaurants including takeout and delivery, on social media and search engine advertising, at office supply stores and at gas stations; 3X elsewhere. Chase's travel covers airlines, hotels, car rental, cruise lines, travel agencies, rail, taxis, tolls and parking, so OTAs count and no denylist is needed. A Mastercard, per the page's World and World Elite Mastercard terms, as the personal IHG cards are. Cruise lines, read 2026-09-29: the offer details' travel is the Travel category of chase.com/RewardsCategoryFAQs, which names cruise lines (on-board goods and services excluded), so cruises earn 5X. Refreshed by Chase (launch offer), read on the source_url's offer details 2026-10-02: travel and office supply stores earn 5X only on purchases posting by 2026-12-31; after that 5X travel is limited to airline tickets bought directly from the airline and car rental agencies, and other travel and office supply stores earn 3X. Every travel_air merchant row is an airline's own site, so travel_air and car_rental keep 5X undated.",
     "rules": [
       {
         "category": "travel_hotel",
@@ -6234,7 +6266,11 @@
       },
       {
         "category": "travel_hotel",
-        "rate": 5.0
+        "rate": 5.0,
+        "window": {
+          "end": "2026-12-31"
+        },
+        "caveat": "5x on purchases that post by 2026-12-31, then 3x."
       },
       {
         "category": "car_rental",
@@ -6242,11 +6278,19 @@
       },
       {
         "category": "travel_ground",
-        "rate": 5.0
+        "rate": 5.0,
+        "window": {
+          "end": "2026-12-31"
+        },
+        "caveat": "5x on purchases that post by 2026-12-31, then 3x."
       },
       {
         "category": "cruise",
-        "rate": 5.0
+        "rate": 5.0,
+        "window": {
+          "end": "2026-12-31"
+        },
+        "caveat": "5x on purchases that post by 2026-12-31, then 3x."
       },
       {
         "category": "dining",
@@ -6258,7 +6302,11 @@
       },
       {
         "category": "office_supply",
-        "rate": 5.0
+        "rate": 5.0,
+        "window": {
+          "end": "2026-12-31"
+        },
+        "caveat": "5x on purchases that post by 2026-12-31, then 3x."
       },
       {
         "category": "gas",
