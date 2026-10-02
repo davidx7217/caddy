@@ -195,7 +195,6 @@ function blockOwned() {
           <span class="row-name">${esc(p.name)}</span>
           <span class="row-meta">${esc(networkName(p.network))} &middot; ${money(p.annual_fee)} &middot; ${esc(CURRENCY[p.currency] || p.currency)}</span>
         </span>
-        ${p.caution ? '<span class="flag" title="Has a caution">!</span>' : ''}
         <span class="chev" aria-hidden="true">&rsaquo;</span>
       </button>
       <button class="btn" data-rm="${esc(inst.productId)}">REMOVE</button>
@@ -298,7 +297,6 @@ function blockCatalog() {
           <span class="row-name">${esc(p.name)}</span>
           <span class="row-meta">${esc(ISSUER[p.issuer] || p.issuer)} &middot; ${money(p.annual_fee)} &middot; ${esc(CURRENCY[p.currency] || p.currency)}</span>
         </span>
-        ${p.caution ? '<span class="flag" title="Has a caution">!</span>' : ''}
         <span class="chev" aria-hidden="true">&rsaquo;</span>
       </button>
       <button class="btn" data-add="${esc(id)}">ADD</button>
@@ -392,7 +390,6 @@ function renderDetail() {
       <button class="icon-btn" data-close="1" aria-label="Close">&times;</button>
     </div>
     <div class="dlg-body">
-      ${p.caution ? `<div class="note">${esc(p.caution)}</div>` : ''}
       <div class="spec">
         <div><span>ISSUER</span><span>${esc(ISSUER[p.issuer] || p.issuer)}</span></div>
         <div><span>NETWORK</span><span>${esc(networkName(p.network))}</span></div>
@@ -411,6 +408,7 @@ function renderDetail() {
           : `<p class="rule-note" style="margin-top:12px">${p.only_at
               ? 'A store card: it earns its base rate at the store above and works nowhere else.'
               : 'No bonus categories. Everything earns the base rate.'}</p>`}
+        ${p.caution ? `<p class="rule-note" style="margin-top:16px">${esc(p.caution)}</p>` : ''}
       </div>
     </div>
     <div class="dlg-foot">

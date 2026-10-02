@@ -164,12 +164,9 @@ h1 { font-size: 34px; font-weight: 400; letter-spacing: -.03em; line-height: 1.1
    guess. Truncating keeps the row a constant by construction. */
 .card-open .row-name, .card-open .row-meta {
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.card-open .flag { color: var(--warn); font-weight: 600; flex: none; }
 .card-open .chev { color: var(--muted); font-size: 15px; flex: none; padding-right: 4px; }
 .card-row .btn { flex: none; }
 
-.note { font-size: 11.5px; line-height: 1.5; color: var(--warn);
-        border: 1px solid var(--warnLine); border-radius: var(--r-sm); padding: 10px 12px; }
 .cfg { display: flex; flex-wrap: wrap; gap: 14px; }
 .cfg label { font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
              color: var(--muted); display: flex; flex-direction: column; gap: 5px; }
