@@ -1284,7 +1284,8 @@ the card's note.
   of Business Gold, Business Platinum and Blue Business Plus; Platinum and Business
   Platinum earn one extra point on cruises. Portal rules added to Gold (cruise),
   Platinum, Business Platinum, Business Gold and Business Green (both). Consumer
-  Platinum's own terms were not read; the business terms name it in both clauses.
+  Platinum's own terms (.../apply/terms/personal/platinum-card/25330-10-0) carry both
+  clauses too -- read in the in-app browser, since curl gets an empty page there.
 - **Unchanged after a second look**: Wyndham Earner's 3X on gas and the Plus and
   Premier's 4X on gas stand -- the pages' summaries now omit gas, but the Reward
   Rules include it (section 13). Gap Encore's 500 points = $1 is already in the

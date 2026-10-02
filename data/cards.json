@@ -1529,10 +1529,10 @@
     "annual_fee": 895,
     "base_rate": 1.0,
     "verified": true,
-    "last_verified": "2026-09-27",
+    "last_verified": "2026-10-02",
     "source_url": "https://www.americanexpress.com/us/credit-cards/card/platinum/",
     "caution": "Outside flights and Amex Travel hotels it earns 1x, so it rarely wins anywhere else.",
-    "note": "Absent until 2026-09-27 because no reachable americanexpress.com page stated the fee or the base rate on 2026-09-10. The product page states both now: $895, and 1X on other purchases. The statement credits are not netted against the fee, for the reason the Sapphire Reserve's are not: the ranker compares what a purchase earns, and credits do not change that. Amex Travel 2X on prepaid car rentals and cruises, read 2026-10-02 in the business cards' Offer & Benefit Terms (business-gold, business-platinum, bluebusinessplus): every Membership Rewards-enrolled card earns at least 1 additional point on air, prepaid hotels, prepaid short-term rentals, prepaid car rentals and cruise reservations made on AmexTravel.com, not combined with a higher bonus; Platinum and Business Platinum earn only 1 additional point on cruises. Consumer Platinum's own terms were not read; the business terms name consumer Platinum in both clauses.",
+    "note": "Absent until 2026-09-27 because no reachable americanexpress.com page stated the fee or the base rate on 2026-09-10. The product page states both now: $895, and 1X on other purchases. The statement credits are not netted against the fee, for the reason the Sapphire Reserve's are not: the ranker compares what a purchase earns, and credits do not change that. Amex Travel 2X on prepaid car rentals and cruises, read 2026-10-02 in the business cards' Offer & Benefit Terms (business-gold, business-platinum, bluebusinessplus): every Membership Rewards-enrolled card earns at least 1 additional point on air, prepaid hotels, prepaid short-term rentals, prepaid car rentals and cruise reservations made on AmexTravel.com, not combined with a higher bonus; Platinum and Business Platinum earn only 1 additional point on cruises. Confirmed 2026-10-02 in consumer Platinum's own Offer & Benefit Terms (americanexpress.com/en-us/credit-cards/apply/terms/personal/platinum-card/25330-10-0, read in the in-app browser; curl gets an empty shell): the same Amex Travel clause, and '2x Membership Rewards points on Cruise Bookings' for U.S. Consumer and Business Platinum, booked through AmexTravel.com or by phone.",
     "rules": [
       {
         "category": "travel_air",
