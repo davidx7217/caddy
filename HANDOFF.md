@@ -1324,7 +1324,9 @@ Working agreements) and pushed.
   card dialog.
 - **Point values are drafts until CONFIRM**; CANCEL drops them. Drafts live in
   `draftVals`, apart from `valuations`, so a re-render caused by another surface
-  writing storage keeps what was typed.
+  writing storage keeps what was typed. DEFAULTS fills every box with Caddy's
+  value as a draft, so it too waits on CONFIRM; a value equal to Caddy's is saved
+  as no override, so a later change to `data/valuations.json` still reaches it.
 - **Cautions are not warnings any more.** No "!" on card rows, no amber box: the
   caution prints under a DETAILS heading at the foot of Bonus categories. The
   `.flag` and `.note` styles had no other users and are gone.

@@ -494,6 +494,11 @@ function blockBlocked() {
   </div>`;
 }
 
+// What a box shows: the draft if one was typed, else the saved value, else Caddy's.
+const shownVal = k => k in draftVals ? draftVals[k] : String(valuations[k] ?? baseVals[k]);
+// DEFAULTS has something to do only while a box shows other than Caddy's value.
+const offDefault = live => live.some(k => parseFloat(shownVal(k)) !== baseVals[k]);
+
 function blockPoints() {
   const live = liveCurrencies();
   if (!live.length) return `<div class="empty">Add a card to set what its points are worth.</div>`;
@@ -503,11 +508,12 @@ function blockPoints() {
       <div class="pt-label">${esc(CURRENCY[k] || k)}</div>
       <div class="pt-in">
         <input type="number" step="0.05" min="0" inputmode="decimal"
-               data-val="${esc(k)}" value="${k in draftVals ? esc(draftVals[k]) : valuations[k] ?? baseVals[k]}">
+               data-val="${esc(k)}" value="${esc(shownVal(k))}">
         <span>c/pt</span>
       </div>
     </div>`).join('')}</div>
     <div class="bar pts-bar">
+      <button class="btn pts-default" data-valdefault="1" ${offDefault(live) ? '' : 'disabled'}>DEFAULTS</button>
       <button class="btn" data-valcancel="1" ${dirty ? '' : 'disabled'}>CANCEL</button>
       <button class="btn solid" data-valsave="1" ${dirty ? '' : 'disabled'}>CONFIRM</button>
     </div>`;
@@ -724,10 +730,22 @@ document.addEventListener('click', e => {
     return;
   }
   if (d.valcancel) { draftVals = {}; render(); return; }
+  // DEFAULTS fills every box with Caddy's value as a draft, so it still waits
+  // on CONFIRM like any other edit, and CANCEL takes it back.
+  if (d.valdefault) {
+    for (const k of liveCurrencies()) {
+      if (k in valuations) draftVals[k] = String(baseVals[k]);
+      else delete draftVals[k];
+    }
+    render();
+    return;
+  }
   if (d.valsave) {
     for (const [k, raw] of Object.entries(draftVals)) {
       const v = parseFloat(raw);
-      if (Number.isFinite(v) && v >= 0) valuations[k] = v;
+      // Caddy's own value is stored as no override, so a later change to the
+      // shipped default still reaches this reader.
+      if (Number.isFinite(v) && v >= 0 && v !== baseVals[k]) valuations[k] = v;
       else delete valuations[k];
     }
     draftVals = {};
@@ -791,6 +809,8 @@ document.addEventListener('input', e => {
     if (e.target.value === saved) delete draftVals[k]; else draftVals[k] = e.target.value;
     const dirty = Object.keys(draftVals).length > 0;
     document.querySelectorAll('[data-valsave], [data-valcancel]').forEach(b => { b.disabled = !dirty; });
+    const def = document.querySelector('[data-valdefault]');
+    if (def) def.disabled = !offDefault(liveCurrencies());
     return;
   }
   if (e.target.dataset.f !== 'q') return;
